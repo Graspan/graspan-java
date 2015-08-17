@@ -1,0 +1,1165 @@
+5:46:31 PM engine run - t:1 INFO:   3888.764s: iteration: 2, interval: 56036435 -- 56652219
+5:46:31 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 221682600 -- 224145740
+5:46:31 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:46:31 PM engine run - t:1 INFO:   Subinterval:: 56036435 -- 56652219 (iteration 2)
+5:46:31 PM engine run - t:1 INFO:   Init vertices...
+5:46:31 PM engine run - t:1 INFO:   Loading...
+5:46:31 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 56036435 -- 56652219
+5:46:36 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:46:40 PM engine run - t:1 INFO:   Load took: 8923ms
+5:46:41 PM engine run - t:1 INFO:   Update exec: 1238 ms.
+5:46:41 PM engine run - t:1 INFO:   3899.203s: iteration: 2, interval: 56652220 -- 57268004
+5:46:41 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 224145740 -- 226608880
+5:46:41 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:46:41 PM engine run - t:1 INFO:   Subinterval:: 56652220 -- 57268004 (iteration 2)
+5:46:41 PM engine run - t:1 INFO:   Init vertices...
+5:46:42 PM engine run - t:1 INFO:   Loading...
+5:46:42 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 56652220 -- 57268004
+5:46:49 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:46:53 PM engine run - t:1 INFO:   Load took: 11312ms
+5:46:54 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:46:55 PM engine run - t:1 INFO:   Update exec: 1707 ms.
+5:46:55 PM engine run - t:1 INFO:   3912.683s: iteration: 2, interval: 57268005 -- 57883789
+5:46:55 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 226608880 -- 229072020
+5:46:55 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:46:55 PM engine run - t:1 INFO:   Subinterval:: 57268005 -- 57883789 (iteration 2)
+5:46:55 PM engine run - t:1 INFO:   Init vertices...
+5:46:55 PM engine run - t:1 INFO:   Loading...
+5:46:55 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 57268005 -- 57883789
+5:47:12 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:47:17 PM engine run - t:1 INFO:   Load took: 21759ms
+5:47:18 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:47:19 PM engine run - t:1 INFO:   Update exec: 1716 ms.
+5:47:19 PM engine run - t:1 INFO:   3936.489s: iteration: 2, interval: 57883790 -- 58499574
+5:47:19 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 229072020 -- 231535160
+5:47:19 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:47:19 PM engine run - t:1 INFO:   Subinterval:: 57883790 -- 58499574 (iteration 2)
+5:47:19 PM engine run - t:1 INFO:   Init vertices...
+5:47:20 PM engine run - t:1 INFO:   Loading...
+5:47:20 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 57883790 -- 58499574
+5:47:29 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:47:31 PM engine run - t:1 INFO:   Load took: 11234ms
+5:47:32 PM engine run - t:1 INFO:   Update exec: 1064 ms.
+5:47:32 PM engine run - t:1 INFO:   3949.802s: iteration: 2, interval: 58499575 -- 59115359
+5:47:32 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 231535160 -- 233998300
+5:47:32 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:47:32 PM engine run - t:1 INFO:   Subinterval:: 58499575 -- 59115359 (iteration 2)
+5:47:32 PM engine run - t:1 INFO:   Init vertices...
+5:47:32 PM engine run - t:1 INFO:   Loading...
+5:47:32 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 58499575 -- 59115359
+5:47:37 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:47:38 PM engine run - t:1 INFO:   Load took: 5982ms
+5:47:39 PM engine run - t:1 INFO:   Update exec: 1185 ms.
+5:47:39 PM engine run - t:1 INFO:   3957.312s: iteration: 2, interval: 59115360 -- 59731144
+5:47:39 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 233998300 -- 236461440
+5:47:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:47:39 PM engine run - t:1 INFO:   Subinterval:: 59115360 -- 59731144 (iteration 2)
+5:47:39 PM engine run - t:1 INFO:   Init vertices...
+5:47:40 PM engine run - t:1 INFO:   Loading...
+5:47:40 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 59115360 -- 59731144
+5:47:45 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:47:46 PM engine run - t:1 INFO:   Load took: 6641ms
+5:47:47 PM engine run - t:1 INFO:   Update exec: 1092 ms.
+5:47:47 PM engine run - t:1 INFO:   3965.347s: iteration: 2, interval: 59731145 -- 60346929
+5:47:47 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 236461440 -- 238924580
+5:47:48 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:47:48 PM engine run - t:1 INFO:   Subinterval:: 59731145 -- 60346929 (iteration 2)
+5:47:48 PM engine run - t:1 INFO:   Init vertices...
+5:47:48 PM engine run - t:1 INFO:   Loading...
+5:47:48 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 59731145 -- 60346929
+5:47:54 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:47:55 PM engine run - t:1 INFO:   Load took: 7549ms
+5:47:56 PM engine run - t:1 INFO:   Update exec: 995 ms.
+5:47:56 PM engine run - t:1 INFO:   3974.373s: iteration: 2, interval: 60346930 -- 60962714
+5:47:56 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 238924580 -- 241387720
+5:47:57 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:47:57 PM engine run - t:1 INFO:   Subinterval:: 60346930 -- 60962714 (iteration 2)
+5:47:57 PM engine run - t:1 INFO:   Init vertices...
+5:47:57 PM engine run - t:1 INFO:   Loading...
+5:47:57 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 60346930 -- 60962714
+5:48:02 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:48:03 PM engine run - t:1 INFO:   Load took: 6071ms
+5:48:04 PM engine run - t:1 INFO:   Update exec: 1094 ms.
+5:48:04 PM engine run - t:1 INFO:   3981.9100000000003s: iteration: 2, interval: 60962715 -- 61578499
+5:48:04 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 241387720 -- 243850860
+5:48:04 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:48:04 PM engine run - t:1 INFO:   Subinterval:: 60962715 -- 61578499 (iteration 2)
+5:48:04 PM engine run - t:1 INFO:   Init vertices...
+5:48:04 PM engine run - t:1 INFO:   Loading...
+5:48:04 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 60962715 -- 61578499
+5:48:09 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:48:10 PM engine run - t:1 INFO:   Load took: 5756ms
+5:48:11 PM engine run - t:1 INFO:   Update exec: 1045 ms.
+5:48:11 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 243850860 -- 246314000
+5:48:12 PM engine run - t:1 INFO:   3990.2110000000002s: iteration: 3, interval: 0 -- 615784
+5:48:12 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:48:12 PM engine run - t:1 INFO:   Subinterval:: 0 -- 615784 (iteration 3)
+5:48:12 PM engine run - t:1 INFO:   Init vertices...
+5:48:13 PM engine run - t:1 INFO:   Loading...
+5:48:13 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 0 -- 615784
+5:48:20 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:48:25 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 78
+5:48:30 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 61
+5:48:35 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 40
+5:48:40 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 18
+5:48:43 PM engine run - t:1 INFO:   Load took: 30635ms
+5:48:45 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:48:45 PM engine run - t:1 INFO:   Update exec: 1533 ms.
+5:48:45 PM engine run - t:1 INFO:   4022.83s: iteration: 3, interval: 615785 -- 1231569
+5:48:45 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 0 -- 2463140
+5:48:45 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:48:45 PM engine run - t:1 INFO:   Subinterval:: 615785 -- 1231569 (iteration 3)
+5:48:45 PM engine run - t:1 INFO:   Init vertices...
+5:48:45 PM engine run - t:1 INFO:   Loading...
+5:48:45 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 615785 -- 1231569
+5:48:50 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:48:51 PM engine run - t:1 INFO:   Load took: 5368ms
+5:48:52 PM engine run - t:1 INFO:   Update exec: 1308 ms.
+5:48:52 PM engine run - t:1 INFO:   4029.806s: iteration: 3, interval: 1231570 -- 1847354
+5:48:52 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 2463140 -- 4926280
+5:48:53 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:48:53 PM engine run - t:1 INFO:   Subinterval:: 1231570 -- 1847354 (iteration 3)
+5:48:53 PM engine run - t:1 INFO:   Init vertices...
+5:48:53 PM engine run - t:1 INFO:   Loading...
+5:48:53 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 1231570 -- 1847354
+5:49:01 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:49:04 PM engine run - t:1 INFO:   Load took: 10557ms
+5:49:05 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:49:05 PM engine run - t:1 INFO:   Update exec: 1725 ms.
+5:49:05 PM engine run - t:1 INFO:   4043.244s: iteration: 3, interval: 1847355 -- 2463139
+5:49:05 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 4926280 -- 7389420
+5:49:06 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:49:06 PM engine run - t:1 INFO:   Subinterval:: 1847355 -- 2463139 (iteration 3)
+5:49:06 PM engine run - t:1 INFO:   Init vertices...
+5:49:07 PM engine run - t:1 INFO:   Loading...
+5:49:07 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 1847355 -- 2463139
+5:49:14 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:49:15 PM engine run - t:1 INFO:   Load took: 8577ms
+5:49:17 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:49:17 PM engine run - t:1 INFO:   Update exec: 1554 ms.
+5:49:17 PM engine run - t:1 INFO:   4054.6910000000003s: iteration: 3, interval: 2463140 -- 3078924
+5:49:17 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 7389420 -- 9852560
+5:49:18 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:49:18 PM engine run - t:1 INFO:   Subinterval:: 2463140 -- 3078924 (iteration 3)
+5:49:18 PM engine run - t:1 INFO:   Init vertices...
+5:49:18 PM engine run - t:1 INFO:   Loading...
+5:49:18 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 2463140 -- 3078924
+5:49:23 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:49:28 PM engine run - t:1 INFO:   Load took: 10259ms
+5:49:29 PM engine run - t:1 INFO:   Update exec: 1108 ms.
+5:49:29 PM engine run - t:1 INFO:   4067.051s: iteration: 3, interval: 3078925 -- 3694709
+5:49:29 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 9852560 -- 12315700
+5:49:30 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:49:30 PM engine run - t:1 INFO:   Subinterval:: 3078925 -- 3694709 (iteration 3)
+5:49:30 PM engine run - t:1 INFO:   Init vertices...
+5:49:30 PM engine run - t:1 INFO:   Loading...
+5:49:30 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 3078925 -- 3694709
+5:49:34 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:49:36 PM engine run - t:1 INFO:   Load took: 6521ms
+5:49:38 PM engine run - t:1 INFO:   Update exec: 1070 ms.
+5:49:38 PM engine run - t:1 INFO:   4075.494s: iteration: 3, interval: 3694710 -- 4310494
+5:49:38 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 12315700 -- 14778840
+5:49:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:49:39 PM engine run - t:1 INFO:   Subinterval:: 3694710 -- 4310494 (iteration 3)
+5:49:39 PM engine run - t:1 INFO:   Init vertices...
+5:49:39 PM engine run - t:1 INFO:   Loading...
+5:49:39 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 3694710 -- 4310494
+5:49:50 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:49:55 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 38
+5:49:59 PM engine run - t:1 INFO:   Load took: 20492ms
+5:50:01 PM engine run - t:1 INFO:   Update exec: 1200 ms.
+5:50:01 PM engine run - t:1 INFO:   4098.526s: iteration: 3, interval: 4310495 -- 4926279
+5:50:01 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 14778840 -- 17241980
+5:50:01 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:01 PM engine run - t:1 INFO:   Subinterval:: 4310495 -- 4926279 (iteration 3)
+5:50:01 PM engine run - t:1 INFO:   Init vertices...
+5:50:01 PM engine run - t:1 INFO:   Loading...
+5:50:01 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 4310495 -- 4926279
+5:50:04 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:50:09 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 26
+5:50:12 PM engine run - t:1 INFO:   Load took: 10956ms
+5:50:13 PM engine run - t:1 INFO:   Update exec: 1121 ms.
+5:50:13 PM engine run - t:1 INFO:   4110.9490000000005s: iteration: 3, interval: 4926280 -- 5542064
+5:50:13 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 17241980 -- 19705120
+5:50:13 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:13 PM engine run - t:1 INFO:   Subinterval:: 4926280 -- 5542064 (iteration 3)
+5:50:13 PM engine run - t:1 INFO:   Init vertices...
+5:50:14 PM engine run - t:1 INFO:   Loading...
+5:50:14 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 4926280 -- 5542064
+5:50:18 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:50:20 PM engine run - t:1 INFO:   Load took: 6171ms
+5:50:22 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:50:22 PM engine run - t:1 INFO:   Update exec: 1529 ms.
+5:50:22 PM engine run - t:1 INFO:   4119.518s: iteration: 3, interval: 5542065 -- 6157849
+5:50:22 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 19705120 -- 22168260
+5:50:22 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:22 PM engine run - t:1 INFO:   Subinterval:: 5542065 -- 6157849 (iteration 3)
+5:50:22 PM engine run - t:1 INFO:   Init vertices...
+5:50:22 PM engine run - t:1 INFO:   Loading...
+5:50:22 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 5542065 -- 6157849
+5:50:25 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:50:26 PM engine run - t:1 INFO:   Load took: 4250ms
+5:50:27 PM engine run - t:1 INFO:   Update exec: 1170 ms.
+5:50:27 PM engine run - t:1 INFO:   4125.468s: iteration: 3, interval: 6157850 -- 6773634
+5:50:28 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 22168260 -- 24631400
+5:50:28 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:29 PM engine run - t:1 INFO:   Subinterval:: 6157850 -- 6773634 (iteration 3)
+5:50:29 PM engine run - t:1 INFO:   Init vertices...
+5:50:29 PM engine run - t:1 INFO:   Loading...
+5:50:29 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 6157850 -- 6773634
+5:50:44 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:50:49 PM engine run - t:1 INFO:   Load took: 19678ms
+5:50:50 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:50:50 PM engine run - t:1 INFO:   Update exec: 1634 ms.
+5:50:50 PM engine run - t:1 INFO:   4148.3640000000005s: iteration: 3, interval: 6773635 -- 7389419
+5:50:50 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 24631400 -- 27094540
+5:50:51 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:51 PM engine run - t:1 INFO:   Subinterval:: 6773635 -- 7389419 (iteration 3)
+5:50:51 PM engine run - t:1 INFO:   Init vertices...
+5:50:51 PM engine run - t:1 INFO:   Loading...
+5:50:51 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 6773635 -- 7389419
+5:50:55 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:50:56 PM engine run - t:1 INFO:   Load took: 5201ms
+5:50:58 PM engine run - t:1 INFO:   Update exec: 1300 ms.
+5:50:58 PM engine run - t:1 INFO:   4155.514s: iteration: 3, interval: 7389420 -- 8005204
+5:50:58 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 27094540 -- 29557680
+5:50:58 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:50:58 PM engine run - t:1 INFO:   Subinterval:: 7389420 -- 8005204 (iteration 3)
+5:50:58 PM engine run - t:1 INFO:   Init vertices...
+5:50:58 PM engine run - t:1 INFO:   Loading...
+5:50:58 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 7389420 -- 8005204
+5:51:03 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:05 PM engine run - t:1 INFO:   Load took: 7519ms
+5:51:07 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:51:07 PM engine run - t:1 INFO:   Update exec: 1693 ms.
+5:51:07 PM engine run - t:1 INFO:   4165.158s: iteration: 3, interval: 8005205 -- 8620989
+5:51:07 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 29557680 -- 32020820
+5:51:08 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:08 PM engine run - t:1 INFO:   Subinterval:: 8005205 -- 8620989 (iteration 3)
+5:51:08 PM engine run - t:1 INFO:   Init vertices...
+5:51:08 PM engine run - t:1 INFO:   Loading...
+5:51:08 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 8005205 -- 8620989
+5:51:15 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:20 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 7
+5:51:21 PM engine run - t:1 INFO:   Load took: 12931ms
+5:51:22 PM engine run - t:1 INFO:   Update exec: 1147 ms.
+5:51:22 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 32020820 -- 34483960
+5:51:22 PM engine run - t:1 INFO:   4179.915s: iteration: 3, interval: 8620990 -- 9236774
+5:51:22 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:22 PM engine run - t:1 INFO:   Subinterval:: 8620990 -- 9236774 (iteration 3)
+5:51:22 PM engine run - t:1 INFO:   Init vertices...
+5:51:22 PM engine run - t:1 INFO:   Loading...
+5:51:22 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 8620990 -- 9236774
+5:51:25 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:30 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+5:51:30 PM engine run - t:1 INFO:   Load took: 8111ms
+5:51:32 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:51:32 PM engine run - t:1 INFO:   Update exec: 1553 ms.
+5:51:32 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 34483960 -- 36947100
+5:51:32 PM engine run - t:1 INFO:   4189.948s: iteration: 3, interval: 9236775 -- 9852559
+5:51:32 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:32 PM engine run - t:1 INFO:   Subinterval:: 9236775 -- 9852559 (iteration 3)
+5:51:32 PM engine run - t:1 INFO:   Init vertices...
+5:51:32 PM engine run - t:1 INFO:   Loading...
+5:51:32 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 9236775 -- 9852559
+5:51:36 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:40 PM engine run - t:1 INFO:   Load took: 7203ms
+5:51:41 PM engine run - t:1 INFO:   Update exec: 1077 ms.
+5:51:41 PM engine run - t:1 INFO:   4198.657s: iteration: 3, interval: 9852560 -- 10468344
+5:51:41 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 36947100 -- 39410240
+5:51:41 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:41 PM engine run - t:1 INFO:   Subinterval:: 9852560 -- 10468344 (iteration 3)
+5:51:41 PM engine run - t:1 INFO:   Init vertices...
+5:51:41 PM engine run - t:1 INFO:   Loading...
+5:51:41 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 9852560 -- 10468344
+5:51:47 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:49 PM engine run - t:1 INFO:   Load took: 7368ms
+5:51:50 PM engine run - t:1 INFO:   Update exec: 1036 ms.
+5:51:50 PM engine run - t:1 INFO:   4207.78s: iteration: 3, interval: 10468345 -- 11084129
+5:51:50 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 39410240 -- 41873380
+5:51:50 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:50 PM engine run - t:1 INFO:   Subinterval:: 10468345 -- 11084129 (iteration 3)
+5:51:50 PM engine run - t:1 INFO:   Init vertices...
+5:51:51 PM engine run - t:1 INFO:   Loading...
+5:51:51 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 10468345 -- 11084129
+5:51:55 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:51:56 PM engine run - t:1 INFO:   Load took: 5208ms
+5:51:57 PM engine run - t:1 INFO:   Update exec: 1144 ms.
+5:51:57 PM engine run - t:1 INFO:   4215.157s: iteration: 3, interval: 11084130 -- 11699914
+5:51:57 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 41873380 -- 44336520
+5:51:58 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:51:58 PM engine run - t:1 INFO:   Subinterval:: 11084130 -- 11699914 (iteration 3)
+5:51:58 PM engine run - t:1 INFO:   Init vertices...
+5:51:58 PM engine run - t:1 INFO:   Loading...
+5:51:58 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 11084130 -- 11699914
+5:52:01 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:52:03 PM engine run - t:1 INFO:   Load took: 4628ms
+5:52:04 PM engine run - t:1 INFO:   Update exec: 1027 ms.
+5:52:04 PM engine run - t:1 INFO:   4221.546s: iteration: 3, interval: 11699915 -- 12315699
+5:52:04 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 44336520 -- 46799660
+5:52:04 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:52:04 PM engine run - t:1 INFO:   Subinterval:: 11699915 -- 12315699 (iteration 3)
+5:52:04 PM engine run - t:1 INFO:   Init vertices...
+5:52:04 PM engine run - t:1 INFO:   Loading...
+5:52:04 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 11699915 -- 12315699
+5:52:08 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:52:10 PM engine run - t:1 INFO:   Load took: 5679ms
+5:52:11 PM engine run - t:1 INFO:   Update exec: 1123 ms.
+5:52:11 PM engine run - t:1 INFO:   4228.927s: iteration: 3, interval: 12315700 -- 12931484
+5:52:11 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 46799660 -- 49262800
+5:52:12 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:52:12 PM engine run - t:1 INFO:   Subinterval:: 12315700 -- 12931484 (iteration 3)
+5:52:12 PM engine run - t:1 INFO:   Init vertices...
+5:52:12 PM engine run - t:1 INFO:   Loading...
+5:52:12 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 12315700 -- 12931484
+5:52:18 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:52:20 PM engine run - t:1 INFO:   Load took: 8496ms
+5:52:22 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:52:22 PM engine run - t:1 INFO:   Update exec: 1562 ms.
+5:52:22 PM engine run - t:1 INFO:   4239.945s: iteration: 3, interval: 12931485 -- 13547269
+5:52:22 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 49262800 -- 51725940
+5:52:22 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:52:22 PM engine run - t:1 INFO:   Subinterval:: 12931485 -- 13547269 (iteration 3)
+5:52:22 PM engine run - t:1 INFO:   Init vertices...
+5:52:22 PM engine run - t:1 INFO:   Loading...
+5:52:22 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 12931485 -- 13547269
+5:52:26 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:52:31 PM engine run - t:1 INFO:   Load took: 8296ms
+5:52:32 PM engine run - t:1 INFO:   Update exec: 1457 ms.
+5:52:32 PM engine run - t:1 INFO:   4250.059s: iteration: 3, interval: 13547270 -- 14163054
+5:52:32 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 51725940 -- 54189080
+5:52:32 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:52:32 PM engine run - t:1 INFO:   Subinterval:: 13547270 -- 14163054 (iteration 3)
+5:52:32 PM engine run - t:1 INFO:   Init vertices...
+5:52:33 PM engine run - t:1 INFO:   Loading...
+5:52:33 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 13547270 -- 14163054
+5:52:42 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:52:47 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 50
+5:52:52 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 5
+5:52:52 PM engine run - t:1 INFO:   Load took: 19877ms
+5:52:54 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:52:54 PM engine run - t:1 INFO:   Update exec: 1683 ms.
+5:52:54 PM engine run - t:1 INFO:   4272.153s: iteration: 3, interval: 14163055 -- 14778839
+5:52:55 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:52:55 PM engine run - t:1 INFO:   Subinterval:: 14163055 -- 14778839 (iteration 3)
+5:52:55 PM engine run - t:1 INFO:   Init vertices...
+5:52:55 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 54189080 -- 56652220
+5:52:55 PM engine run - t:1 INFO:   Loading...
+5:52:55 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 14163055 -- 14778839
+5:53:02 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:53:03 PM engine run - t:1 INFO:   Load took: 8125ms
+5:53:04 PM engine run - t:1 INFO:   Update exec: 1041 ms.
+5:53:04 PM engine run - t:1 INFO:   4282.4580000000005s: iteration: 3, interval: 14778840 -- 15394624
+5:53:05 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 56652220 -- 59115360
+5:53:05 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:53:05 PM engine run - t:1 INFO:   Subinterval:: 14778840 -- 15394624 (iteration 3)
+5:53:05 PM engine run - t:1 INFO:   Init vertices...
+5:53:06 PM engine run - t:1 INFO:   Loading...
+5:53:06 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 14778840 -- 15394624
+5:53:49 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:53:50 PM engine run - t:1 INFO:   Load took: 44259ms
+5:53:51 PM engine run - t:1 INFO:   Update exec: 1114 ms.
+5:53:51 PM engine run - t:1 INFO:   4329.282s: iteration: 3, interval: 15394625 -- 16010409
+5:53:51 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 59115360 -- 61578500
+5:53:52 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:53:52 PM engine run - t:1 INFO:   Subinterval:: 15394625 -- 16010409 (iteration 3)
+5:53:52 PM engine run - t:1 INFO:   Init vertices...
+5:53:52 PM engine run - t:1 INFO:   Loading...
+5:53:52 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 15394625 -- 16010409
+5:53:56 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:53:57 PM engine run - t:1 INFO:   Load took: 5514ms
+5:53:59 PM engine run - t:1 INFO:   Update exec: 1071 ms.
+5:53:59 PM engine run - t:1 INFO:   4336.488s: iteration: 3, interval: 16010410 -- 16626194
+5:53:59 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 61578500 -- 64041640
+5:53:59 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:53:59 PM engine run - t:1 INFO:   Subinterval:: 16010410 -- 16626194 (iteration 3)
+5:53:59 PM engine run - t:1 INFO:   Init vertices...
+5:53:59 PM engine run - t:1 INFO:   Loading...
+5:53:59 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 16010410 -- 16626194
+5:54:08 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:54:11 PM engine run - t:1 INFO:   Load took: 11468ms
+5:54:12 PM engine run - t:1 INFO:   Update exec: 1023 ms.
+5:54:12 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 64041640 -- 66504780
+5:54:12 PM engine run - t:1 INFO:   4349.545s: iteration: 3, interval: 16626195 -- 17241979
+5:54:12 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:54:12 PM engine run - t:1 INFO:   Subinterval:: 16626195 -- 17241979 (iteration 3)
+5:54:12 PM engine run - t:1 INFO:   Init vertices...
+5:54:12 PM engine run - t:1 INFO:   Loading...
+5:54:12 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 16626195 -- 17241979
+5:54:17 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:54:20 PM engine run - t:1 INFO:   Load took: 7657ms
+5:54:21 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:54:21 PM engine run - t:1 INFO:   Update exec: 1590 ms.
+5:54:21 PM engine run - t:1 INFO:   4359.091s: iteration: 3, interval: 17241980 -- 17857764
+5:54:21 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 66504780 -- 68967920
+5:54:21 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:54:21 PM engine run - t:1 INFO:   Subinterval:: 17241980 -- 17857764 (iteration 3)
+5:54:21 PM engine run - t:1 INFO:   Init vertices...
+5:54:21 PM engine run - t:1 INFO:   Loading...
+5:54:21 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 17241980 -- 17857764
+5:54:29 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:54:32 PM engine run - t:1 INFO:   Load took: 10455ms
+5:54:33 PM engine run - t:1 INFO:   Update exec: 1118 ms.
+5:54:33 PM engine run - t:1 INFO:   4370.987s: iteration: 3, interval: 17857765 -- 18473549
+5:54:33 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 68967920 -- 71431060
+5:54:33 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:54:33 PM engine run - t:1 INFO:   Subinterval:: 17857765 -- 18473549 (iteration 3)
+5:54:33 PM engine run - t:1 INFO:   Init vertices...
+5:54:34 PM engine run - t:1 INFO:   Loading...
+5:54:34 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 17857765 -- 18473549
+5:54:40 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:54:45 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 3
+5:54:45 PM engine run - t:1 INFO:   Load took: 11386ms
+5:54:46 PM engine run - t:1 INFO:   Update exec: 1026 ms.
+5:54:46 PM engine run - t:1 INFO:   4383.916s: iteration: 3, interval: 18473550 -- 19089334
+5:54:46 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 71431060 -- 73894200
+5:54:46 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:54:46 PM engine run - t:1 INFO:   Subinterval:: 18473550 -- 19089334 (iteration 3)
+5:54:46 PM engine run - t:1 INFO:   Init vertices...
+5:54:46 PM engine run - t:1 INFO:   Loading...
+5:54:46 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 18473550 -- 19089334
+5:54:51 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:54:55 PM engine run - t:1 INFO:   Load took: 8700ms
+5:54:56 PM engine run - t:1 INFO:   Update exec: 1084 ms.
+5:54:56 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 73894200 -- 76357340
+5:54:56 PM engine run - t:1 INFO:   4394.138s: iteration: 3, interval: 19089335 -- 19705119
+5:54:56 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:54:56 PM engine run - t:1 INFO:   Subinterval:: 19089335 -- 19705119 (iteration 3)
+5:54:56 PM engine run - t:1 INFO:   Init vertices...
+5:54:57 PM engine run - t:1 INFO:   Loading...
+5:54:57 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 19089335 -- 19705119
+5:55:32 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:55:34 PM engine run - t:1 INFO:   Load took: 37160ms
+5:55:35 PM engine run - t:1 INFO:   Update exec: 1182 ms.
+5:55:35 PM engine run - t:1 INFO:   4432.976s: iteration: 3, interval: 19705120 -- 20320904
+5:55:35 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 76357340 -- 78820480
+5:55:36 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:55:36 PM engine run - t:1 INFO:   Subinterval:: 19705120 -- 20320904 (iteration 3)
+5:55:36 PM engine run - t:1 INFO:   Init vertices...
+5:55:37 PM engine run - t:1 INFO:   Loading...
+5:55:37 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 19705120 -- 20320904
+5:56:04 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:56:07 PM engine run - t:1 INFO:   Load took: 29548ms
+5:56:08 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:56:09 PM engine run - t:1 INFO:   Update exec: 2200 ms.
+5:56:09 PM engine run - t:1 INFO:   4466.6990000000005s: iteration: 3, interval: 20320905 -- 20936689
+5:56:09 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 78820480 -- 81283620
+5:56:10 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:56:10 PM engine run - t:1 INFO:   Subinterval:: 20320905 -- 20936689 (iteration 3)
+5:56:10 PM engine run - t:1 INFO:   Init vertices...
+5:56:10 PM engine run - t:1 INFO:   Loading...
+5:56:10 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 20320905 -- 20936689
+5:56:17 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:56:18 PM engine run - t:1 INFO:   Load took: 7707ms
+5:56:19 PM engine run - t:1 INFO:   Update exec: 1246 ms.
+5:56:19 PM engine run - t:1 INFO:   4477.338s: iteration: 3, interval: 20936690 -- 21552474
+5:56:19 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 81283620 -- 83746760
+5:56:20 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:56:20 PM engine run - t:1 INFO:   Subinterval:: 20936690 -- 21552474 (iteration 3)
+5:56:20 PM engine run - t:1 INFO:   Init vertices...
+5:56:20 PM engine run - t:1 INFO:   Loading...
+5:56:20 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 20936690 -- 21552474
+5:56:24 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:56:29 PM engine run - t:1 INFO:   Load took: 8703ms
+5:56:30 PM engine run - t:1 INFO:   Update exec: 1081 ms.
+5:56:30 PM engine run - t:1 INFO:   4487.56s: iteration: 3, interval: 21552475 -- 22168259
+5:56:30 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 83746760 -- 86209900
+5:56:31 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:56:31 PM engine run - t:1 INFO:   Subinterval:: 21552475 -- 22168259 (iteration 3)
+5:56:31 PM engine run - t:1 INFO:   Init vertices...
+5:56:31 PM engine run - t:1 INFO:   Loading...
+5:56:31 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 21552475 -- 22168259
+5:56:36 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:56:38 PM engine run - t:1 INFO:   Load took: 7009ms
+5:56:39 PM engine run - t:1 INFO:   Update exec: 1119 ms.
+5:56:39 PM engine run - t:1 INFO:   4496.81s: iteration: 3, interval: 22168260 -- 22784044
+5:56:39 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 86209900 -- 88673040
+5:56:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:56:39 PM engine run - t:1 INFO:   Subinterval:: 22168260 -- 22784044 (iteration 3)
+5:56:39 PM engine run - t:1 INFO:   Init vertices...
+5:56:39 PM engine run - t:1 INFO:   Loading...
+5:56:39 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 22168260 -- 22784044
+5:56:44 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:56:49 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+5:56:49 PM engine run - t:1 INFO:   Load took: 10077ms
+5:56:50 PM engine run - t:1 INFO:   Update exec: 1107 ms.
+5:56:50 PM engine run - t:1 INFO:   4508.374s: iteration: 3, interval: 22784045 -- 23399829
+5:56:50 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 88673040 -- 91136180
+5:56:51 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:56:51 PM engine run - t:1 INFO:   Subinterval:: 22784045 -- 23399829 (iteration 3)
+5:56:51 PM engine run - t:1 INFO:   Init vertices...
+5:56:51 PM engine run - t:1 INFO:   Loading...
+5:56:51 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 22784045 -- 23399829
+5:56:56 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:57:01 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 34
+5:57:06 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+5:57:06 PM engine run - t:1 INFO:   Load took: 15015ms
+5:57:07 PM engine run - t:1 INFO:   Update exec: 1076 ms.
+5:57:07 PM engine run - t:1 INFO:   4524.854s: iteration: 3, interval: 23399830 -- 24015614
+5:57:07 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 91136180 -- 93599320
+5:57:07 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:57:07 PM engine run - t:1 INFO:   Subinterval:: 23399830 -- 24015614 (iteration 3)
+5:57:07 PM engine run - t:1 INFO:   Init vertices...
+5:57:07 PM engine run - t:1 INFO:   Loading...
+5:57:07 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 23399830 -- 24015614
+5:57:14 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:57:17 PM engine run - t:1 INFO:   Load took: 9124ms
+5:57:18 PM engine run - t:1 INFO:   Update exec: 988 ms.
+5:57:18 PM engine run - t:1 INFO:   4535.513s: iteration: 3, interval: 24015615 -- 24631399
+5:57:18 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 93599320 -- 96062460
+5:57:18 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:57:18 PM engine run - t:1 INFO:   Subinterval:: 24015615 -- 24631399 (iteration 3)
+5:57:18 PM engine run - t:1 INFO:   Init vertices...
+5:57:18 PM engine run - t:1 INFO:   Loading...
+5:57:18 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 24015615 -- 24631399
+5:57:36 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:57:37 PM engine run - t:1 INFO:   Load took: 19498ms
+5:57:39 PM engine run - t:1 INFO:   Update exec: 1160 ms.
+5:57:39 PM engine run - t:1 INFO:   4556.562s: iteration: 3, interval: 24631400 -- 25247184
+5:57:39 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 96062460 -- 98525600
+5:57:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:57:39 PM engine run - t:1 INFO:   Subinterval:: 24631400 -- 25247184 (iteration 3)
+5:57:39 PM engine run - t:1 INFO:   Init vertices...
+5:57:39 PM engine run - t:1 INFO:   Loading...
+5:57:39 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 24631400 -- 25247184
+5:58:00 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:58:01 PM engine run - t:1 INFO:   Load took: 22469ms
+5:58:03 PM engine run - t:1 INFO:   Update exec: 1057 ms.
+5:58:03 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 98525600 -- 100988740
+5:58:03 PM engine run - t:1 INFO:   4581.202s: iteration: 3, interval: 25247185 -- 25862969
+5:58:04 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:58:04 PM engine run - t:1 INFO:   Subinterval:: 25247185 -- 25862969 (iteration 3)
+5:58:04 PM engine run - t:1 INFO:   Init vertices...
+5:58:04 PM engine run - t:1 INFO:   Loading...
+5:58:04 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 25247185 -- 25862969
+5:58:27 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:58:30 PM engine run - t:1 INFO:   Load took: 25529ms
+5:58:31 PM engine run - t:1 INFO:   Update exec: 1311 ms.
+5:58:31 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 100988740 -- 103451880
+5:58:31 PM engine run - t:1 INFO:   4609.009s: iteration: 3, interval: 25862970 -- 26478754
+5:58:34 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:58:34 PM engine run - t:1 INFO:   Subinterval:: 25862970 -- 26478754 (iteration 3)
+5:58:34 PM engine run - t:1 INFO:   Init vertices...
+5:58:35 PM engine run - t:1 INFO:   Loading...
+5:58:35 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 25862970 -- 26478754
+5:59:19 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:59:24 PM engine run - t:1 INFO:   Load took: 48131ms
+5:59:25 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+5:59:25 PM engine run - t:1 INFO:   Update exec: 1710 ms.
+5:59:25 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 103451880 -- 105915020
+5:59:25 PM engine run - t:1 INFO:   4663.283s: iteration: 3, interval: 26478755 -- 27094539
+5:59:25 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:59:26 PM engine run - t:1 INFO:   Subinterval:: 26478755 -- 27094539 (iteration 3)
+5:59:26 PM engine run - t:1 INFO:   Init vertices...
+5:59:26 PM engine run - t:1 INFO:   Loading...
+5:59:26 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 26478755 -- 27094539
+5:59:35 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:59:40 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+5:59:40 PM engine run - t:1 INFO:   Load took: 14346ms
+5:59:42 PM engine run - t:1 INFO:   Update exec: 1476 ms.
+5:59:42 PM engine run - t:1 INFO:   4679.533s: iteration: 3, interval: 27094540 -- 27710324
+5:59:42 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 105915020 -- 108378160
+5:59:42 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:59:42 PM engine run - t:1 INFO:   Subinterval:: 27094540 -- 27710324 (iteration 3)
+5:59:42 PM engine run - t:1 INFO:   Init vertices...
+5:59:42 PM engine run - t:1 INFO:   Loading...
+5:59:42 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 27094540 -- 27710324
+5:59:49 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+5:59:54 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+5:59:56 PM engine run - t:1 INFO:   Load took: 13652ms
+5:59:57 PM engine run - t:1 INFO:   Update exec: 1069 ms.
+5:59:57 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 108378160 -- 110841300
+5:59:57 PM engine run - t:1 INFO:   4694.686s: iteration: 3, interval: 27710325 -- 28326109
+5:59:57 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+5:59:57 PM engine run - t:1 INFO:   Subinterval:: 27710325 -- 28326109 (iteration 3)
+5:59:57 PM engine run - t:1 INFO:   Init vertices...
+5:59:57 PM engine run - t:1 INFO:   Loading...
+5:59:57 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 27710325 -- 28326109
+6:00:02 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:00:06 PM engine run - t:1 INFO:   Load took: 8561ms
+6:00:07 PM engine run - t:1 INFO:   Update exec: 992 ms.
+6:00:07 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 110841300 -- 113304440
+6:00:07 PM engine run - t:1 INFO:   4704.678s: iteration: 3, interval: 28326110 -- 28941894
+6:00:07 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:00:07 PM engine run - t:1 INFO:   Subinterval:: 28326110 -- 28941894 (iteration 3)
+6:00:07 PM engine run - t:1 INFO:   Init vertices...
+6:00:07 PM engine run - t:1 INFO:   Loading...
+6:00:07 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 28326110 -- 28941894
+6:00:13 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:00:16 PM engine run - t:1 INFO:   Load took: 8813ms
+6:00:17 PM engine run - t:1 INFO:   Update exec: 1100 ms.
+6:00:17 PM engine run - t:1 INFO:   4714.96s: iteration: 3, interval: 28941895 -- 29557679
+6:00:17 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 113304440 -- 115767580
+6:00:19 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:00:19 PM engine run - t:1 INFO:   Subinterval:: 28941895 -- 29557679 (iteration 3)
+6:00:19 PM engine run - t:1 INFO:   Init vertices...
+6:00:19 PM engine run - t:1 INFO:   Loading...
+6:00:19 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 28941895 -- 29557679
+6:00:24 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:00:26 PM engine run - t:1 INFO:   Load took: 7524ms
+6:00:27 PM engine run - t:1 INFO:   Update exec: 1018 ms.
+6:00:27 PM engine run - t:1 INFO:   4725.242s: iteration: 3, interval: 29557680 -- 30173464
+6:00:27 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 115767580 -- 118230720
+6:00:27 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:00:27 PM engine run - t:1 INFO:   Subinterval:: 29557680 -- 30173464 (iteration 3)
+6:00:27 PM engine run - t:1 INFO:   Init vertices...
+6:00:28 PM engine run - t:1 INFO:   Loading...
+6:00:28 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 29557680 -- 30173464
+6:00:37 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:00:40 PM engine run - t:1 INFO:   Load took: 12392ms
+6:00:41 PM engine run - t:1 INFO:   Update exec: 1080 ms.
+6:00:41 PM engine run - t:1 INFO:   4739.171s: iteration: 3, interval: 30173465 -- 30789249
+6:00:41 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 118230720 -- 120693860
+6:00:41 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:00:41 PM engine run - t:1 INFO:   Subinterval:: 30173465 -- 30789249 (iteration 3)
+6:00:41 PM engine run - t:1 INFO:   Init vertices...
+6:00:42 PM engine run - t:1 INFO:   Loading...
+6:00:42 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 30173465 -- 30789249
+6:00:46 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:00:50 PM engine run - t:1 INFO:   Load took: 8200ms
+6:00:51 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:00:51 PM engine run - t:1 INFO:   Update exec: 1515 ms.
+6:00:51 PM engine run - t:1 INFO:   4749.251s: iteration: 3, interval: 30789250 -- 31405034
+6:00:51 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 120693860 -- 123157000
+6:00:52 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:00:52 PM engine run - t:1 INFO:   Subinterval:: 30789250 -- 31405034 (iteration 3)
+6:00:52 PM engine run - t:1 INFO:   Init vertices...
+6:00:52 PM engine run - t:1 INFO:   Loading...
+6:00:52 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 30789250 -- 31405034
+6:01:12 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:01:17 PM engine run - t:1 INFO:   Load took: 24799ms
+6:01:18 PM engine run - t:1 INFO:   Update exec: 1090 ms.
+6:01:18 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 123157000 -- 125620140
+6:01:18 PM engine run - t:1 INFO:   4775.749s: iteration: 3, interval: 31405035 -- 32020819
+6:01:18 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:01:18 PM engine run - t:1 INFO:   Subinterval:: 31405035 -- 32020819 (iteration 3)
+6:01:18 PM engine run - t:1 INFO:   Init vertices...
+6:01:18 PM engine run - t:1 INFO:   Loading...
+6:01:18 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 31405035 -- 32020819
+6:01:44 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:01:49 PM engine run - t:1 INFO:   Load took: 30945ms
+6:01:50 PM engine run - t:1 INFO:   Update exec: 1186 ms.
+6:01:50 PM engine run - t:1 INFO:   4808.2970000000005s: iteration: 3, interval: 32020820 -- 32636604
+6:01:50 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 125620140 -- 128083280
+6:01:51 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:01:51 PM engine run - t:1 INFO:   Subinterval:: 32020820 -- 32636604 (iteration 3)
+6:01:51 PM engine run - t:1 INFO:   Init vertices...
+6:01:51 PM engine run - t:1 INFO:   Loading...
+6:01:51 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 32020820 -- 32636604
+6:02:51 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:02:56 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 51
+6:03:01 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 7
+6:03:01 PM engine run - t:1 INFO:   Load took: 70215ms
+6:03:03 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:03:03 PM engine run - t:1 INFO:   Update exec: 1692 ms.
+6:03:03 PM engine run - t:1 INFO:   4881.146s: iteration: 3, interval: 32636605 -- 33252389
+6:03:03 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 128083280 -- 130546420
+6:03:04 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:03:04 PM engine run - t:1 INFO:   Subinterval:: 32636605 -- 33252389 (iteration 3)
+6:03:04 PM engine run - t:1 INFO:   Init vertices...
+6:03:04 PM engine run - t:1 INFO:   Loading...
+6:03:04 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 32636605 -- 33252389
+6:03:15 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:03:20 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 3
+6:03:20 PM engine run - t:1 INFO:   Load took: 16138ms
+6:03:22 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:03:22 PM engine run - t:1 INFO:   Update exec: 1597 ms.
+6:03:22 PM engine run - t:1 INFO:   4899.900000000001s: iteration: 3, interval: 33252390 -- 33868174
+6:03:22 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 130546420 -- 133009560
+6:03:22 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:03:22 PM engine run - t:1 INFO:   Subinterval:: 33252390 -- 33868174 (iteration 3)
+6:03:22 PM engine run - t:1 INFO:   Init vertices...
+6:03:22 PM engine run - t:1 INFO:   Loading...
+6:03:22 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 33252390 -- 33868174
+6:03:28 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:03:32 PM engine run - t:1 INFO:   Load took: 9065ms
+6:03:33 PM engine run - t:1 INFO:   Update exec: 1127 ms.
+6:03:33 PM engine run - t:1 INFO:   4910.609s: iteration: 3, interval: 33868175 -- 34483959
+6:03:33 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 133009560 -- 135472700
+6:03:33 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:03:33 PM engine run - t:1 INFO:   Subinterval:: 33868175 -- 34483959 (iteration 3)
+6:03:33 PM engine run - t:1 INFO:   Init vertices...
+6:03:33 PM engine run - t:1 INFO:   Loading...
+6:03:33 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 33868175 -- 34483959
+6:03:39 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:03:42 PM engine run - t:1 INFO:   Load took: 9349ms
+6:03:44 PM engine run - t:1 INFO:   Update exec: 1048 ms.
+6:03:44 PM engine run - t:1 INFO:   4921.479s: iteration: 3, interval: 34483960 -- 35099744
+6:03:44 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 135472700 -- 137935840
+6:03:44 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:03:44 PM engine run - t:1 INFO:   Subinterval:: 34483960 -- 35099744 (iteration 3)
+6:03:44 PM engine run - t:1 INFO:   Init vertices...
+6:03:44 PM engine run - t:1 INFO:   Loading...
+6:03:44 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 34483960 -- 35099744
+6:03:48 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:03:52 PM engine run - t:1 INFO:   Load took: 7691ms
+6:03:53 PM engine run - t:1 INFO:   Update exec: 1068 ms.
+6:03:53 PM engine run - t:1 INFO:   4930.669s: iteration: 3, interval: 35099745 -- 35715529
+6:03:53 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 137935840 -- 140398980
+6:03:53 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:03:54 PM engine run - t:1 INFO:   Subinterval:: 35099745 -- 35715529 (iteration 3)
+6:03:54 PM engine run - t:1 INFO:   Init vertices...
+6:03:54 PM engine run - t:1 INFO:   Loading...
+6:03:54 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 35099745 -- 35715529
+6:04:06 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:04:08 PM engine run - t:1 INFO:   Load took: 14024ms
+6:04:09 PM engine run - t:1 INFO:   Update exec: 1134 ms.
+6:04:09 PM engine run - t:1 INFO:   4946.76s: iteration: 3, interval: 35715530 -- 36331314
+6:04:09 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 140398980 -- 142862120
+6:04:09 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:04:09 PM engine run - t:1 INFO:   Subinterval:: 35715530 -- 36331314 (iteration 3)
+6:04:09 PM engine run - t:1 INFO:   Init vertices...
+6:04:09 PM engine run - t:1 INFO:   Loading...
+6:04:09 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 35715530 -- 36331314
+6:04:14 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:04:17 PM engine run - t:1 INFO:   Load took: 7597ms
+6:04:18 PM engine run - t:1 INFO:   Update exec: 1152 ms.
+6:04:18 PM engine run - t:1 INFO:   4955.997s: iteration: 3, interval: 36331315 -- 36947099
+6:04:18 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 142862120 -- 145325260
+6:04:18 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:04:18 PM engine run - t:1 INFO:   Subinterval:: 36331315 -- 36947099 (iteration 3)
+6:04:18 PM engine run - t:1 INFO:   Init vertices...
+6:04:18 PM engine run - t:1 INFO:   Loading...
+6:04:18 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 36331315 -- 36947099
+6:04:25 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:04:28 PM engine run - t:1 INFO:   Load took: 10036ms
+6:04:30 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:04:30 PM engine run - t:1 INFO:   Update exec: 1610 ms.
+6:04:30 PM engine run - t:1 INFO:   4968.0s: iteration: 3, interval: 36947100 -- 37562884
+6:04:30 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 145325260 -- 147788400
+6:04:30 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:04:30 PM engine run - t:1 INFO:   Subinterval:: 36947100 -- 37562884 (iteration 3)
+6:04:30 PM engine run - t:1 INFO:   Init vertices...
+6:04:30 PM engine run - t:1 INFO:   Loading...
+6:04:30 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 36947100 -- 37562884
+6:04:37 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:04:42 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 6
+6:04:43 PM engine run - t:1 INFO:   Load took: 12752ms
+6:04:44 PM engine run - t:1 INFO:   Update exec: 1072 ms.
+6:04:44 PM engine run - t:1 INFO:   4982.196s: iteration: 3, interval: 37562885 -- 38178669
+6:04:44 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 147788400 -- 150251540
+6:04:44 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:04:44 PM engine run - t:1 INFO:   Subinterval:: 37562885 -- 38178669 (iteration 3)
+6:04:44 PM engine run - t:1 INFO:   Init vertices...
+6:04:45 PM engine run - t:1 INFO:   Loading...
+6:04:45 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 37562885 -- 38178669
+6:04:51 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:04:55 PM engine run - t:1 INFO:   Load took: 10107ms
+6:04:56 PM engine run - t:1 INFO:   Update exec: 1196 ms.
+6:04:56 PM engine run - t:1 INFO:   4994.045s: iteration: 3, interval: 38178670 -- 38794454
+6:04:56 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 150251540 -- 152714680
+6:04:56 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:04:56 PM engine run - t:1 INFO:   Subinterval:: 38178670 -- 38794454 (iteration 3)
+6:04:56 PM engine run - t:1 INFO:   Init vertices...
+6:04:57 PM engine run - t:1 INFO:   Loading...
+6:04:57 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 38178670 -- 38794454
+6:05:07 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:12 PM engine run - t:1 INFO:   Load took: 15514ms
+6:05:14 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:05:14 PM engine run - t:1 INFO:   Update exec: 1646 ms.
+6:05:14 PM engine run - t:1 INFO:   5011.921s: iteration: 3, interval: 38794455 -- 39410239
+6:05:14 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 152714680 -- 155177820
+6:05:14 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:14 PM engine run - t:1 INFO:   Subinterval:: 38794455 -- 39410239 (iteration 3)
+6:05:14 PM engine run - t:1 INFO:   Init vertices...
+6:05:14 PM engine run - t:1 INFO:   Loading...
+6:05:14 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 38794455 -- 39410239
+6:05:19 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:21 PM engine run - t:1 INFO:   Load took: 6455ms
+6:05:22 PM engine run - t:1 INFO:   Update exec: 1301 ms.
+6:05:22 PM engine run - t:1 INFO:   5020.041s: iteration: 3, interval: 39410240 -- 40026024
+6:05:22 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 155177820 -- 157640960
+6:05:22 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:22 PM engine run - t:1 INFO:   Subinterval:: 39410240 -- 40026024 (iteration 3)
+6:05:22 PM engine run - t:1 INFO:   Init vertices...
+6:05:22 PM engine run - t:1 INFO:   Loading...
+6:05:22 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 39410240 -- 40026024
+6:05:28 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:30 PM engine run - t:1 INFO:   Load took: 7448ms
+6:05:31 PM engine run - t:1 INFO:   Update exec: 1480 ms.
+6:05:31 PM engine run - t:1 INFO:   5029.268s: iteration: 3, interval: 40026025 -- 40641809
+6:05:31 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 157640960 -- 160104100
+6:05:31 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:31 PM engine run - t:1 INFO:   Subinterval:: 40026025 -- 40641809 (iteration 3)
+6:05:31 PM engine run - t:1 INFO:   Init vertices...
+6:05:32 PM engine run - t:1 INFO:   Loading...
+6:05:32 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 40026025 -- 40641809
+6:05:37 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:39 PM engine run - t:1 INFO:   Load took: 7383ms
+6:05:40 PM engine run - t:1 INFO:   Update exec: 1183 ms.
+6:05:40 PM engine run - t:1 INFO:   5038.167s: iteration: 3, interval: 40641810 -- 41257594
+6:05:40 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 160104100 -- 162567240
+6:05:40 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:40 PM engine run - t:1 INFO:   Subinterval:: 40641810 -- 41257594 (iteration 3)
+6:05:40 PM engine run - t:1 INFO:   Init vertices...
+6:05:41 PM engine run - t:1 INFO:   Loading...
+6:05:41 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 40641810 -- 41257594
+6:05:45 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:48 PM engine run - t:1 INFO:   Load took: 7049ms
+6:05:49 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:05:49 PM engine run - t:1 INFO:   Update exec: 1585 ms.
+6:05:49 PM engine run - t:1 INFO:   5047.227s: iteration: 3, interval: 41257595 -- 41873379
+6:05:49 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 162567240 -- 165030380
+6:05:49 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:49 PM engine run - t:1 INFO:   Subinterval:: 41257595 -- 41873379 (iteration 3)
+6:05:49 PM engine run - t:1 INFO:   Init vertices...
+6:05:50 PM engine run - t:1 INFO:   Loading...
+6:05:50 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 41257595 -- 41873379
+6:05:54 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:05:57 PM engine run - t:1 INFO:   Load took: 7751ms
+6:05:58 PM engine run - t:1 INFO:   Update exec: 1043 ms.
+6:05:58 PM engine run - t:1 INFO:   5056.276s: iteration: 3, interval: 41873380 -- 42489164
+6:05:58 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 165030380 -- 167493520
+6:05:58 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:05:58 PM engine run - t:1 INFO:   Subinterval:: 41873380 -- 42489164 (iteration 3)
+6:05:58 PM engine run - t:1 INFO:   Init vertices...
+6:05:59 PM engine run - t:1 INFO:   Loading...
+6:05:59 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 41873380 -- 42489164
+6:06:04 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:09 PM engine run - t:1 INFO:   Load took: 9971ms
+6:06:10 PM engine run - t:1 INFO:   Update exec: 1003 ms.
+6:06:10 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 167493520 -- 169956660
+6:06:10 PM engine run - t:1 INFO:   5067.5380000000005s: iteration: 3, interval: 42489165 -- 43104949
+6:06:10 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:06:10 PM engine run - t:1 INFO:   Subinterval:: 42489165 -- 43104949 (iteration 3)
+6:06:10 PM engine run - t:1 INFO:   Init vertices...
+6:06:10 PM engine run - t:1 INFO:   Loading...
+6:06:10 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 42489165 -- 43104949
+6:06:15 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:19 PM engine run - t:1 INFO:   Load took: 9112ms
+6:06:20 PM engine run - t:1 INFO:   Update exec: 1081 ms.
+6:06:20 PM engine run - t:1 INFO:   5078.0560000000005s: iteration: 3, interval: 43104950 -- 43720734
+6:06:20 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 169956660 -- 172419800
+6:06:20 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:06:20 PM engine run - t:1 INFO:   Subinterval:: 43104950 -- 43720734 (iteration 3)
+6:06:20 PM engine run - t:1 INFO:   Init vertices...
+6:06:21 PM engine run - t:1 INFO:   Loading...
+6:06:21 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 43104950 -- 43720734
+6:06:24 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:27 PM engine run - t:1 INFO:   Load took: 6677ms
+6:06:28 PM engine run - t:1 INFO:   Update exec: 1020 ms.
+6:06:28 PM engine run - t:1 INFO:   5086.216s: iteration: 3, interval: 43720735 -- 44336519
+6:06:28 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 172419800 -- 174882940
+6:06:29 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:06:29 PM engine run - t:1 INFO:   Subinterval:: 43720735 -- 44336519 (iteration 3)
+6:06:29 PM engine run - t:1 INFO:   Init vertices...
+6:06:29 PM engine run - t:1 INFO:   Loading...
+6:06:29 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 43720735 -- 44336519
+6:06:34 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:38 PM engine run - t:1 INFO:   Load took: 9031ms
+6:06:39 PM engine run - t:1 INFO:   Update exec: 1330 ms.
+6:06:39 PM engine run - t:1 INFO:   5097.062s: iteration: 3, interval: 44336520 -- 44952304
+6:06:39 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 174882940 -- 177346080
+6:06:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:06:39 PM engine run - t:1 INFO:   Subinterval:: 44336520 -- 44952304 (iteration 3)
+6:06:39 PM engine run - t:1 INFO:   Init vertices...
+6:06:40 PM engine run - t:1 INFO:   Loading...
+6:06:40 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 44336520 -- 44952304
+6:06:47 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:50 PM engine run - t:1 INFO:   Load took: 10024ms
+6:06:51 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:06:51 PM engine run - t:1 INFO:   Update exec: 1768 ms.
+6:06:51 PM engine run - t:1 INFO:   5109.418s: iteration: 3, interval: 44952305 -- 45568089
+6:06:52 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 177346080 -- 179809220
+6:06:52 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:06:52 PM engine run - t:1 INFO:   Subinterval:: 44952305 -- 45568089 (iteration 3)
+6:06:52 PM engine run - t:1 INFO:   Init vertices...
+6:06:52 PM engine run - t:1 INFO:   Loading...
+6:06:52 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 44952305 -- 45568089
+6:06:57 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:06:59 PM engine run - t:1 INFO:   Load took: 7536ms
+6:07:01 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:07:01 PM engine run - t:1 INFO:   Update exec: 1960 ms.
+6:07:01 PM engine run - t:1 INFO:   5119.436s: iteration: 3, interval: 45568090 -- 46183874
+6:07:01 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 179809220 -- 182272360
+6:07:02 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:02 PM engine run - t:1 INFO:   Subinterval:: 45568090 -- 46183874 (iteration 3)
+6:07:02 PM engine run - t:1 INFO:   Init vertices...
+6:07:02 PM engine run - t:1 INFO:   Loading...
+6:07:02 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 45568090 -- 46183874
+6:07:12 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:07:14 PM engine run - t:1 INFO:   Load took: 12197ms
+6:07:15 PM engine run - t:1 INFO:   Update exec: 1157 ms.
+6:07:15 PM engine run - t:1 INFO:   5133.292s: iteration: 3, interval: 46183875 -- 46799659
+6:07:15 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 182272360 -- 184735500
+6:07:15 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:16 PM engine run - t:1 INFO:   Subinterval:: 46183875 -- 46799659 (iteration 3)
+6:07:16 PM engine run - t:1 INFO:   Init vertices...
+6:07:16 PM engine run - t:1 INFO:   Loading...
+6:07:16 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 46183875 -- 46799659
+6:07:22 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:07:27 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 7
+6:07:28 PM engine run - t:1 INFO:   Load took: 11948ms
+6:07:29 PM engine run - t:1 INFO:   Update exec: 1152 ms.
+6:07:29 PM engine run - t:1 INFO:   5146.692s: iteration: 3, interval: 46799660 -- 47415444
+6:07:29 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 184735500 -- 187198640
+6:07:29 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:29 PM engine run - t:1 INFO:   Subinterval:: 46799660 -- 47415444 (iteration 3)
+6:07:29 PM engine run - t:1 INFO:   Init vertices...
+6:07:29 PM engine run - t:1 INFO:   Loading...
+6:07:29 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 46799660 -- 47415444
+6:07:34 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:07:38 PM engine run - t:1 INFO:   Load took: 8695ms
+6:07:39 PM engine run - t:1 INFO:   Update exec: 1096 ms.
+6:07:39 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 187198640 -- 189661780
+6:07:39 PM engine run - t:1 INFO:   5156.816s: iteration: 3, interval: 47415445 -- 48031229
+6:07:39 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:39 PM engine run - t:1 INFO:   Subinterval:: 47415445 -- 48031229 (iteration 3)
+6:07:39 PM engine run - t:1 INFO:   Init vertices...
+6:07:39 PM engine run - t:1 INFO:   Loading...
+6:07:39 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 47415445 -- 48031229
+6:07:44 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:07:47 PM engine run - t:1 INFO:   Load took: 7782ms
+6:07:48 PM engine run - t:1 INFO:   Update exec: 1069 ms.
+6:07:48 PM engine run - t:1 INFO:   5166.109s: iteration: 3, interval: 48031230 -- 48647014
+6:07:48 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 189661780 -- 192124920
+6:07:48 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:48 PM engine run - t:1 INFO:   Subinterval:: 48031230 -- 48647014 (iteration 3)
+6:07:48 PM engine run - t:1 INFO:   Init vertices...
+6:07:49 PM engine run - t:1 INFO:   Loading...
+6:07:49 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 48031230 -- 48647014
+6:07:54 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:07:57 PM engine run - t:1 INFO:   Load took: 8692ms
+6:07:58 PM engine run - t:1 INFO:   Update exec: 1122 ms.
+6:07:58 PM engine run - t:1 INFO:   5176.337s: iteration: 3, interval: 48647015 -- 49262799
+6:07:58 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 192124920 -- 194588060
+6:07:59 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:07:59 PM engine run - t:1 INFO:   Subinterval:: 48647015 -- 49262799 (iteration 3)
+6:07:59 PM engine run - t:1 INFO:   Init vertices...
+6:07:59 PM engine run - t:1 INFO:   Loading...
+6:07:59 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 48647015 -- 49262799
+6:08:02 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:08:03 PM engine run - t:1 INFO:   Load took: 4713ms
+6:08:05 PM engine run - t:1 INFO:   Update exec: 1495 ms.
+6:08:05 PM engine run - t:1 INFO:   5182.919s: iteration: 3, interval: 49262800 -- 49878584
+6:08:05 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 194588060 -- 197051200
+6:08:05 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:08:05 PM engine run - t:1 INFO:   Subinterval:: 49262800 -- 49878584 (iteration 3)
+6:08:05 PM engine run - t:1 INFO:   Init vertices...
+6:08:05 PM engine run - t:1 INFO:   Loading...
+6:08:05 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 49262800 -- 49878584
+6:08:10 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:08:12 PM engine run - t:1 INFO:   Load took: 6388ms
+6:08:13 PM engine run - t:1 INFO:   Update exec: 1086 ms.
+6:08:13 PM engine run - t:1 INFO:   5190.8730000000005s: iteration: 3, interval: 49878585 -- 50494369
+6:08:13 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 197051200 -- 199514340
+6:08:13 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:08:13 PM engine run - t:1 INFO:   Subinterval:: 49878585 -- 50494369 (iteration 3)
+6:08:13 PM engine run - t:1 INFO:   Init vertices...
+6:08:13 PM engine run - t:1 INFO:   Loading...
+6:08:13 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 49878585 -- 50494369
+6:08:18 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:08:21 PM engine run - t:1 INFO:   Load took: 8153ms
+6:08:23 PM engine run - t:1 INFO:   Update exec: 1213 ms.
+6:08:23 PM engine run - t:1 INFO:   5200.613s: iteration: 3, interval: 50494370 -- 51110154
+6:08:23 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 199514340 -- 201977480
+6:08:23 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:08:23 PM engine run - t:1 INFO:   Subinterval:: 50494370 -- 51110154 (iteration 3)
+6:08:23 PM engine run - t:1 INFO:   Init vertices...
+6:08:23 PM engine run - t:1 INFO:   Loading...
+6:08:23 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 50494370 -- 51110154
+6:08:28 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:08:33 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 10
+6:08:34 PM engine run - t:1 INFO:   Load took: 11142ms
+6:08:36 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:08:36 PM engine run - t:1 INFO:   Update exec: 1700 ms.
+6:08:36 PM engine run - t:1 INFO:   5213.899s: iteration: 3, interval: 51110155 -- 51725939
+6:08:36 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 201977480 -- 204440620
+6:08:36 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:08:36 PM engine run - t:1 INFO:   Subinterval:: 51110155 -- 51725939 (iteration 3)
+6:08:36 PM engine run - t:1 INFO:   Init vertices...
+6:08:36 PM engine run - t:1 INFO:   Loading...
+6:08:36 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 51110155 -- 51725939
+6:08:42 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:08:47 PM engine run - t:1 INFO:   Load took: 10469ms
+6:08:48 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:08:49 PM engine run - t:1 INFO:   Update exec: 1672 ms.
+6:08:49 PM engine run - t:1 INFO:   5226.517s: iteration: 3, interval: 51725940 -- 52341724
+6:08:49 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 204440620 -- 206903760
+6:08:49 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:08:49 PM engine run - t:1 INFO:   Subinterval:: 51725940 -- 52341724 (iteration 3)
+6:08:49 PM engine run - t:1 INFO:   Init vertices...
+6:08:49 PM engine run - t:1 INFO:   Loading...
+6:08:49 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 51725940 -- 52341724
+6:09:09 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:11 PM engine run - t:1 INFO:   Load took: 22230ms
+6:09:12 PM engine run - t:1 INFO:   Update exec: 1060 ms.
+6:09:12 PM engine run - t:1 INFO:   5250.073s: iteration: 3, interval: 52341725 -- 52957509
+6:09:12 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 206903760 -- 209366900
+6:09:12 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:09:12 PM engine run - t:1 INFO:   Subinterval:: 52341725 -- 52957509 (iteration 3)
+6:09:12 PM engine run - t:1 INFO:   Init vertices...
+6:09:12 PM engine run - t:1 INFO:   Loading...
+6:09:12 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 52341725 -- 52957509
+6:09:17 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:19 PM engine run - t:1 INFO:   Load took: 6642ms
+6:09:20 PM engine run - t:1 INFO:   Update exec: 1103 ms.
+6:09:20 PM engine run - t:1 INFO:   5258.197s: iteration: 3, interval: 52957510 -- 53573294
+6:09:20 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 209366900 -- 211830040
+6:09:20 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:09:20 PM engine run - t:1 INFO:   Subinterval:: 52957510 -- 53573294 (iteration 3)
+6:09:20 PM engine run - t:1 INFO:   Init vertices...
+6:09:21 PM engine run - t:1 INFO:   Loading...
+6:09:21 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 52957510 -- 53573294
+6:09:27 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:29 PM engine run - t:1 INFO:   Load took: 8523ms
+6:09:31 PM engine run - t:1 INFO:   Update exec: 1269 ms.
+6:09:31 PM engine run - t:1 INFO:   5268.492s: iteration: 3, interval: 53573295 -- 54189079
+6:09:31 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 211830040 -- 214293180
+6:09:31 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:09:31 PM engine run - t:1 INFO:   Subinterval:: 53573295 -- 54189079 (iteration 3)
+6:09:31 PM engine run - t:1 INFO:   Init vertices...
+6:09:31 PM engine run - t:1 INFO:   Loading...
+6:09:31 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 53573295 -- 54189079
+6:09:36 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:39 PM engine run - t:1 INFO:   Load took: 8052ms
+6:09:40 PM engine run - t:1 INFO:   Update exec: 1059 ms.
+6:09:40 PM engine run - t:1 INFO:   5277.978s: iteration: 3, interval: 54189080 -- 54804864
+6:09:40 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 214293180 -- 216756320
+6:09:40 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:09:40 PM engine run - t:1 INFO:   Subinterval:: 54189080 -- 54804864 (iteration 3)
+6:09:40 PM engine run - t:1 INFO:   Init vertices...
+6:09:41 PM engine run - t:1 INFO:   Loading...
+6:09:41 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 54189080 -- 54804864
+6:09:48 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:50 PM engine run - t:1 INFO:   Load took: 9590ms
+6:09:51 PM engine run - t:1 INFO:   Update exec: 1188 ms.
+6:09:51 PM engine run - t:1 INFO:   5289.378s: iteration: 3, interval: 54804865 -- 55420649
+6:09:51 PM vertex-data releaseAndCommit - t:14 INFO:   Vertex data write: 216756320 -- 219219460
+6:09:52 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:09:52 PM engine run - t:1 INFO:   Subinterval:: 54804865 -- 55420649 (iteration 3)
+6:09:52 PM engine run - t:1 INFO:   Init vertices...
+6:09:52 PM engine run - t:1 INFO:   Loading...
+6:09:52 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 54804865 -- 55420649
+6:09:57 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:09:59 PM engine run - t:1 INFO:   Load took: 7643ms
+6:10:00 PM engine run - t:1 INFO:   Update exec: 1060 ms.
+6:10:00 PM engine run - t:1 INFO:   5298.34s: iteration: 3, interval: 55420650 -- 56036434
+6:10:00 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 219219460 -- 221682600
+6:10:01 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:01 PM engine run - t:1 INFO:   Subinterval:: 55420650 -- 56036434 (iteration 3)
+6:10:01 PM engine run - t:1 INFO:   Init vertices...
+6:10:01 PM engine run - t:1 INFO:   Loading...
+6:10:01 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 55420650 -- 56036434
+6:10:05 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:10:10 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 2
+6:10:11 PM engine run - t:1 INFO:   Load took: 10329ms
+6:10:12 PM engine run - t:1 INFO:   Update exec: 1074 ms.
+6:10:12 PM engine run - t:1 INFO:   5310.113s: iteration: 3, interval: 56036435 -- 56652219
+6:10:12 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 221682600 -- 224145740
+6:10:12 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:12 PM engine run - t:1 INFO:   Subinterval:: 56036435 -- 56652219 (iteration 3)
+6:10:12 PM engine run - t:1 INFO:   Init vertices...
+6:10:13 PM engine run - t:1 INFO:   Loading...
+6:10:13 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 56036435 -- 56652219
+6:10:17 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:10:22 PM engine loadBeforeUpdates - t:1 INFO:   Still waiting for loading, counter is: 1
+6:10:23 PM engine run - t:1 INFO:   Load took: 9835ms
+6:10:24 PM engine run - t:1 INFO:   Update exec: 1237 ms.
+6:10:24 PM engine run - t:1 INFO:   5321.866s: iteration: 3, interval: 56652220 -- 57268004
+6:10:24 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 224145740 -- 226608880
+6:10:24 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:24 PM engine run - t:1 INFO:   Subinterval:: 56652220 -- 57268004 (iteration 3)
+6:10:24 PM engine run - t:1 INFO:   Init vertices...
+6:10:24 PM engine run - t:1 INFO:   Loading...
+6:10:24 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 56652220 -- 57268004
+6:10:31 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:10:35 PM engine run - t:1 INFO:   Load took: 10463ms
+6:10:36 PM engine execUpdates - t:1 INFO:   Waiting for execution to finish: countDown:1
+6:10:37 PM engine run - t:1 INFO:   Update exec: 1709 ms.
+6:10:37 PM engine run - t:1 INFO:   5334.512s: iteration: 3, interval: 57268005 -- 57883789
+6:10:37 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 226608880 -- 229072020
+6:10:37 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:37 PM engine run - t:1 INFO:   Subinterval:: 57268005 -- 57883789 (iteration 3)
+6:10:37 PM engine run - t:1 INFO:   Init vertices...
+6:10:37 PM engine run - t:1 INFO:   Loading...
+6:10:37 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 57268005 -- 57883789
+6:10:45 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:10:46 PM engine run - t:1 INFO:   Load took: 9402ms
+6:10:48 PM engine run - t:1 INFO:   Update exec: 1253 ms.
+6:10:48 PM engine run - t:1 INFO:   5345.6050000000005s: iteration: 3, interval: 57883790 -- 58499574
+6:10:48 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 229072020 -- 231535160
+6:10:48 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:48 PM engine run - t:1 INFO:   Subinterval:: 57883790 -- 58499574 (iteration 3)
+6:10:48 PM engine run - t:1 INFO:   Init vertices...
+6:10:48 PM engine run - t:1 INFO:   Loading...
+6:10:48 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 57883790 -- 58499574
+6:10:53 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:10:55 PM engine run - t:1 INFO:   Load took: 6719ms
+6:10:56 PM engine run - t:1 INFO:   Update exec: 1048 ms.
+6:10:56 PM engine run - t:1 INFO:   5353.639s: iteration: 3, interval: 58499575 -- 59115359
+6:10:56 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 231535160 -- 233998300
+6:10:56 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:10:56 PM engine run - t:1 INFO:   Subinterval:: 58499575 -- 59115359 (iteration 3)
+6:10:56 PM engine run - t:1 INFO:   Init vertices...
+6:10:56 PM engine run - t:1 INFO:   Loading...
+6:10:56 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 58499575 -- 59115359
+6:11:05 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:11:07 PM engine run - t:1 INFO:   Load took: 10218ms
+6:11:08 PM engine run - t:1 INFO:   Update exec: 1193 ms.
+6:11:08 PM engine run - t:1 INFO:   5365.816s: iteration: 3, interval: 59115360 -- 59731144
+6:11:08 PM vertex-data releaseAndCommit - t:17 INFO:   Vertex data write: 233998300 -- 236461440
+6:11:08 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:11:08 PM engine run - t:1 INFO:   Subinterval:: 59115360 -- 59731144 (iteration 3)
+6:11:08 PM engine run - t:1 INFO:   Init vertices...
+6:11:08 PM engine run - t:1 INFO:   Loading...
+6:11:08 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 59115360 -- 59731144
+6:11:14 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:11:16 PM engine run - t:1 INFO:   Load took: 8070ms
+6:11:17 PM engine run - t:1 INFO:   Update exec: 1052 ms.
+6:11:17 PM engine run - t:1 INFO:   5375.224s: iteration: 3, interval: 59731145 -- 60346929
+6:11:17 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 236461440 -- 238924580
+6:11:18 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:11:18 PM engine run - t:1 INFO:   Subinterval:: 59731145 -- 60346929 (iteration 3)
+6:11:18 PM engine run - t:1 INFO:   Init vertices...
+6:11:18 PM engine run - t:1 INFO:   Loading...
+6:11:18 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 59731145 -- 60346929
+6:11:22 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:11:25 PM engine run - t:1 INFO:   Load took: 6679ms
+6:11:26 PM engine run - t:1 INFO:   Update exec: 1016 ms.
+6:11:26 PM engine run - t:1 INFO:   5383.5650000000005s: iteration: 3, interval: 60346930 -- 60962714
+6:11:26 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 238924580 -- 241387720
+6:11:26 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:11:26 PM engine run - t:1 INFO:   Subinterval:: 60346930 -- 60962714 (iteration 3)
+6:11:26 PM engine run - t:1 INFO:   Init vertices...
+6:11:26 PM engine run - t:1 INFO:   Loading...
+6:11:26 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 60346930 -- 60962714
+6:11:31 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:11:32 PM engine run - t:1 INFO:   Load took: 6160ms
+6:11:33 PM engine run - t:1 INFO:   Update exec: 1057 ms.
+6:11:33 PM vertex-data releaseAndCommit - t:16 INFO:   Vertex data write: 241387720 -- 243850860
+6:11:33 PM engine run - t:1 INFO:   5391.253s: iteration: 3, interval: 60962715 -- 61578499
+6:11:33 PM engine determineNextWindow - t:1 INFO:   Memory budget: 954466304
+6:11:33 PM engine run - t:1 INFO:   Subinterval:: 60962715 -- 61578499 (iteration 3)
+6:11:33 PM engine run - t:1 INFO:   Init vertices...
+6:11:34 PM engine run - t:1 INFO:   Loading...
+6:11:34 PM engine loadBeforeUpdates - t:1 INFO:   Memshard: 60962715 -- 61578499
+6:11:39 PM engine loadBeforeUpdates - t:1 INFO:   Loading memory-shard finished.main
+6:11:40 PM engine run - t:1 INFO:   Load took: 6000ms
+6:11:41 PM engine run - t:1 INFO:   Update exec: 1022 ms.
+6:11:41 PM vertex-data releaseAndCommit - t:15 INFO:   Vertex data write: 243850860 -- 246314000
+6:11:42 PM engine run - t:1 INFO:   Engine finished in: 5399.966 secs.
+6:11:42 PM engine run - t:1 INFO:   Updates: 246314000
+6:11:42 PM pagerank main - t:1 INFO:   Ready.
+6:11:43 PM vertex-data <init> - t:1 INFO:   Sparse vertex data was allowed but sparse degree file did not exist  using dense
+6:11:43 PM vertex-data <init> - t:1 INFO:   Vertex file [C:\twitter_rv.tar\twitter_rv\twitter_rv.net.4Bj.vout] length: 246314000, nvertices=61578500, expected size: 246314000
+1: 813286 = 14338.841
+2: 14224719 = 11733.93
+3: 15131310 = 9973.954
+4: 31567254 = 8630.536
+5: 16409683 = 8254.998
+6: 14075928 = 6828.7397
+7: 7040932 = 6729.153
+8: 12687952 = 5138.1367
+9: 5380672 = 4913.993
+10: 26784273 = 2994.366
+11: 5741722 = 2716.3977
+12: 17850012 = 2595.116
+13: 6149912 = 2496.5242
+14: 12589972 = 2385.7957
+15: 14669398 = 2372.233
+16: 5210841 = 2355.8752
+17: 14230524 = 2351.4138
+18: 14994465 = 2331.2437
+19: 6449282 = 2325.6323
+20: 20385404 = 2296.4646
