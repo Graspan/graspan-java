@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>graphchi-java</artifactId>
+    <artifactId>gChi-preproc-workout</artifactId>
     <version>0.2</version>
 
     <repositories>
