@@ -1,0 +1,13 @@
+*.class
+*.swp
+.classpath
+.project
+.settings
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.idea
+target
+walkmanager.log

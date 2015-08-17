@@ -1,5 +1,0 @@
-
-
-To create a graphchi-jar with all dependencies:
-
-mvn assembly:assembly -DdescriptorId=jar-with-dependencies
