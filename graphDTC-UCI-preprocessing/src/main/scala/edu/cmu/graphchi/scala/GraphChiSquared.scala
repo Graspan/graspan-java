@@ -1,10 +1,10 @@
-package gDTCpreproc.scala
+package edu.uci.ics.cs.gDTCpreproc.scala
 
 
-import gDTCpreproc._
-import gDTCpreproc.engine._
-import gDTCpreproc.datablocks._
-import gDTCpreproc.util._
+import edu.uci.ics.cs.gDTCpreproc._
+import edu.uci.ics.cs.gDTCpreproc.engine._
+import edu.uci.ics.cs.gDTCpreproc.datablocks._
+import edu.uci.ics.cs.gDTCpreproc.util._
 import java.util.concurrent.TimeUnit
 
 class VertexInfo[VT, ET](v : ChiVertex[VT, ET]) {

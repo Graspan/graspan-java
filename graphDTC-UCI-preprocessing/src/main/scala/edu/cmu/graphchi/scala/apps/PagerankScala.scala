@@ -1,12 +1,12 @@
-package gDTCpreproc.scala.apps
+package edu.uci.ics.cs.gDTCpreproc.scala.apps
 
-import gDTCpreproc.scala._
-import gDTCpreproc.datablocks.FloatConverter
-import gDTCpreproc.util.IdFloat
-import gDTCpreproc.util.Toplist
+import edu.uci.ics.cs.gDTCpreproc.scala._
+import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter
+import edu.uci.ics.cs.gDTCpreproc.util.IdFloat
+import edu.uci.ics.cs.gDTCpreproc.util.Toplist
 import java.util.TreeSet
 import scala.collection.JavaConversions._
-import gDTCpreproc.preprocessing.{EdgeProcessor, VertexProcessor, FastSharder}
+import edu.uci.ics.cs.gDTCpreproc.preprocessing.{EdgeProcessor, VertexProcessor, FastSharder}
 import java.io.FileInputStream
 
 /**

@@ -1,16 +1,16 @@
 package com.twitter.graphchi.topic_pagerank
 
-import gDTCpreproc.scala._
-import gDTCpreproc.datablocks.{IntConverter, FloatConverter}
-import gDTCpreproc.util.IdFloat
-import gDTCpreproc.util.Toplist
+import edu.uci.ics.cs.gDTCpreproc.scala._
+import edu.uci.ics.cs.gDTCpreproc.datablocks.{IntConverter, FloatConverter}
+import edu.uci.ics.cs.gDTCpreproc.util.IdFloat
+import edu.uci.ics.cs.gDTCpreproc.util.Toplist
 import java.util.TreeSet
 import scala.collection.JavaConversions._
 import java.util.Random
 import scala.io.Source
-import gDTCpreproc.ChiFilenames
+import edu.uci.ics.cs.gDTCpreproc.ChiFilenames
 import java.io._
-import gDTCpreproc.engine.auxdata.{DegreeData, VertexData}
+import edu.uci.ics.cs.gDTCpreproc.engine.auxdata.{DegreeData, VertexData}
 
 /**
  * Computes personalized pagerank for a several "topics" a time.

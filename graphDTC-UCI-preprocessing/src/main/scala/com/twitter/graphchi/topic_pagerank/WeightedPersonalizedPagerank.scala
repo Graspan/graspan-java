@@ -1,10 +1,10 @@
 package com.twitter.graphchi.topic_pagerank
 
-import gDTCpreproc.ChiFilenames
-import gDTCpreproc.datablocks.IntConverter
-import gDTCpreproc.engine.auxdata.{DegreeData, VertexData}
-import gDTCpreproc.scala._
-import gDTCpreproc.util.{HugeFloatMatrix, Toplist}
+import edu.uci.ics.cs.gDTCpreproc.ChiFilenames
+import edu.uci.ics.cs.gDTCpreproc.datablocks.IntConverter
+import edu.uci.ics.cs.gDTCpreproc.engine.auxdata.{DegreeData, VertexData}
+import edu.uci.ics.cs.gDTCpreproc.scala._
+import edu.uci.ics.cs.gDTCpreproc.util.{HugeFloatMatrix, Toplist}
 import java.io._
 import scala.collection.JavaConversions._
 import scala.io.Source

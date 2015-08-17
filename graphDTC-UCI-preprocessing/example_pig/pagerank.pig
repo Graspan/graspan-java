@@ -14,7 +14,7 @@ REGISTER graphchi-java-0.2-jar-with-dependencies.jar;
 # Now, use the special PigPagerank -class as a loader to "load" the graph.
 # In addition to loading, this actually performs the computation.
 # The graph must be stored in HDFS.
-pagerank = LOAD 'soc-LiveJournal1.txt' USING gDTCpreproc.apps.pig.PigPagerank as (vertex:int, rank:float);
+pagerank = LOAD 'soc-LiveJournal1.txt' USING edu.uci.ics.cs.gDTCpreproc.apps.pig.PigPagerank as (vertex:int, rank:float);
 
 # Now store the result into HDFS.
 STORE pagerank INTO 'pagerank_livejournal';
