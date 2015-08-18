@@ -27,6 +27,7 @@ import edu.uci.ics.cs.gDTCpreproc.preprocessing.VertexProcessor;
 public class Pagerank implements GraphChiProgram<Float, Float> {
 
 	private static Logger logger = ChiLogger.getLogger("pagerank");
+	public String abc="asdf";
 
 	public void update(ChiVertex<Float, Float> vertex, GraphChiContext context) {
 		System.out.println("Here");
@@ -114,6 +115,10 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 		if (baseFilename.equals("pipein")) { // Allow piping graph in
 			sharder.shard(System.in, fileType);
 		} else {
+			
+			/*
+			 * ah46. checks whether the shard files already exist
+			 */
 			if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nShards)).exists()) {
 				sharder.shard(new FileInputStream(new File(baseFilename)), fileType);
 			} else {
