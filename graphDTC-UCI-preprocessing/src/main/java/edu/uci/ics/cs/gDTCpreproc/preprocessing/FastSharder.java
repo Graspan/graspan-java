@@ -92,12 +92,12 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param edgeValConverter   translator  byte-arrays to/from edge-value
      * @throws IOException  if problems reading the data
      */
-    public FastSharder(String baseFilename, int numShards,
-
+    public FastSharder(String baseFilename, 
+    				   int numShards,
                        VertexProcessor<VertexValueType> vertexProcessor,
                        EdgeProcessor<EdgeValueType> edgeProcessor,
                        BytesToValueConverter<VertexValueType> vertexValConterter,
-                       BytesToValueConverter<EdgeValueType> edgeValConverter) throws IOException {
+                       BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {
         this.baseFilename = baseFilename;
         this.numShards = numShards;
         this.initialIntervalLength = Integer.MAX_VALUE / numShards;

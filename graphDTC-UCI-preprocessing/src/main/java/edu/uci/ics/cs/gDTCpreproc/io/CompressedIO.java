@@ -61,7 +61,7 @@ public class CompressedIO {
     }
 
     /* Note: I realize this is not a good way to manage compression level (should not be part of the utility class). FIXME */
-    public static void disableCompression() {
+    public static void disableCompression() {//ah46
         COMPRESSION_ENABLED = false;
     }
 

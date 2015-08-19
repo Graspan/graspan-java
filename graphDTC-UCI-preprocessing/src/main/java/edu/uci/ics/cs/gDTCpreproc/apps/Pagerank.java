@@ -27,7 +27,6 @@ import edu.uci.ics.cs.gDTCpreproc.preprocessing.VertexProcessor;
 public class Pagerank implements GraphChiProgram<Float, Float> {
 
 	private static Logger logger = ChiLogger.getLogger("pagerank");
-	public String abc="asdf";
 
 	public void update(ChiVertex<Float, Float> vertex, GraphChiContext context) {
 		System.out.println("Here");
@@ -87,15 +86,21 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 	 * @throws IOException
 	 */
 	protected static FastSharder createSharder(String graphName, int numShards) throws IOException {
-		return new FastSharder<Float, Float>(graphName, numShards, new VertexProcessor<Float>() {
+		return new FastSharder<Float, Float>(
+				graphName, 
+				numShards, 
+				new VertexProcessor<Float>() {
 			public Float receiveVertexValue(int vertexId, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
 			}
-		}, new EdgeProcessor<Float>() {
+		}, 
+				new EdgeProcessor<Float>() {
 			public Float receiveEdge(int from, int to, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
 			}
-		}, new FloatConverter(), new FloatConverter());
+		}, 
+				new FloatConverter(), 
+				new FloatConverter());
 	}
 
 	/**
@@ -104,18 +109,19 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 	 * million edges/shard is often a good configuration.
 	 */
 	public static void main(String[] args) throws Exception {
-		String baseFilename = args[0];
-		int nShards = Integer.parseInt(args[1]);
-		String fileType = (args.length >= 3 ? args[2] : null);
+		String baseFilename = args[0];//ah46
+		int nShards = Integer.parseInt(args[1]);//ah46
+		String fileType = (args.length >= 3 ? args[2] : null);//ah46
 
-		CompressedIO.disableCompression();
+		CompressedIO.disableCompression();//ah46
 
 		/* Create shards */
+		
+		/*
+		 * ah46. creates the empty sharder data structure.
+		 */
 		FastSharder sharder = createSharder(baseFilename, nShards);
-		if (baseFilename.equals("pipein")) { // Allow piping graph in
-			sharder.shard(System.in, fileType);
-		} else {
-			
+				
 			/*
 			 * ah46. checks whether the shard files already exist
 			 */
@@ -124,7 +130,6 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 			} else {
 				logger.info("Found shards -- no need to preprocess");
 			}
-		}
 
 		/* Run GraphChi */
 		// GraphChiEngine<Float, Float> engine = new GraphChiEngine<Float,
