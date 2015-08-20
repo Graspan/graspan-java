@@ -7,11 +7,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiFilenames;
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
-import edu.uci.ics.cs.gDTCpreproc.ChiVertex;
-import edu.uci.ics.cs.gDTCpreproc.GraphChiContext;
-import edu.uci.ics.cs.gDTCpreproc.GraphChiProgram;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter;
-import edu.uci.ics.cs.gDTCpreproc.engine.VertexInterval;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.EdgeProcessor;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.FastSharder;
@@ -24,57 +20,9 @@ import edu.uci.ics.cs.gDTCpreproc.preprocessing.VertexProcessor;
  * 
  * @author akyrola
  */
-public class Pagerank implements GraphChiProgram<Float, Float> {
+public class Pagerank  {
 
 	private static Logger logger = ChiLogger.getLogger("pagerank");
-
-	public void update(ChiVertex<Float, Float> vertex, GraphChiContext context) {
-		if (context.getIteration() == 0) {
-			/* Initialize on first iteration */
-			vertex.setValue(1.0f);
-		} else {
-			/*
-			 * On other iterations, set my value to be the weighted average of
-			 * my in-coming neighbors pageranks.
-			 */
-			float sum = 0.f;
-			for (int i = 0; i < vertex.numInEdges(); i++) {
-				sum += vertex.inEdge(i).getValue();
-			}
-			vertex.setValue(0.15f + 0.85f * sum);
-		}
-
-		/*
-		 * Write my value (divided by my out-degree) to my out-edges so
-		 * neighbors can read it.
-		 */
-		float outValue = vertex.getValue() / vertex.numOutEdges();
-		for (int i = 0; i < vertex.numOutEdges(); i++) {
-			vertex.outEdge(i).setValue(outValue);
-		}
-
-	}
-
-	/**
-	 * Callbacks (not needed for Pagerank)
-	 */
-	public void beginIteration(GraphChiContext ctx) {
-	}
-
-	public void endIteration(GraphChiContext ctx) {
-	}
-
-	public void beginInterval(GraphChiContext ctx, VertexInterval interval) {
-	}
-
-	public void endInterval(GraphChiContext ctx, VertexInterval interval) {
-	}
-
-	public void beginSubInterval(GraphChiContext ctx, VertexInterval interval) {
-	}
-
-	public void endSubInterval(GraphChiContext ctx, VertexInterval interval) {
-	}
 
 	/**
 	 * Initialize the sharder-program.
