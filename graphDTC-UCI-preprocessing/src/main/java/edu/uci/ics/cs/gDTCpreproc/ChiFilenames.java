@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 
 import edu.uci.ics.cs.gDTCpreproc.datablocks.BytesToValueConverter;
-import edu.uci.ics.cs.gDTCpreproc.engine.VertexInterval;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 
 /**
@@ -96,25 +95,7 @@ public class ChiFilenames {
         }
     }
 
-    public static ArrayList<VertexInterval> loadIntervals(String baseFilename, int nShards)  throws FileNotFoundException, IOException {
-        String intervalFilename = ChiFilenames.getFilenameIntervals(baseFilename, nShards);
-
-        BufferedReader rd = new BufferedReader(new FileReader(new File(intervalFilename)));
-        String line;
-        int lastId = 0;
-        ArrayList<VertexInterval> intervals = new ArrayList<VertexInterval>(nShards);
-        while((line = rd.readLine()) != null) {
-            int vid = Integer.parseInt(line);
-            intervals.add(new VertexInterval(lastId, vid));
-            lastId = vid + 1;
-        }
-        return intervals;
-    }
 
 
-    public static int numVertices(String baseFilename, int numShards) throws IOException {
-        ArrayList<VertexInterval> intervals = loadIntervals(baseFilename, numShards);
-        return intervals.get(intervals.size() - 1).getLastVertex() + 1;
-    }
 }
 

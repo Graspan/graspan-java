@@ -3,24 +3,13 @@ package edu.uci.ics.cs.gDTCpreproc.preprocessing;
 import nom.tam.util.BufferedDataInputStream;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import java.util.zip.DeflaterOutputStream;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiFilenames;
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
-import edu.uci.ics.cs.gDTCpreproc.ChiVertex;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.BytesToValueConverter;
-import edu.uci.ics.cs.gDTCpreproc.datablocks.ChiPointer;
-import edu.uci.ics.cs.gDTCpreproc.datablocks.DataBlockManager;
-import edu.uci.ics.cs.gDTCpreproc.datablocks.IntConverter;
-import edu.uci.ics.cs.gDTCpreproc.engine.auxdata.VertexData;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
-import edu.uci.ics.cs.gDTCpreproc.shards.MemoryShard;
-import edu.uci.ics.cs.gDTCpreproc.shards.SlidingShard;
 
 /**
  * New version of sharder that requires predefined number of shards
@@ -141,11 +130,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     private String shovelFilename(int i) {
         return baseFilename + ".shovel." + i;
     }
-
-    private String vertexShovelFileName(int i) {
-        return baseFilename + ".vertexshovel." + i;
-    }
-
 
     /**
      * Adds an edge to the preprocessing.
@@ -316,11 +300,8 @@ public class FastSharder <VertexValueType, EdgeValueType> {
          * Construct the degree-data file which stores the in- and out-degree
          * of each vertex. See edu.uci.ics.cs.gDTCpreproc.engine.auxdata.DegreeData
          */
-        if (!memoryEfficientDegreeCount) {
+        if (!memoryEfficientDegreeCount) 
             writeDegrees();
-        } else {
-            computeVertexDegrees();
-        }
 
     }
 
@@ -542,42 +523,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         }
     }
 
-    private static Random random = new Random();
-
-
-
-    // http://www.algolist.net/Algorithms/Sorting/Quicksort
-    // TODO: implement faster
-    private static int partition(long arr[], byte[] values, int sizeOf, int left, int right)
-    {
-        int i = left, j = right;
-        long tmp;
-        long pivot = arr[left + random.nextInt(right - left + 1)];
-        byte[] valueTemplate = new byte[sizeOf];
-
-        while (i <= j) {
-            while (arr[i] < pivot)
-                i++;
-            while (arr[j] > pivot)
-                j--;
-            if (i <= j) {
-                tmp = arr[i];
-
-                /* Swap */
-                System.arraycopy(values, j * sizeOf, valueTemplate, 0, sizeOf);
-                System.arraycopy(values, i * sizeOf, values, j * sizeOf, sizeOf);
-                System.arraycopy(valueTemplate, 0, values, i * sizeOf, sizeOf);
-
-                arr[i] = arr[j];
-                arr[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-        return i;
-    }
-
 
 
     /**
@@ -641,76 +586,5 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         shard(inputStream, GraphInputFormat.EDGELIST);
     }
 
-    /**
-     * Compute vertex degrees by running a special graphchi program.
-     * This is done only if we do not have enough memory to keep track of
-     * vertex degrees in-memory.
-     */
-    private void computeVertexDegrees() {
-        try {
-            logger.info("Use sparse degrees: " + useSparseDegrees);
-
-            DataOutputStream degreeOut = new DataOutputStream(new BufferedOutputStream(
-                    new FileOutputStream(ChiFilenames.getFilenameOfDegreeData(baseFilename, useSparseDegrees))));
-
-
-            SlidingShard[] slidingShards = new SlidingShard[numShards];
-            for(int p=0; p < numShards; p++) {
-                int intervalSt = p * finalIdTranslate.getVertexIntervalLength();
-                int intervalEn = (p + 1) * finalIdTranslate.getVertexIntervalLength() - 1;
-
-                slidingShards[p] = new SlidingShard(null, ChiFilenames.getFilenameShardsAdj(baseFilename, p, numShards),
-                        intervalSt, intervalEn);
-                slidingShards[p].setOnlyAdjacency(true);
-            }
-
-            int SUBINTERVAL = 2000000;
-            ExecutorService parallelExecutor = Executors.newFixedThreadPool(4);
-
-            for(int p=0; p < numShards; p++) {
-                logger.info("Degree computation round " + p + " / " + numShards);
-                int intervalSt = p * finalIdTranslate.getVertexIntervalLength();
-                int intervalEn = (p + 1) * finalIdTranslate.getVertexIntervalLength() - 1;
-
-                MemoryShard<Float> memoryShard = new MemoryShard<Float>(null, ChiFilenames.getFilenameShardsAdj(baseFilename, p, numShards),
-                        intervalSt, intervalEn);
-                memoryShard.setOnlyAdjacency(true);
-
-
-                for(int subIntervalSt=intervalSt; subIntervalSt < intervalEn; subIntervalSt += SUBINTERVAL) {
-                    int subIntervalEn = subIntervalSt + SUBINTERVAL - 1;
-                    if (subIntervalEn > intervalEn) subIntervalEn = intervalEn;
-                    ChiVertex[] verts = new ChiVertex[subIntervalEn - subIntervalSt + 1];
-                    for(int i=0; i < verts.length; i++) {
-                        verts[i] = new ChiVertex(i + subIntervalSt, null);
-                    }
-
-                    memoryShard.loadVertices(subIntervalSt, subIntervalEn, verts, false, parallelExecutor);
-                    for(int i=0; i < numShards; i++) {
-                        if (i != p) {
-                            slidingShards[i].readNextVertices(verts, subIntervalSt, true);
-                        }
-                    }
-
-                    for(int i=0; i < verts.length; i++) {
-                        if (!useSparseDegrees) {
-                            degreeOut.writeInt(Integer.reverseBytes(verts[i].numInEdges()));
-                            degreeOut.writeInt(Integer.reverseBytes(verts[i].numOutEdges()));
-                        } else {
-                            if (verts[i].numEdges() > 0 ){
-                                degreeOut.writeInt(Integer.reverseBytes(subIntervalSt + i));
-                                degreeOut.writeInt(Integer.reverseBytes(verts[i].numInEdges()));
-                                degreeOut.writeInt(Integer.reverseBytes(verts[i].numOutEdges()));
-                            }
-                        }
-                    }
-                }
-            }
-            parallelExecutor.shutdown();
-            degreeOut.close();
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-    }
 
 }
