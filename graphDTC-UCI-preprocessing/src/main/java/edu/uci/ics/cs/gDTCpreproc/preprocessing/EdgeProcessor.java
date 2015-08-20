@@ -5,7 +5,7 @@ package edu.uci.ics.cs.gDTCpreproc.preprocessing;
  * to the value type.
  * @param <ValueType>
  */
-public interface EdgeProcessor <ValueType>  {
+public interface EdgeProcessor <ValueType>  {//ah46
 
     public ValueType receiveEdge(int from, int to, String token);
 

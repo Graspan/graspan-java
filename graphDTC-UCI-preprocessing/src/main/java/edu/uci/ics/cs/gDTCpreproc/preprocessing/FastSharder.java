@@ -97,7 +97,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                        VertexProcessor<VertexValueType> vertexProcessor,
                        EdgeProcessor<EdgeValueType> edgeProcessor,
                        BytesToValueConverter<VertexValueType> vertexValConterter,
-                       BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {
+                       BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {//ah46
         this.baseFilename = baseFilename;//ah46
         this.numShards = numShards;//ah46
         this.initialIntervalLength = Integer.MAX_VALUE / numShards;
@@ -129,13 +129,13 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /** Byte-array template used as a temporary value for performance (instead of
          *  always reallocating it).
          **/
-        if (edgeValueTypeBytesToValueConverter != null) {
-            valueTemplate =  new byte[edgeValueTypeBytesToValueConverter.sizeOf()];
-        } else {
-            valueTemplate = new byte[0];
+        if (edgeValueTypeBytesToValueConverter != null) {//ah46
+            valueTemplate =  new byte[edgeValueTypeBytesToValueConverter.sizeOf()];//ah46
+        } else {//ah46
+            valueTemplate = new byte[0];//ah46
         }
-        if (vertexValueTypeBytesToValueConverter != null)
-            vertexValueTemplate = new byte[vertexValueTypeBytesToValueConverter.sizeOf()];
+        if (vertexValueTypeBytesToValueConverter != null)//ah46
+            vertexValueTemplate = new byte[vertexValueTypeBytesToValueConverter.sizeOf()];//ah46
     }
 
     /*
@@ -287,25 +287,28 @@ public class FastSharder <VertexValueType, EdgeValueType> {
          * Now when we have the total number of vertices known, we can
          * construct the final translator.
          */
+        /*
+         * ah46. (1 + maxVertexId) / numShards + 1 is the size of each vertex interval
+         */
         finalIdTranslate = new VertexIdTranslate((1 + maxVertexId) / numShards + 1, numShards);
 
         /**
          * Store information on how to translate internal vertex id to the original id.
          */
-        saveVertexTranslate();
+        saveVertexTranslate();//ah46
 
         /**
          * Close / flush each shovel-file.
          */
-        for(int i=0; i < numShards; i++) {
+        for(int i=0; i < numShards; i++) {//ah46
             shovelStreams[i].close();
         }
-        shovelStreams = null;
+        shovelStreams = null;//ah46
 
         /**
          *  Store the vertex intervals.
          */
-        writeIntervals();
+        writeIntervals();//ah46
 
         /**
          * Process each shovel to create a final shard.
@@ -335,12 +338,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
             computeVertexDegrees();
         }
 
-        /**
-         * Write the vertex-data file.
-         */
-        if (vertexProcessor != null) {
-            processVertexValues(useSparseDegrees);
-        }
     }
 
 
@@ -367,7 +364,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
     private void writeIntervals() throws IOException{
-    	System.out.println("abc");
         FileWriter wr = new FileWriter(ChiFilenames.getFilenameIntervals(baseFilename, numShards));
         for(int j=1; j<=numShards; j++) {
             int a =(j * finalIdTranslate.getVertexIntervalLength() -1);
@@ -379,81 +375,13 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         wr.close();
     }
 
-    private void saveVertexTranslate() throws IOException {
+    private void saveVertexTranslate() throws IOException {//ah46
         FileWriter wr = new FileWriter(ChiFilenames.getVertexTranslateDefFile(baseFilename, numShards));
         wr.write(finalIdTranslate.stringRepresentation());
         wr.close();
     }
 
-    /**
-     * Initializes the vertex-data file. Similar process as sharding for edges.
-     * @param sparse
-     * @throws IOException
-     */
-    private void processVertexValues(boolean sparse) throws IOException {
-        DataBlockManager dataBlockManager = new DataBlockManager();
-        VertexData<VertexValueType> vertexData = new VertexData<VertexValueType>(maxVertexId + 1, baseFilename,
-                vertexValueTypeBytesToValueConverter, sparse);
-        vertexData.setBlockManager(dataBlockManager);
-        for(int p=0; p < numShards; p++) {
-            int intervalSt = p * finalIdTranslate.getVertexIntervalLength();
-            int intervalEn = (p + 1) * finalIdTranslate.getVertexIntervalLength() - 1;
-            if (intervalEn > maxVertexId) intervalEn = maxVertexId;
 
-            vertexShovelStreams[p].close();
-
-            /* Read shovel and sort */
-            File shovelFile = new File(vertexShovelFileName(p));
-            BufferedDataInputStream in = new BufferedDataInputStream(new FileInputStream(shovelFile));
-
-            int sizeOf = vertexValueTypeBytesToValueConverter.sizeOf();
-            long[] vertexIds = new long[(int) (shovelFile.length() / (4 + sizeOf))];
-            if (vertexIds.length == 0) continue;
-            byte[] vertexValues = new byte[vertexIds.length * sizeOf];
-            for(int i=0; i<vertexIds.length; i++) {
-                int vid = in.readInt();
-                int transVid = finalIdTranslate.forward(preIdTranslate.backward(vid));
-                vertexIds[i] = transVid;
-                in.readFully(vertexValueTemplate);
-                int valueIdx = i * sizeOf;
-                System.arraycopy(vertexValueTemplate, 0, vertexValues, valueIdx, sizeOf);
-            }
-
-            /* Sort */
-            sortWithValues(vertexIds, vertexValues, sizeOf);  // The source id is  higher order, so sorting the longs will produce right result
-
-            int SUBINTERVAL = 2000000;
-
-            int iterIdx = 0;
-
-            /* Insert into data */
-            for(int subIntervalSt=intervalSt; subIntervalSt < intervalEn; subIntervalSt += SUBINTERVAL) {
-                int subIntervalEn = subIntervalSt + SUBINTERVAL - 1;
-                if (subIntervalEn > intervalEn) subIntervalEn = intervalEn;
-                int blockId = vertexData.load(subIntervalSt, subIntervalEn);
-
-                Iterator<Integer> iterator = vertexData.currentIterator();
-                while(iterator.hasNext()) {
-                    int curId = iterator.next();
-
-                    while(iterIdx < vertexIds.length && vertexIds[iterIdx] < curId) {
-                        iterIdx++;
-                    }
-                    if (iterIdx >= vertexIds.length) break;
-
-                    if (curId == (int) vertexIds[iterIdx]) {
-                        ChiPointer pointer = vertexData.getVertexValuePtr(curId, blockId);
-                        System.arraycopy(vertexValues, iterIdx * sizeOf, vertexValueTemplate, 0, sizeOf);
-                        dataBlockManager.writeValue(pointer, vertexValueTemplate);
-                    } else {
-                        // No vertex data for that vertex.
-                    }
-
-                }
-                vertexData.releaseAndCommit(subIntervalSt, blockId);
-            }
-        }
-    }
 
     /**
      * Converts a shovel-file into a shard.
@@ -461,7 +389,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @throws IOException
      */
     private void processShovel(int shardNum) throws IOException {
-        File shovelFile = new File(shovelFilename(shardNum));
+        File shovelFile = new File(shovelFilename(shardNum));//ah46
         int sizeOf = (edgeValueTypeBytesToValueConverter != null ? edgeValueTypeBytesToValueConverter.sizeOf() : 0);
 
         long[] shoveled = new long[(int) (shovelFile.length() / (8 + sizeOf))];
@@ -671,7 +599,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         return i;
     }
 
-    static void quickSort(long arr[], byte[] values, int sizeOf, int left, int right) {
+    static void quickSort(long arr[], byte[] values, int sizeOf, int left, int right) {//ah46
         if (left < right) {
             int index = partition(arr, values, sizeOf, left, right);
             if (left < index - 1)
@@ -682,7 +610,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
 
-    public static void sortWithValues(long[] shoveled, byte[] edgeValues, int sizeOf) {
+    public static void sortWithValues(long[] shoveled, byte[] edgeValues, int sizeOf) {//ah46
         quickSort(shoveled, edgeValues, sizeOf, 0, shoveled.length - 1);
     }
 
@@ -693,26 +621,26 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param format graph input format
      * @throws IOException
      */
-    public void shard(InputStream inputStream, GraphInputFormat format) throws IOException {
-        BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
-        String ln;
-        long lineNum = 0;
+    public void shard(InputStream inputStream, GraphInputFormat format) throws IOException {//ah46
+        BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));//ah46
+        String ln;//ah46
+        long lineNum = 0;//ah46
        
-            while ((ln = ins.readLine()) != null) {
-                if (ln.length() > 2 && !ln.startsWith("#")) {
-                    lineNum++;
-                    if (lineNum % 2000000 == 0) logger.info("Reading line: " + lineNum);
-                    String[] tok = ln.split("\t");
+        
+            while ((ln = ins.readLine()) != null) {//ah46
+                if (ln.length() > 2 && !ln.startsWith("#")) {//ah46
+                    lineNum++;//ah46
+                    if (lineNum % 100000 == 0) logger.info("Reading line: " + lineNum);//ah46
+                    String[] tok = ln.split("\t");//ah46
                    
-                    if (tok.length == 1) tok = ln.split(" ");
+                    if (tok.length == 1) tok = ln.split(" ");//ah46
 
                     if (tok.length > 1) {
                         if (format == GraphInputFormat.EDGELIST) {
                         /* Edge list: <src> <dst> <value> */
                             if (tok.length == 2) {
-                                this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), null);
+                                this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), null);//ah46
                             } else if (tok.length == 3) {
-                            	
                                 this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), tok[2]);
                             }
                         }  else {
@@ -721,7 +649,10 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                     }
                 }
             }
-        this.process();
+            
+            //the vertex shovels have been created after above
+            
+      //  this.process();
     }
 
     /**
@@ -741,7 +672,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param inputStream
      * @throws IOException
      */
-    public void shard(InputStream inputStream) throws IOException {
+    public void shard(InputStream inputStream) throws IOException {//ah46
         shard(inputStream, GraphInputFormat.EDGELIST);
     }
 

@@ -34,7 +34,7 @@ public class VertexIdTranslate {
      * @param origId
      * @return
      */
-    public int forward(int origId) {
+    public int forward(int origId) {//ah46 - need to see more into this translation and whether at all we need it.
         return (origId % numShards) * vertexIntervalLength + origId / numShards;
     }
 
@@ -43,7 +43,7 @@ public class VertexIdTranslate {
      * @param transId
      * @return
      */
-    public int backward(int transId) {
+    public int backward(int transId) {//ah46 - need to see more into this translation and whether at all we need it.
         final int shard = transId / vertexIntervalLength;
         final int off = transId % vertexIntervalLength;
         return off * numShards + shard;

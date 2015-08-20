@@ -134,26 +134,5 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 				logger.info("Found shards -- no need to preprocess");
 			}
 
-		/* Run GraphChi */
-		// GraphChiEngine<Float, Float> engine = new GraphChiEngine<Float,
-		// Float>(baseFilename, nShards);
-		// engine.setEdataConverter(new FloatConverter());
-		// engine.setVertexDataConverter(new FloatConverter());
-		// engine.setModifiesInedges(false); // Important optimization
-		//
-		// engine.run(new Pagerank(), 4);
-		//
-		// logger.info("Ready.");
-		//
-		// /* Output results */
-		// int i = 0;
-		// VertexIdTranslate trans = engine.getVertexIdTranslate();
-		// TreeSet<IdFloat> top20 = Toplist.topListFloat(baseFilename,
-		// engine.numVertices(), 20);
-		// for(IdFloat vertexRank : top20) {
-		// System.out.println(++i + ": " +
-		// trans.backward(vertexRank.getVertexId()) + " = " +
-		// vertexRank.getValue());
-		// }
 	}
 }
