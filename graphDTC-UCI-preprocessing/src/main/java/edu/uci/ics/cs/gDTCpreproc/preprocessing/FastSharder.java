@@ -157,7 +157,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param edgeValueToken
      * @throws IOException
      */
-    public void addEdge(int from, int to, String edgeValueToken) throws IOException {
+    public void addEdge(int from, int to, String edgeValueToken) throws IOException {//ah46
         if (maxVertexId < from) maxVertexId = from;//ah46
         if (maxVertexId < to)  maxVertexId = to;//ah46
 
@@ -184,13 +184,22 @@ public class FastSharder <VertexValueType, EdgeValueType> {
 //        System.out.println(preTranslatedTo);
         
 
+        /*
+         * TODO here edges are grouped by dest vertex id % number of partitions
+         * we need to change this so that edges with the same group of source vertices are in the same partition
+         */
         addToShovel(to % numShards, preTranslatedIdFrom, preTranslatedTo,
                 (edgeProcessor != null ? edgeProcessor.receiveEdge(from, to, edgeValueToken) : null));//ah46
         
     }
 
 
-    private byte[] valueTemplate;
+    /*
+     * valueTemplate is a byte array which is of size 4 for floats. This entire array will contain the edge value. 
+     */
+    private byte[] valueTemplate;//ah46
+    
+    
     private byte[] vertexValueTemplate;
 
 
@@ -208,7 +217,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @throws IOException
      */
     private void addToShovel(int shard, int preTranslatedIdFrom, int preTranslatedTo,
-                             EdgeValueType value) throws IOException {
+                             EdgeValueType value) throws IOException {//ah46
         DataOutputStream strm = shovelStreams[shard];
         strm.writeLong(packEdges(preTranslatedIdFrom, preTranslatedTo));
         if (edgeValueTypeBytesToValueConverter != null) {
@@ -358,6 +367,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
     private void writeIntervals() throws IOException{
+    	System.out.println("abc");
         FileWriter wr = new FileWriter(ChiFilenames.getFilenameIntervals(baseFilename, numShards));
         for(int j=1; j<=numShards; j++) {
             int a =(j * finalIdTranslate.getVertexIntervalLength() -1);
@@ -705,25 +715,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                             	
                                 this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), tok[2]);
                             }
-                        } else if (format == GraphInputFormat.ADJACENCY) {
-                        /* Adjacency list: <vertex-id> <count> <neighbor-1> <neighbor-2> ... */
-//                            int vertexId = Integer.parseInt(tok[0]);
-//                            int len = Integer.parseInt(tok[1]);
-//                            if (len != tok.length - 2) {
-//                                if (lineNum < 10) {
-//                                    throw new IllegalArgumentException("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
-//                                            len + " != " + tok.length);
-//                                } else {
-//                                    logger.warning("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
-//                                            len + " != " + tok.length);
-//                                    break;
-//                                }
-//                            }
-//                            for(int j=2; j < 2 + len; j++) {
-//                                int dest = Integer.parseInt(tok[j]);
-//                                this.addEdge(vertexId, dest, null);
-//                            }
-                        } else {
+                        }  else {
                             throw new IllegalArgumentException("Please specify graph input format");
                         }
                     }
