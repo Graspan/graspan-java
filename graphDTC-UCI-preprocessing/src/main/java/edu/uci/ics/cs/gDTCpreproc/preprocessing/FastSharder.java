@@ -432,11 +432,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /* Delete the shovel-file */
         shovelFile.delete();
 
-        logger.info("Processing shovel " + shardNum + " ... sorting");
-
-        /* Sort the edges */
-        sortWithValues(shoveled, edgeValues, sizeOf);  // The source id is  higher order, so sorting the longs will produce right result
-
         logger.info("Processing shovel " + shardNum + " ... writing shard");
 
 
@@ -599,20 +594,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         return i;
     }
 
-    static void quickSort(long arr[], byte[] values, int sizeOf, int left, int right) {//ah46
-        if (left < right) {
-            int index = partition(arr, values, sizeOf, left, right);
-            if (left < index - 1)
-                quickSort(arr, values, sizeOf, left, index - 1);
-            if (index < right)
-                quickSort(arr, values, sizeOf, index, right);
-        }
-    }
-
-
-    public static void sortWithValues(long[] shoveled, byte[] edgeValues, int sizeOf) {//ah46
-        quickSort(shoveled, edgeValues, sizeOf, 0, shoveled.length - 1);
-    }
 
 
     /**
