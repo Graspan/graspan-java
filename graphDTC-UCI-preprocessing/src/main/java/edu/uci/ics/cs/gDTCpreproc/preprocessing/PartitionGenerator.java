@@ -111,26 +111,26 @@ public class PartitionGenerator <VertexValueType, EdgeValueType> {
 
     /**
      * Adds an edge to the preprocessing.
-     * @param from
-     * @param to
+     * @param src
+     * @param dest
      * @param edgeValueToken
      * @throws IOException
      */
-    public void addEdge(int from, int to, String edgeValueToken) throws IOException {//ah46
-        if (maxVertexId < from) maxVertexId = from;//ah46
-        if (maxVertexId < to)  maxVertexId = to;//ah46
+    public void addEdge(int src, int dest, String edgeValueToken) throws IOException {//ah46
+        if (maxVertexId < src) maxVertexId = src;//ah46
+        if (maxVertexId < dest)  maxVertexId = dest;//ah46
 
         
         //doing translation
-        int preTranslatedIdFrom = preIdTranslate.forward(from);//ah46
-        int preTranslatedTo = preIdTranslate.forward(to);//ah46
+        int preTranslatedIdFrom = preIdTranslate.forward(src);//ah46
+        int preTranslatedTo = preIdTranslate.forward(dest);//ah46
         
 
         /*
          * TODO here edges are grouped by dest vertex id % number of partitions
          * we need to change this so that edges with the same group of source vertices are in the same partition
          */
-        addToShovel(to % nParts, from, to, (edgeProcessor != null ? edgeProcessor.receiveEdge(from, to, edgeValueToken) : null));//ah46
+        addToShovel(dest % nParts, src, dest, (edgeProcessor != null ? edgeProcessor.receiveEdge(src, dest, edgeValueToken) : null));//ah46
         
     }
 
@@ -154,17 +154,17 @@ public class PartitionGenerator <VertexValueType, EdgeValueType> {
      * @param value -> the edge value
      * @throws IOException
      */
-    private void addToShovel(int part, int from, int to, EdgeValueType value) throws IOException {//ah46
+    private void addToShovel(int part, int src, int dest, EdgeValueType value) throws IOException {//ah46
     	
     	//The values being stored
-    	System.out.print(String.valueOf(part)+" "+String.valueOf(from)+" "+String.valueOf(to)+" ");
+    	System.out.print(String.valueOf(part)+" "+String.valueOf(src)+" "+String.valueOf(dest)+" ");
     	System.out.print(value);
     	System.out.println();
 //    	System.exit(0);
 //System.out.print(value);
 
         DataOutputStream strm = shovelStreams[part];
-        strm.writeLong(packEdges(from, to));
+        strm.writeLong(packEdges(src, dest));
         if (edgeValueTypeBytesToValueConverter != null) {
             edgeValueTypeBytesToValueConverter.setValue(valueTemplate, value);
         }
@@ -190,11 +190,6 @@ public class PartitionGenerator <VertexValueType, EdgeValueType> {
     static int getSecond(long l) {//ah46
         return (int) (l & 0x00000000ffffffffl);
     }
-
-  
-
-
-
 
 
 
