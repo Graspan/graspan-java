@@ -29,7 +29,6 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 	private static Logger logger = ChiLogger.getLogger("pagerank");
 
 	public void update(ChiVertex<Float, Float> vertex, GraphChiContext context) {
-		System.out.println("Here");
 		if (context.getIteration() == 0) {
 			/* Initialize on first iteration */
 			vertex.setValue(1.0f);
@@ -86,21 +85,24 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 	 * @throws IOException
 	 */
 	protected static FastSharder createSharder(String graphName, int numShards) throws IOException {
+		
 		return new FastSharder<Float, Float>(
-				graphName, 
-				numShards, 
-				new VertexProcessor<Float>() {
+				graphName, //ah46
+				numShards, //ah46
+				new VertexProcessor<Float>() {//ah46
 			public Float receiveVertexValue(int vertexId, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
 			}
 		}, 
-				new EdgeProcessor<Float>() {
+				new EdgeProcessor<Float>() {//ah46
 			public Float receiveEdge(int from, int to, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
 			}
 		}, 
-				new FloatConverter(), 
-				new FloatConverter());
+				new FloatConverter(), //ah46
+				new FloatConverter());//ah46
+		
+		
 	}
 
 	/**
@@ -118,7 +120,8 @@ public class Pagerank implements GraphChiProgram<Float, Float> {
 		/* Create shards */
 		
 		/*
-		 * ah46. creates the empty sharder data structure.
+		 * ah46. creates the empty sharder data structure. Empty "shovel" and "vertexshovel files are created"
+		 * #of each set = # input shards
 		 */
 		FastSharder sharder = createSharder(baseFilename, nShards);
 				

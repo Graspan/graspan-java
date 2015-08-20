@@ -20,7 +20,7 @@ package edu.uci.ics.cs.gDTCpreproc.datablocks;
  * Converts byte[8] to Long and vice versa.
  * @author Aapo Kyrola
  */
-public class LongConverter implements  BytesToValueConverter<Long> {
+public class LongConverter implements  BytesToValueConverter<Long> {//ah46.
     public int sizeOf() {
         return 8;
     }

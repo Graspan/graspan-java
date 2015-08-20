@@ -26,7 +26,7 @@ package edu.uci.ics.cs.gDTCpreproc.datablocks;
  * @see edu.uci.ics.cs.gDTCpreproc.datablocks.FloatPairConverter
  * @param <T>
  */
-public interface BytesToValueConverter<T> {
+public interface BytesToValueConverter<T> {//ah.
 
     public int sizeOf();
 

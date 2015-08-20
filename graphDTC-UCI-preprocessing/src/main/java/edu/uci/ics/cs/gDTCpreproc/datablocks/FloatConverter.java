@@ -20,7 +20,7 @@ package edu.uci.ics.cs.gDTCpreproc.datablocks;
  * Converts byte[4] array to Float and Float to byte[4].
  * @author Aapo Kyrola
  */
-public class FloatConverter implements  BytesToValueConverter<Float> {
+public class FloatConverter implements  BytesToValueConverter<Float> {//ah46.
     public int sizeOf() {
         return 4;
     }

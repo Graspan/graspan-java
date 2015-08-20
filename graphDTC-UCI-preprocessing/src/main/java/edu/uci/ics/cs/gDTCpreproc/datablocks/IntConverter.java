@@ -20,7 +20,7 @@ package edu.uci.ics.cs.gDTCpreproc.datablocks;
  * Converts byte[4] ot Integer and vice versa.
  * @author  Aapo Kyrola
  */
-public class IntConverter implements  BytesToValueConverter<Integer> {
+public class IntConverter implements  BytesToValueConverter<Integer> {//ah46.
     public int sizeOf() {
         return 4;
     }

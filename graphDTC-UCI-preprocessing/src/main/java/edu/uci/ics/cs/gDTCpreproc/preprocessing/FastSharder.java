@@ -98,14 +98,14 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                        EdgeProcessor<EdgeValueType> edgeProcessor,
                        BytesToValueConverter<VertexValueType> vertexValConterter,
                        BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {
-        this.baseFilename = baseFilename;
-        this.numShards = numShards;
+        this.baseFilename = baseFilename;//ah46
+        this.numShards = numShards;//ah46
         this.initialIntervalLength = Integer.MAX_VALUE / numShards;
         this.preIdTranslate = new VertexIdTranslate(this.initialIntervalLength, numShards);
-        this.edgeProcessor = edgeProcessor;
-        this.vertexProcessor = vertexProcessor;
-        this.edgeValueTypeBytesToValueConverter = edgeValConverter;
-        this.vertexValueTypeBytesToValueConverter = vertexValConterter;
+        this.edgeProcessor = edgeProcessor;//ah46
+        this.vertexProcessor = vertexProcessor;//ah46
+        this.edgeValueTypeBytesToValueConverter = edgeValConverter;//ah46
+        this.vertexValueTypeBytesToValueConverter = vertexValConterter;//ah46
 
         /**
          * In the first phase of processing, the edges are "shoveled" to
@@ -116,6 +116,10 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         shovelStreams = new DataOutputStream[numShards];
         vertexShovelStreams = new DataOutputStream[numShards];
         for(int i=0; i < numShards; i++) {
+        	
+        	/*
+        	 * ah46. Empty "shovel" and "vertexshovel files are created"
+        	 */
             shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
             if (vertexProcessor != null) {
                 vertexShovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(vertexShovelFileName(i))));
@@ -134,6 +138,9 @@ public class FastSharder <VertexValueType, EdgeValueType> {
             vertexValueTemplate = new byte[vertexValueTypeBytesToValueConverter.sizeOf()];
     }
 
+    /*
+     * ah46. separate methods for filenames
+     */
     private String shovelFilename(int i) {
         return baseFilename + ".shovel." + i;
     }
@@ -151,27 +158,35 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @throws IOException
      */
     public void addEdge(int from, int to, String edgeValueToken) throws IOException {
-        if (maxVertexId < from) maxVertexId = from;
-        if (maxVertexId < to)  maxVertexId = to;
+        if (maxVertexId < from) maxVertexId = from;//ah46
+        if (maxVertexId < to)  maxVertexId = to;//ah46
 
         /* If the from and to ids are same, this entry is assumed to contain value
            for the vertex, and it is passed to the vertexProcessor.
+           ah46. we don't need this
          */
-
-        if (from == to) {
-            if (vertexProcessor != null && edgeValueToken != null) {
-                VertexValueType value = vertexProcessor.receiveVertexValue(from, edgeValueToken);
-                if (value != null) {
-                    addVertexValue(from % numShards, preIdTranslate.forward(from), value);
-                }
-            }
-            return;
-        }
-        int preTranslatedIdFrom = preIdTranslate.forward(from);
-        int preTranslatedTo = preIdTranslate.forward(to);
+//        if (from == to) {
+//            if (vertexProcessor != null && edgeValueToken != null) {
+//                VertexValueType value = vertexProcessor.receiveVertexValue(from, edgeValueToken);
+//                if (value != null) {
+//                    addVertexValue(from % numShards, preIdTranslate.forward(from), value);
+//                }
+//            }
+//            return;
+//        }
+        
+        int preTranslatedIdFrom = preIdTranslate.forward(from);//ah46
+        int preTranslatedTo = preIdTranslate.forward(to);//ah46
+        
+//        System.out.println(from);
+//        System.out.println(preTranslatedIdFrom);
+//        System.out.println(to);
+//        System.out.println(preTranslatedTo);
+        
 
         addToShovel(to % numShards, preTranslatedIdFrom, preTranslatedTo,
-                (edgeProcessor != null ? edgeProcessor.receiveEdge(from, to, edgeValueToken) : null));
+                (edgeProcessor != null ? edgeProcessor.receiveEdge(from, to, edgeValueToken) : null));//ah46
+        
     }
 
 
@@ -182,12 +197,14 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     /**
      * Adds n edge to the shovel.  At this stage, the vertex-ids are "pretranslated"
      * to a temporary internal ids. In the last phase, each vertex-id is assigned its
-     * final id. The pretranslation is requried because at this point we do not know
+     * final id. 
+     * 
+     * AH46. THE MAIN REASON FOR PRETRANSLATION: The pretranslation is required because at this point we do not know
      * the total number of vertices.
      * @param shard
      * @param preTranslatedIdFrom internal from-id
      * @param preTranslatedTo internal to-id
-     * @param value
+     * @param value -> the edge value
      * @throws IOException
      */
     private void addToShovel(int shard, int preTranslatedIdFrom, int preTranslatedTo,
@@ -199,6 +216,8 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         }
         strm.write(valueTemplate);
     }
+    
+   
 
 
     public boolean isAllowSparseDegreesAndVertexData() {
@@ -216,35 +235,20 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
     /**
-     * We keep separate shovel-file for vertex-values.
-     * @param shard
-     * @param pretranslatedVertexId
-     * @param value
-     * @throws IOException
-     */
-    private void addVertexValue(int shard, int pretranslatedVertexId, VertexValueType value) throws IOException{
-        DataOutputStream strm = vertexShovelStreams[shard];
-        strm.writeInt(pretranslatedVertexId);
-        vertexValueTypeBytesToValueConverter.setValue(vertexValueTemplate, value);
-        strm.write(vertexValueTemplate);
-    }
-
-
-    /**
      * Bit arithmetic for packing two 32-bit vertex-ids into one 64-bit long.
      * @param a
      * @param b
      * @return
      */
-    static long packEdges(int a, int b) {
+    static long packEdges(int a, int b) {//ah46
         return ((long) a << 32) + b;
     }
 
-    static int getFirst(long l) {
+    static int getFirst(long l) {//ah46
         return  (int)  (l >> 32);
     }
 
-    static int getSecond(long l) {
+    static int getSecond(long l) {//ah46
         return (int) (l & 0x00000000ffffffffl);
     }
 
@@ -683,15 +687,13 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
         String ln;
         long lineNum = 0;
-
-
-        if (!format.equals(GraphInputFormat.MATRIXMARKET)) {
+       
             while ((ln = ins.readLine()) != null) {
                 if (ln.length() > 2 && !ln.startsWith("#")) {
                     lineNum++;
                     if (lineNum % 2000000 == 0) logger.info("Reading line: " + lineNum);
-
                     String[] tok = ln.split("\t");
+                   
                     if (tok.length == 1) tok = ln.split(" ");
 
                     if (tok.length > 1) {
@@ -700,33 +702,33 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                             if (tok.length == 2) {
                                 this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), null);
                             } else if (tok.length == 3) {
+                            	
                                 this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), tok[2]);
                             }
                         } else if (format == GraphInputFormat.ADJACENCY) {
                         /* Adjacency list: <vertex-id> <count> <neighbor-1> <neighbor-2> ... */
-                            int vertexId = Integer.parseInt(tok[0]);
-                            int len = Integer.parseInt(tok[1]);
-                            if (len != tok.length - 2) {
-                                if (lineNum < 10) {
-                                    throw new IllegalArgumentException("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
-                                            len + " != " + tok.length);
-                                } else {
-                                    logger.warning("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
-                                            len + " != " + tok.length);
-                                    break;
-                                }
-                            }
-                            for(int j=2; j < 2 + len; j++) {
-                                int dest = Integer.parseInt(tok[j]);
-                                this.addEdge(vertexId, dest, null);
-                            }
+//                            int vertexId = Integer.parseInt(tok[0]);
+//                            int len = Integer.parseInt(tok[1]);
+//                            if (len != tok.length - 2) {
+//                                if (lineNum < 10) {
+//                                    throw new IllegalArgumentException("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
+//                                            len + " != " + tok.length);
+//                                } else {
+//                                    logger.warning("Error on line " + lineNum + "; number of edges does not match number of tokens:" +
+//                                            len + " != " + tok.length);
+//                                    break;
+//                                }
+//                            }
+//                            for(int j=2; j < 2 + len; j++) {
+//                                int dest = Integer.parseInt(tok[j]);
+//                                this.addEdge(vertexId, dest, null);
+//                            }
                         } else {
                             throw new IllegalArgumentException("Please specify graph input format");
                         }
                     }
                 }
             }
-        } 
         this.process();
     }
 
@@ -736,7 +738,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param format "edgelist" or "adjlist" / "adjacency"
      * @throws IOException
      */
-    public void shard(InputStream inputStream, String format) throws IOException {
+    public void shard(InputStream inputStream, String format) throws IOException {//ah46
         if (format == null || format.equals("edgelist")) {
             shard(inputStream, GraphInputFormat.EDGELIST);
         }
