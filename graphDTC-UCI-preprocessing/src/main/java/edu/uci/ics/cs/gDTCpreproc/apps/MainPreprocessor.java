@@ -41,11 +41,7 @@ public class MainPreprocessor  {
 				new FloatConverter());//ah46
 	}
 
-	/**
-	 * Usage: java edu.uci.ics.cs.gDTCpreproc.demo.PageRank graph-name num-shards
-	 * filetype(edgelist|adjlist) For specifying the number of shards, 20-50
-	 * million edges/shard is often a good configuration.
-	 */
+
 	public static void main(String[] args) throws Exception {
 		String baseFilename = args[0];//ah46
 		int nParts = Integer.parseInt(args[1]);//ah46
@@ -62,7 +58,7 @@ public class MainPreprocessor  {
 		PartitionGenerator partgenerator = createPartition(baseFilename, nParts);
 				
 			/*
-			 * ah46. checks whether the partition files already exist
+			 * ah46. checks whether the partition files already exist, if not the partitions are filled up with edges
 			 */
 			if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nParts)).exists()) {
 				partgenerator.pgen(new FileInputStream(new File(baseFilename)), fileType);
