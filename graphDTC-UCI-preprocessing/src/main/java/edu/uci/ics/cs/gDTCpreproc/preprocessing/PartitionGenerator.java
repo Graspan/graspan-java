@@ -23,7 +23,7 @@ import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
  *
  * Usage:
  * <code>
- *     FastSharder sharder = new FastSharder(graphName, numShards, ....)
+ *     PartitionGenerator sharder = new PartitionGenerator(graphName, nParts, ....)
  *     sharder.shard(new FileInputStream())
  * </code>
  *
@@ -40,12 +40,12 @@ import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
  *
  * @author Aapo Kyrola
  */
-public class FastSharder <VertexValueType, EdgeValueType> {
+public class PartitionGenerator <VertexValueType, EdgeValueType> {
 
     public enum GraphInputFormat {EDGELIST, ADJACENCY, MATRIXMARKET};
 
     private String baseFilename;
-    private int numShards;
+    private int nParts;
     private int initialIntervalLength;
     private VertexIdTranslate preIdTranslate;
     private VertexIdTranslate finalIdTranslate;
@@ -74,21 +74,21 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     /**
      * Constructor
      * @param baseFilename input-file
-     * @param numShards the number of shards to be created
+     * @param nParts the number of shards to be created
      * @param vertexProcessor user-provided function for translating strings to vertex value type
      * @param edgeProcessor user-provided function for translating strings to edge value type
      * @param vertexValConterter translator  byte-arrays to/from vertex-value
      * @param edgeValConverter   translator  byte-arrays to/from edge-value
      * @throws IOException  if problems reading the data
      */
-    public FastSharder(String baseFilename, 
+    public PartitionGenerator(String baseFilename, 
     				   int numShards,
                        VertexProcessor<VertexValueType> vertexProcessor,
                        EdgeProcessor<EdgeValueType> edgeProcessor,
                        BytesToValueConverter<VertexValueType> vertexValConterter,
                        BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {//ah46
         this.baseFilename = baseFilename;//ah46
-        this.numShards = numShards;//ah46
+        this.nParts = numShards;//ah46
         this.initialIntervalLength = Integer.MAX_VALUE / numShards;
         this.preIdTranslate = new VertexIdTranslate(this.initialIntervalLength, numShards);
         this.edgeProcessor = edgeProcessor;//ah46
@@ -156,7 +156,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
          * TODO here edges are grouped by dest vertex id % number of partitions
          * we need to change this so that edges with the same group of source vertices are in the same partition
          */
-        addToShovel(to % numShards, preTranslatedIdFrom, preTranslatedTo,
+        addToShovel(to % nParts, preTranslatedIdFrom, preTranslatedTo,
                 (edgeProcessor != null ? edgeProcessor.receiveEdge(from, to, edgeValueToken) : null));//ah46
         
     }
@@ -178,15 +178,15 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * 
      * AH46. THE MAIN REASON FOR PRETRANSLATION: The pretranslation is required because at this point we do not know
      * the total number of vertices.
-     * @param shard
+     * @param part
      * @param preTranslatedIdFrom internal from-id
      * @param preTranslatedTo internal to-id
      * @param value -> the edge value
      * @throws IOException
      */
-    private void addToShovel(int shard, int preTranslatedIdFrom, int preTranslatedTo,
+    private void addToShovel(int part, int preTranslatedIdFrom, int preTranslatedTo,
                              EdgeValueType value) throws IOException {//ah46
-        DataOutputStream strm = shovelStreams[shard];
+        DataOutputStream strm = shovelStreams[part];
         strm.writeLong(packEdges(preTranslatedIdFrom, preTranslatedTo));
         if (edgeValueTypeBytesToValueConverter != null) {
             edgeValueTypeBytesToValueConverter.setValue(valueTemplate, value);
@@ -247,8 +247,8 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         }
 
         if (!memoryEfficientDegreeCount) {
-            inDegrees = new int[maxVertexId + numShards];
-            outDegrees = new int[maxVertexId + numShards];
+            inDegrees = new int[maxVertexId + nParts];
+            outDegrees = new int[maxVertexId + nParts];
         }
 
         /**
@@ -256,9 +256,9 @@ public class FastSharder <VertexValueType, EdgeValueType> {
          * construct the final translator.
          */
         /*
-         * ah46. (1 + maxVertexId) / numShards + 1 is the size of each vertex interval
+         * ah46. (1 + maxVertexId) / nParts + 1 is the size of each vertex interval
          */
-        finalIdTranslate = new VertexIdTranslate((1 + maxVertexId) / numShards + 1, numShards);
+        finalIdTranslate = new VertexIdTranslate((1 + maxVertexId) / nParts + 1, nParts);
 
         /**
          * Store information on how to translate internal vertex id to the original id.
@@ -268,7 +268,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /**
          * Close / flush each shovel-file.
          */
-        for(int i=0; i < numShards; i++) {//ah46
+        for(int i=0; i < nParts; i++) {//ah46
             shovelStreams[i].close();
         }
         shovelStreams = null;//ah46
@@ -281,7 +281,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /**
          * Process each shovel to create a final shard.
          */
-        for(int i=0; i<numShards; i++) {
+        for(int i=0; i<nParts; i++) {
             processShovel(i);
         }
 
@@ -329,8 +329,8 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
     private void writeIntervals() throws IOException{
-        FileWriter wr = new FileWriter(ChiFilenames.getFilenameIntervals(baseFilename, numShards));
-        for(int j=1; j<=numShards; j++) {
+        FileWriter wr = new FileWriter(ChiFilenames.getFilenameIntervals(baseFilename, nParts));
+        for(int j=1; j<=nParts; j++) {
             int a =(j * finalIdTranslate.getVertexIntervalLength() -1);
             wr.write(a + "\n");
             if (a > maxVertexId) {
@@ -341,7 +341,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
     }
 
     private void saveVertexTranslate() throws IOException {//ah46
-        FileWriter wr = new FileWriter(ChiFilenames.getVertexTranslateDefFile(baseFilename, numShards));
+        FileWriter wr = new FileWriter(ChiFilenames.getVertexTranslateDefFile(baseFilename, nParts));
         wr.write(finalIdTranslate.stringRepresentation());
         wr.close();
     }
@@ -350,11 +350,11 @@ public class FastSharder <VertexValueType, EdgeValueType> {
 
     /**
      * Converts a shovel-file into a shard.
-     * @param shardNum
+     * @param partNum
      * @throws IOException
      */
-    private void processShovel(int shardNum) throws IOException {
-        File shovelFile = new File(shovelFilename(shardNum));//ah46
+    private void processShovel(int partNum) throws IOException {
+        File shovelFile = new File(shovelFilename(partNum));//ah46
         int sizeOf = (edgeValueTypeBytesToValueConverter != null ? edgeValueTypeBytesToValueConverter.sizeOf() : 0);
 
         long[] shoveled = new long[(int) (shovelFile.length() / (8 + sizeOf))];
@@ -366,7 +366,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         byte[] edgeValues = new byte[shoveled.length * sizeOf];
 
 
-        logger.info("Processing shovel " + shardNum);
+        logger.info("Processing shovel " + partNum);
 
         /**
          * Read the edges into memory.
@@ -397,7 +397,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /* Delete the shovel-file */
         shovelFile.delete();
 
-        logger.info("Processing shovel " + shardNum + " ... writing shard");
+        logger.info("Processing shovel " + partNum + " ... writing shard");
 
 
         /*
@@ -408,7 +408,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         /**
          * Step 1: ADJACENCY SHARD
          */
-        File adjFile = new File(ChiFilenames.getFilenameShardsAdj(baseFilename, shardNum, numShards));
+        File adjFile = new File(ChiFilenames.getFilenameShardsAdj(baseFilename, partNum, nParts));
         DataOutputStream adjOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(adjFile)));
         File indexFile = new File(adjFile.getAbsolutePath() + ".index");
         DataOutputStream indexOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(indexFile)));
@@ -490,7 +490,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
                 @Override
                 public void setValue(byte[] array, Object val) {
                 }
-            }, shardNum, numShards);
+            }, partNum, nParts);
             File edgeDataSizeFile = new File(edataFileName + ".size");
             File edgeDataDir = new File(ChiFilenames.getDirnameShardEdataBlock(edataFileName, blockSize));
             if (!edgeDataDir.exists()) edgeDataDir.mkdir();
@@ -571,7 +571,7 @@ public class FastSharder <VertexValueType, EdgeValueType> {
      * @param format "edgelist" or "adjlist" / "adjacency"
      * @throws IOException
      */
-    public void shard(InputStream inputStream, String format) throws IOException {//ah46
+    public void pgen(InputStream inputStream, String format) throws IOException {//ah46
         if (format == null || format.equals("edgelist")) {
             shard(inputStream, GraphInputFormat.EDGELIST);
         }

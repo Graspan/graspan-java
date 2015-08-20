@@ -10,33 +10,30 @@ import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.EdgeProcessor;
-import edu.uci.ics.cs.gDTCpreproc.preprocessing.FastSharder;
+import edu.uci.ics.cs.gDTCpreproc.preprocessing.PartitionGenerator;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.VertexProcessor;
 
 /**
- * Example application: PageRank (http://en.wikipedia.org/wiki/Pagerank)
- * Iteratively computes a pagerank for each vertex by averaging the pageranks of
- * in-neighbors pageranks.
- * 
+  * 
  * @author akyrola
  */
-public class Pagerank  {
+public class MainPreprocessor  {
 
-	private static Logger logger = ChiLogger.getLogger("pagerank");
+	private static Logger logger = ChiLogger.getLogger("mainPreprocessor");
 
 	/**
-	 * Initialize the sharder-program.
+	 * Initialize the PartitionGenerator-program.
 	 * 
 	 * @param graphName
-	 * @param numShards
+	 * @param numParts
 	 * @return
 	 * @throws IOException
 	 */
-	protected static FastSharder createSharder(String graphName, int numShards) throws IOException {
+	protected static PartitionGenerator createPartition(String graphName, int numParts) throws IOException {
 		
-		return new FastSharder<Float, Float>(
+		return new PartitionGenerator<Float, Float>(
 				graphName, //ah46
-				numShards, //ah46
+				numParts, //ah46
 				new VertexProcessor<Float>() {//ah46
 			public Float receiveVertexValue(int vertexId, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
@@ -60,26 +57,26 @@ public class Pagerank  {
 	 */
 	public static void main(String[] args) throws Exception {
 		String baseFilename = args[0];//ah46
-		int nShards = Integer.parseInt(args[1]);//ah46
+		int nParts = Integer.parseInt(args[1]);//ah46
 		String fileType = (args.length >= 3 ? args[2] : null);//ah46
 
 		CompressedIO.disableCompression();//ah46
 
-		/* Create shards */
+		/* Create partitions */
 		
 		/*
-		 * ah46. creates the empty sharder data structure. Empty "shovel" and "vertexshovel files are created"
+		 * ah46. creates the empty partitiongenerator data structure. Empty "shovel"
 		 * #of each set = # input shards
 		 */
-		FastSharder sharder = createSharder(baseFilename, nShards);
+		PartitionGenerator partgenerator = createPartition(baseFilename, nParts);
 				
 			/*
-			 * ah46. checks whether the shard files already exist
+			 * ah46. checks whether the partition files already exist
 			 */
-			if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nShards)).exists()) {
-				sharder.shard(new FileInputStream(new File(baseFilename)), fileType);
+			if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nParts)).exists()) {
+				partgenerator.pgen(new FileInputStream(new File(baseFilename)), fileType);
 			} else {
-				logger.info("Found shards -- no need to preprocess");
+				logger.info("Found partitions -- no need to preprocess");
 			}
 
 	}
