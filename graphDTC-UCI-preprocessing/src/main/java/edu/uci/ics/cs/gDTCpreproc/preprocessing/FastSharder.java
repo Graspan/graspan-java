@@ -734,9 +734,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         if (format == null || format.equals("edgelist")) {
             shard(inputStream, GraphInputFormat.EDGELIST);
         }
-        else if (format.equals("adjlist") || format.startsWith("adjacency")) {
-            shard(inputStream, GraphInputFormat.ADJACENCY);
-        }
     }
 
     /**
@@ -820,19 +817,4 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String fileName = args[0];
-        int numShards = Integer.parseInt(args[1]);
-        String conversion = args[2];
-        FastSharder<Integer, Integer> sharder = new FastSharder<Integer, Integer>(fileName, numShards, null, new EdgeProcessor<Integer>() {
-            @Override
-            public Integer receiveEdge(int from, int to, String token) {
-                if (token == null) return 0;
-                return Integer.parseInt(token);
-            }
-        },
-                new IntConverter(), new IntConverter());
-        sharder.shard(new FileInputStream(fileName), conversion);
-
-    }
 }
