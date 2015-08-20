@@ -121,9 +121,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         	 * ah46. Empty "shovel" and "vertexshovel files are created"
         	 */
             shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
-            if (vertexProcessor != null) {
-                vertexShovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(vertexShovelFileName(i))));
-            }
         }
 
         /** Byte-array template used as a temporary value for performance (instead of
@@ -161,19 +158,6 @@ public class FastSharder <VertexValueType, EdgeValueType> {
         if (maxVertexId < from) maxVertexId = from;//ah46
         if (maxVertexId < to)  maxVertexId = to;//ah46
 
-        /* If the from and to ids are same, this entry is assumed to contain value
-           for the vertex, and it is passed to the vertexProcessor.
-           ah46. we don't need this
-         */
-//        if (from == to) {
-//            if (vertexProcessor != null && edgeValueToken != null) {
-//                VertexValueType value = vertexProcessor.receiveVertexValue(from, edgeValueToken);
-//                if (value != null) {
-//                    addVertexValue(from % numShards, preIdTranslate.forward(from), value);
-//                }
-//            }
-//            return;
-//        }
         
         int preTranslatedIdFrom = preIdTranslate.forward(from);//ah46
         int preTranslatedTo = preIdTranslate.forward(to);//ah46
