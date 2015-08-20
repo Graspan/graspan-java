@@ -11,7 +11,6 @@ import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.EdgeProcessor;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.PartitionGenerator;
-import edu.uci.ics.cs.gDTCpreproc.preprocessing.VertexProcessor;
 
 /**
   * 
@@ -34,20 +33,12 @@ public class MainPreprocessor  {
 		return new PartitionGenerator<Float, Float>(
 				graphName, //ah46
 				numParts, //ah46
-				new VertexProcessor<Float>() {//ah46
-			public Float receiveVertexValue(int vertexId, String token) {
-				return (token == null ? 0.0f : Float.parseFloat(token));
-			}
-		}, 
 				new EdgeProcessor<Float>() {//ah46
 			public Float receiveEdge(int from, int to, String token) {
 				return (token == null ? 0.0f : Float.parseFloat(token));
 			}
 		}, 
-				new FloatConverter(), //ah46
 				new FloatConverter());//ah46
-		
-		
 	}
 
 	/**

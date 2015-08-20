@@ -66,7 +66,6 @@ public class PartitionGenerator <VertexValueType, EdgeValueType> {
     private BytesToValueConverter<VertexValueType> vertexValueTypeBytesToValueConverter;
 
     private EdgeProcessor<EdgeValueType> edgeProcessor;
-    private VertexProcessor<VertexValueType> vertexProcessor;
 
 
     private static final Logger logger = ChiLogger.getLogger("fast-sharder");
@@ -83,18 +82,14 @@ public class PartitionGenerator <VertexValueType, EdgeValueType> {
      */
     public PartitionGenerator(String baseFilename, 
     				   int numShards,
-                       VertexProcessor<VertexValueType> vertexProcessor,
                        EdgeProcessor<EdgeValueType> edgeProcessor,
-                       BytesToValueConverter<VertexValueType> vertexValConterter,
                        BytesToValueConverter<EdgeValueType> edgeValConverter ) throws IOException {//ah46
         this.baseFilename = baseFilename;//ah46
         this.nParts = numShards;//ah46
         this.initialIntervalLength = Integer.MAX_VALUE / numShards;
         this.preIdTranslate = new VertexIdTranslate(this.initialIntervalLength, numShards);
         this.edgeProcessor = edgeProcessor;//ah46
-        this.vertexProcessor = vertexProcessor;//ah46
         this.edgeValueTypeBytesToValueConverter = edgeValConverter;//ah46
-        this.vertexValueTypeBytesToValueConverter = vertexValConterter;//ah46
 
         /**
          * In the first phase of processing, the edges are "shoveled" to
