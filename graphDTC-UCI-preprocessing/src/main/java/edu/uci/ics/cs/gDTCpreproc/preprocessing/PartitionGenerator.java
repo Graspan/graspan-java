@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.BytesToValueConverter;
+import edu.uci.ics.cs.gDTCpreproc.datablocks.GenericIntegerConverter;
 
 /**
  * New version of sharder that requires predefined number of shards and
@@ -43,16 +44,13 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private String baseFilename;
 	private int nParts;
 	private int initialIntervalLength;
-	private VertexIdTranslate preIdTranslate;
-	private VertexIdTranslate finalIdTranslate;
 
 	private DataOutputStream[] shovelStreams;
 
 	private int maxVertexId = 0;
 
-	private BytesToValueConverter<EdgeValueType> edgeValueTypeBytesToValueConverter;
+	private GenericIntegerConverter edgeValueTypeBytesToValueConverter;
 
-	private EdgeProcessor<EdgeValueType> edgeProcessor;
 
 	private static final Logger logger = ChiLogger.getLogger("fast-sharder");
 
@@ -63,12 +61,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 *            input-file
 	 * @param nParts
 	 *            the number of partitions to be created
-	 * @param vertexProcessor
-	 *            user-provided function for translating strings to vertex value
-	 *            type
-	 * @param edgeProcessor
-	 *            user-provided function for translating strings to edge value
-	 *            type
 	 * @param vertexValConterter
 	 *            translator byte-arrays to/from vertex-value
 	 * @param edgeValConverter
@@ -76,13 +68,11 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * @throws IOException
 	 *             if problems reading the data
 	 */
-	public PartitionGenerator(String baseFilename, int numShards, EdgeProcessor<EdgeValueType> edgeProcessor,
-			BytesToValueConverter<EdgeValueType> edgeValConverter) throws IOException {// ah46
+	public PartitionGenerator(String baseFilename, int numShards, 
+			GenericIntegerConverter edgeValConverter) throws IOException {// ah46
 		this.baseFilename = baseFilename;// ah46
 		this.nParts = numShards;// ah46
 		this.initialIntervalLength = Integer.MAX_VALUE / numShards;
-		this.preIdTranslate = new VertexIdTranslate(this.initialIntervalLength, numShards);
-		this.edgeProcessor = edgeProcessor;// ah46
 		this.edgeValueTypeBytesToValueConverter = edgeValConverter;// ah46
 
 		/**
@@ -102,7 +92,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		 * (instead of always reallocating it).
 		 **/
 		if (edgeValueTypeBytesToValueConverter != null) {// ah46
-			valueTemplate = new byte[edgeValueTypeBytesToValueConverter.sizeOf()];// ah46
+			valueTemplate = new byte[1];// ah46
 		} else {// ah46
 			valueTemplate = new byte[0];// ah46
 		}
@@ -120,27 +110,22 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * 
 	 * @param src
 	 * @param dest
-	 * @param edgeValueToken
+	 * @param edgeValue
 	 * @throws IOException
 	 */
-	public void addEdge(int src, int dest, String edgeValueToken) throws IOException {// ah46
+	public void addEdge(int src, int dest, int edgeValue) throws IOException {// ah46
 		if (maxVertexId < src)
 			maxVertexId = src;// ah46
 		if (maxVertexId < dest)
 			maxVertexId = dest;// ah46
 
-		// doing translation
-		int preTranslatedIdFrom = preIdTranslate.forward(src);// ah46
-		int preTranslatedTo = preIdTranslate.forward(dest);// ah46
 
 		/*
 		 * TODO here edges are grouped by dest vertex id % number of partitions
 		 * we need to change this so that edges with the same group of source
 		 * vertices are in the same partition
 		 */
-		addToShovel(dest % nParts, src, dest,
-				(edgeProcessor != null ? edgeProcessor.receiveEdge(src, dest, edgeValueToken) : null));// ah46
-
+		addToShovel(dest % nParts, src, dest,edgeValue);// ah46
 	}
 
 	/*
@@ -149,20 +134,19 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 */
 	private byte[] valueTemplate;// ah46
 
-	private void addToShovel(int part, int src, int dest, EdgeValueType value) throws IOException {// ah46
+	private void addToShovel(int part, int src, int dest, int edgeValue) throws IOException {// ah46
 
-		// The values being stored
-		// System.out.print(String.valueOf(part)+" "+String.valueOf(src)+"
-		// "+String.valueOf(dest)+" ");
-		// System.out.print(value);
-		// System.out.println();
-		// System.exit(0);
-		// System.out.print(value);
+//		 The values being stored
+		 System.out.print(String.valueOf(part)+" "+String.valueOf(src)+" "+String.valueOf(dest)+" ");
+		 System.out.print(edgeValue);
+		 System.out.println();
+		 System.exit(0);
+		// System.out.print(()value);
 
 		DataOutputStream strm = shovelStreams[part];
 		strm.writeLong(packEdges(src, dest));
 		if (edgeValueTypeBytesToValueConverter != null) {
-			edgeValueTypeBytesToValueConverter.setValue(valueTemplate, value);
+			edgeValueTypeBytesToValueConverter.setValue(valueTemplate, edgeValue);
 		}
 		strm.write(valueTemplate);
 
@@ -207,7 +191,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 				String[] tok = ln.split("\t");// ah46
 
 				/* Edge list: <src> <dst> <value> */
-				this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), tok[2]);
+				this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
 				// the vertex shovels have been created after above
 			}
 		}

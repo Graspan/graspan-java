@@ -9,8 +9,8 @@ import edu.uci.ics.cs.gDTCpreproc.ChiFilenames;
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
 import edu.uci.ics.cs.gDTCpreproc.ConsolePrinter;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter;
+import edu.uci.ics.cs.gDTCpreproc.datablocks.GenericIntegerConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
-import edu.uci.ics.cs.gDTCpreproc.preprocessing.EdgeProcessor;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.PartitionGenerator;
 
 /**
@@ -34,18 +34,12 @@ public class MainPreprocessor  {
 		
 		return new PartitionGenerator<Float, Float>(
 				graphName, //ah46
-				numParts, //ah46
-				new EdgeProcessor<Float>() {//ah46
-			public Float receiveEdge(int from, int to, String token) {
-				return (token == null ? 0.0f : Float.parseFloat(token));
-			}
-		}, 
-				new FloatConverter());//ah46
+				numParts, 
+				new GenericIntegerConverter());//ah46
 	}
 
 
 	public static void main(String[] args) throws Exception {
-cp.prnt(Byte.SIZE);
 		String baseFilename = args[0];//ah46
 		int nParts = Integer.parseInt(args[1]);//ah46
 		String fileType = (args.length >= 3 ? args[2] : null);//ah46
