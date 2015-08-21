@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiFilenames;
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
-import edu.uci.ics.cs.gDTCpreproc.datablocks.ConsolePrinter;
+import edu.uci.ics.cs.gDTCpreproc.ConsolePrinter;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.FloatConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.EdgeProcessor;
@@ -45,7 +45,7 @@ public class MainPreprocessor  {
 
 
 	public static void main(String[] args) throws Exception {
-		cp.prnt(x);
+cp.prnt(Byte.SIZE);
 		String baseFilename = args[0];//ah46
 		int nParts = Integer.parseInt(args[1]);//ah46
 		String fileType = (args.length >= 3 ? args[2] : null);//ah46

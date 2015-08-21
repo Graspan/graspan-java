@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gDTCpreproc.datablocks;
+package edu.uci.ics.cs.gDTCpreproc;
 
 public class ConsolePrinter {
 	
