@@ -4,37 +4,8 @@ import java.io.*;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
-import edu.uci.ics.cs.gDTCpreproc.datablocks.BytesToValueConverter;
 import edu.uci.ics.cs.gDTCpreproc.datablocks.GenericIntegerConverter;
 
-/**
- * New version of sharder that requires predefined number of shards and
- * translates the vertex ids in order to randomize the order, thus requiring no
- * additional step to divide the number of edges for each shard equally (it is
- * assumed that probablistically the number of edges is roughly even).
- *
- * Since the vertex ids are translated to internal-ids, you need to use
- * VertexIdTranslate class to obtain the original id-numbers.
- *
- * Usage: <code>
- *     PartitionGenerator sharder = new PartitionGenerator(graphName, nParts, ....)
- *     sharder.shard(new FileInputStream())
- * </code>
- *
- * To use a pipe to feed a graph, use <code>
- *     sharder.shard(System.in, "edgelist");
- * </code>
- *
- * <b>Note:</b>
- * <a href="http://code.google.com/p/graphchi/wiki/EdgeListFormat">Edge list</a>
- * and <a href="http://code.google.com/p/graphchi/wiki/AdjacencyListFormat">
- * adjacency list</a> formats are supported.
- *
- * <b>Note:</b>If from and to vertex ids equal (applies only to edge list
- * format), the line is assumed to contain vertex-value.
- *
- * @author Aapo Kyrola
- */
 public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 	public enum GraphInputFormat {
@@ -43,14 +14,14 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 	private String baseFilename;
 	private int nParts;
-	private int initialIntervalLength;
 
 	private DataOutputStream[] shovelStreams;
 
 	private int maxVertexId = 0;
 
-	private GenericIntegerConverter edgeValueTypeBytesToValueConverter;
-
+	private GenericIntegerConverter vIdtoBytes;
+	private GenericIntegerConverter edgeValtoBytes;
+	
 
 	private static final Logger logger = ChiLogger.getLogger("fast-sharder");
 
@@ -61,25 +32,23 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 *            input-file
 	 * @param nParts
 	 *            the number of partitions to be created
-	 * @param vertexValConterter
-	 *            translator byte-arrays to/from vertex-value
 	 * @param edgeValConverter
 	 *            translator byte-arrays to/from edge-value
 	 * @throws IOException
 	 *             if problems reading the data
 	 */
-	public PartitionGenerator(String baseFilename, int numShards, 
+	public PartitionGenerator(String baseFilename, int nParts, GenericIntegerConverter vIdtoBytes, 
 			GenericIntegerConverter edgeValConverter) throws IOException {// ah46
-		this.baseFilename = baseFilename;// ah46
-		this.nParts = numShards;// ah46
-		this.initialIntervalLength = Integer.MAX_VALUE / numShards;
-		this.edgeValueTypeBytesToValueConverter = edgeValConverter;// ah46
+		this.baseFilename = baseFilename;
+		this.nParts = nParts;
+		this.vIdtoBytes = vIdtoBytes;
+		this.edgeValtoBytes = edgeValConverter; 
 
 		/**
 		 * the edges are "shoveled" to partitions.
 		 */
-		shovelStreams = new DataOutputStream[numShards];
-		for (int i = 0; i < numShards; i++) {
+		shovelStreams = new DataOutputStream[nParts];
+		for (int i = 0; i < nParts; i++) {
 
 			/*
 			 * ah46. Empty "shovel" files are created"
@@ -87,15 +56,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 			shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
 		}
 
-		/**
-		 * Byte-array template used as a temporary value for performance
-		 * (instead of always reallocating it).
-		 **/
-		if (edgeValueTypeBytesToValueConverter != null) {// ah46
-			valueTemplate = new byte[1];// ah46
-		} else {// ah46
-			valueTemplate = new byte[0];// ah46
-		}
 	}
 
 	/*
@@ -119,57 +79,55 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		if (maxVertexId < dest)
 			maxVertexId = dest;// ah46
 
-
 		/*
 		 * TODO here edges are grouped by dest vertex id % number of partitions
 		 * we need to change this so that edges with the same group of source
 		 * vertices are in the same partition
 		 */
-		addToShovel(dest % nParts, src, dest,edgeValue);// ah46
+		addToShovel(dest % nParts, src, dest, edgeValue);// ah46
 	}
 
-	/*
-	 * valueTemplate is a byte array which is of size 4 for floats. This entire
-	 * array will contain the edge value.
-	 */
-	private byte[] valueTemplate;// ah46
+	private byte[] valueTemplate;
+	
+	
 
 	private void addToShovel(int part, int src, int dest, int edgeValue) throws IOException {// ah46
 
-//		 The values being stored
-		 System.out.print(String.valueOf(part)+" "+String.valueOf(src)+" "+String.valueOf(dest)+" ");
-		 System.out.print(edgeValue);
-		 System.out.println();
-		 System.exit(0);
+		// The values being stored
+		// System.out.print(String.valueOf(part)+" "+String.valueOf(src)+"
+		// "+String.valueOf(dest)+" ");
+		// System.out.print(edgeValue);
+		// System.out.println();
+		// System.exit(0);
 		// System.out.print(()value);
-
+		
 		DataOutputStream strm = shovelStreams[part];
-		strm.writeLong(packEdges(src, dest));
-		if (edgeValueTypeBytesToValueConverter != null) {
-			edgeValueTypeBytesToValueConverter.setValue(valueTemplate, edgeValue);
-		}
+		
+		valueTemplate=new byte[vIdtoBytes.getSize()];
+		
+		vIdtoBytes.setValue(valueTemplate, src);
 		strm.write(valueTemplate);
+		
+		vIdtoBytes.setValue(valueTemplate, dest);
+		strm.write(valueTemplate);
+		
+		valueTemplate=new byte[edgeValtoBytes.getSize()];
+		
+		edgeValtoBytes.setValue(valueTemplate, edgeValue);
+		strm.write(valueTemplate);
+		
+//		System.exit(0);
+		
+		
+//		edgeValtoBytes.setValue(valueTemplate, edgeValue);
+//		strm.writeLong(packEdges(src, dest));
+//		if (edgeValtoBytes != null) {
+//			edgeValtoBytes.setValue(valueTemplate, edgeValue);
+//		}
+		
 
 	}
 
-	/**
-	 * Bit arithmetic for packing two 32-bit vertex-ids into one 64-bit long.
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
-	 */
-	static long packEdges(int a, int b) {// ah46
-		return ((long) a << 32) + b;
-	}
-
-	static int getFirst(long l) {// ah46
-		return (int) (l >> 32);
-	}
-
-	static int getSecond(long l) {// ah46
-		return (int) (l & 0x00000000ffffffffl);
-	}
 
 	/**
 	 * generates the partitions
@@ -201,13 +159,12 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * Partition a graph
 	 * 
 	 * @param inputStream
-	 * @param format "edgelist"
+	 * @param format
+	 *            "edgelist"
 	 * @throws IOException
 	 */
-	public void pgen(InputStream inputStream, String format) throws IOException {// ah46
-		if (format == null || format.equals("edgelist")) {
-			pgen(inputStream, GraphInputFormat.EDGELIST);
-		}
+	public void pgen(InputStream inputStream) throws IOException {// ah46
+		pgen(inputStream, GraphInputFormat.EDGELIST);
 	}
 
 }
