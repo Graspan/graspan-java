@@ -27,17 +27,13 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	/**
 	 * Constructor
 	 * 
-	 * @param baseFilename
-	 *            input-file
-	 * @param nParts
-	 *            the number of partitions to be created
-	 * @param edgeValConverter
-	 *            translator byte-arrays to/from edge-value
-	 * @throws IOException
-	 *             if problems reading the data
+	 * @param baseFilename input-file
+	 * @param nParts the number of partitions to be created
+	 * @param edgeValConverter translator byte-arrays to/from edge-value
+	 * @throws IOException if problems reading the data
 	 */
 	public PartitionGenerator(String baseFilename, int nParts, GenericIntegerConverter vIdtoBytes, 
-			GenericIntegerConverter edgeValConverter) throws IOException {// ah46
+			GenericIntegerConverter edgeValConverter) throws IOException {
 		this.baseFilename = baseFilename;
 		this.nParts = nParts;
 		this.vIdtoBytes = vIdtoBytes;
@@ -124,8 +120,9 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * @param format graph input format
 	 * @throws IOException
 	 */
-	public void pgen(InputStream inputStream, GraphInputFormat format) throws IOException {
+	public void pgen(InputStream inputStream) throws IOException {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
+		long partMax=edgeCounter(inputStream)/nParts;
 		String ln;
 		long lineNum = 0;
 		while ((ln = ins.readLine()) != null) {
@@ -148,7 +145,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * @param format
 	 * @throws IOException
 	 */
-	public long edgeCounter(InputStream inputStream, GraphInputFormat format) throws IOException {// ah46
+	public long edgeCounter(InputStream inputStream) throws IOException {// ah46
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));// ah46
 		String ln;
 		long numEdges = 0;
@@ -162,16 +159,5 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		return numEdges;
 	}
 
-	/**
-	 * Partition a graph
-	 * 
-	 * @param inputStream
-	 * @param format
-	 *            "edgelist"
-	 * @throws IOException
-	 */
-	public void pgen(InputStream inputStream) throws IOException {// ah46
-		pgen(inputStream, GraphInputFormat.EDGELIST);
-	}
 
 }
