@@ -17,7 +17,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 	private DataOutputStream[] shovelStreams;
 
-	private int maxVertexId = 0;
 
 	private GenericIntegerConverter vIdtoBytes;
 	private GenericIntegerConverter edgeValtoBytes;
@@ -55,7 +54,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 			 */
 			shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
 		}
-
 	}
 
 	/*
@@ -74,10 +72,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * @throws IOException
 	 */
 	public void addEdge(int src, int dest, int edgeValue) throws IOException {// ah46
-		if (maxVertexId < src)
-			maxVertexId = src;// ah46
-		if (maxVertexId < dest)
-			maxVertexId = dest;// ah46
 
 		/*
 		 * TODO here edges are grouped by dest vertex id % number of partitions
@@ -89,8 +83,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 	private byte[] valueTemplate;
 	
-	
-
 	private void addToShovel(int part, int src, int dest, int edgeValue) throws IOException {// ah46
 
 		// The values being stored
@@ -116,15 +108,11 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		edgeValtoBytes.setValue(valueTemplate, edgeValue);
 		strm.write(valueTemplate);
 		
-//		System.exit(0);
-		
-		
 //		edgeValtoBytes.setValue(valueTemplate, edgeValue);
 //		strm.writeLong(packEdges(src, dest));
 //		if (edgeValtoBytes != null) {
 //			edgeValtoBytes.setValue(valueTemplate, edgeValue);
 //		}
-		
 
 	}
 
@@ -133,26 +121,45 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * generates the partitions
 	 * 
 	 * @param inputStream
-	 * @param format
-	 *            graph input format
+	 * @param format graph input format
 	 * @throws IOException
 	 */
-	public void pgen(InputStream inputStream, GraphInputFormat format) throws IOException {// ah46
-		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));// ah46
-		String ln;// ah46
-		long lineNum = 0;// ah46
-		while ((ln = ins.readLine()) != null) {// ah46
-			if (ln.length() > 2 && !ln.startsWith("#")) {// ah46
-				lineNum++;// ah46
+	public void pgen(InputStream inputStream, GraphInputFormat format) throws IOException {
+		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
+		String ln;
+		long lineNum = 0;
+		while ((ln = ins.readLine()) != null) {
+			if (!ln.startsWith("#")) {
+				lineNum++;
 				if (lineNum % 100000 == 0)
-					logger.info("Reading line: " + lineNum);// ah46
-				String[] tok = ln.split("\t");// ah46
+					logger.info("Reading line: " + lineNum);
+				String[] tok = ln.split("\t");
 
 				/* Edge list: <src> <dst> <value> */
 				this.addEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
-				// the vertex shovels have been created after above
 			}
 		}
+	}
+	
+	/**
+	 * Scans the entire graph and counts the total number of edges. 
+	 * 
+	 * @param inputStream
+	 * @param format
+	 * @throws IOException
+	 */
+	public long edgeCounter(InputStream inputStream, GraphInputFormat format) throws IOException {// ah46
+		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));// ah46
+		String ln;
+		long numEdges = 0;
+		while ((ln = ins.readLine()) != null) {
+			if (!ln.startsWith("#")) {
+				numEdges++;
+				if (numEdges % 100000 == 0)
+					logger.info("Reading line: " + numEdges);
+			}
+		}
+		return numEdges;
 	}
 
 	/**

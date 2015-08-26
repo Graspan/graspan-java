@@ -12,10 +12,6 @@ import edu.uci.ics.cs.gDTCpreproc.datablocks.GenericIntegerConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.PartitionGenerator;
 
-/**
-  * 
- * @author akyrola
- */
 public class MainPreprocessor  {
 	static ConsolePrinter cp=new ConsolePrinter();
 
