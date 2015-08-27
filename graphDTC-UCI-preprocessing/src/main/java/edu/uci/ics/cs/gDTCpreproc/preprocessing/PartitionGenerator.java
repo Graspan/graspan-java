@@ -23,6 +23,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private String baseFilename;
 	private int nParts;
 	private int numEdges;
+	private LinkedHashMap<Long, Integer> vOutDegs;
 
 	private DataOutputStream[] shovelStreams;
 
@@ -197,6 +198,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 			}
 		}
 		numEdges = this.numEdges;
+		vOutDegs=this.vOutDegs;
 	}
 
 }
