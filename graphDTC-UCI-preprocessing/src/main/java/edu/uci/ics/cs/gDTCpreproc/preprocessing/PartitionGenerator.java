@@ -167,7 +167,8 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	}
 
 	/**
-	 * Scans the entire graph and counts the out degrees of all the vertices 
+	 * Scans the entire graph and counts the out degrees of all the vertices.
+	 * This is the Preliminary Scan 
 	 * 
 	 * @param inputStream
 	 * @param format
@@ -199,6 +200,14 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		}
 		numEdges = this.numEdges;
 		vOutDegs=this.vOutDegs;
+	}
+	
+	/*
+	 * Allocate vertices to partitions.
+	 * 
+	 */
+	public void vAlloc(){
+		
 	}
 
 }
