@@ -12,8 +12,8 @@ import edu.uci.ics.cs.gDTCpreproc.datablocks.GenericIntegerConverter;
 import edu.uci.ics.cs.gDTCpreproc.io.CompressedIO;
 import edu.uci.ics.cs.gDTCpreproc.preprocessing.PartitionGenerator;
 
-public class MainPreprocessor  {
-	static ConsolePrinter cp=new ConsolePrinter();
+public class MainPreprocessor {
+	static ConsolePrinter cp = new ConsolePrinter();
 
 	private static Logger logger = ChiLogger.getLogger("mainPreprocessor");
 
@@ -26,37 +26,29 @@ public class MainPreprocessor  {
 	 * @throws IOException
 	 */
 	protected static PartitionGenerator createPartition(String graphName, int numParts) throws IOException {
-		
-		return new PartitionGenerator(
-				graphName, 
-				numParts, 
-				new GenericIntegerConverter(4),
+		return new PartitionGenerator(graphName, numParts, new GenericIntegerConverter(4),
 				new GenericIntegerConverter(1));
 	}
 
-
 	public static void main(String[] args) throws Exception {
-		String baseFilename = args[0];//ah46
-		int nParts = Integer.parseInt(args[1]);//ah46
+		String baseFilename = args[0];
+		int nParts = Integer.parseInt(args[1]);
 
-		CompressedIO.disableCompression();//ah46
-
-		/* Create partitions */
-		
 		/*
-		 * ah46. creates the empty partitiongenerator data structure. Empty "shovel"
-		 * #of each set = # input shards
+		 * creates the empty partitiongenerator data structure. Empty
+		 * "shovel" #of each set = # input shards
 		 */
 		PartitionGenerator partgenerator = createPartition(baseFilename, nParts);
-				
-			/*
-			 * ah46. checks whether the partition files already exist, if not the partitions are filled up with edges
-			 */
-			if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nParts)).exists()) {
-				partgenerator.pgen(new FileInputStream(new File(baseFilename)));
-			} else {
-				logger.info("Found partitions -- no need to preprocess");
-			}
+
+		/*
+		 * checks whether the partition files already exist, if not the
+		 * partitions are filled up with edges
+		 */
+		if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nParts)).exists()) {
+			partgenerator.pgen(new FileInputStream(new File(baseFilename)));
+		} else {
+			logger.info("Found partitions -- no need to preprocess");
+		}
 
 	}
 }
