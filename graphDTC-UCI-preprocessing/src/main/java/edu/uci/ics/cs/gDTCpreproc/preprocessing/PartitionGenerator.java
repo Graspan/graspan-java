@@ -23,7 +23,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private String baseFilename;
 	private int nParts;
 	private int numEdges;
-	private LinkedHashMap<Long, Integer> vOutDegs;
+	private LinkedHashMap<Integer, Integer> vOutDegs;
 
 	private DataOutputStream[] shovelStreams;
 
@@ -82,26 +82,6 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	public void addEdge(int src, int dest, int edgeValue, long partMax) throws IOException {// ah46
 
 		addToShovel(1, src, dest, edgeValue);
-
-		ArrayList<Long> al = new ArrayList<Long>();
-		LinkedHashMap<Long, ArrayList> edgeDistributorTable = new LinkedHashMap<Long, ArrayList>();
-		int edtItemSize = edgeDistributorTable.get((long) 124).size();
-		al = edgeDistributorTable.get((long) 124);
-
-		if (edtItemSize != 0) {
-			/*
-			 * edge with same source already exists in the EDT
-			 */
-			if (edtItemSize < partMax) {// you can still add edges to the list
-										// for this source vertex
-				if (edgeDistributorTable.size() < nParts) {//
-					al.add((long) 456);
-					edgeDistributorTable.put((long) 124, al);
-				}
-			} else {// edge list for this source vertex is full.
-
-			}
-		}
 
 	}
 
@@ -178,13 +158,14 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
-		LinkedHashMap<Long, Integer> vOutDegs = new LinkedHashMap<Long,Integer>();
+		LinkedHashMap<Integer, Integer> vOutDegs = new LinkedHashMap<Integer,Integer>();
 		
 		while ((ln = ins.readLine()) != null) {
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 
-				long src = Long.parseLong(tok[0]);
+				int src = Integer.parseInt(tok[0]);
+				
 				
 				if (!vOutDegs.containsKey(src)){
 					vOutDegs.put(src, 1);
@@ -195,18 +176,28 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 				
 				numEdges++;
 				if (numEdges % 100000 == 0)
+					
 					logger.info("Reading line: " + numEdges);
 			}
 		}
-		numEdges = this.numEdges;
-		vOutDegs=this.vOutDegs;
+		this.numEdges=(int) numEdges;
+		this.vOutDegs=vOutDegs;
+		System.out.println(vOutDegs.size());
+		System.out.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
 	}
 	
 	/*
 	 * Allocate vertices to partitions.
 	 * 
 	 */
-	public void vAlloc(){
+	public void vAlloc(int nParts){
+		
+		/*
+		 * calculating the size of each partition
+		 */
+		long partSize=numEdges/nParts;
+		
+		
 		
 	}
 
