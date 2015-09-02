@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private String baseFilename;
 	private int nParts;
 	private int numEdges;
-	private LinkedHashMap<Integer, Integer> vOutDegs;
+	private HashMap<Integer, Integer> vOutDegs;
 
 	private DataOutputStream[] shovelStreams;
 
@@ -158,7 +159,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
-		LinkedHashMap<Integer, Integer> vOutDegs = new LinkedHashMap<Integer,Integer>();
+		HashMap<Integer, Integer> vOutDegs = new HashMap<Integer,Integer>();
 		
 		while ((ln = ins.readLine()) != null) {
 			if (!ln.startsWith("#")) {
