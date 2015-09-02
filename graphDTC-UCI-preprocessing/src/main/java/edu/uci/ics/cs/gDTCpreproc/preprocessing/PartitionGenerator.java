@@ -7,9 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gDTCpreproc.ChiLogger;
@@ -112,6 +115,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 		edgeValtoBytes.setValue(valueTemplate, edgeValue);
 		strm.write(valueTemplate);
+		
 
 		// edgeValtoBytes.setValue(valueTemplate, edgeValue);
 		// strm.writeLong(packEdges(src, dest));
@@ -184,6 +188,17 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		this.numEdges=(int) numEdges;
 		this.vOutDegs=vOutDegs;
 		System.out.println(vOutDegs.size());
+		
+		/*
+		 * Save the file in disk
+		 */
+		Iterator it = vOutDegs.entrySet().iterator();
+		PrintWriter writer = new PrintWriter("degrees.txt", "UTF-8");
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        writer.println(pair.getKey() + "\t" + pair.getValue());
+	    }
+		writer.close();
 		System.out.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
 	}
 	
