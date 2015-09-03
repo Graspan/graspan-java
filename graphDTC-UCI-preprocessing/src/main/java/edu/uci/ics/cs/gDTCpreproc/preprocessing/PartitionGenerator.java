@@ -26,8 +26,8 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 	private String baseFilename;
 	private int nParts;
+	private int degMax;
 	private int numEdges;
-	private HashMap<Integer, Integer> vOutDegs;
 
 	private DataOutputStream[] shovelStreams;
 
@@ -186,19 +186,24 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 			}
 		}
 		this.numEdges=(int) numEdges;
-		this.vOutDegs=vOutDegs;
-		System.out.println(vOutDegs.size());
 		
 		/*
-		 * Save the file in disk
+		 * Save the file in disk and finds max degree
 		 */
 		Iterator it = vOutDegs.entrySet().iterator();
-		PrintWriter writer = new PrintWriter("degrees.txt", "UTF-8");
+		PrintWriter writer = new PrintWriter("C:/Users/Aftab/workspace/graphdtc/graphDTC-UCI-preprocessing/degrees.txt", "UTF-8");
+		int degMax=0;
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
+	        if (Integer.parseInt(pair.getValue().toString())>degMax){
+	        	degMax=Integer.parseInt(pair.getValue().toString());
+	        }
 	        writer.println(pair.getKey() + "\t" + pair.getValue());
 	    }
+	    
+	    this.degMax=degMax;
 		writer.close();
+		System.out.println(degMax);
 		System.out.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
 	}
 	
@@ -211,7 +216,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		/*
 		 * calculating the size of each partition
 		 */
-		long partSize=numEdges/nParts;
+		int partSize=Math.max(numEdges/nParts, degMax);
 		
 		
 		
