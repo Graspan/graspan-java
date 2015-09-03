@@ -33,7 +33,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private HashMap<Integer, Integer> vOutDegs ;
 	private LinkedHashMap<Integer, Integer> pat ;
 
-	private DataOutputStream[] shovelStreams;
+	private DataOutputStream[] partitionStreams;
 
 	private GenericIntegerConverter vIdtoBytes;
 	private GenericIntegerConverter edgeValtoBytes;
@@ -60,42 +60,36 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		this.edgeValtoBytes = edgeValConverter;
 
 		/**
-		 * the edges are "shoveled" to partitions.
+		 * the edges are stored in partitions.
 		 */
-		shovelStreams = new DataOutputStream[nParts];
+		partitionStreams = new DataOutputStream[nParts];
 		for (int i = 0; i < nParts; i++) {
 
 			/*
-			 * ah46. Empty "shovel" files are created"
+			 * Empty "partition" files are created"
 			 */
-			shovelStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(shovelFilename(i))));
+			partitionStreams[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(partitionFilename(i))));
 		}
 	}
 
 	/*
-	 * ah46. separate methods for filenames
+	 * separate methods for filenames
 	 */
-	private String shovelFilename(int i) {
-		return baseFilename + ".shovel." + i;
+	private String partitionFilename(int i) {
+		return baseFilename + ".partition." + i;
 	}
 
 	/**
 	 * Adds an edge to the preprocessing.
 	 * 
-	 * @param src
-	 * @param dest
-	 * @param edgeValue
-	 * @throws IOException
 	 */
 	public void addEdge(int src, int dest, int edgeValue, long partMax) throws IOException {// ah46
-
-		addToShovel(1, src, dest, edgeValue);
-
+		addtoPartition(pat.get(src), src, dest, edgeValue);
 	}
 
 	private byte[] valueTemplate;
 
-	private void addToShovel(int part, int src, int dest, int edgeValue) throws IOException {// ah46
+	private void addtoPartition(int part, int src, int dest, int edgeValue) throws IOException {// ah46
 
 		// The values being stored
 		// System.out.print(String.valueOf(part)+" "+String.valueOf(src)+"
@@ -105,7 +99,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		// System.exit(0);
 		// System.out.print(()value);
 
-		DataOutputStream strm = shovelStreams[part];
+		DataOutputStream strm = partitionStreams[part];
 
 		valueTemplate = new byte[vIdtoBytes.getSize()];
 
@@ -175,14 +169,12 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 
 				int src = Integer.parseInt(tok[0]);
 				
-				
 				if (!vOutDegs.containsKey(src)){
 					vOutDegs.put(src, 1);
 				}
 				else{
 					vOutDegs.put(src, vOutDegs.get(src)+1);
 				}
-				
 				numEdges++;
 				if (numEdges % 100000 == 0)
 					
@@ -225,11 +217,8 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		 * But this isn't entirely memory efficient.
 		 */
 		int partSize=Math.max(numEdges/nParts, degMax);
-		System.out.println(numEdges/nParts);
-		System.exit(0);
 		
-		
-		int partNo=1;
+		int partNo=0;
 		int degSum=0;
 		LinkedHashMap<Integer, Integer> pat = new LinkedHashMap<Integer,Integer>();
 		
