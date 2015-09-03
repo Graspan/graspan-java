@@ -3,11 +3,13 @@ package edu.uci.ics.cs.gDTCpreproc.preprocessing;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +30,8 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private int nParts;
 	private int degMax;
 	private int numEdges;
+	private HashMap<Integer, Integer> vOutDegs ;
+	private LinkedHashMap<Integer, Integer> pat ;
 
 	private DataOutputStream[] shovelStreams;
 
@@ -188,35 +192,76 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		this.numEdges=(int) numEdges;
 		
 		/*
-		 * Save the file in disk and finds max degree
+		 * Save the degrees file in disk and find max degree
 		 */
 		Iterator it = vOutDegs.entrySet().iterator();
 		PrintWriter writer = new PrintWriter("C:/Users/Aftab/workspace/graphdtc/graphDTC-UCI-preprocessing/degrees.txt", "UTF-8");
 		int degMax=0;
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
-	        if (Integer.parseInt(pair.getValue().toString())>degMax){
-	        	degMax=Integer.parseInt(pair.getValue().toString());
+	        if ((Integer)pair.getValue()>degMax){
+	        	degMax=(Integer)pair.getValue();
 	        }
 	        writer.println(pair.getKey() + "\t" + pair.getValue());
 	    }
 	    
+	    writer.close();
+	    this.vOutDegs=vOutDegs;
 	    this.degMax=degMax;
-		writer.close();
+		
 		System.out.println(degMax);
 		System.out.println("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
 	}
 	
 	/*
-	 * Allocate vertices to partitions.
+	 * Create Partition Allocation Table
 	 * 
 	 */
-	public void vAlloc(int nParts){
+	public void createPartAllocTab(int nParts) throws IOException{
 		
 		/*
-		 * calculating the size of each partition
+		 * calculating the size of each partition.
+		 * Allocate it to whichever is maximum the numEdges/nParts or the maximum degree.
+		 * But this isn't entirely memory efficient.
 		 */
 		int partSize=Math.max(numEdges/nParts, degMax);
+		System.out.println(numEdges/nParts);
+		System.exit(0);
+		
+		
+		int partNo=1;
+		int degSum=0;
+		LinkedHashMap<Integer, Integer> pat = new LinkedHashMap<Integer,Integer>();
+		
+		/*
+		 * Scanning the degrees map to assign vertices to the partition allocation table 
+		 */
+		Iterator vOutDegIt = vOutDegs.entrySet().iterator();
+		while (vOutDegIt.hasNext()) {
+			Map.Entry pair = (Map.Entry)vOutDegIt.next();
+			degSum=degSum+(Integer)pair.getValue();
+			if(degSum < partSize){
+				pat.put((Integer) pair.getKey(), partNo);
+			}
+			else{
+				partNo++;
+				degSum=0;
+				pat.put((Integer) pair.getKey(), partNo);
+			}
+	        
+	    }
+		
+		/*
+		 * Save the pat file in disk and find max degree
+		 */
+		Iterator patIt = pat.entrySet().iterator();
+		PrintWriter writer2 = new PrintWriter("C:/Users/Aftab/workspace/graphdtc/graphDTC-UCI-preprocessing/pat.txt", "UTF-8");
+	    while (patIt.hasNext()) {
+	        Map.Entry pair = (Map.Entry)patIt.next();
+	        writer2.println(pair.getKey() + "\t" + pair.getValue());
+	    }
+	    writer2.close();
+	    this.pat=pat;
 		
 		
 		
