@@ -31,7 +31,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	private int degMax;
 	private int numEdges;
 	private HashMap<Integer, Integer> vOutDegs ;
-	private LinkedHashMap<Integer, Integer> pat ;
+	private LinkedHashMap<Integer, Integer> partAllocTable ;
 
 	private DataOutputStream[] partitionStreams;
 
@@ -83,13 +83,21 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	 * Adds edges to the partition files
 	 */
 	public void addEdge(int src, int dest, int edgeValue, long partMax) throws IOException {
-		addtoPartition_ELformat(pat.get(src), src, dest, edgeValue);
+		addtoPartitionFile_ELformat(partAllocTable.get(src), src, dest, edgeValue);
+	}
+	
+	
+	/**
+	 * Adds edges to the partition map, in adjacency list format.
+	 */
+	private void addtoPartitionMap(int part, int src, int dest, int edgeValue) throws IOException {
+		
 	}
 	
 	/**
 	 * Adds edges to the partition files, in adjacency list format.
 	 */
-	private void addtoPartition_ALformat(int part, int src, int dest, int edgeValue) throws IOException {
+	private void addtoPartitionFile_ALformat(int part, int src, int dest, int edgeValue) throws IOException {
 		
 	}
 
@@ -98,7 +106,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	/**
 	 * Adds edges to the partition files, in edge list format.
 	 */
-	private void addtoPartition_ELformat(int part, int src, int dest, int edgeValue) throws IOException {
+	private void addtoPartitionFile_ELformat(int part, int src, int dest, int edgeValue) throws IOException {
 
 		// The values being stored
 		// System.out.print(String.valueOf(part)+" "+String.valueOf(src)+"
@@ -229,7 +237,7 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 		
 		int partNo=0;
 		int degSum=0;
-		LinkedHashMap<Integer, Integer> pat = new LinkedHashMap<Integer,Integer>();
+		LinkedHashMap<Integer, Integer> partAllocTable = new LinkedHashMap<Integer,Integer>();
 		
 		/*
 		 * Scanning the degrees map to assign vertices to the partition allocation table 
@@ -239,27 +247,27 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 			Map.Entry pair = (Map.Entry)vOutDegIt.next();
 			degSum=degSum+(Integer)pair.getValue();
 			if(degSum < partSize){
-				pat.put((Integer) pair.getKey(), partNo);
+				partAllocTable.put((Integer) pair.getKey(), partNo);
 			}
 			else{
 				partNo++;
 				degSum=0;
-				pat.put((Integer) pair.getKey(), partNo);
+				partAllocTable.put((Integer) pair.getKey(), partNo);
 			}
 	        
 	    }
 		
 		/*
-		 * Save the pat file in disk and find max degree
+		 * Save the partAllocTable file in disk and find max degree
 		 */
-		Iterator patIt = pat.entrySet().iterator();
-		PrintWriter writer2 = new PrintWriter("C:/Users/Aftab/workspace/graphdtc/graphDTC-UCI-preprocessing/pat.txt", "UTF-8");
+		Iterator patIt = partAllocTable.entrySet().iterator();
+		PrintWriter writer2 = new PrintWriter("C:/Users/Aftab/workspace/graphdtc/graphDTC-UCI-preprocessing/partAllocTable.txt", "UTF-8");
 	    while (patIt.hasNext()) {
 	        Map.Entry pair = (Map.Entry)patIt.next();
 	        writer2.println(pair.getKey() + "\t" + pair.getValue());
 	    }
 	    writer2.close();
-	    this.pat=pat;
+	    this.partAllocTable=partAllocTable;
 		
 		
 		

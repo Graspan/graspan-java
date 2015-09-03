@@ -55,7 +55,8 @@ public class MainPreprocessor {
 		 */
 		if (!new File(ChiFilenames.getFilenameIntervals(baseFilename, nParts)).exists()) {
 			partgenerator.genDegrees(new FileInputStream(new File(baseFilename)));
-//			partgenerator.pgen(new FileInputStream(new File(baseFilename)));
+			partgenerator.createPartAllocTab(nParts);
+			partgenerator.pgen(new FileInputStream(new File(baseFilename)));
 		} else {
 			logger.info("Found partitions -- no need to preprocess");
 		}
