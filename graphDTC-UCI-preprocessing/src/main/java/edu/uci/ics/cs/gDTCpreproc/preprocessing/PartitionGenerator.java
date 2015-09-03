@@ -80,16 +80,25 @@ public class PartitionGenerator<VertexValueType, EdgeValueType> {
 	}
 
 	/**
-	 * Adds an edge to the preprocessing.
-	 * 
+	 * Adds edges to the partition files
 	 */
-	public void addEdge(int src, int dest, int edgeValue, long partMax) throws IOException {// ah46
-		addtoPartition(pat.get(src), src, dest, edgeValue);
+	public void addEdge(int src, int dest, int edgeValue, long partMax) throws IOException {
+		addtoPartition_ELformat(pat.get(src), src, dest, edgeValue);
+	}
+	
+	/**
+	 * Adds edges to the partition files, in adjacency list format.
+	 */
+	private void addtoPartition_ALformat(int part, int src, int dest, int edgeValue) throws IOException {
+		
 	}
 
 	private byte[] valueTemplate;
 
-	private void addtoPartition(int part, int src, int dest, int edgeValue) throws IOException {// ah46
+	/**
+	 * Adds edges to the partition files, in edge list format.
+	 */
+	private void addtoPartition_ELformat(int part, int src, int dest, int edgeValue) throws IOException {
 
 		// The values being stored
 		// System.out.print(String.valueOf(part)+" "+String.valueOf(src)+"
