@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gDTCpreproc;
+package edu.uci.ics.cs.gdtc.preproc;
 
 import java.io.File;
 import java.io.FileInputStream;
