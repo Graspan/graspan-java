@@ -23,7 +23,7 @@ public class MainPreprocessor {
 		PartitionGenerator partgenerator = createPartition(baseFilename, nParts);
 		partgenerator.generateDegrees(new FileInputStream(new File(baseFilename)));
 		partgenerator.allocateVIntervalstoPartitions();
-		partgenerator.pgen(new FileInputStream(new File(baseFilename)));
+		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 	}
 
 	/**
@@ -32,8 +32,7 @@ public class MainPreprocessor {
 	 * @param inputGraphPath
 	 * @param numPartitions
 	 */
-	protected static PartitionGenerator createPartition(String inputGraphPath, int numPartitions)
-			throws IOException {
+	protected static PartitionGenerator createPartition(String inputGraphPath, int numPartitions) throws IOException {
 		return new PartitionGenerator(inputGraphPath, numPartitions);
 	}
 }
