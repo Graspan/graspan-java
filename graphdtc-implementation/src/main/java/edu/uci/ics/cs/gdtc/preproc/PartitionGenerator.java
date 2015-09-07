@@ -48,13 +48,8 @@ public class PartitionGenerator {
 		this.numPartitions = numPartitions;
 		this.baseFilename = baseFilename;
 
-		// initialize partition allocation table and create empty partition
-		// files
+		// initialize partition allocation table
 		partitionAllocationTable = new int[numPartitions];
-//		for (int i = 0; i < numPartitions; i++) {
-//			partitionAllocationTable[i] = 0;
-//			new FileWriter(baseFilename + ".partition." + i, true);
-//		}
 	}
 
 	/**
@@ -96,7 +91,18 @@ public class PartitionGenerator {
 			degreeOutputStream.println(pair.getKey() + "\t" + pair.getValue());
 		}
 		degreeOutputStream.close();
-		this.outDegreesMap = (TreeMap<Integer, Integer>) Collections.unmodifiableMap(degreesMap);
+		this.outDegreesMap = degreesMap;
+
+		/*
+		 * ERROR WHEN USING THE FOLLOWING CODE INSTEAD OF ABOVE.: Exception in thread "main" java.lang.ClassCastException:
+		 * java.util.Collections$UnmodifiableMap cannot be cast to
+		 * java.util.TreeMap at
+		 * edu.uci.ics.cs.gdtc.preproc.PartitionGenerator.generateDegrees(
+		 * PartitionGenerator.java:94) at
+		 * edu.uci.ics.cs.gdtc.preproc.MainPreprocessor.main(MainPreprocessor.
+		 * java:24)
+		 */
+		//this.outDegreesMap = (TreeMap<Integer, Integer>) Collections.unmodifiableMap(degreesMap);
 	}
 
 	/**
@@ -158,7 +164,6 @@ public class PartitionGenerator {
 
 		// initialize partition buffers
 		ArrayList<LinkedHashMap<Integer, ArrayList<Integer[]>>> partitionBuffers = new ArrayList<LinkedHashMap<Integer, ArrayList<Integer[]>>>();
-
 		int partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
 		int partitionBufferFreespace[] = new int[numPartitions];
 		for (int i = 0; i < numPartitions; i++) {
@@ -166,8 +171,6 @@ public class PartitionGenerator {
 			LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = new LinkedHashMap<Integer, ArrayList<Integer[]>>();
 			partitionBuffers.add(vertexAdjList);
 		}
-		
-		
 		this.partitionBuffers = partitionBuffers;
 		this.partitionBufferSize = partitionBufferSize;
 		this.partitionBufferFreespace = partitionBufferFreespace;
@@ -179,7 +182,7 @@ public class PartitionGenerator {
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 				// Edge list: <src> <dst> <value>
-				processEdge(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
+				addEdgetoBuffer(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
 			}
 		}
 
@@ -199,45 +202,39 @@ public class PartitionGenerator {
 	 * @param edgeValue
 	 * @throws IOException
 	 */
-	private void processEdge(int srcVId, int dstVId, int edgeValue) throws IOException {
+	private void addEdgetoBuffer(int srcVId, int dstVId, int edgeValue) throws IOException {
 
 		int partitionId = findPartition(srcVId);
 
-		// obtain the adjacencyList from the relevant partition buffer
+		// get the adjacencyList from the relevant partition buffer
 		LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
 
-		// obtain the relevant srcVIdrow row from the adjacencyList (if it
-		// already exists)
+		// store the (destVId, edgeValue) pair in an array
 		Integer[] destEdgeValPair = new Integer[2];
 		destEdgeValPair[0] = dstVId;
 		destEdgeValPair[1] = edgeValue;
 
+		/*
+		 * IF the srcVId row already exists, save the (destVId, edgeValue) pair
+		 * array in the vertexAdjList for the given SrcVId. ELSE create a new
+		 * arrayList for the SrcVId and then add to the vertexAdjList of this
+		 * partition buffer
+		 */
 		if (vertexAdjList.containsKey(srcVId)) {
 			vertexAdjList.get(srcVId).add(destEdgeValPair);
-		}
-		else{
+		} else {
 			ArrayList<Integer[]> srcVIdRow = new ArrayList<Integer[]>();
 			srcVIdRow.add(destEdgeValPair);
 			vertexAdjList.put(srcVId, srcVIdRow);
 		}
 
-		// store the dstVId and edge value in an array and add it to
-		// srcVIdrow
+		// decrement the partition buffer space
+		partitionBufferFreespace[partitionId] = partitionBufferFreespace[partitionId] - 1;
 
-		/*
-		 * update the adjacency list and store it back in the buffer in place of
-		 * the original adjacency list if there is space available in the buffer
-		 */
-		
-		if (!isPartitionBufferFull(partitionId)) {
-//			partitionBuffers.set(partitionId, vertexAdjList);
-			partitionBufferFreespace[partitionId] = partitionBufferFreespace[partitionId] - 1;
-		} else {
+		// if partition buffer is full transfer the partition buffer to file
+		if (isPartitionBufferFull(partitionId)) {
 			transferBufferEdgestoDisk(partitionId);
-//			partitionBuffers.set(partitionId, vertexAdjList);
-//			partitionBufferFreespace[partitionId] = this.partitionBufferSize;
 		}
-
 	}
 
 	/**
@@ -280,8 +277,6 @@ public class PartitionGenerator {
 		PrintWriter adjListOutputStream = new PrintWriter(
 				new BufferedWriter(new FileWriter(baseFilename + ".partition." + partitionId, true)));
 
-		// adjListOutputStream.println();
-
 		// obtain the adjacencyList from the relevant partition buffer
 		LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
 		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList.entrySet().iterator();
@@ -313,7 +308,6 @@ public class PartitionGenerator {
 
 		// empty the buffer
 		vertexAdjList.clear();
-//		partitionBuffers.set(partitionId, vertexAdjList);
 		partitionBufferFreespace[partitionId] = partitionBufferSize;
 	}
 }
