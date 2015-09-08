@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
+/**
+ * 
+ * @author Aftab
+ *INCOMPLETE
+ */
 public class PartitionInterconnCalculator {
 	int numParts;
 

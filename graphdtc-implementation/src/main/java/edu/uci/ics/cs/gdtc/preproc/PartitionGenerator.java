@@ -8,10 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -22,6 +20,15 @@ import java.util.TreeMap;
  */
 public class PartitionGenerator {
 
+	/**
+	 * numPartitions - number of input partitions numEdges - total number of
+	 * input edges in the graph baseFilename - path of the input graph file
+	 * outDegreesMap - map of vertex and degrees BUFFER_FOR_PARTITIONS - the
+	 * total number of edges that can be kept in all partition buffers
+	 * partitionBufferSize - the total number of edges that can be kept in each
+	 * partition buffer partitionBufferFreespace - table consisting of available
+	 * space in each partition buffer
+	 */
 	private int numPartitions;
 	private long numEdges;
 	private String baseFilename;
@@ -29,13 +36,12 @@ public class PartitionGenerator {
 	private int[] partitionAllocationTable;
 	private static final int BUFFER_FOR_PARTITIONS = 10;
 	private int partitionBufferSize;
+	private int[] partitionBufferFreespace;
 
 	// Each partition buffer consists of an adjacency list.
 	// ArrayList<HashMap<srcVertexID, <[destVertexID1,edgeValue1],
 	// [destVertexID2,edgeValue2]..........>>
-	private ArrayList<LinkedHashMap<Integer, ArrayList<Integer[]>>> partitionBuffers;
-
-	private int[] partitionBufferFreespace;
+	private ArrayList<HashMap<Integer, ArrayList<Integer[]>>> partitionBuffers;
 
 	/**
 	 * Constructor
@@ -64,18 +70,16 @@ public class PartitionGenerator {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
-		TreeMap<Integer, Integer> degreesMap = new TreeMap<Integer, Integer>();
+		TreeMap<Integer, Integer> outDegreesMap = new TreeMap<Integer, Integer>();
 
 		while ((ln = ins.readLine()) != null) {
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
-
 				int src = Integer.parseInt(tok[0]);
-
-				if (!degreesMap.containsKey(src)) {
-					degreesMap.put(src, 1);
+				if (!outDegreesMap.containsKey(src)) {
+					outDegreesMap.put(src, 1);
 				} else {
-					degreesMap.put(src, degreesMap.get(src) + 1);
+					outDegreesMap.put(src, outDegreesMap.get(src) + 1);
 				}
 				numEdges++;
 			}
@@ -83,7 +87,7 @@ public class PartitionGenerator {
 		this.numEdges = numEdges;
 
 		// Save the degrees on disk
-		Iterator it = degreesMap.entrySet().iterator();
+		Iterator it = outDegreesMap.entrySet().iterator();
 
 		PrintWriter degreeOutputStream = new PrintWriter(baseFilename + ".degrees", "UTF-8");
 		while (it.hasNext()) {
@@ -91,10 +95,11 @@ public class PartitionGenerator {
 			degreeOutputStream.println(pair.getKey() + "\t" + pair.getValue());
 		}
 		degreeOutputStream.close();
-		this.outDegreesMap = degreesMap;
+		this.outDegreesMap = outDegreesMap;
 
 		/*
-		 * ERROR WHEN USING THE FOLLOWING CODE INSTEAD OF ABOVE.: Exception in thread "main" java.lang.ClassCastException:
+		 * ERROR when using the following code instead of the one above.:
+		 * Exception in thread "main" java.lang.ClassCastException:
 		 * java.util.Collections$UnmodifiableMap cannot be cast to
 		 * java.util.TreeMap at
 		 * edu.uci.ics.cs.gdtc.preproc.PartitionGenerator.generateDegrees(
@@ -102,7 +107,8 @@ public class PartitionGenerator {
 		 * edu.uci.ics.cs.gdtc.preproc.MainPreprocessor.main(MainPreprocessor.
 		 * java:24)
 		 */
-		//this.outDegreesMap = (TreeMap<Integer, Integer>) Collections.unmodifiableMap(degreesMap);
+		// this.outDegreesMap = (TreeMap<Integer, Integer>)
+		// Collections.unmodifiableMap(degreesMap);
 	}
 
 	/**
@@ -110,11 +116,19 @@ public class PartitionGenerator {
 	 */
 	public void allocateVIntervalstoPartitions() {
 
+		// average of edges by no. of partitions
 		long avgEdgesPerPartition = Math.floorDiv(numEdges, numPartitions);
+
+		// the heuristic for interval max
 		long intervalMax = (long) (avgEdgesPerPartition * 0.9);
 
+		// marker of the max vertex (based on Id) of the interval
 		int intervalHeadVertexId = 0;
+
+		// counter of the number of edges in the interval
 		int intervalEdgeCount = 0;
+
+		// marker of the current partition table
 		int partTabIdx = 0;
 
 		Iterator it = outDegreesMap.entrySet().iterator();
@@ -163,12 +177,12 @@ public class PartitionGenerator {
 	public void writePartitionEdgestoFiles(InputStream inputStream) throws IOException {
 
 		// initialize partition buffers
-		ArrayList<LinkedHashMap<Integer, ArrayList<Integer[]>>> partitionBuffers = new ArrayList<LinkedHashMap<Integer, ArrayList<Integer[]>>>();
+		ArrayList<HashMap<Integer, ArrayList<Integer[]>>> partitionBuffers = new ArrayList<HashMap<Integer, ArrayList<Integer[]>>>();
 		int partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
 		int partitionBufferFreespace[] = new int[numPartitions];
 		for (int i = 0; i < numPartitions; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;
-			LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = new LinkedHashMap<Integer, ArrayList<Integer[]>>();
+			HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = new HashMap<Integer, ArrayList<Integer[]>>();
 			partitionBuffers.add(vertexAdjList);
 		}
 		this.partitionBuffers = partitionBuffers;
@@ -186,32 +200,33 @@ public class PartitionGenerator {
 			}
 		}
 
-		// transfer any remaining edges in the buffer to files.
+		// send any remaining edges in the buffer to disk
 		for (int i = 0; i < numPartitions; i++) {
-			transferBufferEdgestoDisk(i);
+			sendBufferEdgestoDisk_NmlFmt(i);
 		}
 	}
 
 	/**
 	 * Checks each edge, finds the appropriate partition, adds them to the
-	 * corresponding partition buffer, and then calls transferBufferEdgestoDisk
-	 * when the buffer is full
+	 * corresponding partition buffer, and then CALLS
+	 * sendBufferEdgestoDisk_NmlFmt/ByteFmt() when the buffer is full (CALLED BY
+	 * writePartitionEdgestoFiles())
 	 * 
 	 * @param srcVId
-	 * @param dstVId
+	 * @param destVId
 	 * @param edgeValue
 	 * @throws IOException
 	 */
-	private void addEdgetoBuffer(int srcVId, int dstVId, int edgeValue) throws IOException {
+	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue) throws IOException {
 
 		int partitionId = findPartition(srcVId);
 
 		// get the adjacencyList from the relevant partition buffer
-		LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
+		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
 
 		// store the (destVId, edgeValue) pair in an array
 		Integer[] destEdgeValPair = new Integer[2];
-		destEdgeValPair[0] = dstVId;
+		destEdgeValPair[0] = destVId;
 		destEdgeValPair[1] = edgeValue;
 
 		/*
@@ -233,13 +248,13 @@ public class PartitionGenerator {
 
 		// if partition buffer is full transfer the partition buffer to file
 		if (isPartitionBufferFull(partitionId)) {
-			transferBufferEdgestoDisk(partitionId);
+			sendBufferEdgestoDisk_NmlFmt(partitionId);
 		}
 	}
 
 	/**
 	 * searches the partitionAllocationTable to find out which partition a
-	 * vertex belongs (called by processEdge() method)
+	 * vertex belongs (CALLED BY addEdgetoBuffer() method)
 	 * 
 	 * @param srcV
 	 */
@@ -255,7 +270,8 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * Checks whether partition buffer is full (called by processEdge() method)
+	 * Checks whether partition buffer is full (CALLED BY addEdgetoBuffer()
+	 * method)
 	 * 
 	 * @param partitionId
 	 * @return
@@ -266,27 +282,36 @@ public class PartitionGenerator {
 
 	/**
 	 * Transfers the buffer edges to disk (performs the actual write operation)
+	 * storing them in Normal Format (CALLED BY addEdgetoBuffer() when buffer is
+	 * full and CALLED BY writePartitionEdgestoFiles() when there are no more
+	 * edges to be read from input graph)
 	 * 
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private void transferBufferEdgestoDisk(int partitionId) throws IOException {
-		int srcId, destId, count;
+	private void sendBufferEdgestoDisk_NmlFmt(int partitionId) throws IOException {
+		int srcVId, destVId, count;
 		byte edgeValue;
 
 		PrintWriter adjListOutputStream = new PrintWriter(
 				new BufferedWriter(new FileWriter(baseFilename + ".partition." + partitionId, true)));
 
-		// obtain the adjacencyList from the relevant partition buffer
-		LinkedHashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
+		// get the adjacencyList from the relevant partition buffer
+		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
 		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList.entrySet().iterator();
+
+		/*
+		 * Write the adjacencyList in the disk in the following format:
+		 * <SrcId-1><Count><DestId-1><EdgeVal-1><DestId-2><EdgeVal-2>........<
+		 * SrcId-n><Count><DestId-1><EdgeVal-1><DestId-2><EdgeVal-2>
+		 */
 		while (it.hasNext()) {
 
 			Map.Entry<Integer, ArrayList<Integer[]>> pair = it.next();
 
 			// write the srcId
-			srcId = pair.getKey();
-			adjListOutputStream.println(srcId);
+			srcVId = pair.getKey();
+			adjListOutputStream.println(srcVId);
 
 			// get the relevant srcVIdrow row from the adjacencyList
 			ArrayList<Integer[]> srcVIdRow = pair.getValue();
@@ -298,9 +323,9 @@ public class PartitionGenerator {
 			// write the destId edgeValue pair
 			for (int i = 0; i < srcVIdRow.size(); i++) {
 				Integer[] destIdEdgeVal = srcVIdRow.get(i);
-				destId = destIdEdgeVal[0];
+				destVId = destIdEdgeVal[0];
 				edgeValue = Byte.parseByte(destIdEdgeVal[1].toString());
-				adjListOutputStream.println(destId);
+				adjListOutputStream.println(destVId);
 				adjListOutputStream.println(edgeValue);
 			}
 		}
@@ -310,4 +335,53 @@ public class PartitionGenerator {
 		vertexAdjList.clear();
 		partitionBufferFreespace[partitionId] = partitionBufferSize;
 	}
+
+	/**
+	 * Transfers the buffer edges to disk (performs the actual write operation),
+	 * storing them in Byte Format//INCOMPLETE
+	 * 
+	 * @param partitionId
+	 * @throws IOException
+	 */
+	private void sendBufferEdgestoDisk_ByteFmt(int partitionId) throws IOException {
+		int srcVId, destVId, count;
+		byte edgeValue;
+
+		PrintWriter adjListOutputStream = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".partition." + partitionId, true)));
+
+		// obtain the adjacencyList from the relevant partition buffer
+		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers.get(partitionId);
+		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList.entrySet().iterator();
+		while (it.hasNext()) {
+
+			Map.Entry<Integer, ArrayList<Integer[]>> pair = it.next();
+
+			// write the srcId
+			srcVId = pair.getKey();
+			adjListOutputStream.println(srcVId);
+
+			// get the relevant srcVIdrow row from the adjacencyList
+			ArrayList<Integer[]> srcVIdRow = pair.getValue();
+
+			// write the count
+			count = srcVIdRow.size();
+			adjListOutputStream.println(count);
+
+			// write the destId edgeValue pair
+			for (int i = 0; i < srcVIdRow.size(); i++) {
+				Integer[] destIdEdgeVal = srcVIdRow.get(i);
+				destVId = destIdEdgeVal[0];
+				edgeValue = Byte.parseByte(destIdEdgeVal[1].toString());
+				adjListOutputStream.println(destVId);
+				adjListOutputStream.println(edgeValue);
+			}
+		}
+		adjListOutputStream.close();
+
+		// empty the buffer
+		vertexAdjList.clear();
+		partitionBufferFreespace[partitionId] = partitionBufferSize;
+	}
+
 }
