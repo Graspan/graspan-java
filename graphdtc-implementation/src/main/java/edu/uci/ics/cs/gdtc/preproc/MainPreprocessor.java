@@ -17,7 +17,7 @@ public class MainPreprocessor {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		// read input
+
 		String baseFilename = args[0];
 		int numPartitions = Integer.parseInt(args[1]);
 

@@ -110,9 +110,9 @@ public class PartitionGenerator {
 		 * Exception in thread "main" java.lang.ClassCastException:
 		 * java.util.Collections$UnmodifiableMap cannot be cast to
 		 * java.util.TreeMap at
-		 * edu.uci.ics.cs.gdtc.preproc.PartitionGenerator.generateDegrees(
+		 * edu.uci.ics.cs.gdtc.PartitionGenerator.generateDegrees(
 		 * PartitionGenerator.java:94) at
-		 * edu.uci.ics.cs.gdtc.preproc.MainPreprocessor.main(MainPreprocessor.
+		 * edu.uci.ics.cs.gdtc.MainPreprocessor.main(MainPreprocessor.
 		 * java:24)
 		 */
 		// this.outDegreesMap = (TreeMap<Integer, Integer>)
@@ -356,6 +356,7 @@ public class PartitionGenerator {
 	 * @param partitionId
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	private void sendBufferEdgestoDisk_NmlFmt(int partitionId) throws IOException {
 		int srcVId, destVId, count;
 		byte edgeValue;
