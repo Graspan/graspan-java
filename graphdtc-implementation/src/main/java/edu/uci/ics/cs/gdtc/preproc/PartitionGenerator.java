@@ -37,7 +37,7 @@ public class PartitionGenerator {
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
 	public static int[] partitionAllocationTable;
-	private static final long BUFFER_FOR_PARTITIONS = 1000000000000000L;
+	private static final long BUFFER_FOR_PARTITIONS = 3;
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
 	private DataOutputStream[] partitionOutputStreams;

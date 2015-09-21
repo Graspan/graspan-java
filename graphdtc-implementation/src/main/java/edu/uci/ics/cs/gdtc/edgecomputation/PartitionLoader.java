@@ -32,6 +32,8 @@ public class PartitionLoader {
 	 */
 	public void loadPartition(String baseFilename, int[] partitionPair) throws IOException {
 
+		int part1MaxSrc, part1MinSrc, part2MaxSrc, part2MinSrc, numOfUniqueSrcsPart1, numOfUniqueSrcsPart2;
+
 		int part1Id = partitionPair[0];
 		int part2Id = partitionPair[1];
 
@@ -41,18 +43,18 @@ public class PartitionLoader {
 		 */
 
 		// find the max src of each partition
-		int part1MaxSrc = partAllocTable[part1Id];
-		int part2MaxSrc = partAllocTable[part2Id];
+		part1MaxSrc = partAllocTable[part1Id];
+		part2MaxSrc = partAllocTable[part2Id];
 
 		// find the number of unique source vertices in each partition | IMP we
 		// consider the vertex numbering of the input graph to start from 1 NOT
 		// 0
-		int numOfUniqueSrcsPart1 = findNumOfUniqueSrcs(part1MaxSrc, part1Id);
-		int numOfUniqueSrcsPart2 = findNumOfUniqueSrcs(part2MaxSrc, part2Id);
+		numOfUniqueSrcsPart1 = findNumOfUniqueSrcs(part1MaxSrc, part1Id);
+		numOfUniqueSrcsPart2 = findNumOfUniqueSrcs(part2MaxSrc, part2Id);
 
 		// find the min src of each partition
-		int part1MinSrc = part1MaxSrc - numOfUniqueSrcsPart1 + 1;
-		int part2MinSrc = part2MaxSrc - numOfUniqueSrcsPart2 + 1;
+		part1MinSrc = part1MaxSrc - numOfUniqueSrcsPart1 + 1;
+		part2MinSrc = part2MaxSrc - numOfUniqueSrcsPart2 + 1;
 
 		// create the degree arrays by reading the degrees file
 		int part1degs[] = new int[numOfUniqueSrcsPart1];
@@ -92,14 +94,31 @@ public class PartitionLoader {
 		this.part2EdgeValsArray = part2EdgeValsArray;
 
 		// create input streams of the two partitions
+		// TODO likely to require translation of the ids - due to repartitioning
 		DataInputStream part1InputStream = new DataInputStream(
 				new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + part1Id)));
 		DataInputStream part2InputStream = new DataInputStream(
 				new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + part2Id)));
 
 		// read the input streams into the corresponding arrays
-		fillPartitionArray(part1InputStream);
-		fillPartitionArray(part2InputStream);
+		fillPartitionArray(part1InputStream, part1EdgesArray, part1EdgeValsArray, part1MinSrc);
+		fillPartitionArray(part2InputStream, part2EdgesArray, part2EdgeValsArray, part2MinSrc);
+
+		/*
+		 * TEST Loading of Partitions in Arrays
+		 */
+		for (int i = 0; i < part2EdgeValsArray.length; i++) {
+			for (int j = 0; j < part2degs[i]; j++) {
+				System.out.print(part2EdgeValsArray[i][j] + " ");
+			}
+			System.out.println();
+		}
+		for (int i = 0; i < part1EdgesArray.length; i++) {
+			for (int j = 0; j < part1degs[i]; j++) {
+				System.out.print(part1EdgesArray[i][j] + " ");
+			}
+			System.out.println();
+		}
 
 	}
 
@@ -160,29 +179,43 @@ public class PartitionLoader {
 	 * @param partInputStream
 	 * @throws IOException
 	 */
-	private void fillPartitionArray(DataInputStream partInputStream) throws IOException {
+	private void fillPartitionArray(DataInputStream partInputStream, int[][] partEdgesArray, int[][] partEdgeValsArray,
+			int partMinSrc) throws IOException {
+
+		// initialize an array that stores the position of last added edge(dest
+		// vert) and the edge val in partEdgesArray and partEdgeValsArray for a
+		// given source vertex
+		int[] lastAddedPositioninSrcRow = new int[partEdgesArray.length];
+		for (int i = 0; i < partEdgesArray.length; i++) {
+			lastAddedPositioninSrcRow[i] = -1;
+		}
+
 		while (true) {
 			try {
-				// srcVId
+				// get srcVId
 				int src = partInputStream.readInt();
-				// System.out.println("src " + partInputStream.readInt());
-				// System.out.println("-----");
 
-				// count (number of destVs from srcV in the current list of the
-				// partition file)
+				// get corresponding arraySrcVId of srcVId
+				int arraySrcVId = src - partMinSrc;
+
+				// get count (number of destVs from srcV in the current list of
+				// the partition file)
 				int count = partInputStream.readInt();
-				// System.out.println("# " + count);
-				// System.out.println("-----");
 
+				// get dstVId & edgeVal and store them in the corresponding
+				// arrays
 				for (int i = 0; i < count; i++) {
+
 					// dstVId
-					System.out.println("dst " + partInputStream.readInt());
+					partEdgesArray[arraySrcVId][lastAddedPositioninSrcRow[arraySrcVId] + 1] = partInputStream.readInt();
 
-					// edge value
-					System.out.println("val " + partInputStream.readByte());
+					// edgeVal
+					partEdgeValsArray[arraySrcVId][lastAddedPositioninSrcRow[arraySrcVId] + 1] = partInputStream
+							.readByte();
 
+					// increment the last added position for this row
+					lastAddedPositioninSrcRow[arraySrcVId]++;
 				}
-				System.out.println("=====");
 
 			} catch (Exception exception) {
 				break;

@@ -34,14 +34,16 @@ public class MainGraphDTC {
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 
 		// COMPUTATION
-//		BasicScheduler basicScheduler = new BasicScheduler();
-//		basicScheduler.initScheduler(numPartitions);
+		BasicScheduler basicScheduler = new BasicScheduler();
+		basicScheduler.initScheduler(numPartitions);
 		PartitionLoader partLoader = new PartitionLoader();
-//		partLoader.loadPartition(baseFilename, basicScheduler.getPartstoLoad());
+		partLoader.loadPartition(baseFilename, basicScheduler.getPartstoLoad());
 		
-		//TEST loadPartition
-		int arr[]={0,1};
-		partLoader.loadPartition(baseFilename, arr);
+		/*
+		 * TEST LoadPartition
+		 */
+//		int arr[]={0,1};
+//		partLoader.loadPartition(baseFilename, arr);
 	}
 
 	/**

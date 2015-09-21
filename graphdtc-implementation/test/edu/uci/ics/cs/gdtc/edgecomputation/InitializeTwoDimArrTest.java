@@ -14,6 +14,8 @@ public class InitializeTwoDimArrTest {
 			}
 			System.out.println();
 		}
+		
+		System.out.println(arr.length+"which length");
 	}
 
 	private static void initialize2DPartArray(int[][] partArray, int numOfUniqueSrcs, int[] partDegs) {
