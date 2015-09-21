@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.computation;
+package edu.uci.ics.cs.gdtc.edgecomputation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,15 +12,17 @@ import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
  * @author Aftab
  *INCOMPLETE
  */
-public class PartitionInterconnCalculator {
+public class PartitionScheduler {
 	int numParts;
+	
 
 	/**
 	 * Constructor
 	 */
-	public PartitionInterconnCalculator() {
-		int arr[][] = new int[numParts][numParts];
+	public PartitionScheduler() {
+		int arr[][][] = new int[numParts][numParts][2];
 
+		
 	}
 
 	private void computePartitionPercentage(int partitionId, int[] partitionAllocationTable, InputStream inputStream)

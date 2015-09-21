@@ -1,12 +1,9 @@
 package edu.uci.ics.cs.gdtc.preproc;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,22 +24,23 @@ import java.util.TreeMap;
 public class PartitionGenerator {
 
 	/**
-	 * numPartitions - number of input partitions numEdges - total number of
-	 * input edges in the graph baseFilename - path of the input graph file
-	 * outDegreesMap - map of vertex and degrees BUFFER_FOR_PARTITIONS - the
-	 * total number of edges that can be kept in all partition buffers
-	 * partitionBufferSize - the total number of edges that can be kept in each
-	 * partition buffer partitionBufferFreespace - table consisting of available
-	 * space in each partition buffer
+	 * numPartitions:number of input partitions|numEdges:total number of input
+	 * edges in the graph|baseFilename:path of the input graph
+	 * file|outDegreesMap:map of vertex and degrees|BUFFER_FOR_PARTITIONS:the
+	 * total number of edges that can be kept in all partition buffers|
+	 * partitionBufferSize:the total number of edges that can be kept in each
+	 * partition buffer|partitionBufferFreespace:table consisting of
+	 * available space in each partition buffer
 	 */
 	private int numPartitions;
 	private long numEdges;
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
-	private int[] partitionAllocationTable;
-	private static final int BUFFER_FOR_PARTITIONS = 10;
-	private int partitionBufferSize;
-	private int[] partitionBufferFreespace;
+	public static int[] partitionAllocationTable;
+	private static final long BUFFER_FOR_PARTITIONS = 1000000000000000L;
+	private long partitionBufferSize;
+	private long[] partitionBufferFreespace;
+	private DataOutputStream[] partitionOutputStreams;
 
 	// Each partition buffer consists of an adjacency list.
 	// HashMap<srcVertexID, <[destVertexID1,edgeValue1],
@@ -63,11 +61,19 @@ public class PartitionGenerator {
 		// initialize partition allocation table
 		partitionAllocationTable = new int[numPartitions];
 
+		// create the streams for the empty partition files (these streams will
+		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
+		partitionOutputStreams = new DataOutputStream[numPartitions];
+		for (int i = 0; i < numPartitions; i++) {
+			this.partitionOutputStreams[i] = new DataOutputStream(
+					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
+		}
 	}
 
 	/**
 	 * Scans the entire graph and counts the out-degrees of all the vertices.
 	 * This is the Preliminary Scan
+	 * TODO need to store the degrees file in a more space-efficient way
 	 * 
 	 * @param inputStream
 	 * @param format
@@ -97,12 +103,12 @@ public class PartitionGenerator {
 		// Save the degrees on disk
 		Iterator it = outDegreesMap.entrySet().iterator();
 
-		PrintWriter degreeOutputStream = new PrintWriter(baseFilename + ".degrees", "UTF-8");
+		PrintWriter outDegOutputStream = new PrintWriter(baseFilename + ".degrees", "UTF-8");
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
-			degreeOutputStream.println(pair.getKey() + "\t" + pair.getValue());
+			outDegOutputStream.println(pair.getKey() + "\t" + pair.getValue());
 		}
-		degreeOutputStream.close();
+		outDegOutputStream.close();
 		this.outDegreesMap = outDegreesMap;
 
 		/*
@@ -112,8 +118,7 @@ public class PartitionGenerator {
 		 * java.util.TreeMap at
 		 * edu.uci.ics.cs.gdtc.PartitionGenerator.generateDegrees(
 		 * PartitionGenerator.java:94) at
-		 * edu.uci.ics.cs.gdtc.MainPreprocessor.main(MainPreprocessor.
-		 * java:24)
+		 * edu.uci.ics.cs.gdtc.MainPreprocessor.main(MainGraphDTC. java:24)
 		 */
 		// this.outDegreesMap = (TreeMap<Integer, Integer>)
 		// Collections.unmodifiableMap(degreesMap);
@@ -187,8 +192,8 @@ public class PartitionGenerator {
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[10];
 
-		int partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
-		int partitionBufferFreespace[] = new int[numPartitions];
+		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
+		long partitionBufferFreespace[] = new long[numPartitions];
 		for (int i = 0; i < numPartitions; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;
 			HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = new HashMap<Integer, ArrayList<Integer[]>>();
@@ -213,6 +218,8 @@ public class PartitionGenerator {
 		for (int i = 0; i < numPartitions; i++) {
 			sendBufferEdgestoDisk_ByteFmt(i);
 		}
+		
+		this.outDegreesMap.clear();
 	}
 
 	/**
@@ -267,7 +274,7 @@ public class PartitionGenerator {
 	 * @param srcV
 	 */
 	private int findPartition(int srcVId) {
-		int partitionId = 111;
+		int partitionId = -1;
 		for (int i = 0; i < numPartitions; i++) {
 			if (srcVId <= partitionAllocationTable[i]) {
 				partitionId = i;
@@ -299,12 +306,7 @@ public class PartitionGenerator {
 	 */
 	private void sendBufferEdgestoDisk_ByteFmt(int partitionId) throws IOException {
 
-		DataOutputStream adjListOutputStream = new DataOutputStream(
-				new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + partitionId, true)));
-
-		// Reading data
-		// DataInputStream dataIn = new DataInputStream(new
-		// BufferedInputStream(new FileInputStream("D:\\file.txt")));
+		DataOutputStream adjListOutputStream = this.partitionOutputStreams[partitionId];
 
 		int srcVId, destVId, count;
 		int edgeValue;
