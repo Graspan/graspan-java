@@ -12,12 +12,12 @@ public interface IScheduler {
 	 * 
 	 * @param numParts
 	 */
-	public void initScheduler(int numParts);
+	public void initScheduler(int totalNumParts);
 
 	/**
 	 * 
 	 * @return
 	 */
-	public int[] getPartstoLoad();
+	public int[] getPartstoLoad(int numPartsPerComputation);
 
 }

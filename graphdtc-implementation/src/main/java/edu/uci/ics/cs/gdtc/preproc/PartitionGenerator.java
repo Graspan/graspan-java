@@ -36,7 +36,7 @@ public class PartitionGenerator {
 	private long numEdges;
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
-	public static int[] partitionAllocationTable;
+	public static int[] partAllocTable;
 	private static final long BUFFER_FOR_PARTITIONS = 3;
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
@@ -58,8 +58,8 @@ public class PartitionGenerator {
 		this.numPartitions = numPartitions;
 		this.baseFilename = baseFilename;
 
-		// initialize partition allocation table
-		partitionAllocationTable = new int[numPartitions];
+		// initialize partition allocation table (it stores the maximum src vertex id for each partition)
+		partAllocTable = new int[numPartitions];
 
 		// create the streams for the empty partition files (these streams will
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
@@ -153,7 +153,7 @@ public class PartitionGenerator {
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
 			if (intervalEdgeCount > intervalMax & !isLastPartition(partTabIdx)) {
-				partitionAllocationTable[partTabIdx] = intervalHeadVertexId;
+				partAllocTable[partTabIdx] = intervalHeadVertexId;
 				intervalEdgeCount = 0;
 				partTabIdx++;
 			}
@@ -162,7 +162,7 @@ public class PartitionGenerator {
 			// last_Vertex
 			else if (isLastPartition(partTabIdx)) {
 				intervalHeadVertexId = outDegreesMap.lastKey();
-				partitionAllocationTable[partTabIdx] = intervalHeadVertexId;
+				partAllocTable[partTabIdx] = intervalHeadVertexId;
 				break;
 			}
 		}
@@ -176,12 +176,12 @@ public class PartitionGenerator {
 	 * @return
 	 */
 	private boolean isLastPartition(int partTabIdx) {
-		return (partTabIdx == (partitionAllocationTable.length - 1) ? true : false);
+		return (partTabIdx == (partAllocTable.length - 1) ? true : false);
 	}
 
 	/**
 	 * Scans the input graph, pools edges for each partition (according to
-	 * partitionAllocationTable), and writes the edges to the corresponding
+	 * partAllocTable), and writes the edges to the corresponding
 	 * partition files
 	 * 
 	 * @param inputStream
@@ -268,7 +268,7 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * searches the partitionAllocationTable to find out which partition a
+	 * searches the partAllocTable to find out which partition a
 	 * vertex belongs (CALLED BY addEdgetoBuffer() method)
 	 * 
 	 * @param srcV
@@ -276,7 +276,7 @@ public class PartitionGenerator {
 	private int findPartition(int srcVId) {
 		int partitionId = -1;
 		for (int i = 0; i < numPartitions; i++) {
-			if (srcVId <= partitionAllocationTable[i]) {
+			if (srcVId <= partAllocTable[i]) {
 				partitionId = i;
 				break;
 			}

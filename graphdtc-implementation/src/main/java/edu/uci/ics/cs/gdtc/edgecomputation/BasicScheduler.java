@@ -2,6 +2,10 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 
 /**
  * 
+ * Schedules the selection of ONLY TWO partitions on which memory computations is
+ * to be done, also sets a limit of the maximum allowable number of new
+ * partitions that can be generated from repartitioning
+ * 
  * @author Aftab
  *
  */
@@ -10,6 +14,7 @@ public class BasicScheduler implements IScheduler {
 	private int[][] partScheduleMap = new int[SizeOfPartScheduleMap][SizeOfPartScheduleMap];
 	private static final int SizeOfPartScheduleMap = 50;
 
+	
 	private int[] newPartsIndex;
 	private static final int NumOfNewParts = 10;
 
@@ -22,30 +27,29 @@ public class BasicScheduler implements IScheduler {
 	 * -1:partition pair has not been computed|entry 1:partition pair has been
 	 * computed
 	 */
-	public void initScheduler(int numPartitions) {
+	public void initScheduler(int totalNumParts) {
 		// initialize partScheduleMap
-		for (int i = 0; i < numPartitions; i++) {
-			for (int j = 0; j < numPartitions; j++) {
+		for (int i = 0; i < totalNumParts; i++) {
+			for (int j = 0; j < totalNumParts; j++) {
 				partScheduleMap[i][j] = -1;
 			}
 		}
-		this.numPartitions = numPartitions;
+		this.numPartitions = totalNumParts;
 	}
 
 	public void updateSchedulerInfo() {
-		
-		
 
 	}
 
 	/**
-	 * Returns the next pair of partitions (ids) to be computed
+	 * Returns the next set of partitions (ids) to be computed
 	 * 
 	 */
-	public int[] getPartstoLoad() {
+	public int[] getPartstoLoad(int numPartsPerComputation) {
+		
 		for (int i = 0; i < partScheduleMap.length; i++) {
 			for (int j = 0; j < partScheduleMap.length; j++) {
-				if (i != j & !isComputed(i, j)) {
+				if (!isComputed(i, j)) {
 					int[] partPair = new int[2];
 					partPair[0] = i;
 					partPair[1] = j;
