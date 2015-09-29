@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -16,12 +15,9 @@ import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
  * @author Aftab
  *
  */
-public class PartitionLoader {
+public class NewEdgeComputer {
 
-	private static final int NEW_EDGE_BUFFER_SIZE = 10;
-	private static final int NEW_EDGE_INDEX_BUFFER_SIZE = 10;
-
-	int partAllocTable[] = PartitionGenerator.partAllocTable;
+	private int partAllocTable[] = PartitionGenerator.partAllocTable;
 
 	/*
 	 * Data structures for storing the partitions to load
@@ -29,8 +25,8 @@ public class PartitionLoader {
 	 * Dimension 1 indicates partition number, Dimension 2 indicates list for a
 	 * source vertex, Dimension 3 indicates an out-edge from each source vertex
 	 */
-	public int partEdgeArrays[][][];
-	public int partEdgeValArrays[][][];
+	private int partEdgeArrays[][][];
+	private int partEdgeValArrays[][][];
 
 	/*
 	 * Stores the out degrees of each source vertex of each partition.
@@ -38,21 +34,19 @@ public class PartitionLoader {
 	 * Dimension 1 indicates partition number, Dimension 2 indicates out degree
 	 * of a source vertex in the partition indicated by Index 1
 	 */
-	public int partOutDegrees[][];
+	private int partOutDegrees[][];
 
-	// public DataInputStream partitionInputStreams[];|| USE IF USING MULTI
-	// THREADING
+	private int loadedParts[];
 
 	/*
 	 * New Edge Data Structures
 	 */
-	// int part1newEdges[] = new int[NEW_EDGE_BUFFER_SIZE];
-	// int part2newEdges[] = new int[NEW_EDGE_BUFFER_SIZE];
-	// int part1newEdgeVals[] = new int[NEW_EDGE_BUFFER_SIZE];
-	// int part2newEdgeVals[] = new int[NEW_EDGE_BUFFER_SIZE];
-	// int part1newEdgeIndex[] = new int[NEW_EDGE_INDEX_BUFFER_SIZE];
-	// int part2newEdgeIndex[] = new int[NEW_EDGE_INDEX_BUFFER_SIZE];
-	// int part1lastAddedEdgePos, part2lastAddedEdgePos;
+	private static final int NEW_EDGE_BUFFER_SIZE = 10;
+	private static final int NEW_EDGE_INDEX_BUFFER_SIZE = 10;
+	int newEdges[] = new int[NEW_EDGE_BUFFER_SIZE];
+	int newEdgeVals[] = new int[NEW_EDGE_BUFFER_SIZE];
+	int newEdgeIndex[][];
+	int lastAddedEdgePos;
 
 	/**
 	 * Loads the two partitions in the memory
@@ -61,24 +55,26 @@ public class PartitionLoader {
 	 * @param partitionPair
 	 * @throws IOException
 	 */
-	public void loadPartition(String baseFilename, int[] partitionsToLoad) throws IOException {
+	public void loadPartitions(String baseFilename, int[] partsToLoad) throws IOException {
 
 		// get the degrees of the source vertices in the partitions
-		getDegrees(baseFilename, partitionsToLoad);
+		getDegrees(baseFilename, partsToLoad);
 
 		// initialize data structures of the partitions to load
-		initPartitionDataStructs(partitionsToLoad);
+		initPartitionDataStructs(partsToLoad);
 
 		// fill the partition data structures
-		fillPartitionDataStructs(baseFilename, partitionsToLoad);
+		fillPartitionDataStructs(baseFilename, partsToLoad);
+
+		this.loadedParts = partsToLoad;
 
 		/*
 		 * TEST Loading of Partitions in Arrays
 		 */
-		for (int i = 0; i < partitionsToLoad.length; i++) {
-			System.out.println("Partition: " + partitionsToLoad[i]);
-			for (int j = 0; j < this.getNumUniqueSrcs(partitionsToLoad[i]); j++) {
-				int srcv = j + this.getMinSrc(partitionsToLoad[i]);
+		for (int i = 0; i < partsToLoad.length; i++) {
+			System.out.println("Partition: " + partsToLoad[i]);
+			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
+				int srcv = j + this.getMinSrc(partsToLoad[i]);
 				System.out.println("SourceV: " + srcv);
 				System.out.println("Edge Vals: ");
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
@@ -87,6 +83,58 @@ public class PartitionLoader {
 				System.out.println();
 			}
 		}
+	}
+
+	public void computeNewEdges() {
+
+		// initialize the new edge index
+		initNewEdgeIdx();
+
+		// scan each partition
+		for (int i = 0; i < loadedParts.length; i++) {
+			for (int j = 0; j < this.getNumUniqueSrcs(loadedParts[i]); j++) {
+				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
+
+					// Edge 1
+					int srcV1 = this.getActualIdFrmPartArrId(j, loadedParts[i]);
+					int destV1 = this.partEdgeArrays[i][j][k];
+					int edgeVal1 = this.partEdgeValArrays[i][j][k];
+
+					// find whether the destination vertex belongs to any of the
+					// loaded partitions as a source vertex
+					for (int l = 0; l < loadedParts.length; l++) {
+						// if the destination vertex does not belong to any of
+						// the loaded partitions as a source vertex
+						if (!inPartition(destV1, loadedParts[l])) {
+							continue;
+						}
+						// else if the destination vertex belongs to any of the
+						// loaded partitions as a source vertex
+						else {
+							int srcV2 = destV1;
+							int srcV2ArrId = this.getPartArrIdFrmActualId(srcV2, loadedParts[l]); 
+							
+							for (int m = 0; m < this.partOutDegrees[l][srcV2ArrId]; m++) {
+								int destV2 = this.partEdgeArrays[l][srcV2ArrId][m];
+								int edgeVal2 = this.partEdgeValArrays[l][srcV2ArrId][m];
+								int newEdgeVal = generateNewEdgeVal(edgeVal1, edgeVal2);
+								if (newEdgeVal != -1) {
+									//get last occurrence
+									this.getNewEdgeArrId(srcV1, i);
+								}
+								;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// scan new edges
+		// if new edges generated = false abort
+		// new edge index
+		// keep a counter of sizes of the partitions (an array)
+
 	}
 
 	/**
@@ -135,17 +183,18 @@ public class PartitionLoader {
 				if (!inPartition(srcVId, partitionsToLoad[i])) {
 					continue;
 				} else {
-					try {
-						partOutDegrees[i][srcVId - getMinSrc(partitionsToLoad[i])] = deg;
-					} catch (ArrayIndexOutOfBoundsException e) {
-						System.out.println("hellp");
-						System.out.println("Source " + srcVId);
-						System.out.println("Partition Id in array " + i);
-						System.out.println("The actual partition Id " + partitionsToLoad[i]);
-						System.out.println(getMinSrc(partitionsToLoad[i]));
-						System.out.println(partOutDegrees[1][3]);
-						System.exit(0);
-					}
+					// try {
+					partOutDegrees[i][srcVId - getMinSrc(partitionsToLoad[i])] = deg;
+					// } catch (ArrayIndexOutOfBoundsException e) {
+					// System.out.println("hellp");
+					// System.out.println("Source " + srcVId);
+					// System.out.println("Partition Id in array " + i);
+					// System.out.println("The actual partition Id " +
+					// partitionsToLoad[i]);
+					// System.out.println(getMinSrc(partitionsToLoad[i]));
+					// System.out.println(partOutDegrees[1][3]);
+					// System.exit(0);
+					// }
 				}
 			}
 		}
@@ -251,6 +300,59 @@ public class PartitionLoader {
 	}
 
 	/**
+	 * Initializes the new edge index data structure
+	 */
+	private void initNewEdgeIdx() {
+		this.newEdgeIndex = new int[loadedParts.length][];
+		for (int i = 0; i < this.loadedParts.length; i++) {
+			newEdgeIndex[i] = new int[this.getNumUniqueSrcs(this.loadedParts[i])];
+		}
+		for (int i = 0; i < loadedParts.length; i++) {
+			for (int j = 0; j < this.getNumUniqueSrcs(this.loadedParts[i]); j++) {
+				newEdgeIndex[i][j] = -1;
+			}
+		}
+	}
+
+	/**
+	 * Reads the grammar info in the memory and returns a new production if
+	 * derivable from the input values
+	 * 
+	 * @param edgeVal1
+	 * @param edgeVal2
+	 * @return
+	 */
+	private int generateNewEdgeVal(int edgeVal1, int edgeVal2) {
+		int grammar[][] = new int[5][3];
+		int newEdgeVal = -1;
+		for (int i = 0; i < grammar.length; i++) {
+			if (grammar[i][0] == edgeVal1 & grammar[i][1] == edgeVal2) {
+				newEdgeVal = grammar[i][2];
+				return newEdgeVal;
+			}
+		}
+		return newEdgeVal;
+	}
+
+	/**
+	 * Gets the id of the first occurence of the entry of a source vertex in the
+	 * new edge data structures
+	 * 
+	 * @return
+	 */
+	private int getNewEdgeArrId(int srcV1, int partId) {
+
+		// get the first entry position of this source vertex from the
+		// newEdgeIndex array
+		
+//		first find the position of the source vertex in the given partition
+		// int partArrId=getPartArrIdFrmActualId(partId)
+		// firstId=newEdgeIndex[];
+		 return 0;
+
+	}
+
+	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
 	 * consider the vertex numbering of the input graph to start from 1 NOT 0
 	 * 
@@ -303,5 +405,29 @@ public class PartitionLoader {
 			return false;
 	}
 
+	/**
+	 * 
+	 * Returns the actual Id of the source vertex from the Id of the vertex in
+	 * the loaded partition array
+	 * 
+	 * @param vertexPartArrId
+	 * @param partId
+	 * @return
+	 */
+	private int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
+		return vertexPartArrId + this.getMinSrc(partId);
+	}
+
+	/**
+	 * Returns the Id of the source vertex in the loaded partition array from
+	 * the actual Id of the source vertex
+	 * 
+	 * @param vertexId
+	 * @param partId
+	 * @return
+	 */
+	private int getPartArrIdFrmActualId(int vertexId, int partId) {
+		return this.getMaxSrc(partId) - vertexId;
+	}
 
 }
