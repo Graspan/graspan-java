@@ -16,7 +16,7 @@ import edu.uci.ics.gdtc.GraphDTCVertex;
 public class GraphDTCEngine {
 	private static final Logger logger = GraphDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
-	private long numUpdates;
+	private long nUpdates;
 	
 	public GraphDTCEngine() {
 		
@@ -110,7 +110,7 @@ public class GraphDTCEngine {
                     } finally {
                         int pending = countDown.decrementAndGet();
                         synchronized (termationLock) {
-                            numUpdates += threadUpdates;
+                            nUpdates += threadUpdates;
                             if (pending == 0) {
                             	termationLock.notifyAll();
                             }
