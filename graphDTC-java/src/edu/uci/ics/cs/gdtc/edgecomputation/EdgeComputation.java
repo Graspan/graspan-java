@@ -16,6 +16,35 @@ public class EdgeComputation {
 				verticesTo == null || edgeList == null)
 			return;
 		
+		scanAddableEdges();
+		checkDuplication();
+		addEdges();
+	}
+
+	/**
+	 * Description:
+	 * @param:
+	 * @return:void
+	 */
+	private static void addEdges() {
+		
+	}
+
+	/**
+	 * Description:
+	 * @param:
+	 * @return:void
+	 */
+	private static void checkDuplication() {
+		
+	}
+
+	/**
+	 * Description:
+	 * @param:
+	 * @return:void
+	 */
+	private static void scanAddableEdges() {
 		
 	}
 }

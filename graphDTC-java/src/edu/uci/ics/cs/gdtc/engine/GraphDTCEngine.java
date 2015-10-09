@@ -89,6 +89,11 @@ public class GraphDTCEngine {
 		if(verticesTo == null || verticesTo.length == 0)
 			return;
 		
+		// set readable index, for read and write concurrency
+		// for current iteration, readable index points to the last new edge in the previous iteration
+		// which is readable for the current iteration
+		setReadableIndex(edgesList);
+		
 		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
         final int chunkSize = 1 + vertices.length / 64;
@@ -96,7 +101,7 @@ public class GraphDTCEngine {
         final int nWorkers = vertices.length / chunkSize + 1;
         final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
         
-        /* Parallel updates */
+        // Parallel updates
         for(int id = 0; id < nWorkers; id++) {
             final int currentId = id;
             final int chunkStart = currentId * chunkSize;
@@ -109,7 +114,9 @@ public class GraphDTCEngine {
 
                     try {
                         int end = chunkEnd;
-                        if (end > vertices.length) end = vertices.length;
+                        if (end > vertices.length) 
+                        	end = vertices.length;
+                        
                         for(int i = chunkStart; i < end; i++) {
                             GraphDTCVertex vertex = vertices[i];
                             GraphDTCNewEdgesList edgeList = edgesList[i];
@@ -151,6 +158,28 @@ public class GraphDTCEngine {
 
     }
 	
+
+	/**
+	 * Description:
+	 * @param:
+	 * @return:
+	 */
+	private void setReadableIndex(GraphDTCNewEdgesList[] edgesList) {
+		if(edgesList == null || edgesList.length == 0)
+			return;
+		
+		for(int i = 0; i < edgesList.length; i++) {
+			GraphDTCNewEdgesList list = edgesList[i];
+			if(list == null)
+				return;
+			int size = list.getSize();
+			if(size == 0)
+				return;
+			list.setReadableSize(size);
+			int index = list.getIndex();
+			list.setReadableIndex(index);
+		}
+	}
 
 	/**
 	 * Description:

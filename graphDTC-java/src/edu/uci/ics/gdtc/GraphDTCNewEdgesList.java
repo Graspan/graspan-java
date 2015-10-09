@@ -11,6 +11,8 @@ public class GraphDTCNewEdgesList {
 	private NewEdgesNode first;
 	private NewEdgesNode last;
 	private int size;
+	private int readableSize;
+	private int readableIndex;
 	
 	class NewEdgesNode {
 		private int[] dstVertices = null;
@@ -48,12 +50,32 @@ public class GraphDTCNewEdgesList {
 		return size;
 	}
 	
+	public int getReadableSize() {
+		return readableSize;
+	}
+	
+	public int getReadableIndex() {
+		return readableIndex;
+	}
+	
+	public void setReadableSize(int readableSize) {
+		this.readableSize = readableSize;
+	}
+	
+	public void setReadableIndex(int readableIndex) {
+		this.readableIndex = readableIndex;
+	}
+	
 	public NewEdgesNode getFirst() {
 		return first;
 	}
 	
 	public NewEdgesNode getLast() {
 		return last;
+	}
+	
+	public int getIndex() {
+		return last.getIndex();
 	}
 	
 	public void add(int vertexId, char edgeValue) {
