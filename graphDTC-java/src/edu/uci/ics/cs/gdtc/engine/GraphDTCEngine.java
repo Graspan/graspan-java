@@ -4,7 +4,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputation;
 import edu.uci.ics.gdtc.GraphDTCLogger;
+import edu.uci.ics.gdtc.GraphDTCNewEdgesList;
 import edu.uci.ics.gdtc.GraphDTCVertex;
 
 
@@ -39,20 +42,24 @@ public class GraphDTCEngine {
         
 		int intervalEnd = 0;
 		int intervalStart = 0;
+		
 		//TODO: get the num of vertices
 		int nVertices = intervalEnd - intervalStart + 1;
-		GraphDTCVertex[] vertices = new GraphDTCVertex[nVertices];
+		
+		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
+		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
+		GraphDTCNewEdgesList[] edgesList = new GraphDTCNewEdgesList[nVertices];
 		
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
 		// 1. load partitions into memory
-		loadPartitions(vertices);
+		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		
 		logger.info("Starting computation and edge addition...");
 		t = System.currentTimeMillis();
 		// 2. do computation and add edges
-		doComputation(vertices);
+		doComputation(verticesFrom, verticesTo, edgesList);
 		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
 		
 		// 3. store partitions to disk
@@ -73,10 +80,16 @@ public class GraphDTCEngine {
 	 * @param:
 	 * @return:
 	 */
-	private void doComputation(final GraphDTCVertex[] vertices) {
-		if(vertices == null || vertices.length == 0)
+	private void doComputation(final GraphDTCVertex[] verticesFrom, 
+			final GraphDTCVertex[] verticesTo, 
+			final GraphDTCNewEdgesList[] edgesList) {
+		if(verticesFrom == null || verticesFrom.length == 0)
 			return;
 		
+		if(verticesTo == null || verticesTo.length == 0)
+			return;
+		
+		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
         final int chunkSize = 1 + vertices.length / 64;
 
@@ -84,8 +97,8 @@ public class GraphDTCEngine {
         final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
         
         /* Parallel updates */
-        for(int i = 0; i < nWorkers; i++) {
-            final int currentId = i;
+        for(int id = 0; id < nWorkers; id++) {
+            final int currentId = id;
             final int chunkStart = currentId * chunkSize;
             final int chunkEnd = chunkStart + chunkSize;
 
@@ -99,9 +112,10 @@ public class GraphDTCEngine {
                         if (end > vertices.length) end = vertices.length;
                         for(int i = chunkStart; i < end; i++) {
                             GraphDTCVertex vertex = vertices[i];
+                            GraphDTCNewEdgesList edgeList = edgesList[i];
                             if (vertex != null) {
                             	threadUpdates++;
-                                update(vertex);
+                                execUpdate(vertex, verticesFrom, verticesTo, edgeList);
                             }
                         }
 
@@ -117,6 +131,8 @@ public class GraphDTCEngine {
                         }
                     }
                 }
+
+				
             });
         }
         
@@ -127,7 +143,9 @@ public class GraphDTCEngine {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (countDown.get() > 0) logger.info("Waiting for execution to finish: countDown:" + countDown.get());
+                
+                if (countDown.get() > 0) 
+                	logger.info("Waiting for execution to finish: countDown:" + countDown.get());
             }
         }
 
@@ -139,7 +157,7 @@ public class GraphDTCEngine {
 	 * @param:
 	 * @return:
 	 */
-	private void loadPartitions(GraphDTCVertex[] vertices) {
+	private void loadPartitions(GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo) {
 		
 	}
 	
@@ -148,7 +166,12 @@ public class GraphDTCEngine {
 	 * @param:
 	 * @return:
 	 */
-	private void update(GraphDTCVertex vertex) {
+	private void execUpdate(GraphDTCVertex vertex,
+			GraphDTCVertex[] verticesFrom,
+			GraphDTCVertex[] verticesTo,
+			GraphDTCNewEdgesList edgeList) {
 		
+		EdgeComputation.execUpate(vertex, verticesFrom, verticesTo, edgeList);
 	}
+	
 }
