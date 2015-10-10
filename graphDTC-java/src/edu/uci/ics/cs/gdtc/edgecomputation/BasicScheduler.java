@@ -12,26 +12,25 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 public class BasicScheduler implements IScheduler {
 
 	private int[][] partScheduleMap = new int[SizeOfPartScheduleMap][SizeOfPartScheduleMap];
+	
+	//We are assuming at most 50 - numOfOriginalParts will be created after the complete process
 	private static final int SizeOfPartScheduleMap = 50;
 
 	
-	private int[] newPartsIndex;
-	private static final int NumOfNewParts = 10;
-
 	private int numPartitions;
 
 	/**
 	 * Initializes the scheduler
 	 * 
-	 * entry 0:no active partition is represented by this row/column|entry
-	 * -1:partition pair has not been computed|entry 1:partition pair has been
+	 * entry -1:no active partition is represented by this row/column|entry
+	 * 0:partition pair has not been computed|entry 1:partition pair has been
 	 * computed
 	 */
 	public void initScheduler(int totalNumParts) {
 		// initialize partScheduleMap
 		for (int i = 0; i < totalNumParts; i++) {
-			for (int j = 0; j < totalNumParts; j++) {
-				partScheduleMap[i][j] = -1;
+			for (int j = 0; j < i; j++) {
+				partScheduleMap[i][j] = 0;
 			}
 		}
 		this.numPartitions = totalNumParts;
@@ -48,12 +47,13 @@ public class BasicScheduler implements IScheduler {
 	public int[] getPartstoLoad(int numPartsPerComputation) {
 		
 		for (int i = 0; i < partScheduleMap.length; i++) {
-			for (int j = 0; j < partScheduleMap.length; j++) {
+			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {
-					int[] partPair = new int[2];
-					partPair[0] = i;
-					partPair[1] = j;
-					return partPair;
+					int[] partsToLoad = new int[2];
+					partsToLoad[0] = i;
+					partsToLoad[1] = j;
+					partScheduleMap[i][j]=1;
+					return partsToLoad;
 				}
 			}
 		}

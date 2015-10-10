@@ -66,6 +66,16 @@ public class NewEdgeComputer {
 		// fill the partition data structures
 		fillPartitionDataStructs(baseFilename, partsToLoad);
 
+		
+		// sorting the partitions
+		for (int i = 0; i < partsToLoad.length; i++) {
+			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
+				int low = 0;
+				int high = this.partOutDegrees[i][j] - 1;
+				quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
+			}
+		}
+
 		this.loadedParts = partsToLoad;
 
 		/*
@@ -76,6 +86,11 @@ public class NewEdgeComputer {
 			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
 				int srcv = j + this.getMinSrc(partsToLoad[i]);
 				System.out.println("SourceV: " + srcv);
+				System.out.println("Dest Vs: ");
+				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
+					System.out.print(this.partEdgeArrays[i][j][k] + " ");
+				}
+				System.out.println();
 				System.out.println("Edge Vals: ");
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
 					System.out.print(this.partEdgeValArrays[i][j][k] + " ");
@@ -83,6 +98,63 @@ public class NewEdgeComputer {
 				System.out.println();
 			}
 		}
+	}
+
+	/**
+	 * Rendered from:
+	 * http://www.programcreek.com/2012/11/quicksort-array-in-java/ accessed at
+	 * 9 October 2015
+	 * 
+	 * For sorting each source vertex adjacency list in the loaded partitions
+	 * 
+	 * @param arr
+	 * @param low
+	 * @param high
+	 */
+	public static void quickSort(int[] edgeArr, int[] edgeValArr, int low, int high) {
+		if (edgeArr == null || edgeArr.length == 0)
+			return;
+
+		if (low >= high)
+			return;
+
+		// pick the pivot
+		int middle = low + (high - low) / 2;
+		int pivot = edgeArr[middle];
+
+		// make left < pivot and right > pivot
+		int i = low, j = high;
+		while (i <= j) {
+			while (edgeArr[i] < pivot) {
+				i++;
+			}
+
+			while (edgeArr[j] > pivot) {
+				j--;
+			}
+
+			if (i <= j) {
+
+				int temp = edgeArr[i];
+				edgeArr[i] = edgeArr[j];
+				edgeArr[j] = temp;
+
+				temp = edgeValArr[i];
+				edgeValArr[i] = edgeValArr[j];
+				edgeValArr[j] = temp;
+
+				i++;
+				j--;
+
+			}
+		}
+
+		// recursively sort two sub parts
+		if (low < j)
+			quickSort(edgeArr, edgeValArr, low, j);
+
+		if (high > i)
+			quickSort(edgeArr, edgeValArr, i, high);
 	}
 
 	public void computeNewEdges() {
@@ -112,14 +184,14 @@ public class NewEdgeComputer {
 						// loaded partitions as a source vertex
 						else {
 							int srcV2 = destV1;
-							int srcV2ArrId = this.getPartArrIdFrmActualId(srcV2, loadedParts[l]); 
-							
+							int srcV2ArrId = this.getPartArrIdFrmActualId(srcV2, loadedParts[l]);
+
 							for (int m = 0; m < this.partOutDegrees[l][srcV2ArrId]; m++) {
 								int destV2 = this.partEdgeArrays[l][srcV2ArrId][m];
 								int edgeVal2 = this.partEdgeValArrays[l][srcV2ArrId][m];
 								int newEdgeVal = generateNewEdgeVal(edgeVal1, edgeVal2);
 								if (newEdgeVal != -1) {
-									//get last occurrence
+									// get last occurrence
 									this.getNewEdgeArrId(srcV1, i);
 								}
 								;
@@ -344,11 +416,11 @@ public class NewEdgeComputer {
 
 		// get the first entry position of this source vertex from the
 		// newEdgeIndex array
-		
-//		first find the position of the source vertex in the given partition
+
+		// first find the position of the source vertex in the given partition
 		// int partArrId=getPartArrIdFrmActualId(partId)
 		// firstId=newEdgeIndex[];
-		 return 0;
+		return 0;
 
 	}
 
