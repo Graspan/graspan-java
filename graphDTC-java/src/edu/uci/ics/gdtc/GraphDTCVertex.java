@@ -32,4 +32,12 @@ public class GraphDTCVertex {
 	public char[] getOutEdgeValues() {
 		return outEdgeValues;
 	}
+	
+	public int getOutEdge(int i) {
+		return outEdges[i];
+	}
+	
+	public char getOutEdgeValue(int i) {
+		return outEdgeValues[i];
+	}
 }

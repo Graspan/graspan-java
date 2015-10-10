@@ -48,7 +48,7 @@ public class GraphDTCEngine {
 		
 		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
 		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
-		GraphDTCNewEdgesList[] edgesList = new GraphDTCNewEdgesList[nVertices];
+		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[nVertices];
 		
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
@@ -59,7 +59,7 @@ public class GraphDTCEngine {
 		logger.info("Starting computation and edge addition...");
 		t = System.currentTimeMillis();
 		// 2. do computation and add edges
-		doComputation(verticesFrom, verticesTo, edgesList);
+		doComputation(verticesFrom, verticesTo, edgesLists);
 		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
 		
 		// 3. store partitions to disk
@@ -82,7 +82,7 @@ public class GraphDTCEngine {
 	 */
 	private void doComputation(final GraphDTCVertex[] verticesFrom, 
 			final GraphDTCVertex[] verticesTo, 
-			final GraphDTCNewEdgesList[] edgesList) {
+			final GraphDTCNewEdgesList[] edgesLists) {
 		if(verticesFrom == null || verticesFrom.length == 0)
 			return;
 		
@@ -92,7 +92,7 @@ public class GraphDTCEngine {
 		// set readable index, for read and write concurrency
 		// for current iteration, readable index points to the last new edge in the previous iteration
 		// which is readable for the current iteration
-		setReadableIndex(edgesList);
+		setReadableIndex(edgesLists);
 		
 		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
@@ -119,10 +119,11 @@ public class GraphDTCEngine {
                         
                         for(int i = chunkStart; i < end; i++) {
                             GraphDTCVertex vertex = vertices[i];
-                            GraphDTCNewEdgesList edgeList = edgesList[i];
+                            GraphDTCNewEdgesList edgeList = edgesLists[i];
                             if (vertex != null) {
                             	threadUpdates++;
-                                execUpdate(vertex, verticesFrom, verticesTo, edgeList);
+                                execUpdate(vertex, verticesFrom, verticesTo, 
+                                		edgeList, edgesLists);
                             }
                         }
 
@@ -198,9 +199,11 @@ public class GraphDTCEngine {
 	private void execUpdate(GraphDTCVertex vertex,
 			GraphDTCVertex[] verticesFrom,
 			GraphDTCVertex[] verticesTo,
-			GraphDTCNewEdgesList edgeList) {
+			GraphDTCNewEdgesList edgeList,
+			GraphDTCNewEdgesList[] edgesLists) {
 		
-		EdgeComputation.execUpate(vertex, verticesFrom, verticesTo, edgeList);
+		EdgeComputation.execUpate(vertex, verticesFrom, verticesTo, 
+				edgeList, edgesLists);
 	}
 	
 }
