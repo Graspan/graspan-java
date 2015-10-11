@@ -1,4 +1,4 @@
-package edu.uci.ics.gdtc;
+package edu.uci.ics.cs.gdtc.edgecomputation;
 
 /**
  * @author Kai Wang
@@ -6,7 +6,7 @@ package edu.uci.ics.gdtc;
  * Created by Oct 8, 2015
  */
 public class GraphDTCNewEdgesList {
-	private static final int NODE_SIZE = 256;
+	public static final int NODE_SIZE = 256;
 	
 	private NewEdgesNode first;
 	private NewEdgesNode last;
@@ -94,5 +94,17 @@ public class GraphDTCNewEdgesList {
 		
 		size++;
 		last.add(vertexId, edgeValue);
+	}
+	
+	public NewEdgesNode getNode(int index) {
+		if(index == 0) return first;
+		if(index > size) return null;
+		
+		NewEdgesNode node = first;
+		for(int i = 0; i < index; i++) {
+			node = node.next;
+		}
+		
+		return node;
 	}
 }

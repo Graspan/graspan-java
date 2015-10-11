@@ -6,9 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputation;
-import edu.uci.ics.gdtc.GraphDTCLogger;
-import edu.uci.ics.gdtc.GraphDTCNewEdgesList;
-import edu.uci.ics.gdtc.GraphDTCVertex;
+import edu.uci.ics.cs.gdtc.edgecomputation.GraphDTCNewEdgesList;
+import edu.uci.ics.cs.gdtc.GraphDTCLogger;
+import edu.uci.ics.cs.gdtc.GraphDTCVertex;
 
 
 /**

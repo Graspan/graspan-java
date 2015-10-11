@@ -1,4 +1,4 @@
-package edu.uci.ics.gdtc;
+package edu.uci.ics.cs.gdtc;
 
 /**
  * @author Kai Wang
@@ -39,5 +39,9 @@ public class GraphDTCVertex {
 	
 	public char getOutEdgeValue(int i) {
 		return outEdgeValues[i];
+	}
+	
+	public int getVertexId() {
+		return id;
 	}
 }
