@@ -9,7 +9,7 @@ public class GraphDTCVertex {
 	private int id;
 	private int numOutEdges;
 	private int[] outEdges = null;
-	private char[] outEdgeValues = null;
+	private byte[] outEdgeValues = null;
 	
 	public GraphDTCVertex(int id, int outDegree) {
 		this.id = id;
@@ -17,7 +17,7 @@ public class GraphDTCVertex {
 		
 		if(outDegree != 0) {
 			outEdges = new int[outDegree];
-			outEdgeValues = new char[outDegree];
+			outEdgeValues = new byte[outDegree];
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class GraphDTCVertex {
 		return outEdges;
 	}
 	
-	public char[] getOutEdgeValues() {
+	public byte[] getOutEdgeValues() {
 		return outEdgeValues;
 	}
 	
@@ -37,7 +37,7 @@ public class GraphDTCVertex {
 		return outEdges[i];
 	}
 	
-	public char getOutEdgeValue(int i) {
+	public byte getOutEdgeValue(int i) {
 		return outEdgeValues[i];
 	}
 	

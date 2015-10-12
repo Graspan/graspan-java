@@ -23,7 +23,7 @@ public class EdgeComputation {
 			
 			// get dst vertex id and edge value from array
 			int vertexId = vertex.getOutEdge(i);
-			char edgeValue = vertex.getOutEdgeValue(i);
+			byte edgeValue = vertex.getOutEdgeValue(i);
 			
 			// scan edges in partition "from"
 			if(isInRange(vertexId, verticesFrom))
@@ -66,7 +66,7 @@ public class EdgeComputation {
 	 * @param:
 	 * @return:
 	 */
-	private static boolean isDuplicationEdge(int vertexId, char edgeValue, 
+	private static boolean isDuplicationEdge(int vertexId, byte edgeValue, 
 			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
 		if(vertex == null || vertex.getNumOutEdges() == 0)
 			return false;
@@ -74,7 +74,7 @@ public class EdgeComputation {
 		// 1. check fixed size array
 		for(int i = 0; i < vertex.getNumOutEdges(); i++) {
 			int id = vertex.getOutEdge(i);
-			char value = vertex.getOutEdgeValue(i);
+			byte value = vertex.getOutEdgeValue(i);
 			if((vertexId == id) && (edgeValue == value))
 				return true;
 		}
@@ -88,7 +88,7 @@ public class EdgeComputation {
 			return false;
 		
 		int[] ids = null;
-		char[] values = null;
+		byte[] values = null;
 		
 		// 2.1 check (size - 1) node, each node is full of NODE_SIZE elements
 		for(int j = 0; j < size - 1; j++) {
@@ -121,7 +121,7 @@ public class EdgeComputation {
 	 * @param:
 	 * @return:
 	 */
-	private static void scanAddableEdges(int vertexId, char edgeValue, GraphDTCVertex[] vertices, 
+	private static void scanAddableEdges(int vertexId, byte edgeValue, GraphDTCVertex[] vertices, 
 			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList, GraphDTCNewEdgesList[] edgesLists) {
 		if(vertices == null || vertices.length == 0)
 			return;
@@ -137,7 +137,7 @@ public class EdgeComputation {
 		// 1. scan original fixed size array
 		for(int i = 0; i < v.getNumOutEdges(); i++) {
 			int dstId = v.getOutEdge(i);
-			char dstEdgeValue = v.getOutEdgeValue(i);
+			byte dstEdgeValue = v.getOutEdgeValue(i);
 			
 			//TODO: add grammar check
 			if(checkGrammar()) {
@@ -159,7 +159,7 @@ public class EdgeComputation {
 		if(readableSize == 0) return;
 		
 		int[] ids = null;
-		char[] values = null;
+		byte[] values = null;
 		
 		// 2.1 check (readableSize - 1) node, each node is full of NODE_SIZE elements
 		for(int j = 0; j < readableSize - 1; j++) {

@@ -16,13 +16,13 @@ public class GraphDTCNewEdgesList {
 	
 	class NewEdgesNode {
 		private int[] dstVertices = null;
-		private char[] edgeValues = null;
+		private byte[] edgeValues = null;
 		private int index;
 		private NewEdgesNode next = null;
 		
 		NewEdgesNode() {
 			dstVertices = new int[NODE_SIZE];
-			edgeValues = new char[NODE_SIZE];
+			edgeValues = new byte[NODE_SIZE];
 			
 		}
 		
@@ -30,7 +30,7 @@ public class GraphDTCNewEdgesList {
 			return dstVertices;
 		}
 		
-		public char[] getEdgeValues() {
+		public byte[] getEdgeValues() {
 			return edgeValues;
 		}
 		
@@ -38,7 +38,7 @@ public class GraphDTCNewEdgesList {
 			return index;
 		}
 		
-		public void add(int vertexId, char edgeValue) {
+		public void add(int vertexId, byte edgeValue) {
 			dstVertices[index] = vertexId;
 			edgeValues[index] = edgeValue;
 			index++;
@@ -78,7 +78,7 @@ public class GraphDTCNewEdgesList {
 		return last.getIndex();
 	}
 	
-	public void add(int vertexId, char edgeValue) {
+	public void add(int vertexId, byte edgeValue) {
 		if(size == 0) {
 			first = new NewEdgesNode();
 			last = first;
