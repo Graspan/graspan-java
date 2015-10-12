@@ -25,24 +25,55 @@ public class EdgeComputation {
 			int vertexId = vertex.getOutEdge(i);
 			byte edgeValue = vertex.getOutEdgeValue(i);
 			
-			// scan edges in partition "from"
-			if(isInRange(vertexId, verticesFrom))
-				scanAddableEdges(vertexId, edgeValue, verticesFrom, 
-						vertex, edgeList, edgesLists);
-			
-			// scan edges in partition "to"
-			if(isInRange(vertexId, verticesTo))
-				scanAddableEdges(vertexId, edgeValue, verticesTo, 
-						vertex, edgeList, edgesLists);
+			// check vertex range and scan addable edges
+			checkRangeAndScanEdges(vertexId, edgeValue,
+					vertex, verticesFrom, verticesTo,
+					edgeList, edgesLists);
 			
 		}
 		
+		// 2. check new edges linked array
+		if(edgeList == null) return;
+		int readableSize = edgeList.getReadableSize();
+		if(readableSize == 0) return;
+		
+		int[] ids = null;
+		byte[] values = null;
+		
+		// 2.1 check (readableSize - 1) node, each node is full of NODE_SIZE elements
+		for(int j = 0; j < readableSize - 1; j++) {
+			ids = edgeList.getNode(j).getDstVertices();
+			values = edgeList.getNode(j).getEdgeValues();
+			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
+			
+			for(int k = 0; k < ids.length; k++) {
+				
+				// check vertex range and scan addable edges
+				checkRangeAndScanEdges(ids[k], values[k],
+						vertex, verticesFrom, verticesTo,
+						edgeList, edgesLists);
+				
+			}
+		}
+		
+		// 2.2 check the last node, the num of elements is index
+		ids = edgeList.getLast().getDstVertices();
+		values = edgeList.getLast().getEdgeValues();
+		int readableIndex = edgeList.getReadableIndex();
+		for(int m = 0; m < readableIndex; m++) {
+			
+			// check vertex range and scan addable edges
+			checkRangeAndScanEdges(ids[m], values[m],
+					vertex, verticesFrom, verticesTo,
+					edgeList, edgesLists);
+			
+		}
 	}
 
 	/**
 	 * Description:
 	 * @param:
-	 * @return:boolean
+	 * @return: boolean
 	 */
 	// TODO: to be optimized
 	private static boolean isInRange(int vertexId, GraphDTCVertex[] vertices) {
@@ -57,6 +88,27 @@ public class EdgeComputation {
 		
 		return false;
 	}
+	
+	/**
+	 * Description:
+	 * @param:
+	 * @return: 
+	 */
+	private static void checkRangeAndScanEdges(int vertexId, byte edgeValue, 
+			GraphDTCVertex vertex, GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo,
+			GraphDTCNewEdgesList edgeList, GraphDTCNewEdgesList[] edgesLists) {
+		
+		// scan edges in partition "from"
+		if(isInRange(vertexId, verticesFrom))
+			scanAddableEdges(vertexId, edgeValue, verticesFrom, 
+					vertex, edgeList, edgesLists);
+					
+		// scan edges in partition "to"
+		if(isInRange(vertexId, verticesTo))
+			scanAddableEdges(vertexId, edgeValue, verticesTo, 
+					vertex, edgeList, edgesLists);
+	}
+			
 
 	/**
 	 * Description:
@@ -80,12 +132,10 @@ public class EdgeComputation {
 		}
 		
 		// 2. check new edges linked array
-		if(edgeList == null)
-			return false;
+		if(edgeList == null)	return false;
 		
 		int size = edgeList.getSize();
-		if(size == 0)
-			return false;
+		if(size == 0)	return false;
 		
 		int[] ids = null;
 		byte[] values = null;
@@ -139,17 +189,10 @@ public class EdgeComputation {
 			int dstId = v.getOutEdge(i);
 			byte dstEdgeValue = v.getOutEdgeValue(i);
 			
-			//TODO: add grammar check
-			if(checkGrammar()) {
-				//TODO: dstEdgeValue to be fixed based on grammar!!
-				if(!isDuplicationEdge(dstId, dstEdgeValue, vertex, edgeList)) {
-					// no duplication, needs to add edge to linked array
-					// synchronize, to guarantee happens-before relationship
-					synchronized (lock) {
-						edgeList.add(dstId, dstEdgeValue);
-					}
-				}
-			}
+			// check grammar, check duplication and add edges
+			//TODO: dstEdgeValue to be fixed based on grammar!!
+			checkGrammarAndDuplication(dstId, dstEdgeValue, lock,
+					vertex, edgeList);
 		}
 		
 		// 2. scan new edges linked array
@@ -168,17 +211,11 @@ public class EdgeComputation {
 			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
 			
 			for(int k = 0; k < ids.length; k++) {
-				//TODO: add grammar check
-				if(checkGrammar()) {
-					//TODO: dstEdgeValue to be fixed based on grammar!!
-					if(!isDuplicationEdge(ids[k], values[k], vertex, edgeList)) {
-						// no duplication, needs to add edge to linked array
-						// synchronize, to guarantee happens-before relationship
-						synchronized (lock) {
-							edgeList.add(ids[k], values[k]);
-						}
-					}
-				}
+				// check grammar, check duplication and add edges
+				//TODO: values[k] to be fixed based on grammar!!
+				checkGrammarAndDuplication(ids[k], values[k], lock,
+						vertex, edgeList);
+				
 			}
 		}
 		
@@ -187,16 +224,29 @@ public class EdgeComputation {
 		values = edgesLists[index].getLast().getEdgeValues();
 		int readableIndex = edgesLists[index].getReadableIndex();
 		for(int m = 0; m < readableIndex; m++) {
-			
-			//TODO: add grammar check
-			if(checkGrammar()) {
-				//TODO: dstEdgeValue to be fixed based on grammar!!
-				if(!isDuplicationEdge(ids[m], values[m], vertex, edgeList)) {
-					// no duplication, needs to add edge to linked array
-					// synchronize, to guarantee happens-before relationship
-					synchronized (lock) {
-						edgeList.add(ids[m], values[m]);
-					}
+			// check grammar, check duplication and add edges
+			//TODO: values[m] to be fixed based on grammar!!
+			checkGrammarAndDuplication(ids[m], values[m], lock,
+					vertex, edgeList);
+		}
+	}
+	
+	/**
+	 * Description:
+	 * @param:
+	 * @return:
+	 */
+	private static void checkGrammarAndDuplication(int vertexId, byte edgeValue, final Object lock,
+			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
+		
+		//TODO: add grammar check
+		if(checkGrammar()) {
+			//TODO: dstEdgeValue to be fixed based on grammar!!
+			if(!isDuplicationEdge(vertexId, edgeValue, vertex, edgeList)) {
+				// no duplication, needs to add edge to linked array
+				// synchronize, to guarantee happens-before relationship
+				synchronized (lock) {
+					edgeList.add(vertexId, edgeValue);
 				}
 			}
 		}
