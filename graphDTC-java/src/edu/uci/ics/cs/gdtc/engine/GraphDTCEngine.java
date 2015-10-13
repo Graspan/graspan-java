@@ -2,7 +2,9 @@ package edu.uci.ics.cs.gdtc.engine;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputation;
@@ -100,63 +102,74 @@ public class GraphDTCEngine {
 
         final int nWorkers = vertices.length / chunkSize + 1;
         final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
+        final AtomicIntegerArray nNewEdges = new AtomicIntegerArray(verticesFrom.length);
+        final AtomicBoolean terminateFlag = new AtomicBoolean(false);
         
-        // Parallel updates
-        for(int id = 0; id < nWorkers; id++) {
-            final int currentId = id;
-            final int chunkStart = currentId * chunkSize;
-            final int chunkEnd = chunkStart + chunkSize;
-
-            computationExecutor.submit(new Runnable() {
-
-                public void run() {
-                    int threadUpdates = 0;
-
-                    try {
-                        int end = chunkEnd;
-                        if (end > vertices.length) 
-                        	end = vertices.length;
-                        
-                        for(int i = chunkStart; i < end; i++) {
-                            GraphDTCVertex vertex = vertices[i];
-                            GraphDTCNewEdgesList edgeList = edgesLists[i];
-                            if (vertex != null) {
-                            	threadUpdates++;
-                                execUpdate(vertex, verticesFrom, verticesTo, 
-                                		edgeList, edgesLists);
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        int pending = countDown.decrementAndGet();
-                        synchronized (termationLock) {
-                            nUpdates += threadUpdates;
-                            if (pending == 0) {
-                            	termationLock.notifyAll();
-                            }
-                        }
-                    }
-                }
-
-				
-            });
-        }
+        while(!terminateFlag.get()) {
+        	
+	        // Parallel updates
+	        for(int id = 0; id < nWorkers; id++) {
+	            final int currentId = id;
+	            final int chunkStart = currentId * chunkSize;
+	            final int chunkEnd = chunkStart + chunkSize;
+	
+	            computationExecutor.submit(new Runnable() {
+	
+	                public void run() {
+	                    int threadUpdates = 0;
+	
+	                    try {
+	                        int end = chunkEnd;
+	                        if (end > vertices.length) 
+	                        	end = vertices.length;
+	                        
+	                        for(int i = chunkStart; i < end; i++) {
+	                            GraphDTCVertex vertex = vertices[i];
+	                            GraphDTCNewEdgesList edgeList = edgesLists[i];
+	                            if (vertex != null) {
+	                            	threadUpdates++;
+	                                execUpdate(vertex, verticesFrom, verticesTo, 
+	                                		edgeList, edgesLists, nNewEdges, i);
+	                            }
+	                        }
+	
+	                    } catch (Exception e) {
+	                        e.printStackTrace();
+	                    } finally {
+	                        int pending = countDown.decrementAndGet();
+	                        synchronized (termationLock) {
+	                            nUpdates += threadUpdates;
+	                            if (pending == 0) {
+	                            	termationLock.notifyAll();
+	                            }
+	                        }
+	                    }
+	                }
+	
+	            });
+	        }
         
-        synchronized (termationLock) {
-            while(countDown.get() > 0) {
-                try {
-                	termationLock.wait(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                
-                if (countDown.get() > 0) 
-                	logger.info("Waiting for execution to finish: countDown:" + countDown.get());
-            }
+	        synchronized (termationLock) {
+	            while(countDown.get() > 0) {
+	                try {
+	                	termationLock.wait(1500);
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	                
+	                if (countDown.get() > 0) 
+	                	logger.info("Waiting for execution to finish: countDown:" + countDown.get());
+	            }
+	        }
+	        
+	        int sum = 0;
+	        for(int i = 0; i < nNewEdges.length(); i++) {
+	        	sum += nNewEdges.get(i);
+	        }
+	        
+	        if(sum == 0)
+	        	terminateFlag.set(true);
         }
-
     }
 	
 
@@ -200,10 +213,11 @@ public class GraphDTCEngine {
 			GraphDTCVertex[] verticesFrom,
 			GraphDTCVertex[] verticesTo,
 			GraphDTCNewEdgesList edgeList,
-			GraphDTCNewEdgesList[] edgesLists) {
+			GraphDTCNewEdgesList[] edgesLists, 
+			AtomicIntegerArray nNewEdges, int arrayIndex) {
 		
 		EdgeComputation.execUpate(vertex, verticesFrom, verticesTo, 
-				edgeList, edgesLists);
+				edgeList, edgesLists, nNewEdges, arrayIndex);
 	}
 	
 }
