@@ -2,9 +2,9 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 
 /**
  * 
- * Schedules the selection of ONLY TWO partitions on which memory computations is
- * to be done, also sets a limit of the maximum allowable number of new
- * partitions that can be generated from repartitioning
+ * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY  - Schedules the selection of partitions
+ * on which memory computations is to be done, also sets a limit of the maximum
+ * allowable number of new partitions that can be generated from repartitioning
  * 
  * @author Aftab
  *
@@ -12,11 +12,11 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 public class BasicScheduler implements IScheduler {
 
 	private int[][] partScheduleMap = new int[SizeOfPartScheduleMap][SizeOfPartScheduleMap];
-	
-	//We are assuming at most 50 - numOfOriginalParts will be created after the complete process
+
+	// We are assuming at most 50 - numOfOriginalParts will be created after the
+	// complete process
 	private static final int SizeOfPartScheduleMap = 50;
 
-	
 	private int numPartitions;
 
 	/**
@@ -42,17 +42,17 @@ public class BasicScheduler implements IScheduler {
 
 	/**
 	 * Returns the next set of partitions (ids) to be computed
-	 * 
+	 * TODO currently designed to load two partitions only. 
 	 */
 	public int[] getPartstoLoad(int numPartsPerComputation) {
-		
+
 		for (int i = 0; i < partScheduleMap.length; i++) {
 			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {
-					int[] partsToLoad = new int[2];
+					int[] partsToLoad = new int[numPartsPerComputation];
 					partsToLoad[0] = i;
 					partsToLoad[1] = j;
-					partScheduleMap[i][j]=1;
+					partScheduleMap[i][j] = 1;
 					return partsToLoad;
 				}
 			}

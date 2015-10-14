@@ -1,3 +1,4 @@
+
 //comment again
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,21 +35,22 @@ public class MainGraphDTC {
 		partgenerator.allocateVIntervalstoPartitions();
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 
-		// COMPUTATION
-		// TODO use a loop here as determined by scheduler
-
 		// determine the partitions to load in memory
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler(numInputPartitions);
 
 		// load the partitions to memory
 		NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
+
+		// COMPUTATION
+		// TODO use a loop here as determined by scheduler
 		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation));
 
 		// compute new edges
-//		NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
-//		newEdgeComputer.computeNewEdges(partLoader.partEdgeArrays, partLoader.partEdgeValArrays,
-//				partLoader.partOutDegrees);
+		// NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
+		// newEdgeComputer.computeNewEdges(partLoader.partEdgeArrays,
+		// partLoader.partEdgeValArrays,
+		// partLoader.partOutDegrees);
 
 		/*
 		 * TEST PartitionLoader
