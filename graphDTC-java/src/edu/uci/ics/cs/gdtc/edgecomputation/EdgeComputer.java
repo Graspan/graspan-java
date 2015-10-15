@@ -11,11 +11,31 @@ import edu.uci.ics.cs.gdtc.GraphDTCVertex;
  *
  * Created by Oct 8, 2015
  */
-public class EdgeComputation {
+public class EdgeComputer {
+	private GraphDTCVertex vertex = null;
+	private GraphDTCNewEdgesList edgeList = null;
+	private static GraphDTCNewEdgesList[] edgesLists= null;
+	private static GraphDTCVertex[] verticesFrom = null;
+	private static GraphDTCVertex[] verticesTo = null;
 	
-	public static void execUpate(GraphDTCVertex vertex, GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo, 
-			GraphDTCNewEdgesList edgeList, GraphDTCNewEdgesList[] edgesLists,
-			AtomicIntegerArray nNewEdges, int arrayIndex) {
+	public EdgeComputer(GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
+		this.vertex = vertex;
+		this.edgeList = edgeList;
+	}
+	
+	public static void setEdgesLists(GraphDTCNewEdgesList[] lists) {
+		edgesLists = lists;
+	}
+	
+	public static void setVerticesFrom(GraphDTCVertex[] vertices) {
+		verticesFrom = vertices;
+	}
+	
+	public static void setVerticesTo(GraphDTCVertex[] vertices) {
+		verticesTo = vertices;
+	}
+	
+	public void execUpdate(AtomicIntegerArray nNewEdges, int arrayIndex) {
 		if(vertex == null || verticesFrom == null || verticesTo == null 
 				|| edgeList == null || edgesLists == null)
 			return;
@@ -31,8 +51,7 @@ public class EdgeComputation {
 			
 			// check vertex range and scan addable edges
 			checkRangeAndScanEdges(vertexId, edgeValue,
-					vertex, verticesFrom, verticesTo,
-					edgeList, edgesLists, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 			
 		}
 		
@@ -54,8 +73,7 @@ public class EdgeComputation {
 				
 				// check vertex range and scan addable edges
 				checkRangeAndScanEdges(ids[k], values[k],
-						vertex, verticesFrom, verticesTo,
-						edgeList, edgesLists, nNewEdges, arrayIndex);
+						 nNewEdges, arrayIndex);
 				
 			}
 		}
@@ -68,8 +86,7 @@ public class EdgeComputation {
 			
 			// check vertex range and scan addable edges
 			checkRangeAndScanEdges(ids[m], values[m],
-					vertex, verticesFrom, verticesTo,
-					edgeList, edgesLists, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 			
 		}
 	}
@@ -80,7 +97,7 @@ public class EdgeComputation {
 	 * @return: boolean
 	 */
 	// TODO: to be optimized
-	private static boolean isInRange(int vertexId, GraphDTCVertex[] vertices) {
+	private boolean isInRange(int vertexId, GraphDTCVertex[] vertices) {
 		if(vertices == null || vertices.length == 0)
 				return false;
 		
@@ -98,20 +115,18 @@ public class EdgeComputation {
 	 * @param:
 	 * @return: 
 	 */
-	private static void checkRangeAndScanEdges(int vertexId, byte edgeValue, 
-			GraphDTCVertex vertex, GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo,
-			GraphDTCNewEdgesList edgeList, GraphDTCNewEdgesList[] edgesLists, 
+	private void checkRangeAndScanEdges(int vertexId, byte edgeValue, 
 			AtomicIntegerArray nNewEdges, int arrayIndex) {
 		
 		// scan edges in partition "from"
 		if(isInRange(vertexId, verticesFrom))
 			scanAddableEdges(vertexId, edgeValue, verticesFrom, 
-					vertex, edgeList, edgesLists, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 					
 		// scan edges in partition "to"
 		if(isInRange(vertexId, verticesTo))
 			scanAddableEdges(vertexId, edgeValue, verticesTo, 
-					vertex, edgeList, edgesLists, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 	}
 			
 
@@ -123,7 +138,7 @@ public class EdgeComputation {
 	 * @param:
 	 * @return:
 	 */
-	private static boolean isDuplicationEdge(int vertexId, byte edgeValue, 
+	private boolean isDuplicationEdge(int vertexId, byte edgeValue, 
 			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
 		if(vertex == null || vertex.getNumOutEdges() == 0)
 			return false;
@@ -176,8 +191,7 @@ public class EdgeComputation {
 	 * @param:
 	 * @return:
 	 */
-	private static void scanAddableEdges(int vertexId, byte edgeValue, GraphDTCVertex[] vertices, 
-			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList, GraphDTCNewEdgesList[] edgesLists, 
+	private void scanAddableEdges(int vertexId, byte edgeValue, GraphDTCVertex[] vertices, 
 			AtomicIntegerArray nNewEdges, int arrayIndex) {
 		if(vertices == null || vertices.length == 0)
 			return;
@@ -198,7 +212,7 @@ public class EdgeComputation {
 			// check grammar, check duplication and add edges
 			//TODO: dstEdgeValue to be fixed based on grammar!!
 			checkGrammarAndDuplication(dstId, dstEdgeValue, lock,
-					vertex, edgeList, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 		}
 		
 		// 2. scan new edges linked array
@@ -220,7 +234,7 @@ public class EdgeComputation {
 				// check grammar, check duplication and add edges
 				//TODO: values[k] to be fixed based on grammar!!
 				checkGrammarAndDuplication(ids[k], values[k], lock,
-						vertex, edgeList, nNewEdges, arrayIndex);
+						nNewEdges, arrayIndex);
 				
 			}
 		}
@@ -233,7 +247,7 @@ public class EdgeComputation {
 			// check grammar, check duplication and add edges
 			//TODO: values[m] to be fixed based on grammar!!
 			checkGrammarAndDuplication(ids[m], values[m], lock,
-					vertex, edgeList, nNewEdges, arrayIndex);
+					nNewEdges, arrayIndex);
 		}
 	}
 	
@@ -242,8 +256,7 @@ public class EdgeComputation {
 	 * @param:
 	 * @return:
 	 */
-	private static void checkGrammarAndDuplication(int vertexId, byte edgeValue, final Object lock,
-			GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList, 
+	private void checkGrammarAndDuplication(int vertexId, byte edgeValue, final Object lock,
 			AtomicIntegerArray nNewEdges, int arrayIndex) {
 		
 		//TODO: add grammar check

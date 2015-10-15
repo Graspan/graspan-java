@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputation;
+import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputation.GraphDTCNewEdgesList;
 import edu.uci.ics.cs.gdtc.GraphDTCLogger;
 import edu.uci.ics.cs.gdtc.GraphDTCVertex;
@@ -51,6 +51,7 @@ public class GraphDTCEngine {
 		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
 		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
 		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[nVertices];
+		EdgeComputer[] edgeComputers = new EdgeComputer[nVertices];
 		
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
@@ -61,7 +62,10 @@ public class GraphDTCEngine {
 		logger.info("Starting computation and edge addition...");
 		t = System.currentTimeMillis();
 		// 2. do computation and add edges
-		doComputation(verticesFrom, verticesTo, edgesLists);
+		EdgeComputer.setEdgesLists(edgesLists);
+		EdgeComputer.setVerticesFrom(verticesFrom);
+		EdgeComputer.setVerticesTo(verticesTo);
+		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
 		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
 		
 		// 3. store partitions to disk
@@ -84,7 +88,8 @@ public class GraphDTCEngine {
 	 */
 	private void doComputation(final GraphDTCVertex[] verticesFrom, 
 			final GraphDTCVertex[] verticesTo, 
-			final GraphDTCNewEdgesList[] edgesLists) {
+			final GraphDTCNewEdgesList[] edgesLists,
+			final EdgeComputer[] edgeComputers) {
 		if(verticesFrom == null || verticesFrom.length == 0)
 			return;
 		
@@ -126,10 +131,10 @@ public class GraphDTCEngine {
 	                        for(int i = chunkStart; i < end; i++) {
 	                            GraphDTCVertex vertex = vertices[i];
 	                            GraphDTCNewEdgesList edgeList = edgesLists[i];
+	                            EdgeComputer edgeComputer = new EdgeComputer(vertex, edgeList);
 	                            if (vertex != null) {
 	                            	threadUpdates++;
-	                                execUpdate(vertex, verticesFrom, verticesTo, 
-	                                		edgeList, edgesLists, nNewEdges, i);
+	                                edgeComputer.execUpdate(nNewEdges, i);
 	                            }
 	                        }
 	
@@ -202,22 +207,6 @@ public class GraphDTCEngine {
 	 */
 	private void loadPartitions(GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo) {
 		
-	}
-	
-	/**
-	 * Description:
-	 * @param:
-	 * @return:
-	 */
-	private void execUpdate(GraphDTCVertex vertex,
-			GraphDTCVertex[] verticesFrom,
-			GraphDTCVertex[] verticesTo,
-			GraphDTCNewEdgesList edgeList,
-			GraphDTCNewEdgesList[] edgesLists, 
-			AtomicIntegerArray nNewEdges, int arrayIndex) {
-		
-		EdgeComputation.execUpate(vertex, verticesFrom, verticesTo, 
-				edgeList, edgesLists, nNewEdges, arrayIndex);
 	}
 	
 }
