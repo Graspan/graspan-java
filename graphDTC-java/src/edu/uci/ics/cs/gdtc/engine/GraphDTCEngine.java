@@ -21,7 +21,7 @@ import edu.uci.ics.cs.gdtc.GraphDTCVertex;
 public class GraphDTCEngine {
 	private static final Logger logger = GraphDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
-	private long nUpdates;
+	private long totalNewEdges;
 	
 	public GraphDTCEngine() {
 		
@@ -107,10 +107,10 @@ public class GraphDTCEngine {
 
         final int nWorkers = vertices.length / chunkSize + 1;
         final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
-        final AtomicIntegerArray nNewEdges = new AtomicIntegerArray(verticesFrom.length);
-        final AtomicBoolean terminateFlag = new AtomicBoolean(false);
         
-        while(!terminateFlag.get()) {
+        do {
+        	totalNewEdges = 0;
+        	countDown.set(1 + nWorkers);
         	
 	        // Parallel updates
 	        for(int id = 0; id < nWorkers; id++) {
@@ -129,12 +129,18 @@ public class GraphDTCEngine {
 	                        	end = vertices.length;
 	                        
 	                        for(int i = chunkStart; i < end; i++) {
+	                        	// each vertex is associated with an edgeList
 	                            GraphDTCVertex vertex = vertices[i];
 	                            GraphDTCNewEdgesList edgeList = edgesLists[i];
-	                            EdgeComputer edgeComputer = new EdgeComputer(vertex, edgeList);
+	                            EdgeComputer edgeComputer = edgeComputers[i];
+	                            
 	                            if (vertex != null) {
-	                            	threadUpdates++;
-	                                edgeComputer.execUpdate(nNewEdges, i);
+	                            	if(edgeComputer == null)
+	                            		edgeComputer = new EdgeComputer(vertex, edgeList);
+	                            	
+	                                edgeComputer.execUpdate();
+	                                threadUpdates = edgeComputer.getNumNewEdges();
+	                                edgeComputer.setNumNewEdges(0);
 	                            }
 	                        }
 	
@@ -143,7 +149,7 @@ public class GraphDTCEngine {
 	                    } finally {
 	                        int pending = countDown.decrementAndGet();
 	                        synchronized (termationLock) {
-	                            nUpdates += threadUpdates;
+	                            totalNewEdges += threadUpdates;
 	                            if (pending == 0) {
 	                            	termationLock.notifyAll();
 	                            }
@@ -167,14 +173,7 @@ public class GraphDTCEngine {
 	            }
 	        }
 	        
-	        int sum = 0;
-	        for(int i = 0; i < nNewEdges.length(); i++) {
-	        	sum += nNewEdges.get(i);
-	        }
-	        
-	        if(sum == 0)
-	        	terminateFlag.set(true);
-        }
+        } while(totalNewEdges > 0);
     }
 	
 
