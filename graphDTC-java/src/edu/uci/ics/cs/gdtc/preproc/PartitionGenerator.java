@@ -98,8 +98,7 @@ public class PartitionGenerator {
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
 			if (lineCount % 10000000 == 0) {
-				System.out.println();
-				System.out.println("Reading line number: " + lineCount);
+				System.out.print("\nReading line number: " + lineCount);
 			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
@@ -217,7 +216,7 @@ public class PartitionGenerator {
 		System.out.println("Generating partition files");
 
 		// initialize partition buffers
-		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[10];
+		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numPartitions];
 
 		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTITIONS + " edges for "
 				+ numPartitions + " partitions)... ");
@@ -237,7 +236,12 @@ public class PartitionGenerator {
 		System.out.print("Performing second scan on input graph\n");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
+		long lineCount=0;
 		while ((ln = ins.readLine()) != null) {
+			lineCount++;
+			if (lineCount % 10000000 == 0) {
+				System.out.print("\nSending edges to buffer, reading line number: " + lineCount);
+			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 				// Edge list: <src> <dst> <value>
