@@ -29,18 +29,20 @@ public class PartitionGenerator {
 	 * file|outDegreesMap:map of vertex and degrees|BUFFER_FOR_PARTITIONS:the
 	 * total number of edges that can be kept in all partition buffers|
 	 * partitionBufferSize:the total number of edges that can be kept in each
-	 * partition buffer|partitionBufferFreespace:table consisting of
-	 * available space in each partition buffer
+	 * partition buffer|partitionBufferFreespace:table consisting of available
+	 * space in each partition buffer|partitionDiskWriteCount:the number of
+	 * writes to disk for creating the partition files
 	 */
 	private int numPartitions;
 	private long numEdges;
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
 	public static int[] partAllocTable;
-	private static final long BUFFER_FOR_PARTITIONS = 3;
+	private static final long BUFFER_FOR_PARTITIONS = 100;
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
 	private DataOutputStream[] partitionOutputStreams;
+	private int partitionDiskWriteCount;
 
 	// Each partition buffer consists of an adjacency list.
 	// HashMap<srcVertexID, <[destVertexID1,edgeValue1],
@@ -55,10 +57,13 @@ public class PartitionGenerator {
 	 * @throws IOException
 	 */
 	public PartitionGenerator(String baseFilename, int numPartitions) throws IOException {
+		System.out.print("Initializing partition generator program... ");
+
 		this.numPartitions = numPartitions;
 		this.baseFilename = baseFilename;
 
-		// initialize partition allocation table (it stores the maximum src vertex id for each partition)
+		// initialize partition allocation table (it stores the maximum src
+		// vertex id for each partition)
 		partAllocTable = new int[numPartitions];
 
 		// create the streams for the empty partition files (these streams will
@@ -68,25 +73,34 @@ public class PartitionGenerator {
 			this.partitionOutputStreams[i] = new DataOutputStream(
 					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
 		}
+		System.out.print("Done\n");
 	}
 
 	/**
 	 * Scans the entire graph and counts the out-degrees of all the vertices.
-	 * This is the Preliminary Scan
-	 * TODO need to store the degrees file in a more space-efficient way
+	 * This is the Preliminary Scan TODO need to store the degrees file in a
+	 * more space-efficient way
 	 * 
 	 * @param inputStream
 	 * @param format
 	 * @throws IOException
 	 */
 	public void generateDegrees(InputStream inputStream) throws IOException {
+		System.out.println("Generating degrees file");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
 		TreeMap<Integer, Integer> outDegreesMap = new TreeMap<Integer, Integer>();
 
 		// read inputgraph line-by-line and keep incrementing degree
+		System.out.print("Performing first scan on input graph... ");
+		long lineCount = 0;
 		while ((ln = ins.readLine()) != null) {
+			lineCount++;
+			if (lineCount % 10000000 == 0) {
+				System.out.println();
+				System.out.println("Reading line number: " + lineCount);
+			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 				int src = Integer.parseInt(tok[0]);
@@ -98,9 +112,13 @@ public class PartitionGenerator {
 				numEdges++;
 			}
 		}
+		System.out.print("Done\n");
+
 		this.numEdges = numEdges;
+		System.out.print(">Total number of edges in input graph: " + numEdges + "\n");
 
 		// Save the degrees on disk
+		System.out.print("Saving degrees file " + baseFilename + ".degrees... ");
 		Iterator it = outDegreesMap.entrySet().iterator();
 
 		PrintWriter outDegOutputStream = new PrintWriter(baseFilename + ".degrees", "UTF-8");
@@ -122,18 +140,21 @@ public class PartitionGenerator {
 		 */
 		// this.outDegreesMap = (TreeMap<Integer, Integer>)
 		// Collections.unmodifiableMap(degreesMap);
+		System.out.print("Done\n");
 	}
 
 	/**
 	 * Allocates vertex intervals to partitions.
 	 */
 	public void allocateVIntervalstoPartitions() {
+		System.out.print("Allocating vertices to partitions (creating partition allocation table)\n");
 
 		// average of edges by no. of partitions
 		long avgEdgesPerPartition = Math.floorDiv(numEdges, numPartitions);
 
 		// the heuristic for interval max
 		long intervalMax = (long) (avgEdgesPerPartition * 0.9);
+		System.out.println(">Calculated partition size threshold: " + intervalMax + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
 		int intervalHeadVertexId = 0;
@@ -166,6 +187,11 @@ public class PartitionGenerator {
 				break;
 			}
 		}
+		System.out.print("Generated partition allocation table\n");
+		System.out.println(">Partition allocation table: ");
+		for (int i = 0; i < partAllocTable.length; i++) {
+			System.out.println(" " + partAllocTable[i]);
+		}
 	}
 
 	/**
@@ -181,17 +207,20 @@ public class PartitionGenerator {
 
 	/**
 	 * Scans the input graph, pools edges for each partition (according to
-	 * partAllocTable), and writes the edges to the corresponding
-	 * partition files
+	 * partAllocTable), and writes the edges to the corresponding partition
+	 * files
 	 * 
 	 * @param inputStream
 	 * @throws IOException
 	 */
 	public void writePartitionEdgestoFiles(InputStream inputStream) throws IOException {
+		System.out.println("Generating partition files");
 
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[10];
 
+		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTITIONS + " edges for "
+				+ numPartitions + " partitions)... ");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
 		long partitionBufferFreespace[] = new long[numPartitions];
 		for (int i = 0; i < numPartitions; i++) {
@@ -202,8 +231,10 @@ public class PartitionGenerator {
 		this.partitionBuffers = partitionBuffers;
 		this.partitionBufferSize = partitionBufferSize;
 		this.partitionBufferFreespace = partitionBufferFreespace;
+		System.out.print("Done\n");
 
 		// read the input graph edge-wise and process each edge
+		System.out.print("Performing second scan on input graph\n");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		while ((ln = ins.readLine()) != null) {
@@ -218,7 +249,16 @@ public class PartitionGenerator {
 		for (int i = 0; i < numPartitions; i++) {
 			sendBufferEdgestoDisk_ByteFmt(i);
 		}
-		
+
+		// close all streams
+		for (int i = 0; i < this.partitionOutputStreams.length; i++) {
+			this.partitionOutputStreams[i].close();
+		}
+
+		System.out.println("Partition files created");
+		System.out.println(
+				">Total number of writes to disk for creating partition files: " + this.partitionDiskWriteCount);
+
 		this.outDegreesMap.clear();
 	}
 
@@ -263,13 +303,16 @@ public class PartitionGenerator {
 
 		// if partition buffer is full transfer the partition buffer to file
 		if (isPartitionBufferFull(partitionId)) {
+			// System.out.print("Partition buffer for partition # " +
+			// partitionId + " full, writing to disk... ");
 			sendBufferEdgestoDisk_ByteFmt(partitionId);
+			// System.out.print("Done\n");
 		}
 	}
 
 	/**
-	 * searches the partAllocTable to find out which partition a
-	 * vertex belongs (CALLED BY addEdgetoBuffer() method)
+	 * searches the partAllocTable to find out which partition a vertex belongs
+	 * (CALLED BY addEdgetoBuffer() method)
 	 * 
 	 * @param srcV
 	 */
@@ -305,6 +348,7 @@ public class PartitionGenerator {
 	 * @throws IOException
 	 */
 	private void sendBufferEdgestoDisk_ByteFmt(int partitionId) throws IOException {
+		partitionDiskWriteCount++;
 
 		DataOutputStream adjListOutputStream = this.partitionOutputStreams[partitionId];
 
@@ -342,7 +386,6 @@ public class PartitionGenerator {
 				adjListOutputStream.writeByte(edgeValue);
 			}
 		}
-		adjListOutputStream.close();
 
 		// empty the buffer
 		vertexAdjList.clear();

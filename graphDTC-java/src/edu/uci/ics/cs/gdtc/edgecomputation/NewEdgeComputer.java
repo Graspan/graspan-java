@@ -11,7 +11,9 @@ import java.io.InputStreamReader;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
 /**
- * This program generates loads partitions into the memory and computes new edges.
+ * This program generates loads partitions into the memory and computes new
+ * edges.
+ * 
  * @author Aftab
  *
  */
@@ -24,21 +26,15 @@ public class NewEdgeComputer {
 	 */
 	private int partAllocTable[] = PartitionGenerator.partAllocTable;
 
-	/*
-	 * Data structures for storing the partitions to load:
-	 * 
-	 * Dimension 1 indicates partition number, Dimension 2 indicates list for a
-	 * source vertex, Dimension 3 indicates an out-edge from each source vertex
-	 */
+	// Data structures for storing the partitions to load:
+	// Dimension 1 indicates partition number, Dimension 2 indicates list for a
+	// source vertex, Dimension 3 indicates an out-edge from each source vertex
 	private int partEdgeArrays[][][];
 	private int partEdgeValArrays[][][];
 
-	/*
-	 * Stores the out degrees of each source vertex of each partition.
-	 * 
-	 * Dimension 1 indicates partition number, Dimension 2 indicates out degree
-	 * of a source vertex in the partition indicated by Index 1
-	 */
+	// Stores the out degrees of each source vertex of each partition.
+	// Dimension 1 indicates partition number, Dimension 2 indicates out degree
+	// of a source vertex in the partition indicated by Index 1
 	private int partOutDegrees[][];
 
 	// Contains the ids of the partitions to be loaded in the memory
@@ -77,16 +73,27 @@ public class NewEdgeComputer {
 	 * @throws IOException
 	 */
 	public void loadPartitions(String baseFilename, int[] partsToLoad) throws IOException {
+
+		System.out.print("Loading partitions: ");
+		for (int i = 0; i < partsToLoad.length; i++) {
+			System.out.print(partsToLoad[i] + " ");
+		}
+		System.out.print("\n");
+
 		// get the degrees of the source vertices in the partitions
 		getDegrees(baseFilename, partsToLoad);
 
 		// initialize data structures of the partitions to load
+		System.out.print("Initializing data structures for loading partitions... ");
 		initPartitionDataStructs(partsToLoad);
+		System.out.print("Done\n");
 
 		// fill the partition data structures
 		fillPartitionDataStructs(baseFilename, partsToLoad);
+		System.out.println("Completed loading of partitions");
 
 		// sorting the partitions
+		System.out.print("Sorting loaded partition data structures... ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
 				int low = 0;
@@ -94,29 +101,30 @@ public class NewEdgeComputer {
 				quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
 			}
 		}
+		System.out.print("Done\n");
 
 		this.loadedParts = partsToLoad;
 
 		/*
 		 * TEST Loading of Partitions in Arrays
 		 */
-		// for (int i = 0; i < partsToLoad.length; i++) {
-		// System.out.println("Partition: " + partsToLoad[i]);
-		// for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
-		// int srcv = j + this.getMinSrc(partsToLoad[i]);
-		// System.out.println("SourceV: " + srcv);
-		// System.out.println("Dest Vs: ");
-		// for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
-		// System.out.print(this.partEdgeArrays[i][j][k] + " ");
-		// }
-		// System.out.println();
-		// System.out.println("Edge Vals: ");
-		// for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
-		// System.out.print(this.partEdgeValArrays[i][j][k] + " ");
-		// }
-		// System.out.println();
-		// }
-		// }
+		 for (int i = 0; i < partsToLoad.length; i++) {
+		 System.out.println("Partition: " + partsToLoad[i]);
+		 for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
+		 int srcv = j + this.getMinSrc(partsToLoad[i]);
+		 System.out.println("SourceV: " + srcv);
+		 System.out.println("Dest Vs: ");
+		 for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
+		 System.out.print(this.partEdgeArrays[i][j][k] + " ");
+		 }
+		 System.out.println();
+		 System.out.println("Edge Vals: ");
+		 for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
+		 System.out.print(this.partEdgeValArrays[i][j][k] + " ");
+		 }
+		 System.out.println();
+		 }
+		 }
 	}
 
 	/**
@@ -208,6 +216,7 @@ public class NewEdgeComputer {
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".degrees"))));
 		String ln;
 
+		System.out.print("Reading degrees file to obtain degrees of source vertices in partitions... ");
 		while ((ln = outDegStream.readLine()) != null) {
 
 			String[] tok = ln.split("\t");
@@ -222,23 +231,31 @@ public class NewEdgeComputer {
 				if (!inPartition(srcVId, partitionsToLoad[i])) {
 					continue;
 				} else {
-					// try {
-					partOutDegrees[i][srcVId - getMinSrc(partitionsToLoad[i])] = deg;
-					// } catch (ArrayIndexOutOfBoundsException e) {
-					// System.out.println("hellp");
-					// System.out.println("Source " + srcVId);
-					// System.out.println("Partition Id in array " + i);
-					// System.out.println("The actual partition Id " +
-					// partitionsToLoad[i]);
-					// System.out.println(getMinSrc(partitionsToLoad[i]));
-					// System.out.println(partOutDegrees[1][3]);
-					// System.exit(0);
-					// }
+					try {
+						partOutDegrees[i][srcVId - getMinSrc(partitionsToLoad[i])] = deg;
+					} catch (ArrayIndexOutOfBoundsException e) {
+						// System.out.println("hellp");
+						// System.out.println("Source " + srcVId);
+						// System.out.println("Partition Id in array " + i);
+						// System.out.println("The actual partition Id " + 1);
+						// System.out.println("Min Src of this partition: " +
+						// getMinSrc(0));
+						// System.out.println("Max Src of this partition: " +
+						// getMaxSrc(4));
+						// System.out.println("num of uniq sources: " +
+						// this.getNumUniqueSrcs(1));
+						System.out.println("Min: " + getMinSrc(1));
+						// int a = srcVId - getMinSrc(partitionsToLoad[i]);
+						// System.out.println("Problem at: " + a);
+						// System.out.println(partOutDegrees[0][0]);
+						System.exit(0);
+					}
 				}
 			}
 		}
 		this.partOutDegrees = partOutDegrees;
 		outDegStream.close();
+		System.out.print("Done\n");
 	}
 
 	/**
@@ -266,7 +283,8 @@ public class NewEdgeComputer {
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
 
 					// initialize each entry to -1
-					partEdgeValsArrays[i][j][k] = -1;
+					partEdgeValsArrays[i][j][k] = -1;// TODO - check whether you
+														// need it.
 				}
 			}
 		}
@@ -292,18 +310,18 @@ public class NewEdgeComputer {
 			// stores the position of last filled edge (destV) and the edge val
 			// in partEdgesArrays and partEdgeValArrays for a a source vertex
 			// for a partition
-			int[] lastAddedEdgePos = new int[this.getNumUniqueSrcs(partitionsToLoad[i])];
+			int[] lastAddedEdgePos = new int[getNumUniqueSrcs(partitionsToLoad[i])];
 			for (int j = 0; j < lastAddedEdgePos.length; j++) {
 				lastAddedEdgePos[j] = -1;
 			}
 
-			while (true) {
+			while (true) {// (partitionInputStream.available()!=0);
 				try {
 					// get srcVId
-					int src = partitionInputStream.readInt();
+					int src = partitionInputStream.readInt();// src=b;
 
 					// get corresponding arraySrcVId of srcVId
-					int arraySrcVId = src - this.getMinSrc(partitionsToLoad[i]);
+					int arraySrcVId = src - getMinSrc(partitionsToLoad[i]);
 
 					// get count (number of destVs from srcV in the current list
 					// of the partition file)
@@ -453,7 +471,7 @@ public class NewEdgeComputer {
 		if (partId == 0) {
 			return 1;
 		} else {
-			return getMaxSrc(partId) - getMaxSrc(partId - 1) + 1;
+			return (getMaxSrc(partId - 1) + 1);
 		}
 	}
 
@@ -470,9 +488,8 @@ public class NewEdgeComputer {
 	/**
 	 * Finds whether the given vertex belongs to a partition
 	 * 
-	 * @param src
-	 * @param partMinSrc
-	 * @param partAllocTable
+	 * @param srcVId
+	 * @param partId
 	 * @return
 	 */
 	private boolean inPartition(int srcVId, int partId) {
