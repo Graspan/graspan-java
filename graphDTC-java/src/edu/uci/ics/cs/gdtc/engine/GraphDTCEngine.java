@@ -2,9 +2,7 @@ package edu.uci.ics.cs.gdtc.engine;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
@@ -135,11 +133,24 @@ public class GraphDTCEngine {
 	                            EdgeComputer edgeComputer = edgeComputers[i];
 	                            
 	                            if (vertex != null) {
-	                            	if(edgeComputer == null)
-	                            		edgeComputer = new EdgeComputer(vertex, edgeList);
+	                            	if(edgeComputer == null) {
+	                            		edgeComputers[i] = edgeComputer;
+	                            	}
+	                            	if(edgeList == null) {
+	                            		edgeList = new GraphDTCNewEdgesList();
+	                            		edgesLists[i] = edgeList;
+	                            	}
+	                            	
+	                            	// get termination status for each vertex
+	                            	if(edgeComputer.getTerminateStatus())
+	                            		continue;
 	                            	
 	                                edgeComputer.execUpdate();
 	                                threadUpdates = edgeComputer.getNumNewEdges();
+	                                
+	                                // set termination status if nNewEdges == 0 for each vertex
+	                                if(threadUpdates == 0)
+	                                	edgeComputer.setTerminateStatus(true);
 	                                edgeComputer.setNumNewEdges(0);
 	                            }
 	                        }

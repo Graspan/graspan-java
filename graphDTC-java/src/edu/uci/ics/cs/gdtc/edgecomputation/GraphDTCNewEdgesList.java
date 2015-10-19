@@ -46,6 +46,11 @@ public class GraphDTCNewEdgesList {
 		
 	}
 	
+	public GraphDTCNewEdgesList() {
+		last = first = null;
+		size = 0;
+	}
+	
 	public int getSize() {
 		return size;
 	}

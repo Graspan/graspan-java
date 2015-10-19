@@ -1,8 +1,5 @@
 package edu.uci.ics.cs.gdtc.edgecomputation;
 
-
-import java.util.concurrent.atomic.AtomicIntegerArray;
-
 import edu.uci.ics.cs.gdtc.GraphDTCVertex;
 
 
@@ -15,6 +12,7 @@ public class EdgeComputer {
 	private GraphDTCVertex vertex = null;
 	private GraphDTCNewEdgesList edgeList = null;
 	private int nNewEdges;
+	private boolean terminateStatus;
 	private static GraphDTCNewEdgesList[] edgesLists= null;
 	private static GraphDTCVertex[] verticesFrom = null;
 	private static GraphDTCVertex[] verticesTo = null;
@@ -30,6 +28,14 @@ public class EdgeComputer {
 	
 	public void setNumNewEdges(int nNewEdges) {
 		this.nNewEdges = nNewEdges;
+	}
+	
+	public boolean getTerminateStatus() {
+		return terminateStatus;
+	}
+	
+	public void setTerminateStatus(boolean terminateStatus) {
+		this.terminateStatus = terminateStatus;
 	}
 	
 	public static void setEdgesLists(GraphDTCNewEdgesList[] lists) {
@@ -48,6 +54,7 @@ public class EdgeComputer {
 		if(vertex == null || verticesFrom == null || verticesTo == null 
 				|| edgeList == null || edgesLists == null)
 			return;
+		
 		int nOutEdges = vertex.getNumOutEdges();
 		if(nOutEdges == 0) return;
 		
@@ -58,7 +65,7 @@ public class EdgeComputer {
 			int vertexId = vertex.getOutEdge(i);
 			byte edgeValue = vertex.getOutEdgeValue(i);
 			
-			// check vertex range and scan addable edges
+			// check vertex range and scan edges
 			checkRangeAndScanEdges(vertexId, edgeValue);
 			
 		}
@@ -79,7 +86,7 @@ public class EdgeComputer {
 			
 			for(int k = 0; k < ids.length; k++) {
 				
-				// check vertex range and scan addable edges
+				// check vertex range and scan edges
 				checkRangeAndScanEdges(ids[k], values[k]);
 				
 			}
@@ -91,7 +98,7 @@ public class EdgeComputer {
 		int readableIndex = edgeList.getReadableIndex();
 		for(int m = 0; m < readableIndex; m++) {
 			
-			// check vertex range and scan addable edges
+			// check vertex range and scan edges
 			checkRangeAndScanEdges(ids[m], values[m]);
 			
 		}
@@ -203,7 +210,7 @@ public class EdgeComputer {
 		if(v == null || v.getNumOutEdges() == 0)
 			return;
 		
-		final Object lock = new Object();
+//		final Object lock = new Object();
 		
 		// 1. scan original fixed size array
 		for(int i = 0; i < v.getNumOutEdges(); i++) {
@@ -212,7 +219,7 @@ public class EdgeComputer {
 			
 			// check grammar, check duplication and add edges
 			//TODO: dstEdgeValue to be fixed based on grammar!!
-			checkGrammarAndAddEdge(dstId, dstEdgeValue, lock);
+			checkGrammarAndAddEdge(dstId, dstEdgeValue);
 		}
 		
 		// 2. scan new edges linked array
@@ -233,7 +240,7 @@ public class EdgeComputer {
 			for(int k = 0; k < ids.length; k++) {
 				// check grammar, check duplication and add edges
 				//TODO: values[k] to be fixed based on grammar!!
-				checkGrammarAndAddEdge(ids[k], values[k], lock);
+				checkGrammarAndAddEdge(ids[k], values[k]);
 				
 			}
 		}
@@ -245,7 +252,7 @@ public class EdgeComputer {
 		for(int m = 0; m < readableIndex; m++) {
 			// check grammar, check duplication and add edges
 			//TODO: values[m] to be fixed based on grammar!!
-			checkGrammarAndAddEdge(ids[m], values[m], lock);
+			checkGrammarAndAddEdge(ids[m], values[m]);
 		}
 	}
 	
@@ -254,18 +261,17 @@ public class EdgeComputer {
 	 * @param:
 	 * @return:
 	 */
-	private void checkGrammarAndAddEdge(int vertexId, byte edgeValue, final Object lock) {
+	private void checkGrammarAndAddEdge(int vertexId, byte edgeValue) {
 		
 		//TODO: add grammar check
 		if(checkGrammar()) {
 			//TODO: dstEdgeValue to be fixed based on grammar!!
 			if(!isDuplicationEdge(vertexId, edgeValue)) {
 				// no duplication, needs to add edge to linked array
-				// synchronize, to guarantee happens-before relationship
-				synchronized (lock) {
-					edgeList.add(vertexId, edgeValue);
-					nNewEdges++;
-				}
+				// TODO: assume happens-before relationship is guaranteed 
+				// by main thread waiting for all threads finish
+				edgeList.add(vertexId, edgeValue);
+				nNewEdges++;
 			}
 		}
 	}
