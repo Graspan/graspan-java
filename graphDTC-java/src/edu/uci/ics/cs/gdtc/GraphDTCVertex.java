@@ -21,6 +21,12 @@ public class GraphDTCVertex {
 		}
 	}
 	
+	public GraphDTCVertex(int id, int[] outEdges, byte[] outEdgeValues) {
+		this.id = id;
+		this.outEdges = outEdges;
+		this.outEdgeValues = outEdgeValues;
+	}
+	
 	public int getNumOutEdges() {
 		return numOutEdges;
 	}

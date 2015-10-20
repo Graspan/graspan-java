@@ -1,5 +1,6 @@
 package edu.uci.ics.cs.gdtc.engine;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,6 +8,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputation.GraphDTCNewEdgesList;
+import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
 import edu.uci.ics.cs.gdtc.GraphDTCLogger;
 import edu.uci.ics.cs.gdtc.GraphDTCVertex;
 
@@ -20,17 +22,21 @@ public class GraphDTCEngine {
 	private static final Logger logger = GraphDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
+	private String baseFileName;
+	private int[] partitionsToLoad;
 	
-	public GraphDTCEngine() {
-		
+	public GraphDTCEngine(String baseFileName, int[] partitionsToLoad) {
+		this.baseFileName = baseFileName;
+		this.partitionsToLoad = partitionsToLoad;
 	}
 	
 	/**
 	 * Description:
 	 * @param:
 	 * @return:
+	 * @throws IOException 
 	 */
-	public void run() {
+	public void run() throws IOException {
 		
 		// get the num of processors
 		int nThreads = 8;
@@ -53,10 +59,14 @@ public class GraphDTCEngine {
 		
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
-		// 1. load partitions into memory
-		loadPartitions(verticesFrom, verticesTo);
-		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		
+		PartitionLoader loader = new PartitionLoader();
+		// 1. load partitions into memory
+		loader.loadPartitions(baseFileName, partitionsToLoad);
+//		loadPartitions(verticesFrom, verticesTo);
+		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
+		verticesFrom = loader.getVerticesFrom();
+		verticesTo = loader.getVerticesTo();
 		logger.info("Starting computation and edge addition...");
 		t = System.currentTimeMillis();
 		// 2. do computation and add edges
@@ -210,13 +220,4 @@ public class GraphDTCEngine {
 		}
 	}
 
-	/**
-	 * Description:
-	 * @param:
-	 * @return:
-	 */
-	private void loadPartitions(GraphDTCVertex[] verticesFrom, GraphDTCVertex[] verticesTo) {
-		
-	}
-	
 }

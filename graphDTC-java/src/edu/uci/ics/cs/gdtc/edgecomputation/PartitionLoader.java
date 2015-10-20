@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import edu.uci.ics.cs.gdtc.GraphDTCVertex;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
 /**
@@ -17,7 +18,7 @@ import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
  * @author Aftab
  *
  */
-public class NewEdgeComputer {
+public class PartitionLoader {
 
 	/*
 	 * TODO Remember to update partAllocTable after repartitioning and reset all
@@ -30,7 +31,7 @@ public class NewEdgeComputer {
 	// Dimension 1 indicates partition number, Dimension 2 indicates list for a
 	// source vertex, Dimension 3 indicates an out-edge from each source vertex
 	private int partEdgeArrays[][][];
-	private int partEdgeValArrays[][][];
+	private byte partEdgeValArrays[][][];
 
 	// Stores the out degrees of each source vertex of each partition.
 	// Dimension 1 indicates partition number, Dimension 2 indicates out degree
@@ -61,6 +62,8 @@ public class NewEdgeComputer {
 	 */
 	private int newEdgeArrMarkersforSrc[][][][][];
 
+	private GraphDTCVertex[] verticesFrom = null;
+	private GraphDTCVertex[] verticesTo = null;
 	/**
 	 * PART 1: LOADING PHASE
 	 */
@@ -93,14 +96,14 @@ public class NewEdgeComputer {
 		System.out.println("Completed loading of partitions");
 
 		// sorting the partitions
-		System.out.print("Sorting loaded partition data structures... ");
-		for (int i = 0; i < partsToLoad.length; i++) {
-			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
-				int low = 0;
-				int high = this.partOutDegrees[i][j] - 1;
-				quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
-			}
-		}
+//		System.out.print("Sorting loaded partition data structures... ");
+//		for (int i = 0; i < partsToLoad.length; i++) {
+//			for (int j = 0; j < this.getNumUniqueSrcs(partsToLoad[i]); j++) {
+//				int low = 0;
+//				int high = this.partOutDegrees[i][j] - 1;
+//				quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
+//			}
+//		}
 		System.out.print("Done\n");
 
 		this.loadedParts = partsToLoad;
@@ -125,6 +128,14 @@ public class NewEdgeComputer {
 		 System.out.println();
 		 }
 		 }
+	}
+	
+	public GraphDTCVertex[] getVerticesFrom() {
+		return verticesFrom;
+	}
+	
+	public GraphDTCVertex[] getVerticesTo() {
+		return verticesTo;
 	}
 
 	/**
@@ -265,21 +276,33 @@ public class NewEdgeComputer {
 
 		// initialize Dimension 1 (Total no. of Partitions)
 		int partEdgeArrays[][][] = new int[partitionsToLoad.length][][];
-		int partEdgeValsArrays[][][] = new int[partitionsToLoad.length][][];
-
+		byte partEdgeValsArrays[][][] = new byte[partitionsToLoad.length][][];
+		
+		int count = 0;
 		for (int i = 0; i < partitionsToLoad.length; i++) {
 
 			// initialize Dimension 2 (Total no. of Unique SrcVs for a
 			// Partition)
 			partEdgeArrays[i] = new int[this.getNumUniqueSrcs(partitionsToLoad[i])][];
-			partEdgeValsArrays[i] = new int[this.getNumUniqueSrcs(partitionsToLoad[i])][];
+			partEdgeValsArrays[i] = new byte[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 
 			for (int j = 0; j < this.getNumUniqueSrcs(partitionsToLoad[i]); j++) {
 
 				// initialize Dimension 3 (Total no. of Out-edges for a SrcV)
 				partEdgeArrays[i][j] = new int[this.partOutDegrees[i][j]];
-				partEdgeValsArrays[i][j] = new int[this.partOutDegrees[i][j]];
-
+				partEdgeValsArrays[i][j] = new byte[this.partOutDegrees[i][j]];
+				
+				//TODO: get the vertex id?
+				int vertexId = getActualIdFrmPartArrId(j, partitionsToLoad[i]); 
+				
+				//TODO: FIX THIS LATER!!
+				if(i == 0)
+					verticesFrom[j] = new GraphDTCVertex(vertexId, 
+							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
+				if(i == 1)
+					verticesTo[j] = new GraphDTCVertex(vertexId, 
+							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
+						
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
 
 					// initialize each entry to -1

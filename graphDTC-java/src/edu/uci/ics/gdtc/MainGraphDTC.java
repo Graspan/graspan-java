@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.BasicScheduler;
-import edu.uci.ics.cs.gdtc.edgecomputation.NewEdgeComputer;
+import edu.uci.ics.cs.gdtc.engine.GraphDTCEngine;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
 /**
@@ -50,11 +50,14 @@ public class MainGraphDTC {
 		basicScheduler.initScheduler(numInputPartitions);
 		System.out.print("Done\n");
 
+		GraphDTCEngine engine = new GraphDTCEngine(baseFilename, 
+				basicScheduler.getPartstoLoad(numPartsPerComputation));
+		engine.run();
 		// load the partitions to memory
-		NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
+//		NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
 
 		// TODO use a loop here as determined by scheduler
-		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation));
+//		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation));
 
 		// compute new edges
 		// NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
