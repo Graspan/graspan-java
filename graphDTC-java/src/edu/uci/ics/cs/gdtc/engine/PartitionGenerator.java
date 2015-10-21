@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.preproc;
+package edu.uci.ics.cs.gdtc.engine;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import edu.uci.ics.cs.gdtc.enginedata.AllPartitions;
 
 /**
  * 
@@ -41,7 +43,6 @@ public class PartitionGenerator {
 	private long numEdges;
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
-	public static int[] partAllocTable;
 	private static final long BUFFER_FOR_PARTITIONS = 100000000;
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
@@ -65,10 +66,6 @@ public class PartitionGenerator {
 
 		this.numPartitions = numPartitions;
 		this.baseFilename = baseFilename;
-
-		// initialize partition allocation table (it stores the maximum src
-		// vertex id for each partition)
-		partAllocTable = new int[numPartitions];
 
 		// create the streams for the empty partition files (these streams will
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
@@ -136,17 +133,6 @@ public class PartitionGenerator {
 		outDegOutputStream.close();
 		this.outDegreesMap = outDegreesMap;
 
-		/*
-		 * ERROR when using the following code instead of the one above.:
-		 * Exception in thread "main" java.lang.ClassCastException:
-		 * java.util.Collections$UnmodifiableMap cannot be cast to
-		 * java.util.TreeMap at
-		 * edu.uci.ics.cs.gdtc.PartitionGenerator.generateDegrees(
-		 * PartitionGenerator.java:94) at
-		 * edu.uci.ics.cs.gdtc.MainPreprocessor.main(MainGraphDTC. java:24)
-		 */
-		// this.outDegreesMap = (TreeMap<Integer, Integer>)
-		// Collections.unmodifiableMap(degreesMap);
 		System.out.println("Done");
 	}
 
@@ -156,7 +142,8 @@ public class PartitionGenerator {
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
-	public void allocateVIntervalstoPartitions() throws FileNotFoundException, UnsupportedEncodingException {
+	public void allocateVIntervalstoPartitions(int numParts)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		System.out.print("Allocating vertices to partitions (creating partition allocation table)\n");
 
 		// average of edges by no. of partitions
@@ -167,7 +154,7 @@ public class PartitionGenerator {
 		System.out.println(">Calculated partition size threshold: " + intervalMax + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
-		int intervalHeadVertexId = 0;
+		int intervalMaxVertexId = 0;
 
 		// counter of the number of edges in the interval
 		int intervalEdgeCount = 0;
@@ -176,24 +163,28 @@ public class PartitionGenerator {
 		int partTabIdx = 0;
 
 		Iterator it = outDegreesMap.entrySet().iterator();
+
+		// creating the Partition Allocation Table
+		int[] partAllocTable = new int[numParts];
+
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
-			intervalHeadVertexId = (Integer) pair.getKey();
+			intervalMaxVertexId = (Integer) pair.getKey();
 			intervalEdgeCount += (Integer) pair.getValue();
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
-			if (intervalEdgeCount > intervalMax & !isLastPartition(partTabIdx)) {
-				partAllocTable[partTabIdx] = intervalHeadVertexId;
+			if (intervalEdgeCount > intervalMax & !isLastPartition(partTabIdx, numParts)) {
+				partAllocTable[partTabIdx] = intervalMaxVertexId;
 				intervalEdgeCount = 0;
 				partTabIdx++;
 			}
 
 			// when last partition is reached, assign partition_interval_head to
 			// last_Vertex
-			else if (isLastPartition(partTabIdx)) {
-				intervalHeadVertexId = outDegreesMap.lastKey();
-				partAllocTable[partTabIdx] = intervalHeadVertexId;
+			else if (isLastPartition(partTabIdx, numParts)) {
+				intervalMaxVertexId = outDegreesMap.lastKey();
+				partAllocTable[partTabIdx] = intervalMaxVertexId;
 				break;
 			}
 		}
@@ -203,19 +194,10 @@ public class PartitionGenerator {
 		for (int i = 0; i < partAllocTable.length; i++) {
 			partAllocTableOutputStream.println(partAllocTable[i]);
 		}
+
+		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
 
-	}
-
-	/**
-	 * check whether we have reached the last partition (called by
-	 * allocateVIntervalstoPartitions() method)
-	 * 
-	 * @param partTabIdx
-	 * @return
-	 */
-	private boolean isLastPartition(int partTabIdx) {
-		return (partTabIdx == (partAllocTable.length - 1) ? true : false);
 	}
 
 	/**
@@ -295,7 +277,7 @@ public class PartitionGenerator {
 	 */
 	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue) throws IOException {
 
-		int partitionId = findPartition(srcVId);
+		int partitionId = PartitionQuerier.findPartition(srcVId);
 
 		// get the adjacencyList from the relevant partition buffer
 		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partitionBuffers[partitionId];
@@ -331,20 +313,13 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * searches the partAllocTable to find out which partition a vertex belongs
-	 * (CALLED BY addEdgetoBuffer() method)
+	 * check whether partition indicated by partTabId is the last partition
 	 * 
-	 * @param srcV
+	 * @param partTabIdx
+	 * @return
 	 */
-	private int findPartition(int srcVId) {
-		int partitionId = -1;
-		for (int i = 0; i < numPartitions; i++) {
-			if (srcVId <= partAllocTable[i]) {
-				partitionId = i;
-				break;
-			}
-		}
-		return partitionId;
+	public static boolean isLastPartition(int partTabIdx, int numParts) {
+		return (partTabIdx == (numParts - 1) ? true : false);
 	}
 
 	/**

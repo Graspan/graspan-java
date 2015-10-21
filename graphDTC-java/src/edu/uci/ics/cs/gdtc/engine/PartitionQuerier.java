@@ -1,4 +1,6 @@
-package edu.uci.ics.cs.gdtc.edgecomputation;
+package edu.uci.ics.cs.gdtc.engine;
+
+import edu.uci.ics.cs.gdtc.enginedata.AllPartitions;
 
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions
@@ -6,7 +8,7 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
  * 
  * @author Aftab
  */
-public class PartitionInfo extends NewEdgeComputer {
+public class PartitionQuerier extends PartitionLoader {
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
@@ -14,7 +16,7 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * 
 	 * @param partId
 	 */
-	static int getNumUniqueSrcs(int partId) {
+	public static int getNumUniqueSrcs(int partId) {
 		if (partId == 0) {
 			return getMaxSrc(partId);
 		} else {
@@ -28,7 +30,7 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * @param partId
 	 * @return
 	 */
-	static int getMinSrc(int partId) {
+	public static int getMinSrc(int partId) {
 		if (partId == 0) {
 			return 1;
 		} else {
@@ -42,8 +44,9 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * @param partId
 	 * @return
 	 */
-	static int getMaxSrc(int partId) {
-		int maxSrc = NewEdgeComputer.partAllocTable[partId];
+	public static int getMaxSrc(int partId) {
+		int[] partAllocTable = AllPartitions.getPartAllocTab();
+		int maxSrc = partAllocTable[partId];
 		return maxSrc;
 	}
 
@@ -54,7 +57,7 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * @param partId
 	 * @return
 	 */
-	static boolean inPartition(int srcVId, int partId) {
+	public static boolean inPartition(int srcVId, int partId) {
 		if (srcVId >= getMinSrc(partId) & srcVId <= getMaxSrc(partId))
 			return true;
 		else
@@ -70,7 +73,7 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * @param partId
 	 * @return
 	 */
-	static int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
+	public static int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
 		return vertexPartArrId + getMinSrc(partId);
 	}
 
@@ -82,7 +85,28 @@ public class PartitionInfo extends NewEdgeComputer {
 	 * @param partId
 	 * @return
 	 */
-	static int getPartArrIdFrmActualId(int vertexId, int partId) {
+	public static int getPartArrIdFrmActualId(int vertexId, int partId) {
 		return getMaxSrc(partId) - vertexId;
 	}
+
+	
+
+	/**
+	 * searches the partAllocTable to find out which partition a vertex belongs
+	 * (CALLED BY addEdgetoBuffer() method)
+	 * 
+	 * @param srcV
+	 */
+	public static int findPartition(int srcVId) {
+		int[] partAllocTable = AllPartitions.getPartAllocTab();
+		int partitionId = -1;
+		for (int i = 0; i < partAllocTable.length; i++) {
+			if (srcVId <= partAllocTable[i]) {
+				partitionId = i;
+				break;
+			}
+		}
+		return partitionId;
+	}
+
 }
