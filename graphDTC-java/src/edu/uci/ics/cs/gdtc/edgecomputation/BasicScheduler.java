@@ -27,12 +27,6 @@ public class BasicScheduler implements IScheduler {
 	 * computed
 	 */
 	public void initScheduler(int totalNumParts) {
-		// initialize partScheduleMap
-		for (int i = 0; i < totalNumParts; i++) {
-			for (int j = 0; j < i; j++) {
-				partScheduleMap[i][j] = 0;
-			}
-		}
 		this.numPartitions = totalNumParts;
 	}
 

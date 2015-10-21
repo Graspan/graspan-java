@@ -4,15 +4,19 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -38,7 +42,7 @@ public class PartitionGenerator {
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegreesMap;
 	public static int[] partAllocTable;
-	private static final long BUFFER_FOR_PARTITIONS = 100;
+	private static final long BUFFER_FOR_PARTITIONS = 100000000;
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
 	private DataOutputStream[] partitionOutputStreams;
@@ -91,14 +95,18 @@ public class PartitionGenerator {
 		String ln;
 		long numEdges = 0;
 		TreeMap<Integer, Integer> outDegreesMap = new TreeMap<Integer, Integer>();
-
 		// read inputgraph line-by-line and keep incrementing degree
 		System.out.print("Performing first scan on input graph... ");
 		long lineCount = 0;
+		long readStartTime = System.nanoTime();
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
-			if (lineCount % 10000000 == 0) {
-				System.out.print("\nReading line number: " + lineCount);
+			if (lineCount % 30000000 == 0) {
+				System.out
+						.print("\nReading edge #" + NumberFormat.getNumberInstance(Locale.US).format(lineCount) + ".");
+				double readSpeed = 30000000 / ((System.nanoTime() - readStartTime) / 1000000000);
+				System.out.print(" Read speed: " + readSpeed + " edges/sec");
+				readStartTime = System.nanoTime();
 			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
@@ -111,7 +119,7 @@ public class PartitionGenerator {
 				numEdges++;
 			}
 		}
-		System.out.print("Done\n");
+		System.out.println("\nDone");
 
 		this.numEdges = numEdges;
 		System.out.print(">Total number of edges in input graph: " + numEdges + "\n");
@@ -139,13 +147,16 @@ public class PartitionGenerator {
 		 */
 		// this.outDegreesMap = (TreeMap<Integer, Integer>)
 		// Collections.unmodifiableMap(degreesMap);
-		System.out.print("Done\n");
+		System.out.println("Done");
 	}
 
 	/**
 	 * Allocates vertex intervals to partitions.
+	 * 
+	 * @throws UnsupportedEncodingException
+	 * @throws FileNotFoundException
 	 */
-	public void allocateVIntervalstoPartitions() {
+	public void allocateVIntervalstoPartitions() throws FileNotFoundException, UnsupportedEncodingException {
 		System.out.print("Allocating vertices to partitions (creating partition allocation table)\n");
 
 		// average of edges by no. of partitions
@@ -186,11 +197,14 @@ public class PartitionGenerator {
 				break;
 			}
 		}
-		System.out.print("Generated partition allocation table\n");
-		System.out.println(">Partition allocation table: ");
+
+		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable\n");
+		PrintWriter partAllocTableOutputStream = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
-			System.out.println(" " + partAllocTable[i]);
+			partAllocTableOutputStream.println(partAllocTable[i]);
 		}
+		partAllocTableOutputStream.close();
+
 	}
 
 	/**
@@ -233,14 +247,16 @@ public class PartitionGenerator {
 		System.out.print("Done\n");
 
 		// read the input graph edge-wise and process each edge
-		System.out.print("Performing second scan on input graph\n");
+		System.out.println("Performing second scan on input graph");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
-		long lineCount=0;
+		long lineCount = 0;
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
-			if (lineCount % 10000000 == 0) {
-				System.out.print("\nSending edges to buffer, reading line number: " + lineCount);
+			if (lineCount % 30000000 == 0) {
+				double percentComplete = (lineCount / numEdges) * 100;
+				System.out.print("Sending edges to buffer, reading line "
+						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete + "%)");
 			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
@@ -259,7 +275,7 @@ public class PartitionGenerator {
 			this.partitionOutputStreams[i].close();
 		}
 
-		System.out.println("Partition files created");
+		System.out.println("\nPartition files created");
 		System.out.println(
 				">Total number of writes to disk for creating partition files: " + this.partitionDiskWriteCount);
 

@@ -28,32 +28,55 @@ public class MainGraphDTC {
 		System.out.println(">Input graph: " + args[0]);
 		System.out.println(">Requested number of partitions to generate: " + args[1]);
 
-		// PREPROCESSING
-		// use PartitionGenerator to create the partitions
+		/**
+		 * PREPROCESSING (PARTITIONING)
+		 */
+		// initialize Partition Generator Program
 		System.out.println("Start preprocessing");
 		long preprocStartTime = System.nanoTime();
 		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInputPartitions);
+
+		// generate degrees file
+		long degGenStartTime = System.nanoTime();
 		partgenerator.generateDegrees(new FileInputStream(new File(baseFilename)));
+		long degGenDuration = System.nanoTime() - degGenStartTime;
+		System.out.println(">Total time for generating degrees file (nanoseconds): " + degGenDuration);
+
+		// creating the partitions
+		long creatingPartsStartTime = System.nanoTime();
 		partgenerator.allocateVIntervalstoPartitions();
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
+		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
+		System.out.println(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
+
 		System.out.println("End of preprocessing");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
 		System.out.println(">Total preprocessing time (nanoseconds): " + preprocDuration);
 
-		// COMPUTATION
-		System.out.println("Start computation");
-		// determine the partitions to load in memory
+		/**
+		 * SCHEDULING AND LOADING (LOAD PARTITIONS TO MEMORY)
+		 */
+		System.out.println("Start scheduling and loading");
 		System.out.print("Initializing scheduler... ");
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler(numInputPartitions);
 		System.out.print("Done\n");
 
-		// load the partitions to memory
+		System.out.print("Initializing loader... ");
 		NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
+		System.out.print("Done\n");
 
 		// TODO use a loop here as determined by scheduler
-		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation));
+		long loadingStartTime = System.nanoTime();
+		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation),
+				numInputPartitions);
+		long loadingDuration = System.nanoTime() - loadingStartTime;
+		System.out.println(
+				">Total time for loading " + numPartsPerComputation + " partitions (nanoseconds): " + loadingDuration);
 
+		/**
+		 * COMPUTATION (GENERATE NEW EDGES)
+		 */
 		// compute new edges
 		// NewEdgeComputer newEdgeComputer = new NewEdgeComputer();
 		// newEdgeComputer.computeNewEdges(partLoader.partEdgeArrays,
