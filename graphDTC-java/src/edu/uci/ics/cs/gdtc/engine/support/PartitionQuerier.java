@@ -1,6 +1,7 @@
-package edu.uci.ics.cs.gdtc.engine;
+package edu.uci.ics.cs.gdtc.engine.support;
 
-import edu.uci.ics.cs.gdtc.enginedata.AllPartitions;
+import edu.uci.ics.cs.gdtc.engine.PartitionLoader;
+import edu.uci.ics.cs.gdtc.engine.data.AllPartitions;
 
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions

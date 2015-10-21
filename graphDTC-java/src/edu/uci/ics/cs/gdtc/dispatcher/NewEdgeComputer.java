@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.executor;
+package edu.uci.ics.cs.gdtc.dispatcher;
 import java.io.IOException;
 
 import edu.uci.ics.cs.gdtc.engine.BasicScheduler;

@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.enginedata;
+package edu.uci.ics.cs.gdtc.engine.data;
 
 public class AllPartitions {
 

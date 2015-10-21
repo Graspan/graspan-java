@@ -20,7 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import edu.uci.ics.cs.gdtc.enginedata.AllPartitions;
+import edu.uci.ics.cs.gdtc.engine.data.AllPartitions;
+import edu.uci.ics.cs.gdtc.engine.support.PartitionQuerier;
 
 /**
  * 
@@ -87,7 +88,7 @@ public class PartitionGenerator {
 	 * @throws IOException
 	 */
 	public void generateDegrees(InputStream inputStream) throws IOException {
-		System.out.println("Generating degrees file");
+		System.out.println("Generating degrees file...");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
@@ -144,7 +145,7 @@ public class PartitionGenerator {
 	 */
 	public void allocateVIntervalstoPartitions(int numParts)
 			throws FileNotFoundException, UnsupportedEncodingException {
-		System.out.print("Allocating vertices to partitions (creating partition allocation table)\n");
+		System.out.print("Allocating vertices to partitions (creating partition allocation table)...\n");
 
 		// average of edges by no. of partitions
 		long avgEdgesPerPartition = Math.floorDiv(numEdges, numPartitions);
@@ -189,11 +190,15 @@ public class PartitionGenerator {
 			}
 		}
 
-		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable\n");
+		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
 		PrintWriter partAllocTableOutputStream = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
 			partAllocTableOutputStream.println(partAllocTable[i]);
 		}
+		System.out.println("Done");
+		
+		System.out.print("Generating degrees file for each partition...");
+		//TODO
 
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
@@ -209,13 +214,13 @@ public class PartitionGenerator {
 	 * @throws IOException
 	 */
 	public void writePartitionEdgestoFiles(InputStream inputStream) throws IOException {
-		System.out.println("Generating partition files");
+		System.out.println("Generating partition files...");
 
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numPartitions];
 
 		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTITIONS + " edges for "
-				+ numPartitions + " partitions)... ");
+				+ numPartitions + " partitions)...");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numPartitions);
 		long partitionBufferFreespace[] = new long[numPartitions];
 		for (int i = 0; i < numPartitions; i++) {
@@ -229,7 +234,7 @@ public class PartitionGenerator {
 		System.out.print("Done\n");
 
 		// read the input graph edge-wise and process each edge
-		System.out.println("Performing second scan on input graph");
+		System.out.println("Performing second scan on input graph...");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long lineCount = 0;
@@ -237,8 +242,8 @@ public class PartitionGenerator {
 			lineCount++;
 			if (lineCount % 30000000 == 0) {
 				double percentComplete = (lineCount / numEdges) * 100;
-				System.out.print("Sending edges to buffer, reading line "
-						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete + "%)");
+				System.out.println("Sending edges to buffer, reading line "
+						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete + "%)...");
 			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
@@ -257,7 +262,7 @@ public class PartitionGenerator {
 			this.partitionOutputStreams[i].close();
 		}
 
-		System.out.println("\nPartition files created");
+		System.out.println("Partition files created.");
 		System.out.println(
 				">Total number of writes to disk for creating partition files: " + this.partitionDiskWriteCount);
 

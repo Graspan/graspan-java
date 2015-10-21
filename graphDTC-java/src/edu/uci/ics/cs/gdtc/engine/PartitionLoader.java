@@ -9,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import edu.uci.ics.cs.gdtc.enginedata.AllPartitions;
-import edu.uci.ics.cs.gdtc.enginedata.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.engine.data.AllPartitions;
+import edu.uci.ics.cs.gdtc.engine.data.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.engine.support.Optimizers;
+import edu.uci.ics.cs.gdtc.engine.support.PartitionQuerier;
 
 /**
  * This program generates loads partitions into the memory and computes new
@@ -55,16 +57,16 @@ public class PartitionLoader {
 		fillPartitionDataStructs(baseFilename, partsToLoad);
 		System.out.println("Completed loading of partitions");
 
-		int partOutDegrees[][] = LoadedPartitions.getPartOutDegs();
-		int partEdgeArrays[][][] = LoadedPartitions.getPartEdgeArrays();
-		byte partEdgeValArrays[][][] = LoadedPartitions.getPartEdgeValArrays();
+		int loadedPartOutDegrees[][] = LoadedPartitions.getLoadedPartOutDegs();
+		int partEdgeArrays[][][] = LoadedPartitions.getLoadedPartEdges();
+		byte partEdgeValArrays[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		// sorting the partitions
 		System.out.print("Sorting loaded partition data structures... ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 				int low = 0;
-				int high = partOutDegrees[i][j] - 1;
+				int high = loadedPartOutDegrees[i][j] - 1;
 				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
 			}
 		}
@@ -81,12 +83,12 @@ public class PartitionLoader {
 				int srcv = j + PartitionQuerier.getMinSrc(partsToLoad[i]);
 				System.out.println("SourceV: " + srcv);
 				System.out.println("Dest Vs: ");
-				for (int k = 0; k < partOutDegrees[i][j]; k++) {
+				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
 					System.out.print(partEdgeArrays[i][j][k] + " ");
 				}
 				System.out.println();
 				System.out.println("Edge Vals: ");
-				for (int k = 0; k < partOutDegrees[i][j]; k++) {
+				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
 					System.out.print(partEdgeValArrays[i][j][k] + " ");
 				}
 				System.out.println();
@@ -184,7 +186,7 @@ public class PartitionLoader {
 				}
 			}
 		}
-		LoadedPartitions.setPartOutDegs(partOutDegrees);
+		LoadedPartitions.setLoadedPartOutDegs(partOutDegrees);
 		outDegStream.close();
 		System.out.println("Done");
 	}
@@ -194,7 +196,7 @@ public class PartitionLoader {
 	 */
 	private void initPartitionDataStructs(int[] partitionsToLoad) {
 
-		int[][] partOutDegrees = LoadedPartitions.getPartOutDegs();
+		int[][] partOutDegrees = LoadedPartitions.getLoadedPartOutDegs();
 
 		// initialize Dimension 1 (Total no. of Partitions)
 		int partEdgeArrays[][][] = new int[partitionsToLoad.length][][];
@@ -222,8 +224,8 @@ public class PartitionLoader {
 			}
 		}
 
-		LoadedPartitions.setPartEdgeArrays(partEdgeArrays);
-		LoadedPartitions.setPartEdgeValArrays(partEdgeValsArrays);
+		LoadedPartitions.setLoadedPartEdges(partEdgeArrays);
+		LoadedPartitions.setLoadedPartEdgeVals(partEdgeValsArrays);
 
 	}
 
@@ -237,8 +239,8 @@ public class PartitionLoader {
 
 		for (int i = 0; i < partitionsToLoad.length; i++) {
 
-			int[][][] partEdgeArrays = LoadedPartitions.getPartEdgeArrays();
-			byte[][][] partEdgeValArrays = LoadedPartitions.getPartEdgeValArrays();
+			int[][][] partEdgeArrays = LoadedPartitions.getLoadedPartEdges();
+			byte[][][] partEdgeValArrays = LoadedPartitions.getLoadedPartEdgeVals();
 
 			DataInputStream partitionInputStream = new DataInputStream(
 					new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partitionsToLoad[i])));
@@ -285,8 +287,8 @@ public class PartitionLoader {
 			}
 			partitionInputStream.close();
 
-			LoadedPartitions.setPartEdgeArrays(partEdgeArrays);
-			LoadedPartitions.setPartEdgeValArrays(partEdgeValArrays);
+			LoadedPartitions.setLoadedPartEdges(partEdgeArrays);
+			LoadedPartitions.setLoadedPartEdgeVals(partEdgeValArrays);
 
 		}
 	}

@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.executor;
+package edu.uci.ics.cs.gdtc.dispatcher;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class Preprocessor {
 		System.out.println(">Requested number of partitions to generate: " + args[1]);
 
 		// initialize Partition Generator Program
-		System.out.println("Start preprocessing");
+		System.out.println("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
 		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInputPartitions);
 
@@ -40,7 +40,7 @@ public class Preprocessor {
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
 		System.out.println(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
 
-		System.out.println("End of preprocessing");
+		System.out.println("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
 		System.out.println(">Total preprocessing time (nanoseconds): " + preprocDuration);
 
