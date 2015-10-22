@@ -138,7 +138,7 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * Allocates vertex intervals to partitions.
+	 * Allocates vertices to partitions.
 	 * 
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
@@ -196,9 +196,9 @@ public class PartitionGenerator {
 			partAllocTableOutputStream.println(partAllocTable[i]);
 		}
 		System.out.println("Done");
-		
+
 		System.out.print("Generating degrees file for each partition...");
-		//TODO
+		// TODO
 
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
@@ -243,7 +243,8 @@ public class PartitionGenerator {
 			if (lineCount % 30000000 == 0) {
 				double percentComplete = (lineCount / numEdges) * 100;
 				System.out.println("Sending edges to buffer, reading line "
-						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete + "%)...");
+						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete
+						+ "%)...");
 			}
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
@@ -258,15 +259,15 @@ public class PartitionGenerator {
 		}
 
 		// close all streams
-		for (int i = 0; i < this.partitionOutputStreams.length; i++) {
-			this.partitionOutputStreams[i].close();
+		for (int i = 0; i < partitionOutputStreams.length; i++) {
+			partitionOutputStreams[i].close();
 		}
 
 		System.out.println("Partition files created.");
 		System.out.println(
-				">Total number of writes to disk for creating partition files: " + this.partitionDiskWriteCount);
+				">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
 
-		this.outDegreesMap.clear();
+		outDegreesMap.clear();
 	}
 
 	/**
@@ -350,7 +351,7 @@ public class PartitionGenerator {
 	private void sendBufferEdgestoDisk_ByteFmt(int partitionId) throws IOException {
 		partitionDiskWriteCount++;
 
-		DataOutputStream adjListOutputStream = this.partitionOutputStreams[partitionId];
+		DataOutputStream adjListOutputStream = partitionOutputStreams[partitionId];
 
 		int srcVId, destVId, count;
 		int edgeValue;
