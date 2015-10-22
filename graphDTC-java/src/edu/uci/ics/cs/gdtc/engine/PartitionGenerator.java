@@ -170,9 +170,9 @@ public class PartitionGenerator {
 		int[] partAllocTable = new int[numParts];
 
 		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
-			intervalMaxVertexId = (Integer) pair.getKey();
-			intervalEdgeCount += (Integer) pair.getValue();
+			Map.Entry<Integer,Integer> pair = (Map.Entry) it.next();
+			intervalMaxVertexId =  pair.getKey();
+			intervalEdgeCount +=  pair.getValue();
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
