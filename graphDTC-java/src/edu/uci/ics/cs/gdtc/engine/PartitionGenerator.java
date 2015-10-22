@@ -48,6 +48,7 @@ public class PartitionGenerator {
 	private long partitionBufferSize;
 	private long[] partitionBufferFreespace;
 	private DataOutputStream[] partitionOutputStreams;
+	private DataOutputStream[] partDegreeOutputStreams;
 	private int partitionDiskWriteCount;
 
 	// Each partition buffer consists of an adjacency list.
@@ -80,7 +81,7 @@ public class PartitionGenerator {
 
 	/**
 	 * Scans the entire graph and counts the out-degrees of all the vertices.
-	 * This is the Preliminary Scan TODO need to store the degrees file in a
+	 * This is the Preliminary Scan | TODO need to store the degrees file in a
 	 * more space-efficient way
 	 * 
 	 * @param inputStream
@@ -202,6 +203,7 @@ public class PartitionGenerator {
 
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
+		outDegreesMap.clear();
 
 	}
 
@@ -264,10 +266,9 @@ public class PartitionGenerator {
 		}
 
 		System.out.println("Partition files created.");
-		System.out.println(
-				">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
+		System.out.println(">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
 
-		outDegreesMap.clear();
+		
 	}
 
 	/**
