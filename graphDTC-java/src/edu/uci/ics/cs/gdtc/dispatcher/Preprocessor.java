@@ -30,7 +30,7 @@ public class Preprocessor {
 
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
-		partgenerator.generateDegrees(new FileInputStream(new File(baseFilename)));
+		partgenerator.generateGraphDegs(new FileInputStream(new File(baseFilename)));
 		long degGenDuration = System.nanoTime() - degGenStartTime;
 		System.out.println(">Total time for generating degrees file (nanoseconds): " + degGenDuration);
 

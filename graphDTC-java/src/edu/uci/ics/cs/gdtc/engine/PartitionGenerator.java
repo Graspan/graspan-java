@@ -31,14 +31,14 @@ import edu.uci.ics.cs.gdtc.engine.support.PartitionQuerier;
 public class PartitionGenerator {
 
 	/**
-	 * numParts:number of input partitions|numEdges:total number of input
-	 * edges in the graph|baseFilename:path of the input graph
-	 * file|outDegs:map of vertex and degrees|BUFFER_FOR_PARTITIONS:the
-	 * total number of edges that can be kept in all partition buffers|
-	 * partBufferSize:the total number of edges that can be kept in each
-	 * partition buffer|partBufferFreespace:table consisting of available
-	 * space in each partition buffer|partitionDiskWriteCount:the number of
-	 * writes to disk for creating the partition files
+	 * numParts:number of input partitions|numEdges:total number of input edges
+	 * in the graph|baseFilename:path of the input graph file|outDegs:map of
+	 * vertex and degrees|BUFFER_FOR_PARTITIONS:the total number of edges that
+	 * can be kept in all partition buffers| partBufferSize:the total number of
+	 * edges that can be kept in each partition buffer|partBufferFreespace:table
+	 * consisting of available space in each partition
+	 * buffer|partitionDiskWriteCount:the number of writes to disk for creating
+	 * the partition files
 	 */
 	private int numParts;
 	private long numEdges;
@@ -48,7 +48,7 @@ public class PartitionGenerator {
 	private long partBufferSize;
 	private long[] partBufferFreespace;
 	private DataOutputStream[] partOutStrms;
-	private DataOutputStream[] partDegreeOutputStreams;
+	private DataOutputStream[] partDegOutStrms;
 	private int partitionDiskWriteCount;
 
 	// Each partition buffer consists of an adjacency list.
@@ -69,12 +69,20 @@ public class PartitionGenerator {
 		this.numParts = numParts;
 		this.baseFilename = baseFilename;
 
-		// create the streams for the empty partition files (these streams will
+		// initialize streams for partition files (these streams will
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
 		partOutStrms = new DataOutputStream[numParts];
 		for (int i = 0; i < numParts; i++) {
-			this.partOutStrms[i] = new DataOutputStream(
+			partOutStrms[i] = new DataOutputStream(
 					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
+		}
+
+		// initialize streams for partition degree files (these streams will
+		// be later filled in by generatePartDegs())
+		partDegOutStrms = new DataOutputStream[numParts];
+		for (int i = 0; i < numParts; i++) {
+			partDegOutStrms[i] = new DataOutputStream(
+					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partitiondegree." + i, true)));
 		}
 		System.out.print("Done\n");
 	}
@@ -88,7 +96,7 @@ public class PartitionGenerator {
 	 * @param format
 	 * @throws IOException
 	 */
-	public void generateDegrees(InputStream inputStream) throws IOException {
+	public void generateGraphDegs(InputStream inputStream) throws IOException {
 		System.out.println("Generating degrees file...");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
@@ -144,8 +152,7 @@ public class PartitionGenerator {
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
-	public void allocateVIntervalstoPartitions()
-			throws FileNotFoundException, UnsupportedEncodingException {
+	public void allocateVIntervalstoPartitions() throws FileNotFoundException, UnsupportedEncodingException {
 		System.out.print("Allocating vertices to partitions (creating partition allocation table)...\n");
 
 		// average of edges by no. of partitions
@@ -170,9 +177,9 @@ public class PartitionGenerator {
 		int[] partAllocTable = new int[numParts];
 
 		while (it.hasNext()) {
-			Map.Entry<Integer,Integer> pair = (Map.Entry) it.next();
-			intervalMaxVertexId =  pair.getKey();
-			intervalEdgeCount +=  pair.getValue();
+			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
+			intervalMaxVertexId = pair.getKey();
+			intervalEdgeCount += pair.getValue();
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
@@ -203,6 +210,17 @@ public class PartitionGenerator {
 
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
+		
+
+	}
+
+	public void generatePartDegs() throws IOException {
+
+		// close all streams
+		for (int i = 0; i < partDegOutStrms.length; i++) {
+			partDegOutStrms[i].close();
+		}
+		
 		outDegs.clear();
 
 	}
@@ -268,7 +286,6 @@ public class PartitionGenerator {
 		System.out.println("Partition files created.");
 		System.out.println(">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
 
-		
 	}
 
 	/**
