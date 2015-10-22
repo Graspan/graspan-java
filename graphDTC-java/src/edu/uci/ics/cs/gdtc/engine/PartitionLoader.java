@@ -34,7 +34,7 @@ public class PartitionLoader {
 	 * @param partitionPair
 	 * @throws IOException
 	 */
-	public void loadPartitions(String baseFilename, int[] partsToLoad, int numParts) throws IOException {
+	public void loadParts(String baseFilename, int[] partsToLoad, int numParts) throws IOException {
 
 		System.out.print("Loading partitions: ");
 		for (int i = 0; i < partsToLoad.length; i++) {
@@ -77,23 +77,23 @@ public class PartitionLoader {
 		/*
 		 * TEST Loading of Partitions in Arrays
 		 */
-		for (int i = 0; i < partsToLoad.length; i++) {
-			System.out.println("Partition: " + partsToLoad[i]);
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
-				int srcv = j + PartitionQuerier.getMinSrc(partsToLoad[i]);
-				System.out.println("SourceV: " + srcv);
-				System.out.println("Dest Vs: ");
-				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
-					System.out.print(partEdgeArrays[i][j][k] + " ");
-				}
-				System.out.println();
-				System.out.println("Edge Vals: ");
-				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
-					System.out.print(partEdgeValArrays[i][j][k] + " ");
-				}
-				System.out.println();
-			}
-		}
+//		for (int i = 0; i < partsToLoad.length; i++) {
+//			System.out.println("Partition: " + partsToLoad[i]);
+//			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
+//				int srcv = j + PartitionQuerier.getMinSrc(partsToLoad[i]);
+//				System.out.println("SourceV: " + srcv);
+//				System.out.println("Dest Vs: ");
+//				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
+//					System.out.print(partEdgeArrays[i][j][k] + " ");
+//				}
+//				System.out.println();
+//				System.out.println("Edge Vals: ");
+//				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
+//					System.out.print(partEdgeValArrays[i][j][k] + " ");
+//				}
+//				System.out.println();
+//			}
+//		}
 	}
 
 	/**

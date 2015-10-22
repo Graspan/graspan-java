@@ -48,7 +48,7 @@ public class PartitionGenerator {
 	private long partBufferSize;
 	private long[] partBufferFreespace;
 	private DataOutputStream[] partOutStrms;
-	private DataOutputStream[] partDegOutStrms;
+	private PrintWriter[] partDegOutStrms;
 	private int partitionDiskWriteCount;
 
 	// Each partition buffer consists of an adjacency list.
@@ -79,10 +79,10 @@ public class PartitionGenerator {
 
 		// initialize streams for partition degree files (these streams will
 		// be later filled in by generatePartDegs())
-		partDegOutStrms = new DataOutputStream[numParts];
+		partDegOutStrms = new PrintWriter[numParts];
 		for (int i = 0; i < numParts; i++) {
-			partDegOutStrms[i] = new DataOutputStream(
-					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partitiondegree." + i, true)));
+			partDegOutStrms[i] = new PrintWriter(
+					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i +".degree", true)));
 		}
 		System.out.print("Done\n");
 	}
@@ -205,22 +205,35 @@ public class PartitionGenerator {
 		}
 		System.out.println("Done");
 
-		System.out.print("Generating degrees file for each partition...");
-		// TODO
-
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutputStream.close();
-		
 
 	}
 
+	/**
+	 * Generates separate out degrees files for each partition
+	 * 
+	 * @throws IOException
+	 */
 	public void generatePartDegs() throws IOException {
 
+		System.out.print("Generating degrees file for each partition... ");
+
+		Iterator it = outDegs.entrySet().iterator();
+		int partId = 0;
+		while (it.hasNext()) {
+			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
+			partId = PartitionQuerier.findPartition(pair.getKey());
+			partDegOutStrms[partId].println(pair.getKey() + "\t" + pair.getValue());
+		}
+		
 		// close all streams
 		for (int i = 0; i < partDegOutStrms.length; i++) {
 			partDegOutStrms[i].close();
 		}
 		
+		System.out.println("Done");
+
 		outDegs.clear();
 
 	}
@@ -240,7 +253,7 @@ public class PartitionGenerator {
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
 
 		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTITIONS + " edges for "
-				+ numParts + " partitions)...");
+				+ numParts + " partitions)... ");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {

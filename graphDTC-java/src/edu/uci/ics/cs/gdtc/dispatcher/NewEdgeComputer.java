@@ -9,7 +9,7 @@ public class NewEdgeComputer {
 	public static void main(String args[]) throws IOException {
 
 		String baseFilename = args[0];
-		int numInputPartitions = Integer.parseInt(args[1]);
+		int numInParts = Integer.parseInt(args[1]);
 		int numPartsPerComputation = Integer.parseInt(args[2]);
 		/**
 		 * SCHEDULING AND LOADING (LOAD PARTITIONS TO MEMORY)
@@ -17,17 +17,17 @@ public class NewEdgeComputer {
 		System.out.println("Start scheduling and loading");
 		System.out.print("Initializing scheduler... ");
 		BasicScheduler basicScheduler = new BasicScheduler();
-		basicScheduler.initScheduler(numInputPartitions);
+		basicScheduler.initScheduler(numInParts);
 		System.out.print("Done\n");
 
 		System.out.print("Initializing loader... ");
-		PartitionLoader newEdgeComputer = new PartitionLoader();
+		PartitionLoader partLoader = new PartitionLoader();
 		System.out.print("Done\n");
 
 		// TODO use a loop here as determined by scheduler
 		long loadingStartTime = System.nanoTime();
-		newEdgeComputer.loadPartitions(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation),
-				numInputPartitions);
+		partLoader.loadParts(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation),
+				numInParts);
 		long loadingDuration = System.nanoTime() - loadingStartTime;
 		System.out.println(
 				">Total time for loading " + numPartsPerComputation + " partitions (nanoseconds): " + loadingDuration);

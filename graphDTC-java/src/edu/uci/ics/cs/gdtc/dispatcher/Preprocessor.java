@@ -38,6 +38,7 @@ public class Preprocessor {
 		long creatingPartsStartTime = System.nanoTime();
 		partgenerator.allocateVIntervalstoPartitions();
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
+		partgenerator.generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
 		System.out.println(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
 
