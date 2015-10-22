@@ -19,14 +19,14 @@ public class Preprocessor {
 	public static void main(String[] args) throws IOException {
 
 		String baseFilename = args[0];
-		int numInputPartitions = Integer.parseInt(args[1]);
+		int numInParts = Integer.parseInt(args[1]);
 		System.out.println(">Input graph: " + args[0]);
 		System.out.println(">Requested number of partitions to generate: " + args[1]);
 
 		// initialize Partition Generator Program
 		System.out.println("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
-		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInputPartitions);
+		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInParts);
 
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
@@ -36,7 +36,7 @@ public class Preprocessor {
 
 		// creating the partitions
 		long creatingPartsStartTime = System.nanoTime();
-		partgenerator.allocateVIntervalstoPartitions(numInputPartitions);
+		partgenerator.allocateVIntervalstoPartitions();
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
 		System.out.println(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
