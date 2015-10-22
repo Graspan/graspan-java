@@ -70,18 +70,26 @@ public class GraphDTCEngine {
 		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[verticesFrom.length + verticesTo.length];
 		EdgeComputer[] edgeComputers = new EdgeComputer[verticesFrom.length + verticesTo.length];
 		
-		for(GraphDTCVertex v : verticesFrom)
-			logger.info(v.toString());
+		logger.info("VERTEX LENGTH: " + verticesFrom.length);
+		for(int i = 0; i < verticesFrom.length; i++) {
+			logger.info("" + verticesFrom[i]);
+			logger.info("" + edgesLists[i]);
+		}
 		
 		logger.info("Finish...");
-//		logger.info("Starting computation and edge addition...");
-//		t = System.currentTimeMillis();
-//		// 2. do computation and add edges
-//		EdgeComputer.setEdgesLists(edgesLists);
-//		EdgeComputer.setVerticesFrom(verticesFrom);
-//		EdgeComputer.setVerticesTo(verticesTo);
-//		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
-//		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+		logger.info("Starting computation and edge addition...");
+		t = System.currentTimeMillis();
+		// 2. do computation and add edges
+		EdgeComputer.setEdgesLists(edgesLists);
+		EdgeComputer.setVerticesFrom(verticesFrom);
+		EdgeComputer.setVerticesTo(verticesTo);
+		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
+		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+		
+		for(int i = 0; i < verticesFrom.length; i++) {
+			logger.info("" + verticesFrom[i]);
+			logger.info("" + edgesLists[i]);
+		}
 //		
 //		// 3. store partitions to disk
 //		storePartitions();
@@ -118,14 +126,17 @@ public class GraphDTCEngine {
 		
 		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
-        final int chunkSize = 1 + vertices.length / 64;
+//        final int chunkSize = 1 + vertices.length / 64;
+		final int chunkSize = 1 + vertices.length / 1;
 
         final int nWorkers = vertices.length / chunkSize + 1;
-        final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
+//        final AtomicInteger countDown = new AtomicInteger(1 + nWorkers);
+        final AtomicInteger countDown = new AtomicInteger(nWorkers);
         
-        do {
+//        do {
         	totalNewEdges = 0;
-        	countDown.set(1 + nWorkers);
+//        	countDown.set(1 + nWorkers);
+        	countDown.set(nWorkers);
         	
 	        // Parallel updates
 	        for(int id = 0; id < nWorkers; id++) {
@@ -149,13 +160,15 @@ public class GraphDTCEngine {
 	                            GraphDTCNewEdgesList edgeList = edgesLists[i];
 	                            EdgeComputer edgeComputer = edgeComputers[i];
 	                            
-	                            if (vertex != null) {
-	                            	if(edgeComputer == null) {
-	                            		edgeComputers[i] = edgeComputer;
-	                            	}
+	                            if (vertex != null && vertex.getNumOutEdges() != 0) {
 	                            	if(edgeList == null) {
 	                            		edgeList = new GraphDTCNewEdgesList();
 	                            		edgesLists[i] = edgeList;
+	                            	}
+	                            	
+	                            	if(edgeComputer == null) {
+	                            		edgeComputer = new EdgeComputer(vertex, edgeList);
+	                            		edgeComputers[i] = edgeComputer;
 	                            	}
 	                            	
 	                            	// get termination status for each vertex
@@ -201,7 +214,7 @@ public class GraphDTCEngine {
 	            }
 	        }
 	        
-        } while(totalNewEdges > 0);
+//        } while(totalNewEdges > 0);
     }
 	
 

@@ -1,12 +1,14 @@
 package edu.uci.ics.cs.gdtc.edgecomputation;
 
+import java.util.Arrays;
+
 /**
  * @author Kai Wang
  *
  * Created by Oct 8, 2015
  */
 public class GraphDTCNewEdgesList {
-	public static final int NODE_SIZE = 256;
+	public static final int NODE_SIZE = 16;
 	
 	private NewEdgesNode first;
 	private NewEdgesNode last;
@@ -49,6 +51,8 @@ public class GraphDTCNewEdgesList {
 	public GraphDTCNewEdgesList() {
 		last = first = null;
 		size = 0;
+		readableIndex = 0;
+		readableSize = 0;
 	}
 	
 	public int getSize() {
@@ -86,6 +90,7 @@ public class GraphDTCNewEdgesList {
 	public void add(int vertexId, byte edgeValue) {
 		if(size == 0) {
 			first = new NewEdgesNode();
+			size++;
 			last = first;
 			
 		} else {
@@ -93,11 +98,11 @@ public class GraphDTCNewEdgesList {
 			if(index >= NODE_SIZE) {
 				last.next = new NewEdgesNode();
 				last = last.next;
+				size++;
 			}
 			
 		}
 		
-		size++;
 		last.add(vertexId, edgeValue);
 	}
 	
@@ -111,5 +116,24 @@ public class GraphDTCNewEdgesList {
 		}
 		
 		return node;
+	}
+	
+	@Override
+	public String toString() {
+		if(size == 0)
+			return "[]";
+		
+		StringBuilder result = new StringBuilder();
+		String NEW_LINE = System.getProperty("line.separator");
+		
+		for(int i = 0; i < size; i++) {
+			NewEdgesNode temp = first;
+			result.append(NEW_LINE + "edge list size : " + size);
+			result.append(NEW_LINE + "dst vertex id : " + Arrays.toString(temp.getDstVertices()));
+			result.append(NEW_LINE + "edge value : " + Arrays.toString(temp.getEdgeValues()));
+			temp = temp.next;
+		}
+		
+		return result.toString();
 	}
 }

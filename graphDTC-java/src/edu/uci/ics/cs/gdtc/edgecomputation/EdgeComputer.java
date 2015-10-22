@@ -51,8 +51,7 @@ public class EdgeComputer {
 	}
 	
 	public void execUpdate() {
-		if(vertex == null || verticesFrom == null || verticesTo == null 
-				|| edgeList == null || edgesLists == null)
+		if(vertex == null || verticesFrom == null || verticesTo == null)
 			return;
 		
 		int nOutEdges = vertex.getNumOutEdges();
@@ -135,8 +134,8 @@ public class EdgeComputer {
 			scanEdges(vertexId, edgeValue, verticesFrom);
 					
 		// scan edges in partition "to"
-		if(isInRange(vertexId, verticesTo))
-			scanEdges(vertexId, edgeValue, verticesTo);
+//		if(isInRange(vertexId, verticesTo))
+//			scanEdges(vertexId, edgeValue, verticesTo);
 	}
 			
 
@@ -163,14 +162,14 @@ public class EdgeComputer {
 		// 2. check new edges linked array
 		if(edgeList == null)	return false;
 		
-		int size = edgeList.getSize();
-		if(size == 0)	return false;
+		int readableSize = edgeList.getReadableSize();
+		if(readableSize == 0)	return false;
 		
 		int[] ids = null;
 		byte[] values = null;
 		
 		// 2.1 check (size - 1) node, each node is full of NODE_SIZE elements
-		for(int j = 0; j < size - 1; j++) {
+		for(int j = 0; j < readableSize - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
 			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
@@ -225,7 +224,10 @@ public class EdgeComputer {
 		// 2. scan new edges linked array
 		if(edgeList == null) return;
 		
-		int readableSize = edgesLists[index].getReadableSize();
+		GraphDTCNewEdgesList dstNewEdgeList = edgesLists[index];
+		if(dstNewEdgeList == null) return;
+		
+		int readableSize = dstNewEdgeList.getReadableSize();
 		if(readableSize == 0) return;
 		
 		int[] ids = null;
