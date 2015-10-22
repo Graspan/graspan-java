@@ -75,14 +75,17 @@ public class PartitionLoader {
 	 * @param partitionPair
 	 * @throws IOException
 	 */
-	public void loadPartitions(String baseFilename, int[] partsToLoad) throws IOException {
+	public void loadPartitions(String baseFilename, int[] partsToLoad, int numParts) throws IOException {
 
 		System.out.print("Loading partitions: ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			System.out.print(partsToLoad[i] + " ");
 		}
 		System.out.print("\n");
-
+		
+		// get the partition allocation table
+		readPartAllocTable(baseFilename, numParts);
+				
 		// get the degrees of the source vertices in the partitions
 		getDegrees(baseFilename, partsToLoad);
 
@@ -128,6 +131,40 @@ public class PartitionLoader {
 		 System.out.println();
 		 }
 		 }
+	}
+	
+	/**
+	 * 
+	 * Gets the partition allocation table
+	 * 
+	 * @param baseFilename
+	 * @param numParts
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	private void readPartAllocTable(String baseFilename, int numParts) throws NumberFormatException, IOException {
+
+		// initialize partAllocTable variable
+		partAllocTable = new int[numParts];
+
+		/*
+		 * Scan the partition allocation table file
+		 */
+		BufferedReader outPartAllocTabStream = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
+		String ln;
+
+		System.out.print("Reading partition allocation table file " + baseFilename + ".partAllocTable... ");
+		int i = 0;
+		while ((ln = outPartAllocTabStream.readLine()) != null) {
+			String tok = ln;
+			// store partition allocation table in memory
+			partAllocTable[i] = Integer.parseInt(tok);
+			i++;
+		}
+//		AllPartitions.setPartAllocTab(partAllocTable);
+		System.out.println("Done");
+
 	}
 	
 	public GraphDTCVertex[] getVerticesFrom() {
@@ -285,6 +322,10 @@ public class PartitionLoader {
 			// Partition)
 			partEdgeArrays[i] = new int[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 			partEdgeValsArrays[i] = new byte[this.getNumUniqueSrcs(partitionsToLoad[i])][];
+			
+			// TODO: FIX THIS LATER！！！
+			if(i == 0) verticesFrom = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
+			if(i == 1) verticesTo = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
 
 			for (int j = 0; j < this.getNumUniqueSrcs(partitionsToLoad[i]); j++) {
 

@@ -32,15 +32,15 @@ public class MainGraphDTC {
 
 		// PREPROCESSING
 		// use PartitionGenerator to create the partitions
-		System.out.println("Start preprocessing");
-		long preprocStartTime = System.nanoTime();
-		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInputPartitions);
-		partgenerator.generateDegrees(new FileInputStream(new File(baseFilename)));
-		partgenerator.allocateVIntervalstoPartitions();
-		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
-		System.out.println("End of preprocessing");
-		long preprocDuration = System.nanoTime() - preprocStartTime;
-		System.out.println(">Total preprocessing time (nanoseconds): " + preprocDuration);
+//		System.out.println("Start preprocessing");
+//		long preprocStartTime = System.nanoTime();
+//		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInputPartitions);
+//		partgenerator.generateDegrees(new FileInputStream(new File(baseFilename)));
+//		partgenerator.allocateVIntervalstoPartitions();
+//		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
+//		System.out.println("End of preprocessing");
+//		long preprocDuration = System.nanoTime() - preprocStartTime;
+//		System.out.println(">Total preprocessing time (nanoseconds): " + preprocDuration);
 
 		// COMPUTATION
 		System.out.println("Start computation");

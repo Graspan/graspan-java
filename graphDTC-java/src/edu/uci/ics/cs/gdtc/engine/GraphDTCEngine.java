@@ -46,38 +46,45 @@ public class GraphDTCEngine {
         
         computationExecutor = Executors.newFixedThreadPool(nThreads);
         
-		int intervalEnd = 0;
-		int intervalStart = 0;
+//		int intervalEnd = 0;
+//		int intervalStart = 0;
 		
 		//TODO: get the num of vertices
-		int nVertices = intervalEnd - intervalStart + 1;
+//		int nVertices = intervalEnd - intervalStart + 1;
 		
-		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
-		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
-		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[nVertices];
-		EdgeComputer[] edgeComputers = new EdgeComputer[nVertices];
+//		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
+//		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
+//		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[nVertices];
+//		EdgeComputer[] edgeComputers = new EdgeComputer[nVertices];
 		
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
 		
 		PartitionLoader loader = new PartitionLoader();
 		// 1. load partitions into memory
-		loader.loadPartitions(baseFileName, partitionsToLoad);
+		loader.loadPartitions(baseFileName, partitionsToLoad, 2);
 //		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
-		verticesFrom = loader.getVerticesFrom();
-		verticesTo = loader.getVerticesTo();
-		logger.info("Starting computation and edge addition...");
-		t = System.currentTimeMillis();
-		// 2. do computation and add edges
-		EdgeComputer.setEdgesLists(edgesLists);
-		EdgeComputer.setVerticesFrom(verticesFrom);
-		EdgeComputer.setVerticesTo(verticesTo);
-		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
-		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();
+		GraphDTCVertex[] verticesTo = loader.getVerticesTo();
+		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[verticesFrom.length + verticesTo.length];
+		EdgeComputer[] edgeComputers = new EdgeComputer[verticesFrom.length + verticesTo.length];
 		
-		// 3. store partitions to disk
-		storePartitions();
+		for(GraphDTCVertex v : verticesFrom)
+			logger.info(v.toString());
+		
+		logger.info("Finish...");
+//		logger.info("Starting computation and edge addition...");
+//		t = System.currentTimeMillis();
+//		// 2. do computation and add edges
+//		EdgeComputer.setEdgesLists(edgesLists);
+//		EdgeComputer.setVerticesFrom(verticesFrom);
+//		EdgeComputer.setVerticesTo(verticesTo);
+//		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
+//		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+//		
+//		// 3. store partitions to disk
+//		storePartitions();
 	}
 
 	/**

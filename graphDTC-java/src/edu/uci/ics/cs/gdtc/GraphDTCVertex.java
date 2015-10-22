@@ -1,5 +1,7 @@
 package edu.uci.ics.cs.gdtc;
 
+import java.util.Arrays;
+
 /**
  * @author Kai Wang
  *
@@ -49,5 +51,17 @@ public class GraphDTCVertex {
 	
 	public int getVertexId() {
 		return id;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		String NEW_LINE = System.getProperty("line.separator");
+		
+		result.append(NEW_LINE + "vertex id : " + id + NEW_LINE);
+		result.append("out edges: " + Arrays.toString(outEdges) + NEW_LINE);
+		result.append("edge value: " + Arrays.toString(outEdgeValues) + NEW_LINE);
+		
+		return result.toString();
 	}
 }

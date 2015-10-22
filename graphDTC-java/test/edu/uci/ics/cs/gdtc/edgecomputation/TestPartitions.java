@@ -42,7 +42,7 @@ public class TestPartitions {
 		partEdgeArrays[0][6] = new int[] { 8, 18, 12, 15, 152 };
 
 		// create Partition 0 Edge Values
-		partEdgeValArrays[0][0] = new int[] { 7, 256, 256, 1, 5 };
+		partEdgeValArrays[0][0] = new int[] { 7, 100, 101, 1, 5 };
 		partEdgeValArrays[0][1] = new int[] { 9, 11, 1, 10, 2, 8 };
 		partEdgeValArrays[0][2] = new int[] {};
 		partEdgeValArrays[0][3] = new int[] { 1, 2, 3, 4, 5, 6 };
@@ -83,7 +83,7 @@ public class TestPartitions {
 
 		// create Partition 5 Edge Values
 		partEdgeValArrays[2][0] = new int[] { 5, 6, 7 };
-		partEdgeValArrays[2][1] = new int[] { 100, 200, 150 };
+		partEdgeValArrays[2][1] = new int[] { 100, 100, 50 };
 		partEdgeValArrays[2][2] = new int[] { 10, 6 };
 		partEdgeValArrays[2][3] = new int[] { 5, 5, 5, 3, 2, 10, 11, 8, 1, 2 };
 		partEdgeValArrays[2][4] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10 };
