@@ -155,27 +155,31 @@ public class EdgeComputer {
 		for(int i = 0; i < vertex.getNumOutEdges(); i++) {
 			int id = vertex.getOutEdge(i);
 			byte value = vertex.getOutEdgeValue(i);
-			if((vertexId == id) && (edgeValue == value))
+//			if((vertexId == id) && (edgeValue == value))
+			//TODO: JUST for testing, change back soon!!!
+			if(vertexId == id)
 				return true;
 		}
 		
 		// 2. check new edges linked array
 		if(edgeList == null)	return false;
 		
-		int readableSize = edgeList.getReadableSize();
-		if(readableSize == 0)	return false;
+		int size = edgeList.getSize();
+		if(size == 0)	return false;
 		
 		int[] ids = null;
 		byte[] values = null;
 		
 		// 2.1 check (size - 1) node, each node is full of NODE_SIZE elements
-		for(int j = 0; j < readableSize - 1; j++) {
+		for(int j = 0; j < size - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
 			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
 			
 			for(int k = 0; k < ids.length; k++) {
-				if((ids[k] == vertexId) && (values[k] == edgeValue))
+				//TODO: JUST for testing, change back soon!!!
+//				if((ids[k] == vertexId) && (values[k] == edgeValue))
+				if(ids[k] == vertexId)
 					return true;
 			}
 		}
@@ -185,7 +189,9 @@ public class EdgeComputer {
 		values = edgeList.getLast().getEdgeValues();
 		int index = edgeList.getIndex();
 		for(int m = 0; m < index; m++) {
-			if((ids[m] == vertexId) && (values[m] == edgeValue))
+			//TODO: JUST for testing, change back soon!!!
+//			if((ids[m] == vertexId) && (values[m] == edgeValue))
+			if(ids[m] == vertexId)
 				return true;
 		}
 		
