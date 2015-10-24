@@ -98,7 +98,7 @@ public class PartitionLoader {
 
 	/**
 	 * 
-	 * Gets the partition allocation table
+	 * Gets the partition allocation table.
 	 * 
 	 * @param baseFilename
 	 * @param numParts
@@ -192,7 +192,7 @@ public class PartitionLoader {
 	}
 
 	/**
-	 * Initializes data structures of the partitions to load
+	 * Initializes data structures of the partitions to load.
 	 */
 	private void initPartitionDataStructs(int[] partitionsToLoad) {
 
@@ -230,7 +230,7 @@ public class PartitionLoader {
 	}
 
 	/**
-	 * Reads the partition files and stores them in arrays
+	 * Reads the partition files and stores them in arrays.
 	 * 
 	 * @param partInputStream
 	 * @throws IOException

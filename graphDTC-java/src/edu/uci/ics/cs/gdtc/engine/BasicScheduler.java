@@ -2,9 +2,10 @@ package edu.uci.ics.cs.gdtc.engine;
 
 /**
  * 
- * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY  - Schedules the selection of partitions
- * on which memory computations is to be done, also sets a limit of the maximum
- * allowable number of new partitions that can be generated from repartitioning
+ * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY - Schedules the
+ * selection of partitions on which memory computations is to be done, also sets
+ * a limit of the maximum allowable number of new partitions that can be
+ * generated from repartitioning.
  * 
  * @author Aftab
  *
@@ -20,11 +21,11 @@ public class BasicScheduler implements IScheduler {
 	private int numPartitions;
 
 	/**
-	 * Initializes the scheduler
+	 * Initializes the scheduler.
 	 * 
-	 * entry -1:no active partition is represented by this row/column|entry
-	 * 0:partition pair has not been computed|entry 1:partition pair has been
-	 * computed
+	 * Entry -1: no active partition is represented by this row/column. Entry 0:
+	 * partition pair has not been computed. Entry 1: partition pair has been
+	 * computed.
 	 */
 	public void initScheduler(int totalNumParts) {
 		this.numPartitions = totalNumParts;
@@ -35,8 +36,8 @@ public class BasicScheduler implements IScheduler {
 	}
 
 	/**
-	 * Returns the next set of partitions (ids) to be computed
-	 * TODO currently designed to load two partitions only. 
+	 * Returns the next set of partitions (ids) to be computed TODO currently
+	 * designed to load two partitions only.
 	 */
 	public int[] getPartstoLoad(int numPartsPerComputation) {
 

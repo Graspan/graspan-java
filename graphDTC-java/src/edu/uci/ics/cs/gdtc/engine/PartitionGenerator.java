@@ -33,7 +33,7 @@ public class PartitionGenerator {
 	/**
 	 * numParts:number of input partitions|numEdges:total number of input edges
 	 * in the graph|baseFilename:path of the input graph file|outDegs:map of
-	 * vertex and degrees|BUFFER_FOR_PARTITIONS:the total number of edges that
+	 * vertex and degrees|BUFFER_FOR_PARTS:the total number of edges that
 	 * can be kept in all partition buffers| partBufferSize:the total number of
 	 * edges that can be kept in each partition buffer|partBufferFreespace:table
 	 * consisting of available space in each partition
@@ -44,7 +44,7 @@ public class PartitionGenerator {
 	private long numEdges;
 	private String baseFilename;
 	private TreeMap<Integer, Integer> outDegs;
-	private static final long BUFFER_FOR_PARTITIONS = 100000000;
+	private static final long BUFFER_FOR_PARTS = 100000000;
 	private long partBufferSize;
 	private long[] partBufferFreespace;
 	private DataOutputStream[] partOutStrms;
@@ -82,7 +82,7 @@ public class PartitionGenerator {
 		partDegOutStrms = new PrintWriter[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partDegOutStrms[i] = new PrintWriter(
-					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i +".degree", true)));
+					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i + ".degrees", true)));
 		}
 		System.out.print("Done\n");
 	}
@@ -101,7 +101,7 @@ public class PartitionGenerator {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
-		TreeMap<Integer, Integer> outDegreesMap = new TreeMap<Integer, Integer>();
+		TreeMap<Integer, Integer> outDegs = new TreeMap<Integer, Integer>();
 		// read inputgraph line-by-line and keep incrementing degree
 		System.out.print("Performing first scan on input graph... ");
 		long lineCount = 0;
@@ -118,10 +118,10 @@ public class PartitionGenerator {
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 				int src = Integer.parseInt(tok[0]);
-				if (!outDegreesMap.containsKey(src)) {
-					outDegreesMap.put(src, 1);
+				if (!outDegs.containsKey(src)) {
+					outDegs.put(src, 1);
 				} else {
-					outDegreesMap.put(src, outDegreesMap.get(src) + 1);
+					outDegs.put(src, outDegs.get(src) + 1);
 				}
 				numEdges++;
 			}
@@ -133,15 +133,15 @@ public class PartitionGenerator {
 
 		// Save the degrees on disk
 		System.out.print("Saving degrees file " + baseFilename + ".degrees... ");
-		Iterator it = outDegreesMap.entrySet().iterator();
+		Iterator it = outDegs.entrySet().iterator();
 
-		PrintWriter outDegOutputStream = new PrintWriter(baseFilename + ".degrees", "UTF-8");
+		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees", "UTF-8");
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
-			outDegOutputStream.println(pair.getKey() + "\t" + pair.getValue());
+			outDegOutStrm.println(pair.getKey() + "\t" + pair.getValue());
 		}
-		outDegOutputStream.close();
-		this.outDegs = outDegreesMap;
+		outDegOutStrm.close();
+		this.outDegs = outDegs;
 
 		System.out.println("Done");
 	}
@@ -159,11 +159,11 @@ public class PartitionGenerator {
 		long avgEdgesPerPartition = Math.floorDiv(numEdges, numParts);
 
 		// the heuristic for interval max
-		long intervalMax = (long) (avgEdgesPerPartition * 0.9);
-		System.out.println(">Calculated partition size threshold: " + intervalMax + " edges");
+		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
+		System.out.println(">Calculated partition size threshold: " + intervalMaxSize + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
-		int intervalMaxVertexId = 0;
+		int intervalMaxVId = 0;
 
 		// counter of the number of edges in the interval
 		int intervalEdgeCount = 0;
@@ -178,13 +178,13 @@ public class PartitionGenerator {
 
 		while (it.hasNext()) {
 			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
-			intervalMaxVertexId = pair.getKey();
+			intervalMaxVId = pair.getKey();
 			intervalEdgeCount += pair.getValue();
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
-			if (intervalEdgeCount > intervalMax & !isLastPartition(partTabIdx, numParts)) {
-				partAllocTable[partTabIdx] = intervalMaxVertexId;
+			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx, numParts)) {
+				partAllocTable[partTabIdx] = intervalMaxVId;
 				intervalEdgeCount = 0;
 				partTabIdx++;
 			}
@@ -192,21 +192,21 @@ public class PartitionGenerator {
 			// when last partition is reached, assign partition_interval_head to
 			// last_Vertex
 			else if (isLastPartition(partTabIdx, numParts)) {
-				intervalMaxVertexId = outDegs.lastKey();
-				partAllocTable[partTabIdx] = intervalMaxVertexId;
+				intervalMaxVId = outDegs.lastKey();
+				partAllocTable[partTabIdx] = intervalMaxVId;
 				break;
 			}
 		}
 
 		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
-		PrintWriter partAllocTableOutputStream = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
+		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
-			partAllocTableOutputStream.println(partAllocTable[i]);
+			partAllocTableOutStrm.println(partAllocTable[i]);
 		}
 		System.out.println("Done");
 
 		AllPartitions.setPartAllocTab(partAllocTable);
-		partAllocTableOutputStream.close();
+		partAllocTableOutStrm.close();
 
 	}
 
@@ -226,12 +226,12 @@ public class PartitionGenerator {
 			partId = PartitionQuerier.findPartition(pair.getKey());
 			partDegOutStrms[partId].println(pair.getKey() + "\t" + pair.getValue());
 		}
-		
+
 		// close all streams
 		for (int i = 0; i < partDegOutStrms.length; i++) {
 			partDegOutStrms[i].close();
 		}
-		
+
 		System.out.println("Done");
 
 		outDegs.clear();
@@ -252,9 +252,9 @@ public class PartitionGenerator {
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
 
-		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTITIONS + " edges for "
+		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for "
 				+ numParts + " partitions)... ");
-		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTITIONS, numParts);
+		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;

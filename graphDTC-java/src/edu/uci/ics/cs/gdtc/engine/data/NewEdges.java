@@ -22,4 +22,8 @@ public class NewEdges {
 	 * newEdgeArraySet for this src.
 	 */
 	private int newEdgeArrMarkersforSrc[][][][][];
+	
+	public int[][][][][] getNewEdgeArrMarkers(){
+		return newEdgeArrMarkersforSrc;
+	}
 }

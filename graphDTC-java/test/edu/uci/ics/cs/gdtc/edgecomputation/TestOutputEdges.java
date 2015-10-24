@@ -1,6 +1,6 @@
 package edu.uci.ics.cs.gdtc.edgecomputation;
 
-public class TestOutputPartitions {
+public class TestOutputEdges {
 	
 	/*
 	 * New Edge Data Structures
@@ -8,7 +8,11 @@ public class TestOutputPartitions {
 
 	// stores the new edges computed
 	public static int newEdgeArraySet[][];
+	
+	// the preset number of new edge array sets
 	public static final int NUM_NEW_EDGE_ARRAY_SETS = 50;
+	
+	//the preset size of each new edge
 	public static final int SIZEOF_NEW_EDGE_ARRAY_SET = 10;
 
 	// indicates whether a new edge array set has been accessed by a thread
@@ -28,4 +32,8 @@ public class TestOutputPartitions {
 		newEdgeArrSetStatus = new int[NUM_NEW_EDGE_ARRAY_SETS];
 		newEdgeArrMarkersforSrc = new int[3][][][][];
 	};
+	
+	public int[][][][][] getNewEdgeArrMarkers(){
+		return newEdgeArrMarkersforSrc;
+	}
 }

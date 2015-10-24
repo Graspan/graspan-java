@@ -9,11 +9,12 @@ import edu.uci.ics.cs.gdtc.engine.data.AllPartitions;
  * 
  * @author Aftab
  */
+
 public class PartitionQuerier extends PartitionLoader {
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
-	 * consider the vertex numbering of the input graph to start from 1 NOT 0
+	 * consider the vertex numbering of the input graph to start from 1 NOT 0.
 	 * 
 	 * @param partId
 	 */
@@ -26,7 +27,7 @@ public class PartitionQuerier extends PartitionLoader {
 	}
 
 	/**
-	 * Returns the smallest source vertex Id in partition partId
+	 * Returns the smallest source vertex Id in partition partId.
 	 * 
 	 * @param partId
 	 * @return
@@ -40,7 +41,7 @@ public class PartitionQuerier extends PartitionLoader {
 	}
 
 	/**
-	 * Returns the largest source vertex Id in partition partId
+	 * Returns the largest source vertex Id in partition partId.
 	 * 
 	 * @param partId
 	 * @return
@@ -52,7 +53,7 @@ public class PartitionQuerier extends PartitionLoader {
 	}
 
 	/**
-	 * Finds whether the given vertex belongs to a partition
+	 * Finds whether the given vertex belongs to a partition as a source vertex.
 	 * 
 	 * @param srcVId
 	 * @param partId
@@ -68,7 +69,7 @@ public class PartitionQuerier extends PartitionLoader {
 	/**
 	 * 
 	 * Returns the actual Id of the source vertex from the Id of the vertex in
-	 * the loaded partition array
+	 * the loaded partition array.
 	 * 
 	 * @param vertexPartArrId
 	 * @param partId
@@ -80,7 +81,7 @@ public class PartitionQuerier extends PartitionLoader {
 
 	/**
 	 * Returns the Id of the source vertex in the loaded partition array from
-	 * the actual Id of the source vertex
+	 * the actual Id of the source vertex.
 	 * 
 	 * @param vertexId
 	 * @param partId
@@ -90,11 +91,9 @@ public class PartitionQuerier extends PartitionLoader {
 		return getMaxSrc(partId) - vertexId;
 	}
 
-	
-
 	/**
 	 * searches the partAllocTable to find out which partition a vertex belongs
-	 * (CALLED BY addEdgetoBuffer() method)
+	 * (CALLED BY addEdgetoBuffer() method).
 	 * 
 	 * @param srcV
 	 */

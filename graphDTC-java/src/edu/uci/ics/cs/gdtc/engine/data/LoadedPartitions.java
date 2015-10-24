@@ -41,6 +41,7 @@ public class LoadedPartitions {
 	}
 
 	/**
+	 * Saves the loaded partitions in 3D arrays.
 	 * 
 	 * @param arr3d
 	 */
