@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import edu.uci.ics.cs.gdtc.engine.BasicScheduler;
 import edu.uci.ics.cs.gdtc.engine.PartitionGenerator;
-import edu.uci.ics.cs.gdtc.engine.PartitionLoader;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
