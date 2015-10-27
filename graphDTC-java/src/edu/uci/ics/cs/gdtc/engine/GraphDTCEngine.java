@@ -62,7 +62,7 @@ public class GraphDTCEngine {
 		
 		PartitionLoader loader = new PartitionLoader();
 		// 1. load partitions into memory
-		loader.loadPartitions(baseFileName, partitionsToLoad, 2);
+		loader.loadParts(baseFileName, partitionsToLoad, 2);
 //		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();
