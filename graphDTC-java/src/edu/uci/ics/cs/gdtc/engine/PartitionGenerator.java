@@ -350,27 +350,6 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * check whether partition indicated by partTabId is the last partition
-	 * 
-	 * @param partTabIdx
-	 * @return
-	 */
-	public static boolean isLastPartition(int partTabIdx, int numParts) {
-		return (partTabIdx == (numParts - 1) ? true : false);
-	}
-
-	/**
-	 * Checks whether partition buffer is full (CALLED BY addEdgetoBuffer()
-	 * method)
-	 * 
-	 * @param partitionId
-	 * @return
-	 */
-	private boolean isPartitionBufferFull(int partitionId) {
-		return (partBufferFreespace[partitionId] == 0 ? true : false);
-	}
-
-	/**
 	 * Transfers the buffer edges to disk (performs the actual write operation),
 	 * storing them in Byte Format (CALLED BY addEdgetoBuffer() when buffer is
 	 * full and CALLED BY writePartitionEdgestoFiles() when there are no more
@@ -479,6 +458,27 @@ public class PartitionGenerator {
 		// empty the buffer
 		vertexAdjList.clear();
 		partBufferFreespace[partitionId] = partBufferSize;
+	}
+	
+	/**
+	 * check whether partition indicated by partTabId is the last partition
+	 * 
+	 * @param partTabIdx
+	 * @return
+	 */
+	public static boolean isLastPartition(int partTabIdx, int numParts) {
+		return (partTabIdx == (numParts - 1) ? true : false);
+	}
+
+	/**
+	 * Checks whether partition buffer is full (CALLED BY addEdgetoBuffer()
+	 * method)
+	 * 
+	 * @param partitionId
+	 * @return
+	 */
+	private boolean isPartitionBufferFull(int partitionId) {
+		return (partBufferFreespace[partitionId] == 0 ? true : false);
 	}
 
 }
