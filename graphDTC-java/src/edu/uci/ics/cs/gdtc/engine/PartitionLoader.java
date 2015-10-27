@@ -237,10 +237,10 @@ public class PartitionLoader {
 	 */
 	private void fillPartitionDataStructs(String baseFilename, int[] partitionsToLoad) throws IOException {
 
-		for (int i = 0; i < partitionsToLoad.length; i++) {
+		int[][][] partEdgeArrays = LoadedPartitions.getLoadedPartEdges();
+		byte[][][] partEdgeValArrays = LoadedPartitions.getLoadedPartEdgeVals();
 
-			int[][][] partEdgeArrays = LoadedPartitions.getLoadedPartEdges();
-			byte[][][] partEdgeValArrays = LoadedPartitions.getLoadedPartEdgeVals();
+		for (int i = 0; i < partitionsToLoad.length; i++) {
 
 			DataInputStream partitionInputStream = new DataInputStream(
 					new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partitionsToLoad[i])));
