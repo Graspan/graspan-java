@@ -10,10 +10,12 @@ public class VertexInterval {
 	private int lastVertex;
 	private int indexStart;
 	private int indexEnd;
+	private int partitionId;
 	
-	public VertexInterval(int firstVertex, int lastVertex) {
+	public VertexInterval(int firstVertex, int lastVertex, int partitionId) {
 		this.firstVertex = firstVertex;
 		this.lastVertex = lastVertex;
+		this.partitionId = partitionId;
 	}
 	
 	public void setFirstVertex(int firstVertex) {
@@ -46,5 +48,13 @@ public class VertexInterval {
 	
 	public int getIndexEnd() {
 		return indexEnd;
+	}
+	
+	public void setPartitionId(int partitionId) {
+		this.partitionId = partitionId;
+	}
+	
+	public int getPartitionId() {
+		return partitionId;
 	}
 }
