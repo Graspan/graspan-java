@@ -127,7 +127,7 @@ public class PartitionLoader {
 		}
 		AllPartitions.setPartAllocTab(partAllocTable);
 		System.out.println("Done");
-
+		outPartAllocTabStream.close();
 	}
 
 	/**
