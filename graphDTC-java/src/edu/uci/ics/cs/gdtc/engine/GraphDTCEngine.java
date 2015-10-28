@@ -119,8 +119,6 @@ public class GraphDTCEngine {
 		if(verticesTo == null || verticesTo.length == 0)
 			return;
 		
-		
-		
 		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
         final int chunkSize = 1 + vertices.length / 64;
