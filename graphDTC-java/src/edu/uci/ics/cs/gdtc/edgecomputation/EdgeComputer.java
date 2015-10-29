@@ -3,7 +3,7 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 import java.util.ArrayList;
 
 import edu.uci.ics.cs.gdtc.GraphDTCVertex;
-import edu.uci.ics.cs.gdtc.engine.VertexInterval;
+import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
 
 
 /**
@@ -20,7 +20,7 @@ public class EdgeComputer {
 	private static GraphDTCVertex[] verticesFrom = null;
 	private static GraphDTCVertex[] verticesTo = null;
 	private static GraphDTCVertex[] vertices = null;
-	private static ArrayList<VertexInterval> intervals = null;
+	private static ArrayList<LoadedVertexInterval> intervals = null;
 	
 	public EdgeComputer(GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
 		this.vertex = vertex;
@@ -59,7 +59,7 @@ public class EdgeComputer {
 		vertices = v;
 	}
 	
-	public static void setIntervals(ArrayList<VertexInterval> vertexIntervals) {
+	public static void setIntervals(ArrayList<LoadedVertexInterval> vertexIntervals) {
 		intervals = vertexIntervals;
 	}
 	
@@ -133,7 +133,7 @@ public class EdgeComputer {
 //		int intervalEnd = vertices[len - 1].getVertexId();
 //		if(vertexId >= intervalSt && vertexId <= intervalEnd)
 //			return true;
-		for(VertexInterval interval : intervals) {
+		for(LoadedVertexInterval interval : intervals) {
 			int intervalSt = interval.getFirstVertex();
 			int intervalEnd = interval.getLastVertex();
 			if(vertexId >= intervalSt && vertexId <= intervalEnd)
@@ -222,13 +222,12 @@ public class EdgeComputer {
 	}
 	
 	private int getDstVertexIndex(int vertexId) {
-		for(VertexInterval interval : intervals) {
+		for(LoadedVertexInterval interval : intervals) {
 			int intervalSt = interval.getFirstVertex();
 			int intervalEnd = interval.getLastVertex();
 			if((vertexId >= intervalSt) && (vertexId <= intervalEnd)) {
 				int indexSt = interval.getIndexStart();
-				int offset = vertexId - intervalSt;
-				return (indexSt + offset);
+				return (indexSt + vertexId - intervalSt);
 			}
 		}
 		return -1;

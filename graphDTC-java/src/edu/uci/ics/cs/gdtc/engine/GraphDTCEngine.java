@@ -58,7 +58,7 @@ public class GraphDTCEngine {
 //		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();
 //		GraphDTCVertex[] verticesTo = loader.getVerticesTo();
 		GraphDTCVertex[] vertices = loader.getVertices();
-		ArrayList<VertexInterval> intervals = loader.getIntervals();
+		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 		

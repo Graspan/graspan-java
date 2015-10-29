@@ -5,14 +5,14 @@ package edu.uci.ics.cs.gdtc.engine;
  *
  * Created by Oct 28, 2015
  */
-public class VertexInterval {
+public class LoadedVertexInterval {
 	private int firstVertex;
 	private int lastVertex;
 	private int indexStart;
 	private int indexEnd;
 	private int partitionId;
 	
-	public VertexInterval(int firstVertex, int lastVertex, int partitionId) {
+	public LoadedVertexInterval(int firstVertex, int lastVertex, int partitionId) {
 		this.firstVertex = firstVertex;
 		this.lastVertex = lastVertex;
 		this.partitionId = partitionId;

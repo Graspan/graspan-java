@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import edu.uci.ics.cs.gdtc.GraphDTCVertex;
-import edu.uci.ics.cs.gdtc.engine.VertexInterval;
+import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
 /**
@@ -67,7 +67,7 @@ public class PartitionLoader {
 	private GraphDTCVertex[] verticesFrom = null;
 	private GraphDTCVertex[] verticesTo = null;
 	private GraphDTCVertex[] vertices = null;
-	private ArrayList<VertexInterval> intervals = null;
+	private ArrayList<LoadedVertexInterval> intervals = null;
 	/**
 	 * PART 1: LOADING PHASE
 	 */
@@ -185,7 +185,7 @@ public class PartitionLoader {
 	}
 	
 	//TODO: initialize intervals after loading!!!!
-	public ArrayList<VertexInterval> getIntervals() {
+	public ArrayList<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
 
