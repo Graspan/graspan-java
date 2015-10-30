@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputation.NewEdgesList;
 import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
-import edu.uci.ics.cs.gdtc.GDTCLogger;
+import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 import edu.uci.ics.cs.gdtc.Vertex;
 
 

@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.BasicScheduler;
 import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
+import edu.uci.ics.cs.gdtc.engine.Engine;
 
 public class NewEdgeComputer {
 	
@@ -11,10 +12,11 @@ public class NewEdgeComputer {
 		String baseFilename = args[0];
 		int numInParts = Integer.parseInt(args[1]);
 		int numPartsPerComputation = Integer.parseInt(args[2]);
+		
 		/**
-		 * SCHEDULING AND LOADING (LOAD PARTITIONS TO MEMORY)
+		 *  LOADING (LOAD PARTITIONS TO MEMORY)
 		 */
-		System.out.println("Start scheduling and loading");
+		System.out.println("Start loading");
 		System.out.print("Initializing scheduler... ");
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler(numInParts);
@@ -35,6 +37,9 @@ public class NewEdgeComputer {
 		/**
 		 * COMPUTATION (GENERATE NEW EDGES)
 		 */
+		Engine engine = new Engine(baseFilename, 
+				basicScheduler.getPartstoLoad(numPartsPerComputation));
+		engine.run();
 		// compute new edges
 		// PartitionLoader newEdgeComputer = new PartitionLoader();
 		// newEdgeComputer.computeNewEdges(partLoader.partEdgeArrays,

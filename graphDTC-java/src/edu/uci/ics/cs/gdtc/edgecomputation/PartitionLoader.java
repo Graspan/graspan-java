@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
 import edu.uci.ics.cs.gdtc.data.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
-import edu.uci.ics.cs.gdtc.support.PartitionQuerier;
 
 /**
  * This program loads partitions into the memory. 

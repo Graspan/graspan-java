@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
-import edu.uci.ics.cs.gdtc.support.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
 
 /**
  * 

@@ -1,7 +1,6 @@
-package edu.uci.ics.cs.gdtc.support;
+package edu.uci.ics.cs.gdtc.data;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
-import edu.uci.ics.cs.gdtc.data.AllPartitions;
 
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions
