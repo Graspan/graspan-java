@@ -287,7 +287,7 @@ public class PartitionLoader {
 				lastAddedEdgePos[j] = -1;
 			}
 
-			while (true) {// partInStrm.available() != 0
+			while (partInStrm.available() != 0) {
 				{
 					try {
 						// get srcVId
