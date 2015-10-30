@@ -248,18 +248,9 @@ public class PartitionLoader {
 				partEdges[i][j] = new int[partOutDegs[i][j]];
 				partEdgeVals[i][j] = new byte[partOutDegs[i][j]];
 
-				// TODO: get the vertex id?
 				int vertexId = PartitionQuerier.getActualIdFrmPartArrId(j, partsToLoad[i]);
-
 				vertices[count++] = new Vertex(vertexId, partEdges[i][j], partEdgeVals[i][j]);
 
-				for (int k = 0; k < partOutDegs[i][j]; k++) {
-
-					// initialize each entry to -1
-					partEdgeVals[i][j][k] = -1;
-					// TODO - check whether you need the above step.
-
-				}
 			}
 		}
 
