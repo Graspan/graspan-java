@@ -258,7 +258,6 @@ public class PartitionGenerator {
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;
-			HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = new HashMap<Integer, ArrayList<Integer[]>>();
 			partitionBuffers[i] = new HashMap<Integer, ArrayList<Integer[]>>();
 		}
 		this.partBuffers = partitionBuffers;
