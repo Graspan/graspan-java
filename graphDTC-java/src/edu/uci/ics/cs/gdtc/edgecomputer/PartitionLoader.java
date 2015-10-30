@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.loader;
+package edu.uci.ics.cs.gdtc.edgecomputer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -28,10 +28,6 @@ public class PartitionLoader {
 	// private Vertex[] verticesTo = null;
 	private Vertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
-
-	/**
-	 * PART 1: LOADING PHASE
-	 */
 
 	/**
 	 * Loads the two partitions in the memory

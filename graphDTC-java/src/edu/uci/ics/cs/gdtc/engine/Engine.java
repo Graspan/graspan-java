@@ -11,7 +11,7 @@ import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.data.Vertex;
 import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
-import edu.uci.ics.cs.gdtc.loader.PartitionLoader;
+import edu.uci.ics.cs.gdtc.edgecomputer.PartitionLoader;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 
 
