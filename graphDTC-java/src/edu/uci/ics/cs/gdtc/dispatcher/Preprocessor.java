@@ -34,7 +34,7 @@ public class Preprocessor {
 
 		// creating the partitions
 		long creatingPartsStartTime = System.nanoTime();
-		partgenerator.allocateVIntervalstoPartitions();
+		partgenerator.createPartVIntervals();
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 		partgenerator.generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;

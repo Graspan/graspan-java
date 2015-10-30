@@ -33,9 +33,9 @@ public class PartitionGenerator {
 	/**
 	 * numParts:number of input partitions|numEdges:total number of input edges
 	 * in the graph|baseFilename:path of the input graph file|outDegs:map of
-	 * vertex and degrees|BUFFER_FOR_PARTS:the total number of edges that
-	 * can be kept in all partition buffers| partBufferSize:the total number of
-	 * edges that can be kept in each partition buffer|partBufferFreespace:table
+	 * vertex and degrees|BUFFER_FOR_PARTS:the total number of edges that can be
+	 * kept in all partition buffers| partBufferSize:the total number of edges
+	 * that can be kept in each partition buffer|partBufferFreespace:table
 	 * consisting of available space in each partition
 	 * buffer|partitionDiskWriteCount:the number of writes to disk for creating
 	 * the partition files
@@ -152,7 +152,8 @@ public class PartitionGenerator {
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
-	public void allocateVIntervalstoPartitions() throws FileNotFoundException, UnsupportedEncodingException {
+	public void createPartVIntervals() throws FileNotFoundException, UnsupportedEncodingException {
+
 		System.out.print("Allocating vertices to partitions (creating partition allocation table)...\n");
 
 		// average of edges by no. of partitions
@@ -176,6 +177,9 @@ public class PartitionGenerator {
 		// creating the Partition Allocation Table
 		int[] partAllocTable = new int[numParts];
 
+		long partSizes[] = new long[numParts];
+		long totalEdgeCount = 0;
+
 		while (it.hasNext()) {
 			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
 			intervalMaxVId = pair.getKey();
@@ -185,6 +189,8 @@ public class PartitionGenerator {
 			// assign the partition_interval_head to the current_Scanned_Vertex
 			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx, numParts)) {
 				partAllocTable[partTabIdx] = intervalMaxVId;
+				partSizes[partTabIdx] = intervalEdgeCount;
+				totalEdgeCount = totalEdgeCount + intervalEdgeCount;
 				intervalEdgeCount = 0;
 				partTabIdx++;
 			}
@@ -194,6 +200,7 @@ public class PartitionGenerator {
 			else if (isLastPartition(partTabIdx, numParts)) {
 				intervalMaxVId = outDegs.lastKey();
 				partAllocTable[partTabIdx] = intervalMaxVId;
+				partSizes[partTabIdx] = numEdges - totalEdgeCount;
 				break;
 			}
 		}
@@ -458,7 +465,7 @@ public class PartitionGenerator {
 		vertexAdjList.clear();
 		partBufferFreespace[partitionId] = partBufferSize;
 	}
-	
+
 	/**
 	 * check whether partition indicated by partTabId is the last partition
 	 * 
