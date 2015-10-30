@@ -22,6 +22,7 @@ import java.util.TreeMap;
 
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
 import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.data.SchedulerInfo;
 
 /**
  * 
@@ -50,6 +51,7 @@ public class PartitionGenerator {
 	private DataOutputStream[] partOutStrms;
 	private PrintWriter[] partDegOutStrms;
 	private int partitionDiskWriteCount;
+	private long[][] edgeDestCount;
 
 	// Each partition buffer consists of an adjacency list.
 	// HashMap<srcVertexID, <[destVertexID1,edgeValue1],
@@ -68,6 +70,9 @@ public class PartitionGenerator {
 
 		this.numParts = numParts;
 		this.baseFilename = baseFilename;
+
+		long[][] edgeDestCount = new long[numParts][numParts];
+		this.edgeDestCount = edgeDestCount;
 
 		// initialize streams for partition files (these streams will
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
@@ -212,6 +217,7 @@ public class PartitionGenerator {
 		}
 		System.out.println("Done");
 
+		SchedulerInfo.setPartSizes(partSizes);
 		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutStrm.close();
 
@@ -288,17 +294,36 @@ public class PartitionGenerator {
 			if (!ln.startsWith("#")) {
 				String[] tok = ln.split("\t");
 				// Edge list: <src> <dst> <value>
+				incrementEdgeDestCount(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]));
 				addEdgetoBuffer(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
 			}
 		}
 
-		// send any remaining edges in the buffer to disk
+		// test print edgedestcounts
 		for (int i = 0; i < numParts; i++) {
+			System.out.println("Destination Edge counts of partition " + i);
+			for (int j = 0; j < numParts; j++) {
+				System.out.print(this.edgeDestCount[i][j] + " ");
+			}
+			System.out.println();
+		}
+		SchedulerInfo.setEdgeDestCount(edgeDestCount);
+
+		// send any remaining edges in the buffer to disk
+		for (
+
+		int i = 0; i < numParts; i++)
+
+		{
 			sendBufferEdgestoDisk_ByteFmt(i);
 		}
 
 		// close all streams
-		for (int i = 0; i < partOutStrms.length; i++) {
+		for (
+
+		int i = 0; i < partOutStrms.length; i++)
+
+		{
 			partOutStrms[i].close();
 		}
 
@@ -464,6 +489,26 @@ public class PartitionGenerator {
 		// empty the buffer
 		vertexAdjList.clear();
 		partBufferFreespace[partitionId] = partBufferSize;
+	}
+
+	/**
+	 * Stores the counts of the destination partitions for each edge in each
+	 * partition.
+	 * 
+	 * @param src
+	 * @param dest
+	 */
+	public void incrementEdgeDestCount(int src, int dest) {
+		long[][] edgeDestCount = this.edgeDestCount;
+
+		// test edges for a partition pair
+		if (PartitionQuerier.findPartition(src) == 0 & PartitionQuerier.findPartition(dest) == 0) {
+			System.out.println(src + " " + dest);
+		}
+
+		if (PartitionQuerier.findPartition(dest) != -1) {
+			edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier.findPartition(dest)]++;
+		}
 	}
 
 	/**
