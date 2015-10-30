@@ -1,9 +1,9 @@
 package edu.uci.ics.cs.gdtc.dispatcher;
 import java.io.IOException;
 
-import edu.uci.ics.cs.gdtc.edgecomputer.BasicScheduler;
 import edu.uci.ics.cs.gdtc.edgecomputer.PartitionLoader;
 import edu.uci.ics.cs.gdtc.engine.Engine;
+import edu.uci.ics.cs.gdtc.scheduler.BasicScheduler;
 
 public class NewEdgeComputer {
 	

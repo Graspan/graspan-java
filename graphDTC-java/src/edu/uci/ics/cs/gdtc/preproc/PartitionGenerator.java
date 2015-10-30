@@ -309,12 +309,12 @@ public class PartitionGenerator {
 		// }
 
 		// write edge dest counts to file
-		System.out.print("Saving edge destination counts to file...");
+		System.out.print("Saving edge destination counts to file... ");
 		writeEdgeDestCountstoFile();
 		System.out.println("Done");
 
 		// write part edge sizes to file
-		System.out.print("Saving partition sizes to file...");
+		System.out.print("Saving partition sizes to file... ");
 		writeTotalPartEdgestoFile();
 		System.out.println("Done");
 
