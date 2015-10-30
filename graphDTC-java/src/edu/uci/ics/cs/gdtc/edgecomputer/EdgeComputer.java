@@ -219,6 +219,7 @@ public class EdgeComputer {
 		int index = getDstVertexIndex(vertexId);
 		if(index == -1) return;
 		
+		assert index >=0 && index < vertices.length;
 		Vertex v = vertices[index];
 		if(v == null || v.getNumOutEdges() == 0) 
 			return;

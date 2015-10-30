@@ -307,6 +307,17 @@ public class PartitionGenerator {
 		// }
 		// System.out.println();
 		// }
+
+		// write edge dest counts to file
+		System.out.print("Saving edge destination counts to file...");
+		writeEdgeDestCountstoFile();
+		System.out.println("Done");
+
+		// write part edge sizes to file
+		System.out.print("Saving partition sizes to file...");
+		writeTotalPartEdgestoFile();
+		System.out.println("Done");
+
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 
 		// send any remaining edges in the buffer to disk
@@ -485,22 +496,56 @@ public class PartitionGenerator {
 
 	/**
 	 * Stores the counts of the destination partitions for each edge in each
-	 * partition.
+	 * partition in the memory.
 	 * 
 	 * @param src
 	 * @param dest
 	 */
-	public void incrementEdgeDestCount(int src, int dest) {
+	private void incrementEdgeDestCount(int src, int dest) {
 		long[][] edgeDestCount = this.edgeDestCount;
 
 		// test edges for a partition pair
-		if (PartitionQuerier.findPartition(src) == 0 & PartitionQuerier.findPartition(dest) == 0) {
-			System.out.println(src + " " + dest);
-		}
+		// if (PartitionQuerier.findPartition(src) == 0 &
+		// PartitionQuerier.findPartition(dest) == 0) {
+		// System.out.println(src + " " + dest);
+		// }
 
 		if (PartitionQuerier.findPartition(dest) != -1) {
 			edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier.findPartition(dest)]++;
 		}
+	}
+
+	/**
+	 * Stores the counts of the destination partitions for each edge in each
+	 * partition in disk.
+	 * 
+	 * @throws IOException
+	 */
+	private void writeEdgeDestCountstoFile() throws IOException {
+		PrintWriter edgeDestCountsOutStrm = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".edgeDestCounts.", true)));
+		for (int i = 0; i < numParts; i++) {
+			for (int j = 0; j < numParts; j++) {
+				edgeDestCountsOutStrm.println(i + "\t" + j + "\t" + edgeDestCount[i][j]);
+			}
+		}
+		edgeDestCountsOutStrm.close();
+
+	}
+
+	/**
+	 * Stores the counts of partition sizes of each partition in disk.
+	 * 
+	 * @throws IOException
+	 */
+	private void writeTotalPartEdgestoFile() throws IOException {
+		PrintWriter partSizesOutStrm = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".partSizes.", true)));
+		long[] partSizes = SchedulerInfo.getPartSizes();
+		for (int i = 0; i < numParts; i++) {
+			partSizesOutStrm.println(partSizes[i]);
+		}
+		partSizesOutStrm.close();
 	}
 
 	/**
@@ -509,7 +554,7 @@ public class PartitionGenerator {
 	 * @param partTabIdx
 	 * @return
 	 */
-	public static boolean isLastPartition(int partTabIdx, int numParts) {
+	private static boolean isLastPartition(int partTabIdx, int numParts) {
 		return (partTabIdx == (numParts - 1) ? true : false);
 	}
 

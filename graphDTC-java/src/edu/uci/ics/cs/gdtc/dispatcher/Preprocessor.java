@@ -50,9 +50,9 @@ public class Preprocessor {
 	 * Initialize the PartitionGenerator-program
 	 * 
 	 * @param inputGraphPath
-	 * @param numPartitions
+	 * @param numParts
 	 */
-	protected static PartitionGenerator initPartGenerator(String inputGraphPath, int numPartitions) throws IOException {
-		return new PartitionGenerator(inputGraphPath, numPartitions);
+	protected static PartitionGenerator initPartGenerator(String inputGraphPath, int numParts) throws IOException {
+		return new PartitionGenerator(inputGraphPath, numParts);
 	}
 }

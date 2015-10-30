@@ -377,17 +377,16 @@ public class PartitionLoader {
 						break;
 					}
 				}
-
-				int partitionId = partsToLoad[i];
-				LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partitionId),
-						PartitionQuerier.getMaxSrc(partitionId), partitionId);
-				interval.setIndexStart(indexSt);
-				indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partitionId) - 1;
-				interval.setIndexEnd(indexEd);
-				intervals.add(interval);
-				indexSt = indexEd + 1;
 			}
-
+			
+			int partitionId = partsToLoad[i];
+			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partitionId),
+					PartitionQuerier.getMaxSrc(partitionId), partitionId);
+			interval.setIndexStart(indexSt);
+			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partitionId) - 1;
+			interval.setIndexEnd(indexEd);
+			intervals.add(interval);
+			indexSt = indexEd + 1;
 			partInStrm.close();
 		}
 	}

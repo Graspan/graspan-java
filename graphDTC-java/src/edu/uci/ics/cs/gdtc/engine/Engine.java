@@ -47,7 +47,7 @@ public class Engine {
         }
         
         computationExecutor = Executors.newFixedThreadPool(nThreads);
-        
+//        computationExecutor = Executors.newSingleThreadExecutor();
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
 		
