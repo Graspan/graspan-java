@@ -68,14 +68,14 @@ public class PartitionLoader {
 		byte partEdgeValArrays[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		// sorting the partitions
-//		System.out.print("Sorting loaded partition data structures... ");
-//		for (int i = 0; i < partsToLoad.length; i++) {
-//			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
-//				int low = 0;
-//				int high = loadedPartOutDegrees[i][j] - 1;
-//				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
-//			}
-//		}
+		System.out.print("Sorting loaded partition data structures... ");
+		for (int i = 0; i < partsToLoad.length; i++) {
+			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
+				int low = 0;
+				int high = loadedPartOutDegrees[i][j] - 1;
+				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
+			}
+		}
 		System.out.println("Done");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
@@ -222,17 +222,18 @@ public class PartitionLoader {
 	private void initPartDataStructs(int[] partsToLoad) {
 
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+		
+		//initializing new data structures
+		int totalNumVertices = 0;
+		for (int i = 0; i < partsToLoad.length; i++) {
+			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]);
+		}
+		vertices = new Vertex[totalNumVertices];
 
 		// initialize Dimension 1 (Total no. of Partitions)
 		int partEdges[][][] = new int[partsToLoad.length][][];
 		byte partEdgeVals[][][] = new byte[partsToLoad.length][][];
-		
-		int totalNumVertices = 0;
-		for(int i = 0; i < partsToLoad.length; i++) 
-			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]);
-		
-		vertices = new Vertex[totalNumVertices];
-		
+
 		int count = 0;
 		for (int i = 0; i < partsToLoad.length; i++) {
 
@@ -240,13 +241,6 @@ public class PartitionLoader {
 			// Partition)
 			partEdges[i] = new int[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])][];
 			partEdgeVals[i] = new byte[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])][];
-
-			// if (i == 0)
-			// verticesFrom = new
-			// Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
-			// if (i == 1)
-			// verticesTo = new
-			// Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
 
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 
@@ -259,20 +253,12 @@ public class PartitionLoader {
 
 				vertices[count++] = new Vertex(vertexId, partEdges[i][j], partEdgeVals[i][j]);
 
-				// // TODO: FIX THIS LATER!!
-				// if (i == 0)
-				// verticesFrom[j] = new Vertex(vertexId, partEdges[i][j],
-				// partEdgeVals[i][j]);
-				// if (i == 1)
-				// verticesTo[j] = new Vertex(vertexId, partEdges[i][j],
-				// partEdgeVals[i][j]);
-
 				for (int k = 0; k < partOutDegs[i][j]; k++) {
 
 					// initialize each entry to -1
 					partEdgeVals[i][j][k] = -1;
 					// TODO - check whether you need the above step.
-					
+
 				}
 			}
 		}
@@ -309,8 +295,7 @@ public class PartitionLoader {
 				lastAddedEdgePos[j] = -1;
 			}
 
-			while (true) {//partInStrm.available() != 0
-				System.out.println("here");
+			while (true) {// partInStrm.available() != 0
 				{
 					try {
 						// get srcVId
@@ -354,6 +339,9 @@ public class PartitionLoader {
 				indexSt = indexEd + 1;
 
 				partInStrm.close();
+
+				LoadedPartitions.setLoadedPartEdges(partEdges);
+				LoadedPartitions.setLoadedPartEdgeVals(partEdgeVals);
 			}
 		}
 	}
