@@ -222,8 +222,8 @@ public class PartitionLoader {
 	private void initPartDataStructs(int[] partsToLoad) {
 
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
-		
-		//initializing new data structures
+
+		// initializing new data structures
 		int totalNumVertices = 0;
 		for (int i = 0; i < partsToLoad.length; i++) {
 			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]);
@@ -275,6 +275,7 @@ public class PartitionLoader {
 
 		for (int i = 0; i < partsToLoad.length; i++) {
 
+			System.out.println("Reading partition file: " + baseFilename + ".partition." + partsToLoad[i]);
 			DataInputStream partInStrm = new DataInputStream(
 					new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partsToLoad[i])));
 
@@ -290,7 +291,9 @@ public class PartitionLoader {
 				{
 					try {
 						// get srcVId
+						System.out.println("source");
 						int src = partInStrm.readInt();// src=b;
+						System.out.println(src);
 
 						// get corresponding arraySrcVId of srcVId
 						int arraySrcVId = src - PartitionQuerier.getMinSrc(partsToLoad[i]);
@@ -303,10 +306,12 @@ public class PartitionLoader {
 						// get dstVId & edgeVal and store them in the
 						// corresponding
 						// arrays
+						System.out.println("destinations");
 						for (int j = 0; j < count; j++) {
 
 							// dstVId
 							partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
+							System.out.println(partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1]);
 
 							// edgeVal
 							partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
@@ -328,12 +333,10 @@ public class PartitionLoader {
 				interval.setIndexEnd(indexEd);
 				intervals.add(interval);
 				indexSt = indexEd + 1;
-
-				partInStrm.close();
-
-				LoadedPartitions.setLoadedPartEdges(partEdges);
-				LoadedPartitions.setLoadedPartEdgeVals(partEdgeVals);
 			}
+			LoadedPartitions.setLoadedPartEdges(partEdges);
+			LoadedPartitions.setLoadedPartEdgeVals(partEdgeVals);
+			partInStrm.close();
 		}
 	}
 }
