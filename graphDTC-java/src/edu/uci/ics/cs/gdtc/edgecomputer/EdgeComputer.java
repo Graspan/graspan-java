@@ -1,5 +1,8 @@
 package edu.uci.ics.cs.gdtc.edgecomputer;
 
+import java.util.ArrayList;
+
+import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.data.Vertex;
 
 
@@ -16,6 +19,8 @@ public class EdgeComputer {
 	private static NewEdgesList[] edgesLists= null;
 	private static Vertex[] verticesFrom = null;
 	private static Vertex[] verticesTo = null;
+	private static Vertex[] vertices = null;
+	private static ArrayList<LoadedVertexInterval> intervals = null;
 	
 	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;
@@ -50,8 +55,18 @@ public class EdgeComputer {
 		verticesTo = vertices;
 	}
 	
+	public static void setVertices(Vertex[] v) {
+		vertices = v;
+	}
+	
+	public static void setIntervals(ArrayList<LoadedVertexInterval> vertexIntervals) {
+		intervals = vertexIntervals;
+	}
+	
 	public void execUpdate() {
-		if(vertex == null || verticesFrom == null || verticesTo == null)
+//		if(vertex == null || verticesFrom == null || verticesTo == null)
+//			return;
+		if(vertex == null || vertices == null)
 			return;
 		
 		int nOutEdges = vertex.getNumOutEdges();
@@ -109,15 +124,21 @@ public class EdgeComputer {
 	 * @return: boolean
 	 */
 	// TODO: to be optimized
-	private boolean isInRange(int vertexId, Vertex[] vertices) {
-		if(vertices == null || vertices.length == 0)
-				return false;
-		
-		int len = vertices.length;
-		int intervalSt = vertices[0].getVertexId();
-		int intervalEnd = vertices[len - 1].getVertexId();
-		if(vertexId >= intervalSt && vertexId <= intervalEnd)
-			return true;
+	private boolean isInRange(int vertexId) {
+//		if(vertices == null || vertices.length == 0)
+//				return false;
+//		
+//		int len = vertices.length;
+//		int intervalSt = vertices[0].getVertexId();
+//		int intervalEnd = vertices[len - 1].getVertexId();
+//		if(vertexId >= intervalSt && vertexId <= intervalEnd)
+//			return true;
+		for(LoadedVertexInterval interval : intervals) {
+			int intervalSt = interval.getFirstVertex();
+			int intervalEnd = interval.getLastVertex();
+			if(vertexId >= intervalSt && vertexId <= intervalEnd)
+				return true;
+		}
 		
 		return false;
 	}
@@ -130,12 +151,14 @@ public class EdgeComputer {
 	private void checkRangeAndScanEdges(int vertexId, byte edgeValue) {
 		
 		// scan edges in partition "from"
-		if(isInRange(vertexId, verticesFrom))
-			scanEdges(vertexId, edgeValue, verticesFrom);
+//		if(isInRange(vertexId, verticesFrom))
+//			scanEdges(vertexId, edgeValue, verticesFrom);
 					
 		// scan edges in partition "to"
 //		if(isInRange(vertexId, verticesTo))
 //			scanEdges(vertexId, edgeValue, verticesTo);
+		if(isInRange(vertexId))
+			scanEdges(vertexId, edgeValue);
 	}
 			
 
@@ -197,6 +220,18 @@ public class EdgeComputer {
 		
 		return false;
 	}
+	
+	private int getDstVertexIndex(int vertexId) {
+		for(LoadedVertexInterval interval : intervals) {
+			int intervalSt = interval.getFirstVertex();
+			int intervalEnd = interval.getLastVertex();
+			if((vertexId >= intervalSt) && (vertexId <= intervalEnd)) {
+				int indexSt = interval.getIndexStart();
+				return (indexSt + vertexId - intervalSt);
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 * Description:
@@ -205,14 +240,15 @@ public class EdgeComputer {
 	 * @param:
 	 * @return:
 	 */
-	private void scanEdges(int vertexId, byte edgeValue, Vertex[] vertices) {
+	private void scanEdges(int vertexId, byte edgeValue) {
 		if(vertices == null || vertices.length == 0)
 			return;
 		
-		int vertexSt = vertices[0].getVertexId();
-		int index = vertexId - vertexSt;
+		int index = getDstVertexIndex(vertexId);
+		if(index == -1) return;
+		
 		Vertex v = vertices[index];
-		if(v == null || v.getNumOutEdges() == 0)
+		if(v == null || v.getNumOutEdges() == 0) 
 			return;
 		
 //		final Object lock = new Object();

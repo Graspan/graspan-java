@@ -7,25 +7,28 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
 import edu.uci.ics.cs.gdtc.data.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.data.Vertex;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
 
 /**
- * This program loads partitions into the memory. 
+ * This program loads partitions into the memory.
  * 
  * @author Aftab
  *
  */
 public class PartitionLoader {
 
-	
-	private Vertex[] verticesFrom = null;
-	private Vertex[] verticesTo = null;
-	
+	// private Vertex[] verticesFrom = null;
+	// private Vertex[] verticesTo = null;
+	private Vertex[] vertices = null;
+	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+
 	/**
 	 * PART 1: LOADING PHASE
 	 */
@@ -44,10 +47,10 @@ public class PartitionLoader {
 			System.out.print(partsToLoad[i] + " ");
 		}
 		System.out.print("\n");
-		
+
 		// get the partition allocation table
 		readPartAllocTable(baseFilename, numParts);
-				
+
 		// get the degrees of the source vertices in the partitions
 		getDegrees(baseFilename, partsToLoad);
 
@@ -59,24 +62,24 @@ public class PartitionLoader {
 		// fill the partition data structures
 		fillPartitionDataStructs(baseFilename, partsToLoad);
 		System.out.println("Completed loading of partitions");
-		
+
 		int loadedPartOutDegrees[][] = LoadedPartitions.getLoadedPartOutDegs();
 		int partEdgeArrays[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeValArrays[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		// sorting the partitions
-		System.out.print("Sorting loaded partition data structures... ");
-		for (int i = 0; i < partsToLoad.length; i++) {
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
-				int low = 0;
-				int high = loadedPartOutDegrees[i][j] - 1;
-				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
-			}
-		}
+//		System.out.print("Sorting loaded partition data structures... ");
+//		for (int i = 0; i < partsToLoad.length; i++) {
+//			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
+//				int low = 0;
+//				int high = loadedPartOutDegrees[i][j] - 1;
+//				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
+//			}
+//		}
 		System.out.println("Done");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
-		
+
 		/*
 		 * TEST Loading of Partitions in Arrays
 		 */
@@ -98,7 +101,7 @@ public class PartitionLoader {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Gets the partition allocation table.
@@ -133,16 +136,25 @@ public class PartitionLoader {
 		System.out.println("Done");
 
 	}
-	
-	public Vertex[] getVerticesFrom() {
-		return verticesFrom;
-	}
-	
-	public Vertex[] getVerticesTo() {
-		return verticesTo;
+
+	// public Vertex[] getVerticesFrom() {
+	// return verticesFrom;
+	// }
+	//
+	// public Vertex[] getVerticesTo() {
+	// return verticesTo;
+	// }
+
+	// TODO: initialize vertices during loading!!!!
+	public Vertex[] getVertices() {
+		return vertices;
 	}
 
-	
+	// TODO: initialize intervals after loading!!!!
+	public ArrayList<LoadedVertexInterval> getIntervals() {
+		return intervals;
+	}
+
 	/**
 	 * Gets the degrees of the source vertices of the partitions that are to be
 	 * loaded.
@@ -203,52 +215,64 @@ public class PartitionLoader {
 		outDegInputStrm.close();
 		System.out.println("Done");
 	}
-	
 
 	/**
 	 * Initializes data structures of the partitions to load
 	 */
 	private void initPartDataStructs(int[] partsToLoad) {
-		
+
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
 		// initialize Dimension 1 (Total no. of Partitions)
 		int partEdges[][][] = new int[partsToLoad.length][][];
 		byte partEdgeVals[][][] = new byte[partsToLoad.length][][];
 		
+		int totalNumVertices = 0;
+		for(int i = 0; i < partsToLoad.length; i++) 
+			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]);
+		
+		vertices = new Vertex[totalNumVertices];
+		
+		int count = 0;
 		for (int i = 0; i < partsToLoad.length; i++) {
 
 			// initialize Dimension 2 (Total no. of Unique SrcVs for a
 			// Partition)
 			partEdges[i] = new int[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])][];
 			partEdgeVals[i] = new byte[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])][];
-			
-			// TODO: FIX THIS LATER
-			if(i == 0) verticesFrom = new Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
-			if(i == 1) verticesTo = new Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+
+			// if (i == 0)
+			// verticesFrom = new
+			// Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+			// if (i == 1)
+			// verticesTo = new
+			// Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
 
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 
 				// initialize Dimension 3 (Total no. of Out-edges for a SrcV)
 				partEdges[i][j] = new int[partOutDegs[i][j]];
 				partEdgeVals[i][j] = new byte[partOutDegs[i][j]];
-				
-				//TODO: get the vertex id?
-				int vertexId = PartitionQuerier.getActualIdFrmPartArrId(j, partsToLoad[i]); 
-				
-				//TODO: FIX THIS LATER!!
-				if(i == 0)
-					verticesFrom[j] = new Vertex(vertexId, 
-							partEdges[i][j], partEdgeVals[i][j]);
-				if(i == 1)
-					verticesTo[j] = new Vertex(vertexId, 
-							partEdges[i][j], partEdgeVals[i][j]);
-						
+
+				// TODO: get the vertex id?
+				int vertexId = PartitionQuerier.getActualIdFrmPartArrId(j, partsToLoad[i]);
+
+				vertices[count++] = new Vertex(vertexId, partEdges[i][j], partEdgeVals[i][j]);
+
+				// // TODO: FIX THIS LATER!!
+				// if (i == 0)
+				// verticesFrom[j] = new Vertex(vertexId, partEdges[i][j],
+				// partEdgeVals[i][j]);
+				// if (i == 1)
+				// verticesTo[j] = new Vertex(vertexId, partEdges[i][j],
+				// partEdgeVals[i][j]);
+
 				for (int k = 0; k < partOutDegs[i][j]; k++) {
 
 					// initialize each entry to -1
-					partEdgeVals[i][j][k] = -1;// TODO - check whether you
-														// need it.
+					partEdgeVals[i][j][k] = -1;
+					// TODO - check whether you need the above step.
+					
 				}
 			}
 		}
@@ -265,9 +289,12 @@ public class PartitionLoader {
 	 * @throws IOException
 	 */
 	private void fillPartitionDataStructs(String baseFilename, int[] partsToLoad) throws IOException {
-		
+
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
+
+		int indexSt = 0;
+		int indexEd = 0;
 
 		for (int i = 0; i < partsToLoad.length; i++) {
 
@@ -282,43 +309,51 @@ public class PartitionLoader {
 				lastAddedEdgePos[j] = -1;
 			}
 
-			while (partInStrm.available() != 0) { {
-				try {
-					// get srcVId
-					int src = partInStrm.readInt();// src=b;
+			while (partInStrm.available() != 0) {
+				{
+					try {
+						// get srcVId
+						int src = partInStrm.readInt();// src=b;
 
-					// get corresponding arraySrcVId of srcVId
-					int arraySrcVId = src - PartitionQuerier.getMinSrc(partsToLoad[i]);
+						// get corresponding arraySrcVId of srcVId
+						int arraySrcVId = src - PartitionQuerier.getMinSrc(partsToLoad[i]);
 
-					// get count (number of destVs from srcV in the current list
-					// of the partition file)
-					int count = partInStrm.readInt();
+						// get count (number of destVs from srcV in the current
+						// list
+						// of the partition file)
+						int count = partInStrm.readInt();
 
-					// get dstVId & edgeVal and store them in the corresponding
-					// arrays
-					for (int j = 0; j < count; j++) {
+						// get dstVId & edgeVal and store them in the
+						// corresponding
+						// arrays
+						for (int j = 0; j < count; j++) {
 
-						// dstVId
-						partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
-								.readInt();
+							// dstVId
+							partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
 
-						// edgeVal
-						partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
-								.readByte();
+							// edgeVal
+							partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
 
-						// increment the last added position for this row
-						lastAddedEdgePos[arraySrcVId]++;
+							// increment the last added position for this row
+							lastAddedEdgePos[arraySrcVId]++;
+						}
+
+					} catch (Exception exception) {
+						break;
 					}
-
-				} catch (Exception exception) {
-					break;
 				}
+
+				int partitionId = partsToLoad[i];
+				LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partitionId),
+						PartitionQuerier.getMaxSrc(partitionId), partitionId);
+				interval.setIndexStart(indexSt);
+				indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partitionId) - 1;
+				interval.setIndexEnd(indexEd);
+				intervals.add(interval);
+				indexSt = indexEd + 1;
+
+				partInStrm.close();
 			}
-			partInStrm.close();
 		}
 	}
-	}
-
-
-
 }
