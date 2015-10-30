@@ -13,26 +13,21 @@ public class NewEdgeComputer {
 		int numInParts = Integer.parseInt(args[1]);
 		int numPartsPerComputation = Integer.parseInt(args[2]);
 		
-		/**
-		 *  LOADING (LOAD PARTITIONS TO MEMORY)
-		 */
-		System.out.println("Start loading");
 		System.out.print("Initializing scheduler... ");
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler(numInParts);
 		System.out.print("Done\n");
 
-		System.out.print("Initializing loader... ");
-		PartitionLoader partLoader = new PartitionLoader();
-		System.out.print("Done\n");
+//		System.out.print("Initializing loader... ");
+//		PartitionLoader partLoader = new PartitionLoader();
+//		System.out.print("Done\n");
 
-		// TODO use a loop here as determined by scheduler
-		long loadingStartTime = System.nanoTime();
-		partLoader.loadParts(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation),
-				numInParts);
-		long loadingDuration = System.nanoTime() - loadingStartTime;
-		System.out.println(
-				">Total time for loading " + numPartsPerComputation + " partitions (nanoseconds): " + loadingDuration);
+//		long loadingStartTime = System.nanoTime();
+//		partLoader.loadParts(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation),
+//				numInParts);
+//		long loadingDuration = System.nanoTime() - loadingStartTime;
+//		System.out.println(
+//				">Total time for loading " + numPartsPerComputation + " partitions (nanoseconds): " + loadingDuration);
 		
 
 		/**

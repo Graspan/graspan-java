@@ -25,11 +25,11 @@ public class Engine {
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private String baseFileName;
-	private int[] partitionsToLoad;
+	private int[] partsToLoad;
 	
 	public Engine(String baseFileName, int[] partitionsToLoad) {
 		this.baseFileName = baseFileName;
-		this.partitionsToLoad = partitionsToLoad;
+		this.partsToLoad = partitionsToLoad;
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class Engine {
 		
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
-		loader.loadParts(baseFileName, partitionsToLoad, 2);
+		loader.loadParts(baseFileName, partsToLoad, 3);
 //		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 //		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -48,7 +49,8 @@ public class PartitionLoader {
 		readPartAllocTable(baseFilename, numParts);
 
 		// get the degrees of the source vertices in the partitions
-		getDegrees(baseFilename, partsToLoad);
+		// getDegrees(baseFilename, partsToLoad);
+		getLoadedPartDegs(baseFilename, partsToLoad);
 
 		// initialize data structures of the partitions to load
 		System.out.print("Initializing data structures for loading partitions... ");
@@ -156,7 +158,62 @@ public class PartitionLoader {
 
 	/**
 	 * Gets the degrees of the source vertices of the partitions that are to be
-	 * loaded.
+	 * loaded. (Deprecated- this method reads the degrees file of the entire
+	 * graph.)
+	 * 
+	 * @param baseFilename
+	 * @param partsToLoad
+	 * @throws IOException
+	 * @throws NumberFormatException
+	 */
+	private void getLoadedPartDegs(String baseFilename, int[] partsToLoad) throws IOException {
+
+		/*
+		 * Initialize the degrees array for each partition
+		 */
+
+		// initialize Dimension 1 (Total no. of Partitions)
+		int[][] partOutDegs = new int[partsToLoad.length][];
+
+		for (int i = 0; i < partsToLoad.length; i++) {
+
+			// initialize Dimension 2 (Total no. of Unique SrcVs for a
+			// Partition)
+			partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+		}
+
+		/*
+		 * Scan degrees file of each partition
+		 */
+		for (int i = 0; i < partsToLoad.length; i++) {
+			BufferedReader outDegInputStrm = new BufferedReader(new InputStreamReader(
+					new FileInputStream(new File(baseFilename + ".partition." + partsToLoad[i] + ".degrees"))));
+
+			System.out.print("Reading partition degrees file (" + baseFilename + ".partition." + partsToLoad[i]
+					+ ".degrees) to obtain degrees of source vertices in partition " + partsToLoad[i] + "... ");
+
+			String ln;
+			while ((ln = outDegInputStrm.readLine()) != null) {
+
+				String[] tok = ln.split("\t");
+
+				// get the srcVId and degree
+				int srcVId = Integer.parseInt(tok[0]);
+				int deg = Integer.parseInt(tok[1]);
+
+				partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
+			}
+			outDegInputStrm.close();
+		}
+		LoadedPartitions.setLoadedPartOutDegs(partOutDegs);
+		System.out.println("Done");
+
+	}
+
+	/**
+	 * Gets the degrees of the source vertices of the partitions that are to be
+	 * loaded. (Deprecated- this method reads the degrees file of the entire
+	 * graph.)
 	 * 
 	 * @param baseFilename
 	 * @param partsToLoad
@@ -204,6 +261,7 @@ public class PartitionLoader {
 					continue;
 				} else {
 					try {
+						System.out.println("interesting");
 						partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
 					} catch (ArrayIndexOutOfBoundsException e) {
 					}
@@ -291,7 +349,6 @@ public class PartitionLoader {
 					try {
 						// get srcVId
 						int src = partInStrm.readInt();
-						System.out.println(src);
 
 						// get corresponding arraySrcVId of srcVId
 						int arraySrcVId = src - PartitionQuerier.getMinSrc(partsToLoad[i]);
