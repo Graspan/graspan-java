@@ -9,6 +9,7 @@ public class AllPartitions {
 	 */
 	public static int[] partAllocTable;
 
+	public static long[] partSizes;
 
 	/**
 	 * Initializes the partition allocation table
@@ -26,5 +27,22 @@ public class AllPartitions {
 	 */
 	public static int[] getPartAllocTab() {
 		return partAllocTable;
+	}
+
+	/**
+	 * 
+	 * @param arr
+	 */
+	public static void setPartSizes(long[] arr) {
+		partSizes = arr;
+	}
+
+	/**
+	 * Returns a ref to partSizes
+	 * 
+	 * @return
+	 */
+	public static long[] getPartSizes() {
+		return partSizes;
 	}
 }
