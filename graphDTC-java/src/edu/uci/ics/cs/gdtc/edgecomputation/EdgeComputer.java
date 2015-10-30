@@ -2,7 +2,7 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
 
 import java.util.ArrayList;
 
-import edu.uci.ics.cs.gdtc.GraphDTCVertex;
+import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
 
 
@@ -12,15 +12,15 @@ import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
  * Created by Oct 8, 2015
  */
 public class EdgeComputer {
-	private GraphDTCVertex vertex = null;
-	private GraphDTCNewEdgesList edgeList = null;
+	private Vertex vertex = null;
+	private NewEdgesList edgeList = null;
 	private int nNewEdges;
 	private boolean terminateStatus;
-	private static GraphDTCNewEdgesList[] edgesLists= null;
-	private static GraphDTCVertex[] vertices = null;
+	private static NewEdgesList[] edgesLists= null;
+	private static Vertex[] vertices = null;
 	private static ArrayList<LoadedVertexInterval> intervals = null;
 	
-	public EdgeComputer(GraphDTCVertex vertex, GraphDTCNewEdgesList edgeList) {
+	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;
 		this.edgeList = edgeList;
 	}
@@ -41,11 +41,11 @@ public class EdgeComputer {
 		this.terminateStatus = terminateStatus;
 	}
 	
-	public static void setEdgesLists(GraphDTCNewEdgesList[] lists) {
+	public static void setEdgesLists(NewEdgesList[] lists) {
 		edgesLists = lists;
 	}
 	
-	public static void setVertices(GraphDTCVertex[] v) {
+	public static void setVertices(Vertex[] v) {
 		vertices = v;
 	}
 	
@@ -84,7 +84,7 @@ public class EdgeComputer {
 		for(int j = 0; j < readableSize - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
-			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
+			assert(ids.length == NewEdgesList.NODE_SIZE);
 			
 			for(int k = 0; k < ids.length; k++) {
 				
@@ -169,7 +169,7 @@ public class EdgeComputer {
 		for(int j = 0; j < size - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
-			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
+			assert(ids.length == NewEdgesList.NODE_SIZE);
 			
 			for(int k = 0; k < ids.length; k++) {
 				//TODO: JUST for testing, change back soon!!!
@@ -219,7 +219,8 @@ public class EdgeComputer {
 		int index = getDstVertexIndex(vertexId);
 		if(index == -1) return;
 		
-		GraphDTCVertex v = vertices[index];
+		assert(index >=0 && index < vertices.length);
+		Vertex v = vertices[index];
 		if(v == null || v.getNumOutEdges() == 0) 
 			return;
 		
@@ -236,7 +237,7 @@ public class EdgeComputer {
 		// 2. scan new edges linked array
 		if(edgeList == null) return;
 		
-		GraphDTCNewEdgesList dstNewEdgeList = edgesLists[index];
+		NewEdgesList dstNewEdgeList = edgesLists[index];
 		if(dstNewEdgeList == null) return;
 		
 		int readableSize = dstNewEdgeList.getReadableSize();
@@ -249,7 +250,7 @@ public class EdgeComputer {
 		for(int j = 0; j < readableSize - 1; j++) {
 			ids = edgesLists[index].getNode(j).getDstVertices();
 			values = edgesLists[index].getNode(j).getEdgeValues();
-			assert(ids.length == GraphDTCNewEdgesList.NODE_SIZE);
+			assert(ids.length == NewEdgesList.NODE_SIZE);
 			
 			for(int k = 0; k < ids.length; k++) {
 				// check grammar, check duplication and add edges

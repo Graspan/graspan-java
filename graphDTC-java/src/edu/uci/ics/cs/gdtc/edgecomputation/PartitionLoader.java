@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import edu.uci.ics.cs.gdtc.GraphDTCVertex;
+import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
@@ -64,7 +64,7 @@ public class PartitionLoader {
 	 */
 	private int newEdgeArrMarkersforSrc[][][][][];
 
-	private GraphDTCVertex[] vertices = null;
+	private Vertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 	/**
 	 * PART 1: LOADING PHASE
@@ -169,7 +169,7 @@ public class PartitionLoader {
 
 	}
 	
-	public GraphDTCVertex[] getVertices() {
+	public Vertex[] getVertices() {
 		return vertices;
 	}
 	
@@ -321,7 +321,7 @@ public class PartitionLoader {
 		for(int i = 0; i < partitionsToLoad.length; i++) 
 			totalNumVertices += getNumUniqueSrcs(partitionsToLoad[i]);
 		
-		vertices = new GraphDTCVertex[totalNumVertices];
+		vertices = new Vertex[totalNumVertices];
 		
 		int count = 0;
 		for (int i = 0; i < partitionsToLoad.length; i++) {
@@ -339,7 +339,7 @@ public class PartitionLoader {
 				
 				int vertexId = getActualIdFrmPartArrId(j, partitionsToLoad[i]); 
 				
-				vertices[count++] =  new GraphDTCVertex(vertexId, 
+				vertices[count++] =  new Vertex(vertexId, 
 						partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
 						
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {

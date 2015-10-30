@@ -7,7 +7,7 @@ import java.util.Arrays;
  *
  * Created by Oct 8, 2015
  */
-public class GraphDTCNewEdgesList {
+public class NewEdgesList {
 	public static final int NODE_SIZE = 1;
 	
 	private NewEdgesNode first;
@@ -48,7 +48,7 @@ public class GraphDTCNewEdgesList {
 		
 	}
 	
-	public GraphDTCNewEdgesList() {
+	public NewEdgesList() {
 		last = first = null;
 		size = 0;
 		readableIndex = 0;

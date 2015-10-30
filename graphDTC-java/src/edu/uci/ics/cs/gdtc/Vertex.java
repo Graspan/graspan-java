@@ -7,13 +7,13 @@ import java.util.Arrays;
  *
  * Created by Oct 8, 2015
  */
-public class GraphDTCVertex {
+public class Vertex {
 	private int id;
 	private int numOutEdges;
 	private int[] outEdges = null;
 	private byte[] outEdgeValues = null;
 	
-	public GraphDTCVertex(int id, int outDegree) {
+	public Vertex(int id, int outDegree) {
 		this.id = id;
 		numOutEdges = outDegree;
 		
@@ -23,7 +23,7 @@ public class GraphDTCVertex {
 		}
 	}
 	
-	public GraphDTCVertex(int id, int[] outEdges, byte[] outEdgeValues) {
+	public Vertex(int id, int[] outEdges, byte[] outEdgeValues) {
 		this.id = id;
 		this.numOutEdges = outEdges.length;
 		this.outEdges = outEdges;

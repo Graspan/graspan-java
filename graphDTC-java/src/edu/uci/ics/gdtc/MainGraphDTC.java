@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.BasicScheduler;
-import edu.uci.ics.cs.gdtc.engine.GraphDTCEngine;
+import edu.uci.ics.cs.gdtc.engine.Engine;
 import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
 
 /**
@@ -50,7 +50,7 @@ public class MainGraphDTC {
 		basicScheduler.initScheduler(numInputPartitions);
 		System.out.print("Done\n");
 
-		GraphDTCEngine engine = new GraphDTCEngine(baseFilename, 
+		Engine engine = new Engine(baseFilename, 
 				basicScheduler.getPartstoLoad(numPartsPerComputation));
 		engine.run();
 		// load the partitions to memory
