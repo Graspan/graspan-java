@@ -2,8 +2,8 @@ package edu.uci.ics.cs.gdtc.edgecomputer;
 
 import java.util.ArrayList;
 
-import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.data.Vertex;
+import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
 
 
 /**
@@ -54,8 +54,6 @@ public class EdgeComputer {
 	}
 	
 	public void execUpdate() {
-//		if(vertex == null || verticesFrom == null || verticesTo == null)
-//			return;
 		if(vertex == null || vertices == null)
 			return;
 		
@@ -115,14 +113,6 @@ public class EdgeComputer {
 	 */
 	// TODO: to be optimized
 	private boolean isInRange(int vertexId) {
-//		if(vertices == null || vertices.length == 0)
-//				return false;
-//		
-//		int len = vertices.length;
-//		int intervalSt = vertices[0].getVertexId();
-//		int intervalEnd = vertices[len - 1].getVertexId();
-//		if(vertexId >= intervalSt && vertexId <= intervalEnd)
-//			return true;
 		for(LoadedVertexInterval interval : intervals) {
 			int intervalSt = interval.getFirstVertex();
 			int intervalEnd = interval.getLastVertex();
@@ -139,14 +129,6 @@ public class EdgeComputer {
 	 * @return: 
 	 */
 	private void checkRangeAndScanEdges(int vertexId, byte edgeValue) {
-		
-		// scan edges in partition "from"
-//		if(isInRange(vertexId, verticesFrom))
-//			scanEdges(vertexId, edgeValue, verticesFrom);
-					
-		// scan edges in partition "to"
-//		if(isInRange(vertexId, verticesTo))
-//			scanEdges(vertexId, edgeValue, verticesTo);
 		if(isInRange(vertexId))
 			scanEdges(vertexId, edgeValue);
 	}
@@ -240,8 +222,6 @@ public class EdgeComputer {
 		Vertex v = vertices[index];
 		if(v == null || v.getNumOutEdges() == 0) 
 			return;
-		
-//		final Object lock = new Object();
 		
 		// 1. scan original fixed size array
 		for(int i = 0; i < v.getNumOutEdges(); i++) {
