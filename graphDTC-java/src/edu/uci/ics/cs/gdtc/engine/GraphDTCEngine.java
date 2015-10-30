@@ -53,25 +53,15 @@ public class GraphDTCEngine {
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
 		loader.loadPartitions(baseFileName, partitionsToLoad, 2);
-//		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
-//		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();
-//		GraphDTCVertex[] verticesTo = loader.getVerticesTo();
 		GraphDTCVertex[] vertices = loader.getVertices();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 		
-//		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[verticesFrom.length + verticesTo.length];
-//		EdgeComputer[] edgeComputers = new EdgeComputer[verticesFrom.length + verticesTo.length];
 		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[vertices.length];
 		EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 		
-//		logger.info("VERTEX LENGTH: " + verticesFrom.length);
-//		for(int i = 0; i < verticesFrom.length; i++) {
-//			logger.info("" + verticesFrom[i]);
-//			logger.info("" + edgesLists[i]);
-//		}
 		logger.info("VERTEX LENGTH: " + vertices.length);
 		for(int i = 0; i < vertices.length; i++) {
 			logger.info("" + vertices[i]);
@@ -84,19 +74,10 @@ public class GraphDTCEngine {
 		
 		// 2. do computation and add edges
 		EdgeComputer.setEdgesLists(edgesLists);
-//		EdgeComputer.setVerticesFrom(verticesFrom);
-//		EdgeComputer.setVerticesTo(verticesTo);
 		EdgeComputer.setVertices(vertices);
 		EdgeComputer.setIntervals(intervals);
-//		doComputation(verticesFrom, verticesTo, edgesLists, edgeComputers);
 		doComputation(vertices, edgesLists, edgeComputers);
 		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
-		
-//		logger.info("VERTEX LENGTH: " + verticesFrom.length);
-//		for(int i = 0; i < verticesFrom.length; i++) {
-//			logger.info("" + verticesFrom[i]);
-//			logger.info("" + edgesLists[i]);
-//		}
 		logger.info("VERTEX LENGTH: " + vertices.length);
 		for(int i = 0; i < vertices.length; i++) {
 			logger.info("" + vertices[i]);
@@ -124,15 +105,9 @@ public class GraphDTCEngine {
 	private void doComputation(final GraphDTCVertex[] vertices, 
 			final GraphDTCNewEdgesList[] edgesLists,
 			final EdgeComputer[] edgeComputers) {
-//		if(verticesFrom == null || verticesFrom.length == 0)
-//			return;
-//		
-//		if(verticesTo == null || verticesTo.length == 0)
-//			return;
 		if(vertices == null || vertices.length == 0)
 			return;
 		
-//		final GraphDTCVertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
         final int chunkSize = 1 + vertices.length / 64;
 
@@ -147,7 +122,6 @@ public class GraphDTCEngine {
     		
         	totalNewEdges = 0;
         	countDown.set(nWorkers);
-        	logger.info("======================ROUND : " + i++);
 	        // Parallel updates
 	        for(int id = 0; id < nWorkers; id++) {
 	            final int currentId = id;

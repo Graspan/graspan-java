@@ -17,8 +17,6 @@ public class EdgeComputer {
 	private int nNewEdges;
 	private boolean terminateStatus;
 	private static GraphDTCNewEdgesList[] edgesLists= null;
-	private static GraphDTCVertex[] verticesFrom = null;
-	private static GraphDTCVertex[] verticesTo = null;
 	private static GraphDTCVertex[] vertices = null;
 	private static ArrayList<LoadedVertexInterval> intervals = null;
 	
@@ -47,14 +45,6 @@ public class EdgeComputer {
 		edgesLists = lists;
 	}
 	
-	public static void setVerticesFrom(GraphDTCVertex[] vertices) {
-		verticesFrom = vertices;
-	}
-	
-	public static void setVerticesTo(GraphDTCVertex[] vertices) {
-		verticesTo = vertices;
-	}
-	
 	public static void setVertices(GraphDTCVertex[] v) {
 		vertices = v;
 	}
@@ -64,8 +54,6 @@ public class EdgeComputer {
 	}
 	
 	public void execUpdate() {
-//		if(vertex == null || verticesFrom == null || verticesTo == null)
-//			return;
 		if(vertex == null || vertices == null)
 			return;
 		
@@ -125,14 +113,6 @@ public class EdgeComputer {
 	 */
 	// TODO: to be optimized
 	private boolean isInRange(int vertexId) {
-//		if(vertices == null || vertices.length == 0)
-//				return false;
-//		
-//		int len = vertices.length;
-//		int intervalSt = vertices[0].getVertexId();
-//		int intervalEnd = vertices[len - 1].getVertexId();
-//		if(vertexId >= intervalSt && vertexId <= intervalEnd)
-//			return true;
 		for(LoadedVertexInterval interval : intervals) {
 			int intervalSt = interval.getFirstVertex();
 			int intervalEnd = interval.getLastVertex();
@@ -149,14 +129,6 @@ public class EdgeComputer {
 	 * @return: 
 	 */
 	private void checkRangeAndScanEdges(int vertexId, byte edgeValue) {
-		
-		// scan edges in partition "from"
-//		if(isInRange(vertexId, verticesFrom))
-//			scanEdges(vertexId, edgeValue, verticesFrom);
-					
-		// scan edges in partition "to"
-//		if(isInRange(vertexId, verticesTo))
-//			scanEdges(vertexId, edgeValue, verticesTo);
 		if(isInRange(vertexId))
 			scanEdges(vertexId, edgeValue);
 	}
@@ -250,8 +222,6 @@ public class EdgeComputer {
 		GraphDTCVertex v = vertices[index];
 		if(v == null || v.getNumOutEdges() == 0) 
 			return;
-		
-//		final Object lock = new Object();
 		
 		// 1. scan original fixed size array
 		for(int i = 0; i < v.getNumOutEdges(); i++) {

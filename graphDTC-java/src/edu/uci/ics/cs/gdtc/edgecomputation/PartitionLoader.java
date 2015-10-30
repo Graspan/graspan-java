@@ -64,8 +64,6 @@ public class PartitionLoader {
 	 */
 	private int newEdgeArrMarkersforSrc[][][][][];
 
-	private GraphDTCVertex[] verticesFrom = null;
-	private GraphDTCVertex[] verticesTo = null;
 	private GraphDTCVertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 	/**
@@ -171,20 +169,10 @@ public class PartitionLoader {
 
 	}
 	
-	public GraphDTCVertex[] getVerticesFrom() {
-		return verticesFrom;
-	}
-	
-	public GraphDTCVertex[] getVerticesTo() {
-		return verticesTo;
-	}
-	
-	// TODO: initialize vertices during loading!!!!
 	public GraphDTCVertex[] getVertices() {
 		return vertices;
 	}
 	
-	//TODO: initialize intervals after loading!!!!
 	public ArrayList<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
@@ -343,26 +331,16 @@ public class PartitionLoader {
 			partEdgeArrays[i] = new int[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 			partEdgeValsArrays[i] = new byte[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 			
-//			if(i == 0) verticesFrom = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
-//			if(i == 1) verticesTo = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
-
 			for (int j = 0; j < this.getNumUniqueSrcs(partitionsToLoad[i]); j++) {
 
 				// initialize Dimension 3 (Total no. of Out-edges for a SrcV)
 				partEdgeArrays[i][j] = new int[this.partOutDegrees[i][j]];
 				partEdgeValsArrays[i][j] = new byte[this.partOutDegrees[i][j]];
 				
-				//TODO: get the vertex id?
 				int vertexId = getActualIdFrmPartArrId(j, partitionsToLoad[i]); 
 				
 				vertices[count++] =  new GraphDTCVertex(vertexId, 
 						partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
-//				if(i == 0)
-//					verticesFrom[j] = new GraphDTCVertex(vertexId, 
-//							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
-//				if(i == 1)
-//					verticesTo[j] = new GraphDTCVertex(vertexId, 
-//							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
 						
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
 
