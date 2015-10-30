@@ -7,10 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
-import edu.uci.ics.cs.gdtc.edgecomputation.GraphDTCNewEdgesList;
+import edu.uci.ics.cs.gdtc.edgecomputation.NewEdgesList;
 import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
-import edu.uci.ics.cs.gdtc.GraphDTCLogger;
-import edu.uci.ics.cs.gdtc.GraphDTCVertex;
+import edu.uci.ics.cs.gdtc.GDTCLogger;
+import edu.uci.ics.cs.gdtc.Vertex;
 
 
 /**
@@ -18,14 +18,14 @@ import edu.uci.ics.cs.gdtc.GraphDTCVertex;
  *
  * Created by Oct 8, 2015
  */
-public class GraphDTCEngine {
-	private static final Logger logger = GraphDTCLogger.getLogger("graphdtc engine");
+public class Engine {
+	private static final Logger logger = GDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private String baseFileName;
 	private int[] partitionsToLoad;
 	
-	public GraphDTCEngine(String baseFileName, int[] partitionsToLoad) {
+	public Engine(String baseFileName, int[] partitionsToLoad) {
 		this.baseFileName = baseFileName;
 		this.partitionsToLoad = partitionsToLoad;
 	}
@@ -52,9 +52,9 @@ public class GraphDTCEngine {
 		//TODO: get the num of vertices
 //		int nVertices = intervalEnd - intervalStart + 1;
 		
-//		GraphDTCVertex[] verticesFrom = new GraphDTCVertex[nVertices];
-//		GraphDTCVertex[] verticesTo = new GraphDTCVertex[nVertices];
-//		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[nVertices];
+//		Vertex[] verticesFrom = new Vertex[nVertices];
+//		Vertex[] verticesTo = new Vertex[nVertices];
+//		NewEdgesList[] edgesLists = new NewEdgesList[nVertices];
 //		EdgeComputer[] edgeComputers = new EdgeComputer[nVertices];
 		
 		logger.info("Loading Partitions...");
@@ -65,9 +65,9 @@ public class GraphDTCEngine {
 		loader.loadParts(baseFileName, partitionsToLoad, 2);
 //		loadPartitions(verticesFrom, verticesTo);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
-		GraphDTCVertex[] verticesFrom = loader.getVerticesFrom();
-		GraphDTCVertex[] verticesTo = loader.getVerticesTo();
-		GraphDTCNewEdgesList[] edgesLists = new GraphDTCNewEdgesList[verticesFrom.length + verticesTo.length];
+		Vertex[] verticesFrom = loader.getVerticesFrom();
+		Vertex[] verticesTo = loader.getVerticesTo();
+		NewEdgesList[] edgesLists = new NewEdgesList[verticesFrom.length + verticesTo.length];
 		EdgeComputer[] edgeComputers = new EdgeComputer[verticesFrom.length + verticesTo.length];
 		
 		logger.info("VERTEX LENGTH: " + verticesFrom.length);
@@ -109,9 +109,9 @@ public class GraphDTCEngine {
 	 * @param:
 	 * @return:
 	 */
-	private void doComputation(final GraphDTCVertex[] verticesFrom, 
-			final GraphDTCVertex[] verticesTo, 
-			final GraphDTCNewEdgesList[] edgesLists,
+	private void doComputation(final Vertex[] verticesFrom, 
+			final Vertex[] verticesTo, 
+			final NewEdgesList[] edgesLists,
 			final EdgeComputer[] edgeComputers) {
 		if(verticesFrom == null || verticesFrom.length == 0)
 			return;
@@ -121,7 +121,7 @@ public class GraphDTCEngine {
 		
 		
 		
-		final GraphDTCVertex[] vertices = verticesFrom;
+		final Vertex[] vertices = verticesFrom;
 		final Object termationLock = new Object();
         final int chunkSize = 1 + vertices.length / 64;
 
@@ -155,13 +155,13 @@ public class GraphDTCEngine {
 	                        
 	                        for(int i = chunkStart; i < end; i++) {
 	                        	// each vertex is associated with an edgeList
-	                            GraphDTCVertex vertex = vertices[i];
-	                            GraphDTCNewEdgesList edgeList = edgesLists[i];
+	                            Vertex vertex = vertices[i];
+	                            NewEdgesList edgeList = edgesLists[i];
 	                            EdgeComputer edgeComputer = edgeComputers[i];
 	                            
 	                            if (vertex != null && vertex.getNumOutEdges() != 0) {
 	                            	if(edgeList == null) {
-	                            		edgeList = new GraphDTCNewEdgesList();
+	                            		edgeList = new NewEdgesList();
 	                            		edgesLists[i] = edgeList;
 	                            	}
 	                            	
@@ -222,12 +222,12 @@ public class GraphDTCEngine {
 	 * @param:
 	 * @return:
 	 */
-	private void setReadableIndex(GraphDTCNewEdgesList[] edgesList) {
+	private void setReadableIndex(NewEdgesList[] edgesList) {
 		if(edgesList == null || edgesList.length == 0)
 			return;
 		
 		for(int i = 0; i < edgesList.length; i++) {
-			GraphDTCNewEdgesList list = edgesList[i];
+			NewEdgesList list = edgesList[i];
 			if(list == null)
 				continue;
 			int size = list.getSize();

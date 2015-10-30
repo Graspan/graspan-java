@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import edu.uci.ics.cs.gdtc.GraphDTCVertex;
+import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
 import edu.uci.ics.cs.gdtc.data.LoadedPartitions;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
@@ -23,8 +23,8 @@ import edu.uci.ics.cs.gdtc.support.PartitionQuerier;
 public class PartitionLoader {
 
 	
-	private GraphDTCVertex[] verticesFrom = null;
-	private GraphDTCVertex[] verticesTo = null;
+	private Vertex[] verticesFrom = null;
+	private Vertex[] verticesTo = null;
 	
 	/**
 	 * PART 1: LOADING PHASE
@@ -134,11 +134,11 @@ public class PartitionLoader {
 
 	}
 	
-	public GraphDTCVertex[] getVerticesFrom() {
+	public Vertex[] getVerticesFrom() {
 		return verticesFrom;
 	}
 	
-	public GraphDTCVertex[] getVerticesTo() {
+	public Vertex[] getVerticesTo() {
 		return verticesTo;
 	}
 
@@ -224,8 +224,8 @@ public class PartitionLoader {
 			partEdgeVals[i] = new byte[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])][];
 			
 			// TODO: FIX THIS LATER
-			if(i == 0) verticesFrom = new GraphDTCVertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
-			if(i == 1) verticesTo = new GraphDTCVertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+			if(i == 0) verticesFrom = new Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+			if(i == 1) verticesTo = new Vertex[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
 
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 
@@ -238,10 +238,10 @@ public class PartitionLoader {
 				
 				//TODO: FIX THIS LATER!!
 				if(i == 0)
-					verticesFrom[j] = new GraphDTCVertex(vertexId, 
+					verticesFrom[j] = new Vertex(vertexId, 
 							partEdges[i][j], partEdgeVals[i][j]);
 				if(i == 1)
-					verticesTo[j] = new GraphDTCVertex(vertexId, 
+					verticesTo[j] = new Vertex(vertexId, 
 							partEdges[i][j], partEdgeVals[i][j]);
 						
 				for (int k = 0; k < partOutDegs[i][j]; k++) {
