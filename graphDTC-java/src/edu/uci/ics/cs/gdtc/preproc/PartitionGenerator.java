@@ -22,7 +22,7 @@ import java.util.TreeMap;
 
 import edu.uci.ics.cs.gdtc.data.AllPartitions;
 import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.data.SchedulerInfo;
+import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 
 /**
  * 
