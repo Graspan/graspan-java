@@ -309,7 +309,8 @@ public class PartitionLoader {
 				lastAddedEdgePos[j] = -1;
 			}
 
-			while (partInStrm.available() != 0) {
+			while (true) {//partInStrm.available() != 0
+				System.out.println("here");
 				{
 					try {
 						// get srcVId
