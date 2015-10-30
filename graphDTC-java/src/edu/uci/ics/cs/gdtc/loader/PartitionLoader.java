@@ -83,6 +83,8 @@ public class PartitionLoader {
 		/*
 		 * TEST Loading of Partitions in Arrays
 		 */
+		System.out.println("Printing Loaded Partitions...");
+		System.out.println("*****");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			System.out.println("Partition: " + partsToLoad[i]);
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
@@ -100,6 +102,7 @@ public class PartitionLoader {
 				System.out.println();
 			}
 		}
+		System.out.println("*****");
 	}
 
 	/**
@@ -291,8 +294,7 @@ public class PartitionLoader {
 				{
 					try {
 						// get srcVId
-						System.out.println("source");
-						int src = partInStrm.readInt();// src=b;
+						int src = partInStrm.readInt();
 						System.out.println(src);
 
 						// get corresponding arraySrcVId of srcVId
@@ -306,12 +308,10 @@ public class PartitionLoader {
 						// get dstVId & edgeVal and store them in the
 						// corresponding
 						// arrays
-						System.out.println("destinations");
 						for (int j = 0; j < count; j++) {
 
 							// dstVId
 							partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
-							System.out.println(partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1]);
 
 							// edgeVal
 							partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
@@ -334,8 +334,7 @@ public class PartitionLoader {
 				intervals.add(interval);
 				indexSt = indexEd + 1;
 			}
-			LoadedPartitions.setLoadedPartEdges(partEdges);
-			LoadedPartitions.setLoadedPartEdgeVals(partEdgeVals);
+
 			partInStrm.close();
 		}
 	}

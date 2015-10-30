@@ -34,8 +34,6 @@ public class NewEdgeComputer {
 		System.out.println(
 				">Total time for loading " + numPartsPerComputation + " partitions (nanoseconds): " + loadingDuration);
 		
-		//TODO REMOVE THIS
-		System.exit(0);
 
 		/**
 		 * COMPUTATION (GENERATE NEW EDGES)
