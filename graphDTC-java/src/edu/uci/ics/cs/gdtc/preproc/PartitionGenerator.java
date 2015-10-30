@@ -299,31 +299,23 @@ public class PartitionGenerator {
 			}
 		}
 
-		// test print edgedestcounts
-		for (int i = 0; i < numParts; i++) {
-			System.out.println("Destination Edge counts of partition " + i);
-			for (int j = 0; j < numParts; j++) {
-				System.out.print(this.edgeDestCount[i][j] + " ");
-			}
-			System.out.println();
-		}
+		// TEST PRINT edgedestcounts
+		// for (int i = 0; i < numParts; i++) {
+		// System.out.println("Destination Edge counts of partition " + i);
+		// for (int j = 0; j < numParts; j++) {
+		// System.out.print(this.edgeDestCount[i][j] + " ");
+		// }
+		// System.out.println();
+		// }
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 
 		// send any remaining edges in the buffer to disk
-		for (
-
-		int i = 0; i < numParts; i++)
-
-		{
+		for (int i = 0; i < numParts; i++) {
 			sendBufferEdgestoDisk_ByteFmt(i);
 		}
 
 		// close all streams
-		for (
-
-		int i = 0; i < partOutStrms.length; i++)
-
-		{
+		for (int i = 0; i < partOutStrms.length; i++) {
 			partOutStrms[i].close();
 		}
 

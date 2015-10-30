@@ -17,8 +17,6 @@ public class EdgeComputer {
 	private int nNewEdges;
 	private boolean terminateStatus;
 	private static NewEdgesList[] edgesLists= null;
-	private static Vertex[] verticesFrom = null;
-	private static Vertex[] verticesTo = null;
 	private static Vertex[] vertices = null;
 	private static ArrayList<LoadedVertexInterval> intervals = null;
 	
@@ -45,14 +43,6 @@ public class EdgeComputer {
 	
 	public static void setEdgesLists(NewEdgesList[] lists) {
 		edgesLists = lists;
-	}
-	
-	public static void setVerticesFrom(Vertex[] vertices) {
-		verticesFrom = vertices;
-	}
-	
-	public static void setVerticesTo(Vertex[] vertices) {
-		verticesTo = vertices;
 	}
 	
 	public static void setVertices(Vertex[] v) {
