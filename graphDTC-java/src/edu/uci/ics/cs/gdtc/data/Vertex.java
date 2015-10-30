@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc;
+package edu.uci.ics.cs.gdtc.data;
 
 import java.util.Arrays;
 

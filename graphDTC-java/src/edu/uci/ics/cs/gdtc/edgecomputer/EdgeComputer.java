@@ -1,6 +1,6 @@
 package edu.uci.ics.cs.gdtc.edgecomputer;
 
-import edu.uci.ics.cs.gdtc.Vertex;
+import edu.uci.ics.cs.gdtc.data.Vertex;
 
 
 /**
