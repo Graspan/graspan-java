@@ -67,7 +67,7 @@ public class PartitionLoader {
 	private GraphDTCVertex[] verticesFrom = null;
 	private GraphDTCVertex[] verticesTo = null;
 	private GraphDTCVertex[] vertices = null;
-	private ArrayList<LoadedVertexInterval> intervals = null;
+	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 	/**
 	 * PART 1: LOADING PHASE
 	 */
@@ -329,6 +329,12 @@ public class PartitionLoader {
 		int partEdgeArrays[][][] = new int[partitionsToLoad.length][][];
 		byte partEdgeValsArrays[][][] = new byte[partitionsToLoad.length][][];
 		
+		int totalNumVertices = 0;
+		for(int i = 0; i < partitionsToLoad.length; i++) 
+			totalNumVertices += getNumUniqueSrcs(partitionsToLoad[i]);
+		
+		vertices = new GraphDTCVertex[totalNumVertices];
+		
 		int count = 0;
 		for (int i = 0; i < partitionsToLoad.length; i++) {
 
@@ -337,9 +343,8 @@ public class PartitionLoader {
 			partEdgeArrays[i] = new int[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 			partEdgeValsArrays[i] = new byte[this.getNumUniqueSrcs(partitionsToLoad[i])][];
 			
-			// TODO: FIX THIS LATER！！！
-			if(i == 0) verticesFrom = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
-			if(i == 1) verticesTo = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
+//			if(i == 0) verticesFrom = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
+//			if(i == 1) verticesTo = new GraphDTCVertex[getNumUniqueSrcs(partitionsToLoad[i])];
 
 			for (int j = 0; j < this.getNumUniqueSrcs(partitionsToLoad[i]); j++) {
 
@@ -350,13 +355,14 @@ public class PartitionLoader {
 				//TODO: get the vertex id?
 				int vertexId = getActualIdFrmPartArrId(j, partitionsToLoad[i]); 
 				
-				//TODO: FIX THIS LATER!!
-				if(i == 0)
-					verticesFrom[j] = new GraphDTCVertex(vertexId, 
-							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
-				if(i == 1)
-					verticesTo[j] = new GraphDTCVertex(vertexId, 
-							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
+				vertices[count++] =  new GraphDTCVertex(vertexId, 
+						partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
+//				if(i == 0)
+//					verticesFrom[j] = new GraphDTCVertex(vertexId, 
+//							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
+//				if(i == 1)
+//					verticesTo[j] = new GraphDTCVertex(vertexId, 
+//							partEdgeArrays[i][j], partEdgeValsArrays[i][j]);
 						
 				for (int k = 0; k < this.partOutDegrees[i][j]; k++) {
 
@@ -379,7 +385,8 @@ public class PartitionLoader {
 	 * @throws IOException
 	 */
 	private void fillPartitionDataStructs(String baseFilename, int[] partitionsToLoad) throws IOException {
-
+		int indexSt = 0;
+		int indexEd = 0;
 		for (int i = 0; i < partitionsToLoad.length; i++) {
 
 			DataInputStream partitionInputStream = new DataInputStream(
@@ -425,8 +432,19 @@ public class PartitionLoader {
 					break;
 				}
 			}
+			
+			int partitionId = partitionsToLoad[i];
+			LoadedVertexInterval interval = new LoadedVertexInterval(getMinSrc(partitionId), 
+					getMaxSrc(partitionId), partitionId);
+			interval.setIndexStart(indexSt);
+			indexEd = indexEd +  getNumUniqueSrcs(partitionId) - 1;
+			interval.setIndexEnd(indexEd);
+			intervals.add(interval);
+			indexSt = indexEd + 1;
 			partitionInputStream.close();
 		}
+		
+		assert(intervals.size() == 2);
 	}
 
 	/**

@@ -248,7 +248,7 @@ public class EdgeComputer {
 		if(index == -1) return;
 		
 		GraphDTCVertex v = vertices[index];
-		if(v == null || v.getNumOutEdges() == 0)
+		if(v == null || v.getNumOutEdges() == 0) 
 			return;
 		
 //		final Object lock = new Object();
