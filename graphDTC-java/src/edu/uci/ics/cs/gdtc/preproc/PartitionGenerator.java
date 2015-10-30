@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import edu.uci.ics.cs.gdtc.data.AllPartitions;
-import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
+import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 
 /**

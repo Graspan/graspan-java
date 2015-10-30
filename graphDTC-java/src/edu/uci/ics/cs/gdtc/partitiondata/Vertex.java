@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.data;
+package edu.uci.ics.cs.gdtc.partitiondata;
 
 import java.util.Arrays;
 

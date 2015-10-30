@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import edu.uci.ics.cs.gdtc.data.AllPartitions;
-import edu.uci.ics.cs.gdtc.data.LoadedPartitions;
-import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.data.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.data.Vertex;
+import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
+import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
 
 /**

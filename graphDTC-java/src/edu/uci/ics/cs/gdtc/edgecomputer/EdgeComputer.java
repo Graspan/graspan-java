@@ -2,8 +2,8 @@ package edu.uci.ics.cs.gdtc.edgecomputer;
 
 import java.util.ArrayList;
 
-import edu.uci.ics.cs.gdtc.data.Vertex;
-import edu.uci.ics.cs.gdtc.data.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 
 
 /**
