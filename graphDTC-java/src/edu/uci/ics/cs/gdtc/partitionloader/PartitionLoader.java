@@ -138,20 +138,11 @@ public class PartitionLoader {
 
 	}
 
-	// public Vertex[] getVerticesFrom() {
-	// return verticesFrom;
-	// }
-	//
-	// public Vertex[] getVerticesTo() {
-	// return verticesTo;
-	// }
 
-	// TODO: initialize vertices during loading!!!!
 	public Vertex[] getVertices() {
 		return vertices;
 	}
 
-	// TODO: initialize intervals after loading!!!!
 	public ArrayList<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
