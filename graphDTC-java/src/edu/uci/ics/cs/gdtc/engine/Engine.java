@@ -107,7 +107,6 @@ public class Engine {
 
 		final int nWorkers = vertices.length / chunkSize + 1;
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
-		int i = 0;
 		do {
 			// set readable index, for read and write concurrency
 			// for current iteration, readable index points to the last new edge

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
@@ -138,11 +139,11 @@ public class PartitionGenerator {
 
 		// Save the degrees on disk
 		System.out.print("Saving degrees file " + baseFilename + ".degrees... ");
-		Iterator it = outDegs.entrySet().iterator();
+		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
 		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees", "UTF-8");
 		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
+			Entry<Integer, Integer> pair = it.next();
 			outDegOutStrm.println(pair.getKey() + "\t" + pair.getValue());
 		}
 		outDegOutStrm.close();
@@ -177,7 +178,7 @@ public class PartitionGenerator {
 		// marker of the current partition table
 		int partTabIdx = 0;
 
-		Iterator it = outDegs.entrySet().iterator();
+		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
 		// creating the Partition Allocation Table
 		int[] partAllocTable = new int[numParts];
@@ -186,7 +187,7 @@ public class PartitionGenerator {
 		long totalEdgeCount = 0;
 
 		while (it.hasNext()) {
-			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
+			Map.Entry<Integer, Integer> pair = it.next();
 			intervalMaxVId = pair.getKey();
 			intervalEdgeCount += pair.getValue();
 
@@ -232,10 +233,10 @@ public class PartitionGenerator {
 
 		System.out.print("Generating degrees file for each partition... ");
 
-		Iterator it = outDegs.entrySet().iterator();
+		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 		int partId = 0;
 		while (it.hasNext()) {
-			Map.Entry<Integer, Integer> pair = (Map.Entry) it.next();
+			Map.Entry<Integer, Integer> pair = it.next();
 			partId = PartitionQuerier.findPartition(pair.getKey());
 			partDegOutStrms[partId].println(pair.getKey() + "\t" + pair.getValue());
 		}

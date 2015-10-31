@@ -17,7 +17,6 @@ public class BasicScheduler implements IScheduler {
 	// complete process
 	private static final int SizeOfPartScheduleMap = 50;
 
-	private int numPartitions;
 
 	/**
 	 * Initializes the scheduler
@@ -33,7 +32,6 @@ public class BasicScheduler implements IScheduler {
 				partScheduleMap[i][j] = 0;
 			}
 		}
-		this.numPartitions = totalNumParts;
 	}
 
 	public void updateSchedulerInfo() {
@@ -75,34 +73,5 @@ public class BasicScheduler implements IScheduler {
 			return false;
 	}
 
-	/**
-	 * Finds the corresponding actual PartitionId from ParitionMapId
-	 * (Incomplete)
-	 * 
-	 * @param partMapId
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private int findPartitionId(int partMapId) {
-		if (!isOriginalPartition(partMapId)) {
-			// TODO
-			return 0;
-		} else
-			return partMapId;
 
-	}
-
-	/**
-	 * Checks whether the partition belongs to the original set of input
-	 * partitions
-	 * 
-	 * @param partMapId
-	 * @return
-	 */
-	private boolean isOriginalPartition(int partMapId) {
-		if (partMapId < this.numPartitions)
-			return true;
-		else
-			return false;
-	}
 }

@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -221,6 +220,7 @@ public class PartitionLoader {
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
+	@SuppressWarnings("unused")
 	private void getDegrees(String baseFilename, int[] partsToLoad) throws NumberFormatException, IOException {
 
 		/*

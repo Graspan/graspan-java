@@ -1,7 +1,5 @@
 package edu.uci.ics.cs.gdtc.partitiondata;
 
-import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
-
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions
  * (used by all phases)
