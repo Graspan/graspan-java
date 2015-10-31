@@ -38,4 +38,22 @@ public class SchedulerInfo {
 	public static long[][] getEdgeDestCount() {
 		return edgeDestCount;
 	}
+
+	/**
+	 * Prints the partition sizes and the partition edge counts
+	 */
+	public static void printData() {
+		System.out.println("Printing Preliminary Scheduling Info...");
+		System.out.println("Partition sizes: ");
+		for (int i = 0; i < partSizes.length; i++) {
+			System.out.println(partSizes[i]);
+		}
+
+		System.out.println("Partition edge destination counts: ");
+		for (int i = 0; i < partSizes.length; i++) {
+			for (int j = 0; j < partSizes.length; j++) {
+				System.out.println(i + " " + j + " " + edgeDestCount[i][j]);
+			}
+		}
+	}
 }

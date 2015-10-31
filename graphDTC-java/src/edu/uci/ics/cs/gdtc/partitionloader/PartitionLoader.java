@@ -48,6 +48,8 @@ public class PartitionLoader {
 
 		// get the scheduling info
 		readSchedulingInfo();
+
+		// SchedulerInfo.printData();
 	}
 
 	/**

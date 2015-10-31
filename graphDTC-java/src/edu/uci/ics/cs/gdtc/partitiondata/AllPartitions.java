@@ -10,16 +10,16 @@ public class AllPartitions {
 	public static int[] partAllocTable;
 
 	/**
-	 * Initializes the partition allocation table
+	 * Sets the partition allocation table.
 	 * 
-	 * @param numParts
+	 * @param arr
 	 */
 	public static void setPartAllocTab(int[] arr) {
 		partAllocTable = arr;
 	}
 
 	/**
-	 * Returns a ref to partAllocTable
+	 * Returns a ref to partAllocTable.
 	 * 
 	 * @return
 	 */
@@ -28,9 +28,10 @@ public class AllPartitions {
 	}
 
 	/**
-	 * Prints the partition allocation table
+	 * Prints the partition allocation table.
 	 */
 	public static void printPartAllocTab() {
+		System.out.println("Partition allocation table:");
 		for (int i = 0; i < partAllocTable.length; i++) {
 			System.out.println(partAllocTable[i]);
 		}
