@@ -52,7 +52,7 @@ public class Engine {
 		
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
-		loader.loadPartitions(baseFileName, partitionsToLoad, 2);
+		loader.loadPartitions(baseFileName, partitionsToLoad, 3);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
