@@ -81,4 +81,30 @@ public class LoadedPartitions {
 		loadedParts = arr;
 	}
 
+	/**
+	 * Print the loaded partitions
+	 */
+	public static void printData() {
+		System.out.println("Printing Loaded Partitions...");
+		System.out.println("*****");
+		for (int i = 0; i < loadedParts.length; i++) {
+			System.out.println("Partition: " + loadedParts[i]);
+			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
+				int srcv = j + PartitionQuerier.getMinSrc(loadedParts[i]);
+				System.out.println("SourceV: " + srcv);
+				System.out.println("Dest Vs: ");
+				for (int k = 0; k < loadedPartOutDegs[i][j]; k++) {
+					System.out.print(loadedPartEdges[i][j][k] + " ");
+				}
+				System.out.println();
+				System.out.println("Edge Vals: ");
+				for (int k = 0; k < loadedPartOutDegs[i][j]; k++) {
+					System.out.print(loadedPartEdgeVals[i][j][k] + " ");
+				}
+				System.out.println();
+			}
+		}
+		System.out.println("*****");
+	}
+
 }

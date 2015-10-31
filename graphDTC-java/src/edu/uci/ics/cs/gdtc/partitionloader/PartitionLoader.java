@@ -14,6 +14,7 @@ import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
+import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
 
 /**
@@ -44,6 +45,9 @@ public class PartitionLoader {
 
 		// get the partition allocation table
 		readPartAllocTable();
+
+		// get the scheduling info
+		readSchedulingInfo();
 	}
 
 	/**
@@ -70,54 +74,32 @@ public class PartitionLoader {
 		System.out.print("Done\n");
 
 		// fill the partition data structures
-		fillPartitionDataStructs(baseFilename, partsToLoad);
+		fillPartDataStructs(baseFilename, partsToLoad);
 		System.out.println("Completed loading of partitions");
 
-		int loadedPartOutDegrees[][] = LoadedPartitions.getLoadedPartOutDegs();
-		int partEdgeArrays[][][] = LoadedPartitions.getLoadedPartEdges();
-		byte partEdgeValArrays[][][] = LoadedPartitions.getLoadedPartEdgeVals();
+		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
+		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
+		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		// sorting the partitions
 		System.out.print("Sorting loaded partition data structures... ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 				int low = 0;
-				int high = loadedPartOutDegrees[i][j] - 1;
-				Optimizers.quickSort(partEdgeArrays[i][j], partEdgeValArrays[i][j], low, high);
+				int high = loadedPartOutDegs[i][j] - 1;
+				Optimizers.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
 			}
 		}
 		System.out.println("Done");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
 
-		/*
-		 * TEST Loading of Partitions in Arrays
-		 */
-		System.out.println("Printing Loaded Partitions...");
-		System.out.println("*****");
-		for (int i = 0; i < partsToLoad.length; i++) {
-			System.out.println("Partition: " + partsToLoad[i]);
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
-				int srcv = j + PartitionQuerier.getMinSrc(partsToLoad[i]);
-				System.out.println("SourceV: " + srcv);
-				System.out.println("Dest Vs: ");
-				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
-					System.out.print(partEdgeArrays[i][j][k] + " ");
-				}
-				System.out.println();
-				System.out.println("Edge Vals: ");
-				for (int k = 0; k < loadedPartOutDegrees[i][j]; k++) {
-					System.out.print(partEdgeValArrays[i][j][k] + " ");
-				}
-				System.out.println();
-			}
-		}
-		System.out.println("*****");
+		LoadedPartitions.printData();
 	}
 
 	/**
-	 * Gets the partition allocation table. (Should be called only during first
-	 * load)
+	 * Gets the partition allocation table. (Should be called only once during
+	 * first load)
 	 * 
 	 * @throws NumberFormatException
 	 * @throws IOException
@@ -132,18 +114,72 @@ public class PartitionLoader {
 		 */
 		BufferedReader inPartAllocTabStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
-		String ln;
+		String ln, tok;
 
 		System.out.print("Reading partition allocation table file " + baseFilename + ".partAllocTable... ");
 		int i = 0;
 		while ((ln = inPartAllocTabStrm.readLine()) != null) {
-			String tok = ln;
+			tok = ln;
 			// store partition allocation table in memory
 			partAllocTable[i] = Integer.parseInt(tok);
 			i++;
 		}
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
+		System.out.println("Done");
+
+	}
+
+	/**
+	 * Gets the Scheduling Info. (Should be called only once during first load)
+	 * 
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	private void readSchedulingInfo() throws NumberFormatException, IOException {
+
+		// initialize edgeDestCount and partSizes variables
+		long edgeDestCount[][] = new long[numParts][numParts];
+		long partSizes[] = new long[numParts];
+
+		/*
+		 * Scan the edge destination counts file
+		 */
+		BufferedReader inEdgeDestCountStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".edgeDestCounts"))));
+		String ln;
+
+		System.out.print("Reading edge destination counts file " + baseFilename + ".edgeDestCounts... ");
+		int partA, partB;
+		String[] tok;
+		while ((ln = inEdgeDestCountStrm.readLine()) != null) {
+			tok = ln.split("\t");
+			partA = Integer.parseInt(tok[0]);
+			partB = Integer.parseInt(tok[1]);
+
+			// store edge destination counts in memory
+			edgeDestCount[partA][partB] = Long.parseLong(tok[2]);
+		}
+		SchedulerInfo.setEdgeDestCount(edgeDestCount);
+
+		inEdgeDestCountStrm.close();
+		System.out.println("Done");
+
+		/*
+		 * Scan the partSizes file
+		 */
+		BufferedReader inPartSizesStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partSizes"))));
+
+		System.out.print("Reading partition sizes file " + baseFilename + ".partSizes... ");
+		int j = 0;
+		while ((ln = inPartSizesStrm.readLine()) != null) {
+			// store partSizes in memory
+			partSizes[j++] = Long.parseLong(ln);
+		}
+		SchedulerInfo.setPartSizes(partSizes);
+
+		inPartSizesStrm.close();
 		System.out.println("Done");
 
 	}
@@ -186,14 +222,14 @@ public class PartitionLoader {
 		 * Scan degrees file of each partition
 		 */
 		for (int i = 0; i < partsToLoad.length; i++) {
-			BufferedReader outDegInputStrm = new BufferedReader(new InputStreamReader(
+			BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
 					new FileInputStream(new File(baseFilename + ".partition." + partsToLoad[i] + ".degrees"))));
 
 			System.out.print("Reading partition degrees file (" + baseFilename + ".partition." + partsToLoad[i]
 					+ ".degrees) to obtain degrees of source vertices in partition " + partsToLoad[i] + "... ");
 
 			String ln;
-			while ((ln = outDegInputStrm.readLine()) != null) {
+			while ((ln = outDegInStrm.readLine()) != null) {
 
 				String[] tok = ln.split("\t");
 
@@ -203,7 +239,7 @@ public class PartitionLoader {
 
 				partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
 			}
-			outDegInputStrm.close();
+			outDegInStrm.close();
 		}
 		LoadedPartitions.setLoadedPartOutDegs(partOutDegs);
 		System.out.println("Done");
@@ -240,14 +276,14 @@ public class PartitionLoader {
 		/*
 		 * Scan the degrees file
 		 */
-		BufferedReader outDegInputStrm = new BufferedReader(
+		BufferedReader outDegInStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".degrees"))));
 
 		System.out.print("Reading degrees file (" + baseFilename
 				+ ".degrees) to obtain degrees of source vertices in partitions to load... ");
 
 		String ln;
-		while ((ln = outDegInputStrm.readLine()) != null) {
+		while ((ln = outDegInStrm.readLine()) != null) {
 
 			String[] tok = ln.split("\t");
 
@@ -270,7 +306,7 @@ public class PartitionLoader {
 			}
 		}
 		LoadedPartitions.setLoadedPartOutDegs(partOutDegs);
-		outDegInputStrm.close();
+		outDegInStrm.close();
 		System.out.println("Done");
 	}
 
@@ -323,7 +359,7 @@ public class PartitionLoader {
 	 * @param partInputStream
 	 * @throws IOException
 	 */
-	private void fillPartitionDataStructs(String baseFilename, int[] partsToLoad) throws IOException {
+	private void fillPartDataStructs(String baseFilename, int[] partsToLoad) throws IOException {
 
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
@@ -380,11 +416,11 @@ public class PartitionLoader {
 				}
 			}
 
-			int partitionId = partsToLoad[i];
-			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partitionId),
-					PartitionQuerier.getMaxSrc(partitionId), partitionId);
+			int partId = partsToLoad[i];
+			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partId),
+					PartitionQuerier.getMaxSrc(partId), partId);
 			interval.setIndexStart(indexSt);
-			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partitionId) - 1;
+			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
 			interval.setIndexEnd(indexEd);
 			intervals.add(interval);
 			indexSt = indexEd + 1;
