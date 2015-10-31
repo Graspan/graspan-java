@@ -25,28 +25,41 @@ import edu.uci.ics.cs.gdtc.support.Optimizers;
  */
 public class PartitionLoader {
 
-	// private Vertex[] verticesFrom = null;
-	// private Vertex[] verticesTo = null;
 	private Vertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	private String baseFilename = "";
+	private int numParts = 0;
+
+	/**
+	 * Initializes the partition loader, reads in the partition allocation
+	 * table, and reads in the edgedestcountInfo
+	 * 
+	 * @param baseFilename
+	 * @param numParts
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	public PartitionLoader(String baseFilename, int numParts) throws NumberFormatException, IOException {
+		this.baseFilename = baseFilename;
+		this.numParts = numParts;
+
+		// get the partition allocation table
+		readPartAllocTable();
+	}
 
 	/**
 	 * Loads the two partitions in the memory
 	 * 
-	 * @param baseFilename
-	 * @param partitionPair
+	 * @param partsToLoad
 	 * @throws IOException
 	 */
-	public void loadParts(String baseFilename, int[] partsToLoad, int numParts) throws IOException {
+	public void loadParts(int[] partsToLoad) throws IOException {
 
 		System.out.print("Loading partitions: ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			System.out.print(partsToLoad[i] + " ");
 		}
 		System.out.print("\n");
-
-		// get the partition allocation table
-		readPartAllocTable(baseFilename, numParts);
 
 		// get the degrees of the source vertices in the partitions
 		// getDegrees(baseFilename, partsToLoad);
@@ -104,15 +117,13 @@ public class PartitionLoader {
 	}
 
 	/**
+	 * Gets the partition allocation table. (Should be called only during first
+	 * load)
 	 * 
-	 * Gets the partition allocation table.
-	 * 
-	 * @param baseFilename
-	 * @param numParts
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	private void readPartAllocTable(String baseFilename, int numParts) throws NumberFormatException, IOException {
+	private void readPartAllocTable() throws NumberFormatException, IOException {
 
 		// initialize partAllocTable variable
 		int partAllocTable[] = new int[numParts];
@@ -137,7 +148,6 @@ public class PartitionLoader {
 		System.out.println("Done");
 
 	}
-
 
 	public Vertex[] getVertices() {
 		return vertices;
@@ -369,7 +379,7 @@ public class PartitionLoader {
 					}
 				}
 			}
-			
+
 			int partitionId = partsToLoad[i];
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partitionId),
 					PartitionQuerier.getMaxSrc(partitionId), partitionId);

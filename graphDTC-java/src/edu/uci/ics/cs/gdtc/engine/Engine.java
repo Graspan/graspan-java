@@ -24,11 +24,11 @@ public class Engine {
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private String baseFileName;
-	private int[] partitionsToLoad;
+	private int[] partsToLoad;
 
 	public Engine(String baseFileName, int[] partitionsToLoad) {
 		this.baseFileName = baseFileName;
-		this.partitionsToLoad = partitionsToLoad;
+		this.partsToLoad = partitionsToLoad;
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class Engine {
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
-		PartitionLoader loader = new PartitionLoader();
-		loader.loadParts(baseFileName, partitionsToLoad, 3);
+		PartitionLoader loader = new PartitionLoader(baseFileName, 3);
+		loader.loadParts(partsToLoad);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
@@ -84,6 +84,7 @@ public class Engine {
 			logger.info("" + vertices[i]);
 			logger.info("" + edgesLists[i]);
 		}
+		System.out.println("trial");
 
 		// 3. process computed partitions //TODO
 		// 4. determine partitions to store //TODO

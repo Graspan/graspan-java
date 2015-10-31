@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Created by Oct 8, 2015
  */
 public class NewEdgesList {
-	public static final int NODE_SIZE = 2;
+	public static final int NODE_SIZE = 100;
 	
 	private NewEdgesNode first;
 	private NewEdgesNode last;
