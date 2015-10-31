@@ -9,7 +9,7 @@ import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
  * @author Aftab
  */
 
-public class PartitionQuerier extends PartitionLoader {
+public class PartitionQuerier {
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
