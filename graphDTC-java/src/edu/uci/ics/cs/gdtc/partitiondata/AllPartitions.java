@@ -9,8 +9,6 @@ public class AllPartitions {
 	 */
 	public static int[] partAllocTable;
 
-	
-
 	/**
 	 * Initializes the partition allocation table
 	 * 
@@ -29,5 +27,13 @@ public class AllPartitions {
 		return partAllocTable;
 	}
 
-	
+	/**
+	 * Prints the partition allocation table
+	 */
+	public static void printPartAllocTab() {
+		for (int i = 0; i < partAllocTable.length; i++) {
+			System.out.println(partAllocTable[i]);
+		}
+	}
+
 }

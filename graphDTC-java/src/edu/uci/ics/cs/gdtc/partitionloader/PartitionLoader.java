@@ -93,7 +93,6 @@ public class PartitionLoader {
 		System.out.println("Done");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
-
 		LoadedPartitions.printData();
 	}
 
