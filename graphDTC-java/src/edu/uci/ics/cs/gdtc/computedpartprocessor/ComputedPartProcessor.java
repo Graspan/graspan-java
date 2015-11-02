@@ -2,6 +2,7 @@ package edu.uci.ics.cs.gdtc.computedpartprocessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
@@ -9,6 +10,7 @@ import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
+import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 
 /**
  * 
@@ -18,6 +20,7 @@ public class ComputedPartProcessor {
 
 	// private static PrintWriter[] partDegOutStrms;
 	private static long partMaxPostNewEdges;
+	private static final Logger logger = GDTCLogger.getLogger("graphdtc computedpartprocessor");
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -25,7 +28,6 @@ public class ComputedPartProcessor {
 	 */
 	public static void initRepartitionConstraints() {
 		int numParts = AllPartitions.getPartAllocTab().length;
-		System.out.println(numParts);
 
 		// get the total number of edges
 		long numEdges = 0;
@@ -33,7 +35,6 @@ public class ComputedPartProcessor {
 		for (int i = 0; i < partSizes.length; i++) {
 			numEdges = numEdges + partSizes[i];
 		}
-		System.out.println(numEdges);
 
 		// average of edges by no. of partitions
 		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
@@ -78,10 +79,13 @@ public class ComputedPartProcessor {
 			int partId = part.getPartitionId();
 			int newEdgeList[];
 			int destPartId;
+			logger.info("Processing partition: " + partId + ".");
+			logger.info("First Vertex: " + part.getFirstVertex() + ".");
+			logger.info("Last Vertex: " + part.getLastVertex() + ".");
 
 			// get partition's indices in "vertices" data structure
-			int partStart = part.getFirstVertex();
-			int partEnd = part.getLastVertex();
+			int partStart = part.getIndexStart();
+			int partEnd = part.getIndexEnd();
 
 			long partSize;
 
@@ -90,26 +94,29 @@ public class ComputedPartProcessor {
 			 */
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
-				// for each newedgelistnode
-				for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-					newEdgeList = newEdgesLL[i].getNode(j).getDstVertices();
-					// for each dest vertex
-					for (int k = 0; k < newEdgeList.length; k++) {
-						if (newEdgeList[k] != 0) {
-							partSizes[partId]++;
-							destPartId = PartitionQuerier.findPartition(newEdgeList[k]);
-							edgeDestCount[partId][destPartId]++;
+				logger.info("howzat12   " + i + " " + vertices[i].getVertexId());
+				if (newEdgesLL[i] != null) {
+					// for each newedgelistnode
+					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
+						newEdgeList = newEdgesLL[i].getNode(j).getDstVertices();
+						// for each dest vertex
+						for (int k = 0; k < newEdgeList.length; k++) {
+							if (newEdgeList[k] != 0) {
+								partSizes[partId]++;
+								destPartId = PartitionQuerier.findPartition(newEdgeList[k]);
+								if (destPartId != -1) {
+									edgeDestCount[partId][destPartId]++;
+								}
+							}
 						}
 					}
-				}
-				partSize = partSizes[partId];
-				if (partSize > partMaxPostNewEdges & i != partEnd) {
-					splitPoints.add(i);
-					partSize = 0;
+					partSize = partSizes[partId];
+					if (partSize > partMaxPostNewEdges & i != partEnd) {
+						splitPoints.add(i);
+						partSize = 0;
+					}
 				}
 			}
-
-
 			// initialize streams for partition degree files (these streams will
 			// be later filled in by generatePartDegs())
 			// partDegOutStrms = new PrintWriter[numParts];
