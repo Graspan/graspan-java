@@ -16,6 +16,7 @@ import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
+import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 /**
  * This program loads partitions into the memory.
@@ -39,9 +40,9 @@ public class PartitionLoader {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public PartitionLoader(String baseFilename, int numParts) throws NumberFormatException, IOException {
-		this.baseFilename = baseFilename;
-		this.numParts = numParts;
+	public PartitionLoader() throws NumberFormatException, IOException {
+		this.baseFilename = UserInput.getBasefilename();
+		this.numParts = UserInput.getNumParts();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -68,7 +69,7 @@ public class PartitionLoader {
 
 		// get the degrees of the source vertices in the partitions
 		// getDegrees(baseFilename, partsToLoad);
-		getLoadedPartDegs(baseFilename, partsToLoad);
+		LoadedPartitions.setLoadedPartOutDegs(getLoadedPartDegs(baseFilename, partsToLoad));
 
 		// initialize data structures of the partitions to load
 		System.out.print("Initializing data structures for loading partitions... ");
@@ -77,7 +78,7 @@ public class PartitionLoader {
 
 		// fill the partition data structures
 		fillPartDataStructs(baseFilename, partsToLoad);
-		System.out.println("Completed loading of partitions");
+		System.out.println("Completed loading of partitions.");
 
 		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
@@ -95,7 +96,7 @@ public class PartitionLoader {
 		System.out.println("Done");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
-		LoadedPartitions.printData();
+//		LoadedPartitions.printData();
 	}
 
 	/**
@@ -203,7 +204,7 @@ public class PartitionLoader {
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
-	private void getLoadedPartDegs(String baseFilename, int[] partsToLoad) throws IOException {
+	private int[][] getLoadedPartDegs(String baseFilename, int[] partsToLoad) throws IOException {
 
 		/*
 		 * Initialize the degrees array for each partition
@@ -242,8 +243,7 @@ public class PartitionLoader {
 			}
 			outDegInStrm.close();
 		}
-		LoadedPartitions.setLoadedPartOutDegs(partOutDegs);
-		System.out.println("Done");
+		return partOutDegs;
 
 	}
 
@@ -299,7 +299,6 @@ public class PartitionLoader {
 					continue;
 				} else {
 					try {
-						System.out.println("interesting");
 						partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
 					} catch (ArrayIndexOutOfBoundsException e) {
 					}

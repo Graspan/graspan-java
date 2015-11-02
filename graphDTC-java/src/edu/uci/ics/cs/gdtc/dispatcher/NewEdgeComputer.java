@@ -4,24 +4,25 @@ import java.io.IOException;
 
 import edu.uci.ics.cs.gdtc.engine.Engine;
 import edu.uci.ics.cs.gdtc.scheduler.BasicScheduler;
+import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 public class NewEdgeComputer {
 
 	public static void main(String args[]) throws IOException {
 
-		String baseFilename = args[0];
-		int numInParts = Integer.parseInt(args[1]);
-		int numPartsPerComputation = Integer.parseInt(args[2]);
+		UserInput.setBasefilename(args[0]); 
+		UserInput.setNumParts(Integer.parseInt(args[1]));
+		UserInput.setNumPartsPerComputation(Integer.parseInt(args[2]));
 
 		System.out.print("Initializing scheduler... ");
 		BasicScheduler basicScheduler = new BasicScheduler();
-		basicScheduler.initScheduler(numInParts);
+		basicScheduler.initScheduler();
 		System.out.print("Done\n");
 
 		/**
 		 * COMPUTATION (GENERATE NEW EDGES)
 		 */
-		Engine engine = new Engine(baseFilename, basicScheduler.getPartstoLoad(numPartsPerComputation));
+		Engine engine = new Engine(basicScheduler.getPartstoLoad());
 		engine.run();
 	}
 }

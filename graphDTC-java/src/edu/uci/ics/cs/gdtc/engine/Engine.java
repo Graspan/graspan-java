@@ -7,14 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.computedpartprocessor.ProcessComputedPartitions;
+import edu.uci.ics.cs.gdtc.computedpartprocessor.ComputedPartProcessor;
 import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
-import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 /**
  * @author Kai Wang
@@ -25,11 +24,9 @@ public class Engine {
 	private static final Logger logger = GDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
-	private String baseFileName;
 	private int[] partsToLoad;
 
-	public Engine( int[] partitionsToLoad) {
-		this.baseFileName = UserInput.getBasefilename();
+	public Engine(int[] partitionsToLoad) {
 		this.partsToLoad = partitionsToLoad;
 	}
 
@@ -54,7 +51,7 @@ public class Engine {
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
-		PartitionLoader loader = new PartitionLoader(baseFileName, 3);
+		PartitionLoader loader = new PartitionLoader();
 		loader.loadParts(partsToLoad);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
@@ -90,7 +87,8 @@ public class Engine {
 		System.out.println("trial");// TODO SEE THAT NOTHING SHOULD BE PRINTED
 									// AFTER THIS STATEMENT USING MULTI THREADS
 
-		ProcessComputedPartitions.processParts(vertices, edgesLists, intervals);
+		ComputedPartProcessor.initRepartitionConstraints();
+		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 		// 3. process computed partitions //TODO
 		// 4. determine partitions to store //TODO
 		// 5. store partitions //TODO

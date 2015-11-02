@@ -1,5 +1,10 @@
 package edu.uci.ics.cs.gdtc.partitiondata;
 
+/**
+ * 
+ * @author Aftab
+ *
+ */
 public class LoadedPartitions {
 
 	// Data structures for storing the partitions to load:
