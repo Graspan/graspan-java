@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class PartitionEdgeInfo {
 	private int partitionId;
 	private ArrayList<Long> pEdgeInfo = new ArrayList<Long>();
+	private ArrayList<Long> priorityInfo = new ArrayList<Long>();
 	
 	public PartitionEdgeInfo(int partitionId) {
 		this.partitionId = partitionId;
@@ -20,8 +21,10 @@ public class PartitionEdgeInfo {
 			throw new IllegalArgumentException("Null parameter in PartitionEdgeInfo!");
 		
 		this.partitionId = partitionId;
-		for(long info : edgeInfo)
+		for(long info : edgeInfo) {
 			pEdgeInfo.add(Long.valueOf(info));
+			priorityInfo.add(0L);
+		}
 	}
 	
 	public ArrayList<Long> getPartitionEdgeInfo() {
@@ -30,5 +33,9 @@ public class PartitionEdgeInfo {
 	
 	public int getPartitionId() {
 		return partitionId;
+	}
+	
+	public ArrayList<Long> getPriorityInfo() {
+		return priorityInfo;
 	}
 }
