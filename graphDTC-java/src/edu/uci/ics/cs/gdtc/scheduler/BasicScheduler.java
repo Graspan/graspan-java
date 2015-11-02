@@ -4,9 +4,10 @@ import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 /**
  * 
- * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY  - Schedules the selection of partitions
- * on which memory computations is to be done, also sets a limit of the maximum
- * allowable number of new partitions that can be generated from repartitioning
+ * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY - Schedules the
+ * selection of partitions on which memory computations is to be done, also sets
+ * a limit of the maximum allowable number of new partitions that can be
+ * generated from repartitioning
  * 
  * @author Aftab
  *
@@ -19,7 +20,6 @@ public class BasicScheduler implements IScheduler {
 	// complete process
 	private static final int SizeOfPartScheduleMap = 50;
 
-
 	/**
 	 * Initializes the scheduler
 	 * 
@@ -28,7 +28,7 @@ public class BasicScheduler implements IScheduler {
 	 * computed
 	 */
 	public void initScheduler() {
-		int totalNumParts=UserInput.getNumParts();
+		int totalNumParts = UserInput.getNumParts();
 		// initialize partScheduleMap
 		for (int i = 0; i < totalNumParts; i++) {
 			for (int j = 0; j < i; j++) {
@@ -42,11 +42,12 @@ public class BasicScheduler implements IScheduler {
 	}
 
 	/**
-	 * Returns the next set of partitions (ids) to be computed
-	 * TODO currently designed to load two partitions only. 
+	 * Returns the next set of partitions (ids) to be computed TODO currently
+	 * designed to load two partitions only.
 	 */
-	public int[] getPartstoLoad(int numPartsPerComputation) {
+	public int[] getPartstoLoad() {
 
+		int numPartsPerComputation = UserInput.getNumPartsPerComputation();
 		for (int i = 0; i < partScheduleMap.length; i++) {
 			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {
@@ -75,6 +76,5 @@ public class BasicScheduler implements IScheduler {
 		else
 			return false;
 	}
-
 
 }

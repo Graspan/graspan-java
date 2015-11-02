@@ -17,6 +17,6 @@ public interface IScheduler {
 	 * 
 	 * @return
 	 */
-	public int[] getPartstoLoad(int numPartsPerComputation);
+	public int[] getPartstoLoad();
 
 }
