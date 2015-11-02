@@ -30,4 +30,14 @@ public class Scheduler {
 		}
 		
 	}
+	
+	private void computePriority() {
+		assert(allEdgeInfo != null && partitionNumEdges != null);
+		
+		for(PartitionEdgeInfo edgeInfo : allEdgeInfo) {
+			int partionId = edgeInfo.getPartitionId();
+			
+		}
+		
+	}
 }
