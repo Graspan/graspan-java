@@ -89,16 +89,16 @@ public class PartitionQuerier {
 	}
 
 	/**
-	 * searches the partAllocTable to find out which partition a vertex belongs
-	 * (CALLED BY addEdgetoBuffer() method).
+	 * Returns the partition id of a given source vertex. Returns -1 if vertex
+	 * does not exist in any partition as a source vertex.
 	 * 
 	 * @param srcV
 	 */
-	public static int findPartition(int srcVId) {
+	public static int findPartition(int srcV) {
 		int[] partAllocTable = AllPartitions.getPartAllocTab();
 		int partitionId = -1;
 		for (int i = 0; i < partAllocTable.length; i++) {
-			if (srcVId <= partAllocTable[i]) {
+			if (srcV <= partAllocTable[i]) {
 				partitionId = i;
 				break;
 			}

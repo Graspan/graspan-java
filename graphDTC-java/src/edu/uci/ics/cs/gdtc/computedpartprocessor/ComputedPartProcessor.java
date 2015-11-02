@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
+import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
@@ -71,6 +72,8 @@ public class ComputedPartProcessor {
 		// splitpoints
 		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
 
+		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+
 		/*
 		 * Scanning each loaded partition
 		 */
@@ -80,8 +83,8 @@ public class ComputedPartProcessor {
 			int newEdgeList[];
 			int destPartId;
 			logger.info("Processing partition: " + partId + ".");
-			logger.info("First Vertex: " + part.getFirstVertex() + ".");
-			logger.info("Last Vertex: " + part.getLastVertex() + ".");
+			// logger.info("First Vertex: " + part.getFirstVertex() + ".");
+			// logger.info("Last Vertex: " + part.getLastVertex() + ".");
 
 			// get partition's indices in "vertices" data structure
 			int partStart = part.getIndexStart();
@@ -94,7 +97,6 @@ public class ComputedPartProcessor {
 			 */
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
-				logger.info("howzat12   " + i + " " + vertices[i].getVertexId());
 				if (newEdgesLL[i] != null) {
 					// for each newedgelistnode
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
@@ -103,6 +105,7 @@ public class ComputedPartProcessor {
 						for (int k = 0; k < newEdgeList.length; k++) {
 							if (newEdgeList[k] != 0) {
 								partSizes[partId]++;
+
 								destPartId = PartitionQuerier.findPartition(newEdgeList[k]);
 								if (destPartId != -1) {
 									edgeDestCount[partId][destPartId]++;

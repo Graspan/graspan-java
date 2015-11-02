@@ -39,7 +39,7 @@ public class LoadedPartitions {
 
 	/**
 	 * 
-	 * @return
+	 * @return byte[][][] loadedPartEdgeVals
 	 */
 	public static byte[][][] getLoadedPartEdgeVals() {
 		return loadedPartEdgeVals;
@@ -56,7 +56,7 @@ public class LoadedPartitions {
 
 	/**
 	 * 
-	 * @return
+	 * @return int[][] loadedPartOutDegs
 	 */
 	public static int[][] getLoadedPartOutDegs() {
 		return loadedPartOutDegs;
@@ -72,7 +72,7 @@ public class LoadedPartitions {
 
 	/**
 	 * 
-	 * @return
+	 * @return int[] loadedParts
 	 */
 	public static int[] getLoadedParts() {
 		return loadedParts;

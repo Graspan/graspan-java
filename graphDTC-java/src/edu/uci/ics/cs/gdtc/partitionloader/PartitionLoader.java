@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
@@ -15,6 +16,7 @@ import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
+import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 import edu.uci.ics.cs.gdtc.support.Optimizers;
 import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
@@ -25,6 +27,8 @@ import edu.uci.ics.cs.gdtc.userinput.UserInput;
  *
  */
 public class PartitionLoader {
+
+	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionloader");
 
 	private Vertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
@@ -61,31 +65,28 @@ public class PartitionLoader {
 	 */
 	public void loadParts(int[] partsToLoad) throws IOException {
 
-		System.out.print("Loading partitions: ");
+		String str = "";
 		for (int i = 0; i < partsToLoad.length; i++) {
-			System.out.print(partsToLoad[i] + " ");
+			str = str + partsToLoad[i] + " ";
 		}
-		System.out.print("\n");
+		logger.info("Loading partitions : " + str+"...");
 
 		// get the degrees of the source vertices in the partitions
 		// getDegrees(baseFilename, partsToLoad);
 		LoadedPartitions.setLoadedPartOutDegs(getLoadedPartDegs(baseFilename, partsToLoad));
 
 		// initialize data structures of the partitions to load
-		System.out.print("Initializing data structures for loading partitions... ");
 		initPartDataStructs(partsToLoad);
-		System.out.print("Done\n");
+		logger.info("Initialized data structures for partitions to load.");
 
 		// fill the partition data structures
 		fillPartDataStructs(baseFilename, partsToLoad);
-		System.out.println("Completed loading of partitions.");
 
 		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		// sorting the partitions
-		System.out.print("Sorting loaded partition data structures... ");
 		for (int i = 0; i < partsToLoad.length; i++) {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
 				int low = 0;
@@ -93,10 +94,10 @@ public class PartitionLoader {
 				Optimizers.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
 			}
 		}
-		System.out.println("Done");
+		logger.info("Sorted loaded partitions.");
 
 		LoadedPartitions.setLoadedParts(partsToLoad);
-//		LoadedPartitions.printData();
+		// LoadedPartitions.printData();
 	}
 
 	/**
@@ -118,7 +119,6 @@ public class PartitionLoader {
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
 		String ln, tok;
 
-		System.out.print("Reading partition allocation table file " + baseFilename + ".partAllocTable... ");
 		int i = 0;
 		while ((ln = inPartAllocTabStrm.readLine()) != null) {
 			tok = ln;
@@ -128,7 +128,8 @@ public class PartitionLoader {
 		}
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
-		System.out.println("Done");
+
+		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 	}
 
@@ -151,7 +152,6 @@ public class PartitionLoader {
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".edgeDestCounts"))));
 		String ln;
 
-		System.out.print("Reading edge destination counts file " + baseFilename + ".edgeDestCounts... ");
 		int partA, partB;
 		String[] tok;
 		while ((ln = inEdgeDestCountStrm.readLine()) != null) {
@@ -165,7 +165,8 @@ public class PartitionLoader {
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 
 		inEdgeDestCountStrm.close();
-		System.out.println("Done");
+
+		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 
 		/*
 		 * Scan the partSizes file
@@ -173,7 +174,6 @@ public class PartitionLoader {
 		BufferedReader inPartSizesStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partSizes"))));
 
-		System.out.print("Reading partition sizes file " + baseFilename + ".partSizes... ");
 		int j = 0;
 		while ((ln = inPartSizesStrm.readLine()) != null) {
 			// store partSizes in memory
@@ -182,7 +182,7 @@ public class PartitionLoader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		System.out.println("Done");
+		logger.info("Loaded part. sizes file " + baseFilename + ".partSizes");
 
 	}
 
@@ -227,9 +227,6 @@ public class PartitionLoader {
 			BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
 					new FileInputStream(new File(baseFilename + ".partition." + partsToLoad[i] + ".degrees"))));
 
-			System.out.print("Reading partition degrees file (" + baseFilename + ".partition." + partsToLoad[i]
-					+ ".degrees) to obtain degrees of source vertices in partition " + partsToLoad[i] + "... ");
-
 			String ln;
 			while ((ln = outDegInStrm.readLine()) != null) {
 
@@ -242,6 +239,9 @@ public class PartitionLoader {
 				partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
 			}
 			outDegInStrm.close();
+
+			logger.info("Loaded " + baseFilename + ".partition." + partsToLoad[i]
+					+ ".degrees" + partsToLoad[i]);
 		}
 		return partOutDegs;
 
@@ -281,7 +281,7 @@ public class PartitionLoader {
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".degrees"))));
 
 		System.out.print("Reading degrees file (" + baseFilename
-				+ ".degrees) to obtain degrees of source vertices in partitions to load... ");
+				+ ".degrees) to obtain degrees of source vertices in partitions to load");
 
 		String ln;
 		while ((ln = outDegInStrm.readLine()) != null) {
@@ -369,7 +369,6 @@ public class PartitionLoader {
 
 		for (int i = 0; i < partsToLoad.length; i++) {
 
-			System.out.println("Reading partition file: " + baseFilename + ".partition." + partsToLoad[i]);
 			DataInputStream partInStrm = new DataInputStream(
 					new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partsToLoad[i])));
 
@@ -425,6 +424,8 @@ public class PartitionLoader {
 			intervals.add(interval);
 			indexSt = indexEd + 1;
 			partInStrm.close();
+
+			logger.info("Loaded " + baseFilename + ".partition." + partsToLoad[i]);
 		}
 	}
 }

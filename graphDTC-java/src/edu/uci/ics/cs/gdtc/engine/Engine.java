@@ -45,15 +45,15 @@ public class Engine {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 
-		// computationExecutor = Executors.newFixedThreadPool(nThreads);
-		computationExecutor = Executors.newSingleThreadExecutor();
-		logger.info("Loading Partitions...");
+		 computationExecutor = Executors.newFixedThreadPool(nThreads);
+//		computationExecutor = Executors.newSingleThreadExecutor();
+		logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
 		loader.loadParts(partsToLoad);
-		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
+		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
@@ -84,21 +84,19 @@ public class Engine {
 			logger.info("" + edgesLists[i]);
 		}
 
-		System.out.println("trial");// TODO SEE THAT NOTHING SHOULD BE PRINTED
-									// AFTER THIS STATEMENT USING MULTI THREADS
 
+		// 3. process computed partitions
 		ComputedPartProcessor.initRepartitionConstraints();
 		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
-		// 3. process computed partitions //TODO
 		// 4. determine partitions to store //TODO
 		// 5. store partitions //TODO
 	}
 
 	/**
-	 * Description:
 	 * 
-	 * @param:
-	 * @return:
+	 * @param vertices
+	 * @param edgesLists
+	 * @param edgeComputers
 	 */
 	private void doComputation(final Vertex[] vertices, final NewEdgesList[] edgesLists,
 			final EdgeComputer[] edgeComputers) {

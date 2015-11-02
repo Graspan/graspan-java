@@ -22,6 +22,10 @@ public class LoadedVertexInterval {
 		this.firstVertex = firstVertex;
 	}
 	
+	/**
+	 * 
+	 * @return int firstVertex
+	 */
 	public int getFirstVertex() {
 		return firstVertex;
 	}
@@ -30,6 +34,10 @@ public class LoadedVertexInterval {
 		this.lastVertex = lastVertex;
 	}
 	
+	/**
+	 * 
+	 * @return int lastVertex
+	 */
 	public int getLastVertex() {
 		return lastVertex;
 	}
@@ -38,6 +46,10 @@ public class LoadedVertexInterval {
 		this.indexStart = indexStart;
 	}
 	
+	/**
+	 * 
+	 * @return int indexStart
+	 */
 	public int getIndexStart() {
 		return indexStart;
 	}
@@ -46,6 +58,10 @@ public class LoadedVertexInterval {
 		this.indexEnd = indexEnd;
 	}
 	
+	/**
+	 * 
+	 * @return int indexEnd
+	 */
 	public int getIndexEnd() {
 		return indexEnd;
 	}
@@ -54,6 +70,10 @@ public class LoadedVertexInterval {
 		this.partitionId = partitionId;
 	}
 	
+	/**
+	 * 
+	 * @return int partitionId
+	 */
 	public int getPartitionId() {
 		return partitionId;
 	}

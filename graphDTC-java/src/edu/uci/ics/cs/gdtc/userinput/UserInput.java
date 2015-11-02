@@ -15,26 +15,50 @@ public class UserInput {
 	// number of partitions during each computation
 	static int numPartsPerComputation;
 
+	/**
+	 * 
+	 * @param str
+	 */
 	public static void setBasefilename(String str) {
 		baseFilename = str;
 	}
 
+	/**
+	 * 
+	 * @return String baseFilename
+	 */
 	public static String getBasefilename() {
 		return baseFilename;
 	}
 
+	/**
+	 * 
+	 * @param n
+	 */
 	public static void setNumParts(int n) {
 		numParts = n;
 	}
 
+	/**
+	 * 
+	 * @return int numParts
+	 */
 	public static int getNumParts() {
 		return numParts;
 	}
 
+	/**
+	 * 
+	 * @param n
+	 */
 	public static void setNumPartsPerComputation(int n) {
 		numPartsPerComputation = n;
 	}
 
+	/**
+	 * 
+	 * @return int numPartsPerComputation
+	 */
 	public static int getNumPartsPerComputation() {
 		return numPartsPerComputation;
 	}

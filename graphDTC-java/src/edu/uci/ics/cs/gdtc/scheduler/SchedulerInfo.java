@@ -14,9 +14,8 @@ public class SchedulerInfo {
 	}
 
 	/**
-	 * Returns a ref to partSizes
 	 * 
-	 * @return
+	 * @return long[] partSizes
 	 */
 	public static long[] getPartSizes() {
 		return partSizes;
@@ -31,9 +30,8 @@ public class SchedulerInfo {
 	}
 
 	/**
-	 * Returns a ref to edgeDestCount
 	 * 
-	 * @param arr
+	 * @return long[][] edgeDestCount
 	 */
 	public static long[][] getEdgeDestCount() {
 		return edgeDestCount;

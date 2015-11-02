@@ -120,10 +120,6 @@ public class NewEdgesList {
 		return node;
 	}
 
-	public int getNodeSize() {
-		return NODE_SIZE;
-	}
-
 	@Override
 	public String toString() {
 		if (size == 0)
