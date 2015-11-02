@@ -1,5 +1,7 @@
 package edu.uci.ics.cs.gdtc.scheduler;
 
+import edu.uci.ics.cs.gdtc.userinput.UserInput;
+
 /**
  * 
  * CURRENTLY WORKS FOR ONLY TWO PARTITIONS LOADED IN THE MEMORY  - Schedules the selection of partitions
@@ -25,7 +27,8 @@ public class BasicScheduler implements IScheduler {
 	 * 0:partition pair has not been computed|entry 1:partition pair has been
 	 * computed
 	 */
-	public void initScheduler(int totalNumParts) {
+	public void initScheduler() {
+		int totalNumParts=UserInput.getNumParts();
 		// initialize partScheduleMap
 		for (int i = 0; i < totalNumParts; i++) {
 			for (int j = 0; j < i; j++) {

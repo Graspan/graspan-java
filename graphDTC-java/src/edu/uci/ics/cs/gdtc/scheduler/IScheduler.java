@@ -6,13 +6,12 @@ package edu.uci.ics.cs.gdtc.scheduler;
  *
  */
 public interface IScheduler {
-	
+
 	/**
 	 * Initializes the Scheduler with the initial number of input partitions.
 	 * 
-	 * @param numParts
 	 */
-	public void initScheduler(int totalNumParts);
+	public void initScheduler();
 
 	/**
 	 * 

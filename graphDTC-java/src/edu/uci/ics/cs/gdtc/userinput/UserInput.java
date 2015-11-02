@@ -7,35 +7,35 @@ package edu.uci.ics.cs.gdtc.userinput;
 public class UserInput {
 
 	// input graph full file name and path
-	String baseFilename = "";
+	static String baseFilename = "";
 
 	// total number of partitions
-	int numParts;
+	static int numParts;
 
 	// number of partitions during each computation
-	int numPartsPerComputation;
+	static int numPartsPerComputation;
 
-	public void setBasefilename(String str) {
+	public static void setBasefilename(String str) {
 		baseFilename = str;
 	}
 
-	public String getBasefilename() {
+	public static String getBasefilename() {
 		return baseFilename;
 	}
 
-	public void setNumParts(int n) {
+	public static void setNumParts(int n) {
 		numParts = n;
 	}
 
-	public int getNumParts() {
+	public static int getNumParts() {
 		return numParts;
 	}
 
-	public void setNumPartsPerComputation(int n) {
+	public static void setNumPartsPerComputation(int n) {
 		numPartsPerComputation = n;
 	}
 
-	public int getNumPartsPerComputation() {
+	public static int getNumPartsPerComputation() {
 		return numPartsPerComputation;
 	}
 
