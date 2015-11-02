@@ -7,12 +7,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.gdtc.computedpartprocessor.ProcessComputedPartitions;
 import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
+import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 /**
  * @author Kai Wang
@@ -26,8 +28,8 @@ public class Engine {
 	private String baseFileName;
 	private int[] partsToLoad;
 
-	public Engine(String baseFileName, int[] partitionsToLoad) {
-		this.baseFileName = baseFileName;
+	public Engine( int[] partitionsToLoad) {
+		this.baseFileName = UserInput.getBasefilename();
 		this.partsToLoad = partitionsToLoad;
 	}
 
@@ -46,8 +48,8 @@ public class Engine {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 
-		computationExecutor = Executors.newFixedThreadPool(nThreads);
-		// computationExecutor = Executors.newSingleThreadExecutor();
+		// computationExecutor = Executors.newFixedThreadPool(nThreads);
+		computationExecutor = Executors.newSingleThreadExecutor();
 		logger.info("Loading Partitions...");
 		long t = System.currentTimeMillis();
 
@@ -84,8 +86,11 @@ public class Engine {
 			logger.info("" + vertices[i]);
 			logger.info("" + edgesLists[i]);
 		}
-		System.out.println("trial");
 
+		System.out.println("trial");// TODO SEE THAT NOTHING SHOULD BE PRINTED
+									// AFTER THIS STATEMENT USING MULTI THREADS
+
+		ProcessComputedPartitions.processParts(vertices, edgesLists, intervals);
 		// 3. process computed partitions //TODO
 		// 4. determine partitions to store //TODO
 		// 5. store partitions //TODO
