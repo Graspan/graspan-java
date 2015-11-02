@@ -73,6 +73,10 @@ public class ComputedPartProcessor {
 		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
 
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+		int src;
+
+		System.out.println("Look Here  !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
+		System.out.println(PartitionQuerier.getPartArrIdFrmActualId(36, 1));
 
 		/*
 		 * Scanning each loaded partition
@@ -97,6 +101,7 @@ public class ComputedPartProcessor {
 			 */
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
+				src = i - partStart + part.getFirstVertex();
 				if (newEdgesLL[i] != null) {
 					// for each newedgelistnode
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
@@ -105,7 +110,7 @@ public class ComputedPartProcessor {
 						for (int k = 0; k < newEdgeList.length; k++) {
 							if (newEdgeList[k] != 0) {
 								partSizes[partId]++;
-
+								loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)]++;
 								destPartId = PartitionQuerier.findPartition(newEdgeList[k]);
 								if (destPartId != -1) {
 									edgeDestCount[partId][destPartId]++;
