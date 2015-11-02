@@ -76,10 +76,9 @@ public class ComputedPartProcessor {
 		int src;
 
 		System.out.println("Look Here  !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
-		System.out.println(PartitionQuerier.getPartArrIdFrmActualId(36, 1));
 
 		/*
-		 * Scanning each loaded partition
+		 * Scanning each loaded partition and updating info
 		 */
 		for (int a = 0; a < intervals.size(); a++) {
 			LoadedVertexInterval part = intervals.get(a);
@@ -125,15 +124,10 @@ public class ComputedPartProcessor {
 					}
 				}
 			}
-			// initialize streams for partition degree files (these streams will
-			// be later filled in by generatePartDegs())
-			// partDegOutStrms = new PrintWriter[numParts];
-			// for (int i = 0; i < numParts; i++) {
-			// partDegOutStrms[i] = new PrintWriter(new BufferedWriter(
-			// new FileWriter(UserInput.getBasefilename() + ".partition." + i +
-			// ".degrees", false)));
-			// }
 		}
+
+		// System.out.println("Look Here !! ! " +
+		// loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
 	}
 
 }
