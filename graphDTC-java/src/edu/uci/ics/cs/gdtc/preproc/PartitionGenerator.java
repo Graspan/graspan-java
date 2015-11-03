@@ -32,26 +32,33 @@ import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
  */
 public class PartitionGenerator {
 
-	/**
-	 * numParts:number of input partitions|numEdges:total number of input edges
-	 * in the graph|baseFilename:path of the input graph file|outDegs:map of
-	 * vertex and degrees|BUFFER_FOR_PARTS:the total number of edges that can be
-	 * kept in all partition buffers| partBufferSize:the total number of edges
-	 * that can be kept in each partition buffer|partBufferFreespace:table
-	 * consisting of available space in each partition
-	 * buffer|partitionDiskWriteCount:the number of writes to disk for creating
-	 * the partition files
-	 */
+	// number of input partitions
 	private int numParts;
+
+	// total number of input edges
 	private long numEdges;
+
+	// path of the input graph file
 	private String baseFilename;
+
+	// map of vertices and degrees
 	private TreeMap<Integer, Integer> outDegs;
+
+	// the total number of edges that can be kept in all partition buffers
 	private static final long BUFFER_FOR_PARTS = 100000000;
+
+	// the total number of edges that can be kept in each partition buffer
 	private long partBufferSize;
+
+	// table consisting of available space in each partition buffer
 	private long[] partBufferFreespace;
+
+	// the number of writes to disk for creating the partition files
+	private int partitionDiskWriteCount;
+
 	private DataOutputStream[] partOutStrms;
 	private PrintWriter[] partDegOutStrms;
-	private int partitionDiskWriteCount;
+
 	private long[][] edgeDestCount;
 
 	// Each partition buffer consists of an adjacency list.
