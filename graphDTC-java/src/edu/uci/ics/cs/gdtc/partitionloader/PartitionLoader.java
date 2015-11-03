@@ -32,7 +32,9 @@ public class PartitionLoader {
 
 	private Vertex[] vertices = null;
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+
 	private String baseFilename = "";
+
 	private int numParts = 0;
 
 	/**
@@ -45,6 +47,7 @@ public class PartitionLoader {
 	 * @throws IOException
 	 */
 	public PartitionLoader() throws NumberFormatException, IOException {
+
 		this.baseFilename = UserInput.getBasefilename();
 		this.numParts = UserInput.getNumParts();
 
@@ -54,11 +57,30 @@ public class PartitionLoader {
 		// get the scheduling info
 		readSchedulingInfo();
 
+		// initialize variables for partition loading
+		initLoadedPartDataStructs();
+
 		// SchedulerInfo.printData();
 	}
 
 	/**
-	 * Loads the two partitions in the memory
+	 * Initializes the data structures for loaded partitions.
+	 */
+	private void initLoadedPartDataStructs() {
+
+		int loadedParts[] = new int[UserInput.getNumPartsPerComputation()];
+		int loadedPartOutDegs[][] = new int[UserInput.getNumPartsPerComputation()][];
+		int loadedPartEdges[][][] = new int[UserInput.getNumPartsPerComputation()][][];
+		byte loadedPartEdgeVals[][][] = new byte[UserInput.getNumPartsPerComputation()][][];
+
+		LoadedPartitions.setLoadedParts(loadedParts);
+		LoadedPartitions.setLoadedPartOutDegs(loadedPartOutDegs);
+		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
+		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
+	}
+
+	/**
+	 * Loads partitions in the memory
 	 * 
 	 * @param partsToLoad
 	 * @throws IOException
@@ -69,7 +91,7 @@ public class PartitionLoader {
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("Loading partitions : " + str+"...");
+		logger.info("Loading partitions : " + str + "...");
 
 		// get the degrees of the source vertices in the partitions
 		// getDegrees(baseFilename, partsToLoad);
@@ -77,8 +99,8 @@ public class PartitionLoader {
 
 		// initialize data structures of the partitions to load
 		initPartDataStructs(partsToLoad);
-		logger.info("Initialized data structures for partitions to load.");
 
+		logger.info("Initialized data structures for partitions to load.");
 		// fill the partition data structures
 		fillPartDataStructs(baseFilename, partsToLoad);
 
@@ -196,8 +218,7 @@ public class PartitionLoader {
 
 	/**
 	 * Gets the degrees of the source vertices of the partitions that are to be
-	 * loaded. (Deprecated- this method reads the degrees file of the entire
-	 * graph.)
+	 * loaded.
 	 * 
 	 * @param baseFilename
 	 * @param partsToLoad
@@ -211,7 +232,12 @@ public class PartitionLoader {
 		 */
 
 		// initialize Dimension 1 (Total no. of Partitions)
-		int[][] partOutDegs = new int[partsToLoad.length][];
+		int[][] partOutDegs = new int[partsToLoad.length][];// TODO will need to
+															// change this,
+															// can't
+															// reinitialize the
+															// whole partOutDegs
+															// Array
 
 		for (int i = 0; i < partsToLoad.length; i++) {
 
@@ -240,8 +266,7 @@ public class PartitionLoader {
 			}
 			outDegInStrm.close();
 
-			logger.info("Loaded " + baseFilename + ".partition." + partsToLoad[i]
-					+ ".degrees" + partsToLoad[i]);
+			logger.info("Loaded " + baseFilename + ".partition." + partsToLoad[i] + ".degrees" + partsToLoad[i]);
 		}
 		return partOutDegs;
 
