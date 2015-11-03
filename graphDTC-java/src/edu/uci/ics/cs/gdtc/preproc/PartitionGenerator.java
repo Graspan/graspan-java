@@ -33,7 +33,7 @@ import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 public class PartitionGenerator {
 
 	// number of input partitions
-	private int numParts;
+	private static int numParts;
 
 	// total number of input edges
 	private long numEdges;
@@ -200,7 +200,7 @@ public class PartitionGenerator {
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
-			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx, numParts)) {
+			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx)) {
 				partAllocTable[partTabIdx] = intervalMaxVId;
 				partSizes[partTabIdx] = intervalEdgeCount;
 				totalEdgeCount = totalEdgeCount + intervalEdgeCount;
@@ -210,7 +210,7 @@ public class PartitionGenerator {
 
 			// when last partition is reached, assign partition_interval_head to
 			// last_Vertex
-			else if (isLastPartition(partTabIdx, numParts)) {
+			else if (isLastPartition(partTabIdx)) {
 				intervalMaxVId = outDegs.lastKey();
 				partAllocTable[partTabIdx] = intervalMaxVId;
 				partSizes[partTabIdx] = numEdges - totalEdgeCount;
@@ -447,9 +447,9 @@ public class PartitionGenerator {
 
 	/**
 	 * Transfers the buffer edges to disk (performs the actual write operation)
-	 * storing them in Normal Format (CALLED BY addEdgetoBuffer() when buffer is
-	 * full and CALLED BY writePartitionEdgestoFiles() when there are no more
-	 * edges to be read from input graph)
+	 * storing them in Normal Format. This method is called by addEdgetoBuffer()
+	 * when buffer is full and called by writePartitionEdgestoFiles() when there
+	 * are no more edges to be read from input graph.
 	 * 
 	 * @param partitionId
 	 * @throws IOException
@@ -557,12 +557,12 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * check whether partition indicated by partTabId is the last partition
+	 * Checks whether partition indicated by partTabId is the last partition
 	 * 
 	 * @param partTabIdx
 	 * @return
 	 */
-	private static boolean isLastPartition(int partTabIdx, int numParts) {
+	private static boolean isLastPartition(int partTabIdx) {
 		return (partTabIdx == (numParts - 1) ? true : false);
 	}
 
