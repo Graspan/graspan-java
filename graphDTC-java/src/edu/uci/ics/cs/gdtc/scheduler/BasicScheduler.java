@@ -21,11 +21,10 @@ public class BasicScheduler implements IScheduler {
 	private static final int SizeOfPartScheduleMap = 50;
 
 	/**
-	 * Initializes the scheduler
-	 * 
-	 * entry -1:no active partition is represented by this row/column|entry
-	 * 0:partition pair has not been computed|entry 1:partition pair has been
-	 * computed
+	 * Initializes the scheduler. An entry of -1 in {@code partScheduleMap}
+	 * shows no active partition is represented by this row/column. An entry of
+	 * 0 shows this partition pair has not been computed. An entry of 1 shows
+	 * this partition pair has been computed.
 	 */
 	public void initScheduler() {
 		int totalNumParts = UserInput.getNumParts();

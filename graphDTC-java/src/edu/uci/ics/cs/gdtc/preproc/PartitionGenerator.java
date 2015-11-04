@@ -557,7 +557,7 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * Checks whether partition indicated by partTabId is the last partition
+	 * Checks whether partition indicated by partTabId is the last partition.
 	 * 
 	 * @param partTabIdx
 	 * @return
@@ -567,8 +567,8 @@ public class PartitionGenerator {
 	}
 
 	/**
-	 * Checks whether partition buffer is full (CALLED BY addEdgetoBuffer()
-	 * method)
+	 * Checks whether partition buffer is full. This method is called by
+	 * addEdgetoBuffer() method.
 	 * 
 	 * @param partitionId
 	 * @return

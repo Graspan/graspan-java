@@ -15,7 +15,8 @@ import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 
 /**
  * 
- * @author Aftab 30 October 2015
+ * @author Aftab <br>
+ *         Created 30 October 2015
  */
 public class ComputedPartProcessor {
 
@@ -75,7 +76,8 @@ public class ComputedPartProcessor {
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		int src;
 
-		System.out.println("Look Here  !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
+		// System.out.println("Look Here !! ! " +
+		// loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
 
 		/*
 		 * Scanning each loaded partition and updating info

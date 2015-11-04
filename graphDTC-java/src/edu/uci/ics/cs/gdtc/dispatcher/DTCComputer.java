@@ -22,9 +22,6 @@ public class DTCComputer {
 		basicScheduler.initScheduler();
 		logger.info("Initialized scheduler.");
 
-		/**
-		 * COMPUTATION (GENERATE NEW EDGES)
-		 */
 		Engine engine = new Engine(basicScheduler.getPartstoLoad());
 		engine.run();
 	}

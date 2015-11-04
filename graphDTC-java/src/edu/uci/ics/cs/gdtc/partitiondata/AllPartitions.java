@@ -21,7 +21,7 @@ public class AllPartitions {
 	/**
 	 * Returns a ref to partAllocTable.
 	 * 
-	 * @return
+	 * @return int[] partAllocTable
 	 */
 	public static int[] getPartAllocTab() {
 		return partAllocTable;

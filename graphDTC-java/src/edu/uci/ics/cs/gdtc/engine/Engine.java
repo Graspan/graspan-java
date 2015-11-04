@@ -45,13 +45,14 @@ public class Engine {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 
-		 computationExecutor = Executors.newFixedThreadPool(nThreads);
-//		computationExecutor = Executors.newSingleThreadExecutor();
+		computationExecutor = Executors.newFixedThreadPool(nThreads);
+		// computationExecutor = Executors.newSingleThreadExecutor();
 		logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
+		// TODO need to start loop here
 		loader.loadParts(partsToLoad);
 		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
@@ -83,7 +84,6 @@ public class Engine {
 			logger.info("" + vertices[i]);
 			logger.info("" + edgesLists[i]);
 		}
-
 
 		// 3. process computed partitions
 		ComputedPartProcessor.initRepartitionConstraints();

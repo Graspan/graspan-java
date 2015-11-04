@@ -45,6 +45,8 @@ public class PartitionQuerier {
 	 */
 	public static int getMaxSrc(int partId) {
 		int[] partAllocTable = AllPartitions.getPartAllocTab();
+		// TODO do not directly use PAT Table index to get partitionID, use
+		// translator
 		int maxSrc = partAllocTable[partId];
 		return maxSrc;
 	}
@@ -80,25 +82,30 @@ public class PartitionQuerier {
 	 * Returns the Id of the source vertex in the loaded partition array from
 	 * the actual Id of the source vertex.
 	 * 
-	 * @param vertexId
+	 * @param src
+	 *            - the actual Id of the source vertex.
 	 * @param partId
+	 *            - the partition Id.
 	 * @return
 	 */
-	public static int getPartArrIdFrmActualId(int vertexId, int partId) {
-		return getMaxSrc(partId) - vertexId;
+	public static int getPartArrIdFrmActualId(int src, int partId) {
+		return src - getMinSrc(partId);
 	}
 
 	/**
 	 * Returns the partition id of a given source vertex. Returns -1 if vertex
 	 * does not exist in any partition as a source vertex.
 	 * 
-	 * @param srcV
+	 * @param src
+	 *            - the actual Id of the source vertex.
 	 */
-	public static int findPartition(int srcV) {
+	public static int findPartition(int src) {
 		int[] partAllocTable = AllPartitions.getPartAllocTab();
 		int partitionId = -1;
 		for (int i = 0; i < partAllocTable.length; i++) {
-			if (srcV <= partAllocTable[i]) {
+			if (src <= partAllocTable[i]) {
+				// TODO do not directly use PAT Table index to get partitionID,
+				// use translator
 				partitionId = i;
 				break;
 			}
