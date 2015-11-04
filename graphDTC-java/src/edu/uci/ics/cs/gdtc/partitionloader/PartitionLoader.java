@@ -124,10 +124,11 @@ public class PartitionLoader {
 		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
+		int newParts[] = LoadedPartitions.getNewParts();
 
 		// sorting the partitions
-		for (int i = 0; i < partsToLoad.length; i++) {
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partsToLoad[i]); j++) {
+		for (int i = 0; i < newParts.length; i++) {
+			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
 				int low = 0;
 				int high = loadedPartOutDegs[i][j] - 1;
 				Optimizers.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
@@ -135,7 +136,10 @@ public class PartitionLoader {
 		}
 		logger.info("Sorted loaded partitions.");
 
-		LoadedPartitions.setLoadedParts(partsToLoad);
+		// reset newParts
+		for (int i = 0; i < newParts.length; i++) {
+			newParts[i] = Integer.MIN_VALUE;
+		}
 
 		// loaded partitions test
 		LoadedPartitions.printData();
@@ -567,9 +571,5 @@ public class PartitionLoader {
 			indexSt = indexEd + 1;
 		}
 
-		// reset newParts
-		for (int i = 0; i < newParts.length; i++) {
-			newParts[i] = Integer.MIN_VALUE;
-		}
 	}
 }
