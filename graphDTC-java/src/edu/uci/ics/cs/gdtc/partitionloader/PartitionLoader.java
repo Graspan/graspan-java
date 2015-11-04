@@ -253,9 +253,11 @@ public class PartitionLoader {
 		 * above, change name of parameter partsToLoad above)
 		 * 
 		 */
-		// int[] loadedParts = { 1400, 6, 10, 5, 2 };
-		// int[] newParts = { -1, -1, -1, -1, -1 };
-		// int[] partsToLoad = { 6, 5, 1000, 10, 2 };
+		// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
+		// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
+		// Integer.MIN_VALUE, Integer.MIN_VALUE,
+		// Integer.MIN_VALUE, Integer.MIN_VALUE };
+		// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
 		// System.out.println("START");
 		// System.out.println("loadedParts");
 		// for (int i = 0; i < loadedParts.length; i++)
@@ -269,7 +271,6 @@ public class PartitionLoader {
 		// for (int i = 0; i < partsToLoad.length; i++)
 		// System.out.print(partsToLoad[i] + " ");
 		// System.out.println();
-		//
 
 		for (int i = 0; i < partsToLoad.length; i++) {
 			tempSet.add(partsToLoad[i]);
@@ -335,7 +336,7 @@ public class PartitionLoader {
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
 		for (int i = 0; i < newParts.length; i++) {
-			if (newParts[i] != -1) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
 				partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
@@ -346,7 +347,7 @@ public class PartitionLoader {
 		 * Scan degrees file of each partition
 		 */
 		for (int i = 0; i < newParts.length; i++) {
-			if (newParts[i] != -1) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 				BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
 						new FileInputStream(new File(baseFilename + ".partition." + newParts[i] + ".degrees"))));
 
@@ -452,7 +453,7 @@ public class PartitionLoader {
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		for (int i = 0; i < newParts.length; i++) {
-			if (newParts[i] != -1) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
@@ -498,7 +499,7 @@ public class PartitionLoader {
 		int indexEd = 0;
 
 		for (int i = 0; i < newParts.length; i++) {
-			if (newParts[i] != -1) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 
 				DataInputStream partInStrm = new DataInputStream(
 						new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + newParts[i])));
