@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.gdtc.scheduler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kai Wang
@@ -9,8 +10,8 @@ import java.util.ArrayList;
  */
 public class PartitionEdgeInfo {
 	private int partitionId;
-	private ArrayList<Long> pEdgeInfo = new ArrayList<Long>();
-	private ArrayList<Long> priorityInfo = new ArrayList<Long>();
+	private List<Long> pEdgeInfo = new ArrayList<Long>();
+	private List<Long> priorityInfo = new ArrayList<Long>();
 	
 	public PartitionEdgeInfo(int partitionId) {
 		this.partitionId = partitionId;
@@ -27,7 +28,7 @@ public class PartitionEdgeInfo {
 		}
 	}
 	
-	public ArrayList<Long> getPartitionEdgeInfo() {
+	public List<Long> getPartitionEdgeInfo() {
 		return pEdgeInfo;
 	}
 	
@@ -35,7 +36,7 @@ public class PartitionEdgeInfo {
 		return partitionId;
 	}
 	
-	public ArrayList<Long> getPriorityInfo() {
+	public List<Long> getPriorityInfo() {
 		return priorityInfo;
 	}
 }

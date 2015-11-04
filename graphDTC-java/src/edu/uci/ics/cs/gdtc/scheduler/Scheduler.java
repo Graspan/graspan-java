@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.gdtc.scheduler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Kai Wang
@@ -8,8 +9,8 @@ import java.util.ArrayList;
  * Created by Oct 30, 2015
  */
 public class Scheduler {
-	private ArrayList<PartitionEdgeInfo> allEdgeInfo = new ArrayList<PartitionEdgeInfo>();
-	private ArrayList<Long> partitionNumEdges = new ArrayList<Long>();
+	private List<PartitionEdgeInfo> allEdgeInfo = new ArrayList<PartitionEdgeInfo>();
+	private List<Long> partitionNumEdges = new ArrayList<Long>();
 	
 	/**
 	 * Constructor
@@ -40,8 +41,8 @@ public class Scheduler {
 		for(PartitionEdgeInfo edgeInfo : allEdgeInfo) {
 			int partionId = edgeInfo.getPartitionId();
 			// get edgeInfo and priorityInfo for each partition
-			ArrayList<Long> pEdgeInfo = edgeInfo.getPartitionEdgeInfo();
-			ArrayList<Long> priorityInfo = edgeInfo.getPriorityInfo();
+			List<Long> pEdgeInfo = edgeInfo.getPartitionEdgeInfo();
+			List<Long> priorityInfo = edgeInfo.getPriorityInfo();
 			
 			// compute priority, starting from (partitionId + 1)
 			// for example, if there are 3 partitions, 0, 1, 2,
@@ -58,20 +59,20 @@ public class Scheduler {
 		
 	}
 	
-	public ArrayList<Integer> schedulePartitions() {
+	public List<Integer> schedulePartitions() {
 		computePriority();
 		long maxPriority = 0L;
 		int scheduledOne = -1;
 		int scheduledTwo = -1;
 		
 		// schedule two partitions every time
-		ArrayList<Integer> result = new ArrayList<Integer>(2);
+		List<Integer> result = new ArrayList<Integer>(2);
 		
 		// each partition has an edgeInfo
 		for(PartitionEdgeInfo edgeInfo : allEdgeInfo) {
 			int partitionId = edgeInfo.getPartitionId();
 			scheduledOne = partitionId;
-			ArrayList<Long> priorityInfo = edgeInfo.getPriorityInfo();
+			List<Long> priorityInfo = edgeInfo.getPriorityInfo();
 			for(int i = 0; i < priorityInfo.size(); i++) {
 				if(priorityInfo.get(i) > maxPriority) {
 					maxPriority = priorityInfo.get(i);
@@ -79,9 +80,6 @@ public class Scheduler {
 				}
 			}
 		}
-		
-		if(scheduledOne == -1 && scheduledTwo == -1)
-			return null;
 		
 		result.add(scheduledOne);
 		result.add(scheduledTwo);
