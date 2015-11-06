@@ -15,6 +15,18 @@ public class UserInput {
 	// number of partitions during each computation
 	static int numPartsPerComputation;
 
+	// The strategy for reloading partitions:
+	// RELOAD_STRATEGY1 - Reload all the requested partitions everytime,
+	// regardless of which are already in the memory
+	// RELOAD_STRATEGY2 - Reload only the requested partitions that are not in
+	// the memory. If a partition has been repartitioned, we consider to be not
+	// in the memory.
+	// RELOAD_STRATEGY3 - Reload only the requested partitions that are not in
+	// the memory, however, if a partition has been repartitioned and a
+	// requested partition is one of its child partitions, we keep the child
+	// partition
+	static String partReloadStrategy = "";
+
 	/**
 	 * 
 	 * @param str
@@ -61,6 +73,22 @@ public class UserInput {
 	 */
 	public static int getNumPartsPerComputation() {
 		return numPartsPerComputation;
+	}
+
+	/**
+	 * 
+	 * @param str
+	 */
+	public static void setPartReloadStrategy(String str) {
+		partReloadStrategy = str;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static String getPartReloadStrategy() {
+		return partReloadStrategy;
 	}
 
 }
