@@ -87,6 +87,9 @@ public class Engine {
 //		
 //		// 3. store partitions to disk
 //		storePartitions();
+		
+		//TODO: decide which partition to store in disk or keep in memory,
+		// set edgelist.clear() accordingly
 	}
 
 	/**

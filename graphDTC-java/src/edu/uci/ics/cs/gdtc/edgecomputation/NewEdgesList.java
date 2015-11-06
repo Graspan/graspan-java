@@ -40,6 +40,10 @@ public class NewEdgesList {
 			return index;
 		}
 		
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		
 		public void add(int vertexId, byte edgeValue) {
 			dstVertices[index] = vertexId;
 			edgeValues[index] = edgeValue;
@@ -88,15 +92,18 @@ public class NewEdgesList {
 	}
 	
 	public void add(int vertexId, byte edgeValue) {
-		if(size == 0) {
+		if(size == 0 && first == null) { // empty linklist
 			first = new NewEdgesNode();
 			size++;
 			last = first;
-			
+		} else if(size == 0) { // nodes already allocated, data invalid, reuse nodes
+			size++;
+	
 		} else {
 			int index = last.getIndex();
 			if(index >= NODE_SIZE) {
-				last.next = new NewEdgesNode();
+				if(last.next == null)
+					last.next = new NewEdgesNode(); // modify for nodes reuse
 				last = last.next;
 				size++;
 			}
@@ -116,6 +123,19 @@ public class NewEdgesList {
 		}
 		
 		return node;
+	}
+	
+	public void clear() {
+		NewEdgesNode currentNode = first;
+		if(first == null) return;
+		
+		for(int i = 0; i < size; i++) {
+			currentNode.setIndex(0);
+			currentNode = currentNode.next;
+		}
+		
+		size = 0;
+		first = last;
 	}
 	
 	@Override
