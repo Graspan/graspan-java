@@ -13,7 +13,12 @@ public class LoadedPartitions {
 
 	// Contains the ids of the partitions loaded in the memory
 	private static int loadedParts[];
-	private static LinkedHashSet<Integer> replacePartsSet;
+	
+	// Partitions to save to disk
+	private static HashSet<Integer> savePartsSet;
+	
+	//Loaded partitions that have been repartitioned
+	private static HashSet<Integer> repartitionedParts;
 
 	// Contains the ids of the partitions that are to be loaded in the memory
 	private static int newParts[];
@@ -137,15 +142,23 @@ public class LoadedPartitions {
 	}
 
 
-	public static void setReplacePartsSet(LinkedHashSet<Integer> set) {
-		replacePartsSet = set;
+	public static void setPartsToSave(LinkedHashSet<Integer> set) {
+		savePartsSet = set;
 
 	}
 
 
-	public static LinkedHashSet<Integer> getReplacePartsIndicesSet() {
-		return replacePartsSet;
+	public static HashSet<Integer> getPartsToSave() {
+		return savePartsSet;
+	}
+	
+	public static void setRepartitionedParts(HashSet<Integer> set) {
+		repartitionedParts = set;
 
+	}
+	
+	public static HashSet<Integer> getRepartitionedParts() {
+		return repartitionedParts;
 	}
 
 }
