@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.gdtc.edgecomputation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
@@ -18,7 +19,7 @@ public class EdgeComputer {
 	private boolean terminateStatus;
 	private static NewEdgesList[] edgesLists= null;
 	private static Vertex[] vertices = null;
-	private static ArrayList<LoadedVertexInterval> intervals = null;
+	private static List<LoadedVertexInterval> intervals = null;
 	
 	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;
@@ -49,7 +50,7 @@ public class EdgeComputer {
 		vertices = v;
 	}
 	
-	public static void setIntervals(ArrayList<LoadedVertexInterval> vertexIntervals) {
+	public static void setIntervals(List<LoadedVertexInterval> vertexIntervals) {
 		intervals = vertexIntervals;
 	}
 	

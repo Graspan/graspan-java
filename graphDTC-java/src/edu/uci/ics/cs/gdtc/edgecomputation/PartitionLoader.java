@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uci.ics.cs.gdtc.Vertex;
 import edu.uci.ics.cs.gdtc.engine.LoadedVertexInterval;
@@ -65,7 +66,7 @@ public class PartitionLoader {
 	private int newEdgeArrMarkersforSrc[][][][][];
 
 	private Vertex[] vertices = null;
-	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	private List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 	/**
 	 * PART 1: LOADING PHASE
 	 */
@@ -173,7 +174,7 @@ public class PartitionLoader {
 		return vertices;
 	}
 	
-	public ArrayList<LoadedVertexInterval> getIntervals() {
+	public List<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
 

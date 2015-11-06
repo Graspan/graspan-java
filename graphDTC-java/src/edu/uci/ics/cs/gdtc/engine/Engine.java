@@ -2,6 +2,7 @@ package edu.uci.ics.cs.gdtc.engine;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,7 +56,7 @@ public class Engine {
 		loader.loadPartitions(baseFileName, partitionsToLoad, 3);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
-		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
+		List<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 		
@@ -113,7 +114,7 @@ public class Engine {
 
         final int nWorkers = vertices.length / chunkSize + 1;
         final AtomicInteger countDown = new AtomicInteger(nWorkers);
-        int i = 0;
+        
         do {
         	// set readable index, for read and write concurrency
     		// for current iteration, readable index points to the last new edge in the previous iteration

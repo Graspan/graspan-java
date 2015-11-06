@@ -12,6 +12,7 @@ public class PartitionEdgeInfo {
 	private int partitionId;
 	private List<Long> pEdgeInfo = new ArrayList<Long>();
 	private List<Long> priorityInfo = new ArrayList<Long>();
+	private List<Boolean> terminationInfo = new ArrayList<Boolean>();
 	
 	public PartitionEdgeInfo(int partitionId) {
 		this.partitionId = partitionId;
@@ -25,6 +26,7 @@ public class PartitionEdgeInfo {
 		for(long info : edgeInfo) {
 			pEdgeInfo.add(Long.valueOf(info));
 			priorityInfo.add(0L);
+			terminationInfo.add(Boolean.FALSE);
 		}
 	}
 	
@@ -38,5 +40,9 @@ public class PartitionEdgeInfo {
 	
 	public List<Long> getPriorityInfo() {
 		return priorityInfo;
+	}
+	
+	public List<Boolean> getTerminationInfo() {
+		return terminationInfo;
 	}
 }
