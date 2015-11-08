@@ -36,6 +36,7 @@ public class PartitionLoader {
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
 	private String baseFilename = "";
+	private String partReloadStrategy = "";
 
 	private int numParts = 0;
 
@@ -52,6 +53,7 @@ public class PartitionLoader {
 
 		this.baseFilename = UserInput.getBasefilename();
 		this.numParts = UserInput.getNumParts();
+		this.partReloadStrategy = UserInput.getPartReloadStrategy();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -75,7 +77,7 @@ public class PartitionLoader {
 
 		int newParts[] = new int[UserInput.getNumPartsPerComputation()];
 		int loadedParts[] = new int[UserInput.getNumPartsPerComputation()];
-		LinkedHashSet<Integer> replacePartsSet = new LinkedHashSet<Integer>();
+		LinkedHashSet<Integer> partsToSaveSet = new LinkedHashSet<Integer>();
 
 		for (int i = 0; i < loadedParts.length; i++) {
 			newParts[i] = Integer.MIN_VALUE;
@@ -86,7 +88,7 @@ public class PartitionLoader {
 		int loadedPartEdges[][][] = new int[UserInput.getNumPartsPerComputation()][][];
 		byte loadedPartEdgeVals[][][] = new byte[UserInput.getNumPartsPerComputation()][][];
 
-		LoadedPartitions.setReplacePartsSet(replacePartsSet);
+		LoadedPartitions.setPartsToSave(partsToSaveSet);
 		LoadedPartitions.setNewParts(newParts);
 		LoadedPartitions.setLoadedParts(loadedParts);
 		LoadedPartitions.setLoadedPartOutDegs(loadedPartOutDegs);
@@ -240,89 +242,97 @@ public class PartitionLoader {
 		return intervals;
 	}
 
+	/**
+	 * Computes the next set of parts that are to be loaded in the memory.
+	 * 
+	 * @param partsToLoad
+	 */
 	private void updateNewParts(int partsToLoad[]) {
-		/*
-		 * Initialize the degrees array for each new partition to load. We shall
-		 * not reinitialize the degrees of the partitions that have already been
-		 * loaded. In addition, at no point will partsToLoad be equal to
-		 * loadedparts
-		 */
-		int[] loadedParts = LoadedPartitions.getLoadedParts();
-		int[] newParts = LoadedPartitions.getNewParts();
-		LinkedHashSet<Integer> replacePartsIndicesSet = LoadedPartitions.getReplacePartsIndicesSet();
-		HashSet<Integer> tempSet = new HashSet<Integer>();
 
-		/*
-		 * partid loading test 1/2 (comment loadedParts, newParts initialization
-		 * above, change name of parameter partsToLoad above)
-		 * 
-		 */
-		// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
-		// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
-		// Integer.MIN_VALUE, Integer.MIN_VALUE,
-		// Integer.MIN_VALUE, Integer.MIN_VALUE };
-		// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
-		// System.out.println("START");
-		// System.out.println("loadedParts");
-		// for (int i = 0; i < loadedParts.length; i++)
-		// System.out.print(loadedParts[i] + " ");
-		// System.out.println();
-		// System.out.println("newParts");
-		// for (int i = 0; i < newParts.length; i++)
-		// System.out.print(newParts[i] + " ");
-		// System.out.println();
-		// System.out.println("partsToLoad");
-		// for (int i = 0; i < partsToLoad.length; i++)
-		// System.out.print(partsToLoad[i] + " ");
-		// System.out.println();
+		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+			/*
+			 * Initialize the degrees array for each new partition to load. We
+			 * shall not reinitialize the degrees of the partitions that have
+			 * already been loaded. In addition, at no point will partsToLoad be
+			 * equal to loadedparts
+			 */
+			int[] loadedParts = LoadedPartitions.getLoadedParts();
+			int[] newParts = LoadedPartitions.getNewParts();
+			HashSet<Integer> savePartsSet = LoadedPartitions.getPartsToSave();
+			HashSet<Integer> tempSet = new HashSet<Integer>();
 
-		for (int i = 0; i < partsToLoad.length; i++) {
-			tempSet.add(partsToLoad[i]);
-		}
+			/*
+			 * partid loading test 1/2 (comment loadedParts, newParts
+			 * initialization above, change name of parameter partsToLoad above)
+			 * 
+			 */
+			// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
+			// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE };
+			// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
+			// System.out.println("START");
+			// System.out.println("loadedParts");
+			// for (int i = 0; i < loadedParts.length; i++)
+			// System.out.print(loadedParts[i] + " ");
+			// System.out.println();
+			// System.out.println("newParts");
+			// for (int i = 0; i < newParts.length; i++)
+			// System.out.print(newParts[i] + " ");
+			// System.out.println();
+			// System.out.println("partsToLoad");
+			// for (int i = 0; i < partsToLoad.length; i++)
+			// System.out.print(partsToLoad[i] + " ");
+			// System.out.println();
 
-		for (int i = 0; i < loadedParts.length; i++) {
-			if (!tempSet.contains(loadedParts[i])) {
-				replacePartsIndicesSet.add(i);
+			for (int i = 0; i < partsToLoad.length; i++) {
+				tempSet.add(partsToLoad[i]);
 			}
-		}
 
-		tempSet.clear();
+			for (int i = 0; i < loadedParts.length; i++) {
+				if (!tempSet.contains(loadedParts[i])) {
+					savePartsSet.add(i);
+				}
+			}
 
-		for (int i = 0; i < loadedParts.length; i++) {
-			tempSet.add(loadedParts[i]);
-		}
+			tempSet.clear();
 
-		for (int i = 0; i < partsToLoad.length; i++) {
-			if (!tempSet.contains(partsToLoad[i])) {
-				for (int j = 0; j < loadedParts.length; j++) {
-					if (replacePartsIndicesSet.contains(j)) {
-						loadedParts[j] = partsToLoad[i];
-						newParts[j] = partsToLoad[i];
-						replacePartsIndicesSet.remove(j);
-						break;
+			for (int i = 0; i < loadedParts.length; i++) {
+				tempSet.add(loadedParts[i]);
+			}
+
+			for (int i = 0; i < partsToLoad.length; i++) {
+				if (!tempSet.contains(partsToLoad[i])) {
+					for (int j = 0; j < loadedParts.length; j++) {
+						if (savePartsSet.contains(j)) {
+							loadedParts[j] = partsToLoad[i];
+							newParts[j] = partsToLoad[i];
+							savePartsSet.remove(j);
+							break;
+						}
 					}
 				}
 			}
+
+			/*
+			 * partid loading test 2/2
+			 */
+			// System.out.println("AFTER STORING NEW PARTS");
+			// System.out.println("loadedParts");
+			// for (int i = 0; i < loadedParts.length; i++)
+			// System.out.print(loadedParts[i] + " ");
+			// System.out.println();
+			// System.out.println("newParts");
+			// for (int i = 0; i < newParts.length; i++)
+			// System.out.print(newParts[i] + " ");
+			// System.out.println();
+			// System.out.println("partsToLoad");
+			// for (int i = 0; i < partsToLoad.length; i++)
+			// System.out.print(partsToLoad[i] + " ");
+			// System.out.println();
+			// System.exit(0);
+
 		}
-
-		/*
-		 * partid loading test 2/2
-		 */
-		// System.out.println("AFTER STORING NEW PARTS");
-		// System.out.println("loadedParts");
-		// for (int i = 0; i < loadedParts.length; i++)
-		// System.out.print(loadedParts[i] + " ");
-		// System.out.println();
-		// System.out.println("newParts");
-		// for (int i = 0; i < newParts.length; i++)
-		// System.out.print(newParts[i] + " ");
-		// System.out.println();
-		// System.out.println("partsToLoad");
-		// for (int i = 0; i < partsToLoad.length; i++)
-		// System.out.print(partsToLoad[i] + " ");
-		// System.out.println();
-		// System.exit(0);
-
 	}
 
 	/**
