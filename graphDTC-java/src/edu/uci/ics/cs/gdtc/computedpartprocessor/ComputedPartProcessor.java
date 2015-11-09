@@ -178,6 +178,22 @@ public class ComputedPartProcessor {
 		 * Creating new partitions based on split points
 		 */
 
+		// testing PartitionQuerier before changing PAT 1/2
+		// System.out.println("testing findpartition 13:" +
+		// PartitionQuerier.findPartition(13));
+		// System.out.println("testing getActualIdFrmPartArrId 4th vertex in
+		// partition 0:"
+		// + PartitionQuerier.getActualIdFrmPartArrId(4, 0));
+		// System.out.println("testing getMaxSrc part 2:" +
+		// PartitionQuerier.getMaxSrc(2));
+		// System.out.println("testing getMinsSrc part 0:" +
+		// PartitionQuerier.getMinSrc(0));
+		// System.out.println("testing getnumunique sources part 2:" +
+		// PartitionQuerier.getNumUniqueSrcs(2));
+		// System.out.println(
+		// "testing getPartArrIdFrmActualId src 38, part 2:" +
+		// PartitionQuerier.getPartArrIdFrmActualId(38, 2));
+
 		// 1. Updating partition allocation table
 		for (int i = 0; i < splitVertices.size(); i++) {
 			newIntervals.add(splitVertices.get(i));
@@ -229,6 +245,18 @@ public class ComputedPartProcessor {
 				newPartId++;
 			}
 		}
+
+		AllPartitions.setPartAllocTab(newPartAllocTable);
+
+		// testing PartitionQuerier after changing PAT 2/2
+//		System.out.println("testing findpartition 7:" + PartitionQuerier.findPartition(7));
+//		System.out.println("testing getActualIdFrmPartArrId 2nd vertex in partition 5:"
+//				+ PartitionQuerier.getActualIdFrmPartArrId(2, 5));
+//		System.out.println("testing getMaxSrc part 4:" + PartitionQuerier.getMaxSrc(4));
+//		System.out.println("testing getMinsSrc part 6:" + PartitionQuerier.getMinSrc(6));
+//		System.out.println("testing getnumunique sources part 3:" + PartitionQuerier.getNumUniqueSrcs(3));
+//		System.out.println(
+//				"testing getPartArrIdFrmActualId src 8, part 4:" + PartitionQuerier.getPartArrIdFrmActualId(8, 4));
 
 		// print new partitions test code
 		for (int i = 0; i < newPartAllocTable.length; i++) {

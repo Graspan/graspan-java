@@ -7,6 +7,8 @@ package edu.uci.ics.cs.gdtc.partitiondata;
  * @author Aftab
  */
 
+// TODO NEED TO UPDATE THE LOGIC OF ALL FUNCTIONS HERE, IF PARTITION ALLOCATION
+// TABLE IS NOT CONTIGUOUS BY PARTID// u cannot operate on partition id anymore
 public class PartitionQuerier {
 
 	/**
@@ -16,11 +18,17 @@ public class PartitionQuerier {
 	 * @param partId
 	 */
 	public static int getNumUniqueSrcs(int partId) {
-		if (partId == 0) {
-			return getMaxSrc(partId);
-		} else {
-			return getMaxSrc(partId) - getMaxSrc(partId - 1);
+		int[][] partAllocTable = AllPartitions.getPartAllocTab();
+		for (int i = 0; i < partAllocTable.length; i++) {
+			if (partId == partAllocTable[i][0]) {
+				if (i == 0) {
+					return partAllocTable[i][1];
+				} else {
+					return partAllocTable[i][1] - partAllocTable[i - 1][1];
+				}
+			}
 		}
+		return -1;
 	}
 
 	/**
@@ -30,11 +38,17 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getMinSrc(int partId) {
-		if (partId == 0) {
-			return 1;
-		} else {
-			return (getMaxSrc(partId - 1) + 1);
+		int[][] partAllocTable = AllPartitions.getPartAllocTab();
+		for (int i = 0; i < partAllocTable.length; i++) {
+			if (partId == partAllocTable[i][0]) {
+				if (i == 0) {
+					return 1;
+				} else {
+					return partAllocTable[i - 1][1] + 1;
+				}
+			}
 		}
+		return -1;
 	}
 
 	/**
@@ -44,11 +58,13 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getMaxSrc(int partId) {
-		int[] partAllocTable = AllPartitions.getPartAllocTab();
-		// TODO do not directly use PAT Table index to get partitionID, use
-		// translator
-		int maxSrc = partAllocTable[partId];
-		return maxSrc;
+		int[][] partAllocTable = AllPartitions.getPartAllocTab();
+		for (int i = 0; i < partAllocTable.length; i++) {
+			if (partId == partAllocTable[i][0]) {
+				return partAllocTable[i][1];
+			}
+		}
+		return -1;
 	}
 
 	/**
@@ -75,6 +91,12 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
+		if (vertexPartArrId >= getMaxSrc(partId) - getMinSrc(partId)) {
+			System.out.println(
+					"ERROR: The vertex-partition index " + vertexPartArrId + " is beyond the index range of partition " + partId);
+			return -1;
+		}
+
 		return vertexPartArrId + getMinSrc(partId);
 	}
 
@@ -89,6 +111,10 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getPartArrIdFrmActualId(int src, int partId) {
+		if (findPartition(src) != partId) {
+			System.out.println("ERROR: Source " + src + " does not exist in partition " + partId);
+			return -1;
+		}
 		return src - getMinSrc(partId);
 	}
 
@@ -100,17 +126,13 @@ public class PartitionQuerier {
 	 *            - the actual Id of the source vertex.
 	 */
 	public static int findPartition(int src) {
-		int[] partAllocTable = AllPartitions.getPartAllocTab();
-		int partitionId = -1;
+		int[][] partAllocTable = AllPartitions.getPartAllocTab();
 		for (int i = 0; i < partAllocTable.length; i++) {
-			if (src <= partAllocTable[i]) {
-				// TODO do not directly use PAT Table index to get partitionID,
-				// use translator
-				partitionId = i;
-				break;
+			if (src <= partAllocTable[i][1]) {
+				return partAllocTable[i][0];
 			}
 		}
-		return partitionId;
+		return -1;
 	}
 
 }
