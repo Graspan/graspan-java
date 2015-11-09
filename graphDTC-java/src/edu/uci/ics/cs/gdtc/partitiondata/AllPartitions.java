@@ -7,14 +7,14 @@ public class AllPartitions {
 	 * the other data structures after the end of a new edge computation
 	 * iteration
 	 */
-	public static int[] partAllocTable;
+	public static int[][] partAllocTable;
 
 	/**
 	 * Sets the partition allocation table.
 	 * 
 	 * @param arr
 	 */
-	public static void setPartAllocTab(int[] arr) {
+	public static void setPartAllocTab(int[][] arr) {
 		partAllocTable = arr;
 	}
 
@@ -23,7 +23,7 @@ public class AllPartitions {
 	 * 
 	 * @return int[] partAllocTable
 	 */
-	public static int[] getPartAllocTab() {
+	public static int[][] getPartAllocTab() {
 		return partAllocTable;
 	}
 

@@ -188,7 +188,7 @@ public class PartitionGenerator {
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
 		// creating the Partition Allocation Table
-		int[] partAllocTable = new int[numParts];
+		int[][] partAllocTable = new int[numParts][2];
 
 		long partSizes[] = new long[numParts];
 		long totalEdgeCount = 0;
@@ -201,7 +201,8 @@ public class PartitionGenerator {
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
 			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx)) {
-				partAllocTable[partTabIdx] = intervalMaxVId;
+				partAllocTable[partTabIdx][0] = partTabIdx;
+				partAllocTable[partTabIdx][1] = intervalMaxVId;
 				partSizes[partTabIdx] = intervalEdgeCount;
 				totalEdgeCount = totalEdgeCount + intervalEdgeCount;
 				intervalEdgeCount = 0;
@@ -212,7 +213,8 @@ public class PartitionGenerator {
 			// last_Vertex
 			else if (isLastPartition(partTabIdx)) {
 				intervalMaxVId = outDegs.lastKey();
-				partAllocTable[partTabIdx] = intervalMaxVId;
+				partAllocTable[partTabIdx][0] = partTabIdx;
+				partAllocTable[partTabIdx][1] = intervalMaxVId;
 				partSizes[partTabIdx] = numEdges - totalEdgeCount;
 				break;
 			}
@@ -221,7 +223,7 @@ public class PartitionGenerator {
 		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
 		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
-			partAllocTableOutStrm.println(partAllocTable[i]);
+			partAllocTableOutStrm.println(partAllocTable[i][0]+"\t"+partAllocTable[i][1]);
 		}
 		System.out.println("Done");
 

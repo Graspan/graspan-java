@@ -144,7 +144,10 @@ public class PartitionLoader {
 		}
 
 		// loaded partitions test
-		LoadedPartitions.printData();
+		// LoadedPartitions.printLoadedPartitions();
+
+		// loaded parts degrees test
+		// LoadedPartitions.printLoadedPartOutDegs();
 		// System.exit(0);
 	}
 
@@ -158,20 +161,21 @@ public class PartitionLoader {
 	private void readPartAllocTable() throws NumberFormatException, IOException {
 
 		// initialize partAllocTable variable
-		int partAllocTable[] = new int[numParts];
+		int partAllocTable[][] = new int[numParts][2];
 
 		/*
 		 * Scan the partition allocation table file
 		 */
 		BufferedReader inPartAllocTabStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
-		String ln, tok;
+		String ln, tok[];
 
 		int i = 0;
 		while ((ln = inPartAllocTabStrm.readLine()) != null) {
-			tok = ln;
+			tok = ln.split("\t");
 			// store partition allocation table in memory
-			partAllocTable[i] = Integer.parseInt(tok);
+			partAllocTable[i][0] = Integer.parseInt(tok[0]);
+			partAllocTable[i][1] = Integer.parseInt(tok[1]);
 			i++;
 		}
 		AllPartitions.setPartAllocTab(partAllocTable);
@@ -230,7 +234,7 @@ public class PartitionLoader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		logger.info("Loaded part. sizes file " + baseFilename + ".partSizes");
+		logger.info("Loaded partition sizes file " + baseFilename + ".partSizes");
 
 	}
 
@@ -249,7 +253,7 @@ public class PartitionLoader {
 	 */
 	private void updateNewParts(int partsToLoad[]) {
 
-		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_2") == 0) {
 			/*
 			 * Initialize the degrees array for each new partition to load. We
 			 * shall not reinitialize the degrees of the partitions that have
@@ -378,7 +382,7 @@ public class PartitionLoader {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees" + newParts[i]);
+				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees" );
 			}
 		}
 
