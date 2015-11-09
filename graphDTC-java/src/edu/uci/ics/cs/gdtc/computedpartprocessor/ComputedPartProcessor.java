@@ -2,6 +2,7 @@ package edu.uci.ics.cs.gdtc.computedpartprocessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
@@ -47,9 +48,11 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		partMaxPostNewEdges = heuristic_newPartMax;
+		System.out.println(partMaxPostNewEdges);
 	}
 
 	/**
+	 * Update data structures based on the computed partitions
 	 * 
 	 * @param vertices
 	 * @param newEdgesLL
@@ -72,60 +75,164 @@ public class ComputedPartProcessor {
 
 		// splitpoints
 		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
+		ArrayList<Integer> splitVertices = new ArrayList<Integer>();
+		TreeSet<Integer> newIntervals = new TreeSet<Integer>();
+		TreeSet<Integer> newPartitions = new TreeSet<Integer>();
 
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
-		int src;
 
 		// System.out.println("Look Here !! ! " +
 		// loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
 
 		/*
-		 * Scanning each loaded partition and updating info
+		 * Scanning each loaded partition, updating info, adding repartitioning
+		 * split points
 		 */
+
 		for (int a = 0; a < intervals.size(); a++) {
+
 			LoadedVertexInterval part = intervals.get(a);
 			int partId = part.getPartitionId();
-			int newEdgeList[];
+			int nodeDestVs[];
+			int numOfNodeVertices = 0;
 			int destPartId;
+			int src;
+
 			logger.info("Processing partition: " + partId + ".");
-			// logger.info("First Vertex: " + part.getFirstVertex() + ".");
-			// logger.info("Last Vertex: " + part.getLastVertex() + ".");
+
+			System.out.println("Processing Partition: " + partId);
+			System.out.println("First Vertex: " + part.getFirstVertex());
+			System.out.println("Last Vertex: " + part.getLastVertex());
+			System.out.println("First Vertex Index: " + part.getIndexStart());
+			System.out.println("Last Vertex Index: " + part.getIndexEnd());
 
 			// get partition's indices in "vertices" data structure
 			int partStart = part.getIndexStart();
 			int partEnd = part.getIndexEnd();
 
-			long partSize;
+			// 1. Scan the new edges and update partSizes, loadPartOutDegs, and
+			// edgeDestCounts
 
-			/*
-			 * update partSizes and edgeDestCounts
-			 */
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
+
+				// get the actual source id
 				src = i - partStart + part.getFirstVertex();
+
+				// src extraction test
+				// System.out.println("Index of Src in DataStructure" + i);
+				// System.out.println("Actual Id of Src" + src);
+
+				// if a new edge for this source exits
 				if (newEdgesLL[i] != null) {
-					// for each newedgelistnode
+
+					// for each new edge list node
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-						newEdgeList = newEdgesLL[i].getNode(j).getDstVertices();
+
+						numOfNodeVertices = newEdgesLL[i].getNode(j).getIndex();
+						nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
+
+						// update degrees
+						partSizes[partId] += numOfNodeVertices;
+						loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)] += numOfNodeVertices;
+
 						// for each dest vertex
-						for (int k = 0; k < newEdgeList.length; k++) {
-							if (newEdgeList[k] != 0) {
-								partSizes[partId]++;
-								loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)]++;
-								destPartId = PartitionQuerier.findPartition(newEdgeList[k]);
-								if (destPartId != -1) {
-									edgeDestCount[partId][destPartId]++;
-								}
+						for (int k = 0; k < numOfNodeVertices; k++) {
+
+							// update edgeDestCount
+							destPartId = PartitionQuerier.findPartition(nodeDestVs[k]);
+							if (destPartId != -1) {
+								edgeDestCount[partId][destPartId]++;
 							}
 						}
 					}
-					partSize = partSizes[partId];
-					if (partSize > partMaxPostNewEdges & i != partEnd) {
-						splitPoints.add(i);
-						partSize = 0;
-					}
 				}
 			}
+
+			// 2. Add repartitioning split points
+
+			// keeps track of the size of the current partition
+			long partEdgeCount = 0;
+
+			// for each src vertex
+			for (int i = partStart; i < partEnd + 1; i++) {
+
+				// get the actual source id
+				src = i - partStart + part.getFirstVertex();
+
+				partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)];
+
+				// if the size of the current partition has become
+				// larger than the limit, this partition is split, and
+				// thus, we add the id of this source vertex as a split
+				// point
+				if (partEdgeCount > partMaxPostNewEdges & i != partEnd) {
+					splitPoints.add(i);
+					splitVertices.add(src);
+					partEdgeCount = 0;
+				}
+			}
+		}
+
+		/*
+		 * Creating new partitions based on split points
+		 */
+
+		// 1. Updating partition allocation table
+		for (int i = 0; i < splitVertices.size(); i++) {
+			newIntervals.add(splitVertices.get(i));
+		}
+
+		int[][] partAllocTable = AllPartitions.getPartAllocTab();
+
+		// add original intervals
+		for (int i = 0; i < partAllocTable.length; i++) {
+			newIntervals.add(partAllocTable[i][1]);
+		}
+
+		// initialize newPartAllocTable
+		int[][] newPartAllocTable = new int[newIntervals.size()][2];
+		for (int i = 0; i < newPartAllocTable.length; i++) {
+			newPartAllocTable[i][0] = -1;
+			newPartAllocTable[i][1] = -1;
+		}
+
+		// get the intervals in the new partition allocation table
+		int c = 0;
+		for (Integer i : newIntervals) {
+			newPartAllocTable[c][1] = i;
+			c++;
+		}
+
+		// get the partition ids from old PAT to new PAT
+		int oldIntervalMax = 0, oldIntervalMin = 0;
+		for (int i = 0; i < newPartAllocTable.length; i++) {
+			for (int j = 0; j < partAllocTable.length; j++) {
+				if (j == 0) {
+					oldIntervalMin = 1;
+				} else {
+					oldIntervalMin = partAllocTable[j - 1][1] + 1;
+				}
+				oldIntervalMax = partAllocTable[j][1];
+				if (newPartAllocTable[i][1] >= oldIntervalMin & newPartAllocTable[i][1] <= oldIntervalMax) {
+					newPartAllocTable[i][0] = partAllocTable[j][0];
+					partAllocTable[j][0] = -1;
+				}
+			}
+		}
+
+		// generate new partition ids
+		int newPartId = partAllocTable.length;
+		for (int i = 0; i < newPartAllocTable.length; i++) {
+			if (newPartAllocTable[i][0] == -1) {
+				newPartAllocTable[i][0] = newPartId;
+				newPartId++;
+			}
+		}
+
+		// print new partitions test code
+		for (int i = 0; i < newPartAllocTable.length; i++) {
+			System.out.println(newPartAllocTable[i][0] + " " + newPartAllocTable[i][1]);
 		}
 
 		// System.out.println("Look Here !! ! " +
