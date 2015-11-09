@@ -9,7 +9,7 @@ import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 public class DTCComputer {
-	
+
 	private static final Logger logger = GDTCLogger.getLogger("graphdtc dtccomputer");
 
 	public static void main(String args[]) throws IOException {
@@ -17,6 +17,7 @@ public class DTCComputer {
 		UserInput.setBasefilename(args[0]);
 		UserInput.setNumParts(Integer.parseInt(args[1]));
 		UserInput.setNumPartsPerComputation(Integer.parseInt(args[2]));
+		UserInput.setPartReloadStrategy(args[3]);
 
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler();

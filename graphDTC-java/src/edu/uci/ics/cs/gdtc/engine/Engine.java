@@ -45,8 +45,8 @@ public class Engine {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 
-		computationExecutor = Executors.newFixedThreadPool(nThreads);
-		// computationExecutor = Executors.newSingleThreadExecutor();
+//		computationExecutor = Executors.newFixedThreadPool(nThreads);
+		 computationExecutor = Executors.newSingleThreadExecutor();
 		logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
@@ -78,7 +78,7 @@ public class Engine {
 		EdgeComputer.setVertices(vertices);
 		EdgeComputer.setIntervals(intervals);
 		doComputation(vertices, edgesLists, edgeComputers);
-		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
 		logger.info("VERTEX LENGTH: " + vertices.length);
 		for (int i = 0; i < vertices.length; i++) {
 			logger.info("" + vertices[i]);

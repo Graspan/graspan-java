@@ -13,11 +13,11 @@ public class LoadedPartitions {
 
 	// Contains the ids of the partitions loaded in the memory
 	private static int loadedParts[];
-	
+
 	// Partitions to save to disk
 	private static HashSet<Integer> savePartsSet;
-	
-	//Loaded partitions that have been repartitioned
+
+	// Loaded partitions that have been repartitioned
 	private static HashSet<Integer> repartitionedParts;
 
 	// Contains the ids of the partitions that are to be loaded in the memory
@@ -77,6 +77,21 @@ public class LoadedPartitions {
 
 	/**
 	 * 
+	 */
+	public static void printLoadedPartOutDegs() {
+		System.out.println("*****");
+		for (int i = 0; i < loadedParts.length; i++) {
+			System.out.println("Source vertex degrees for partition " + loadedParts[i]);
+			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
+				System.out.println(loadedPartOutDegs[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println("*****");
+	}
+
+	/**
+	 * 
 	 * @param arr2d
 	 */
 	public static void setLoadedPartOutDegs(int[][] arr2d) {
@@ -116,13 +131,25 @@ public class LoadedPartitions {
 	}
 
 	/**
+	 * Prints the set of partitions to load
+	 */
+	public static void printNewParts() {
+		System.out.println("*****");
+		System.out.println("New partitions to load:");
+		for (int i = 0; i < newParts.length; i++) {
+			System.out.println(newParts[i]);
+		}
+		System.out.println("*****");
+	}
+
+	/**
 	 * Print the loaded partitions
 	 */
-	public static void printData() {
-		System.out.println("Printing Loaded Partitions...");
+	public static void printLoadedPartitions() {
 		System.out.println("*****");
+		System.out.println("Loaded partitions:");
 		for (int i = 0; i < loadedParts.length; i++) {
-			System.out.println("Partition: " + loadedParts[i]);
+			System.out.println("--- Partition: " + loadedParts[i] + " ---");
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
 				int srcv = j + PartitionQuerier.getMinSrc(loadedParts[i]);
 				System.out.println("SourceV: " + srcv);
@@ -137,26 +164,25 @@ public class LoadedPartitions {
 				}
 				System.out.println();
 			}
+			System.out.println();
 		}
 		System.out.println("*****");
 	}
 
-
-	public static void setPartsToSave(LinkedHashSet<Integer> set) {
+	public static void setPartsToSave(HashSet<Integer> set) {
 		savePartsSet = set;
 
 	}
 
-
 	public static HashSet<Integer> getPartsToSave() {
 		return savePartsSet;
 	}
-	
+
 	public static void setRepartitionedParts(HashSet<Integer> set) {
 		repartitionedParts = set;
 
 	}
-	
+
 	public static HashSet<Integer> getRepartitionedParts() {
 		return repartitionedParts;
 	}

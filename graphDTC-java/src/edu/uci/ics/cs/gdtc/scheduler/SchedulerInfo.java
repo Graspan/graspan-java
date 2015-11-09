@@ -4,6 +4,7 @@ public class SchedulerInfo {
 
 	public static long[] partSizes;
 	private static long[][] edgeDestCount;
+	private int[][] terminationMap;
 
 	/**
 	 * 

@@ -78,6 +78,7 @@ public class ComputedPartProcessor {
 		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
 		ArrayList<Integer> splitVertices = new ArrayList<Integer>();
 		TreeSet<Integer> newIntervals = new TreeSet<Integer>();
+		TreeSet<Integer> newParts = new TreeSet<Integer>();
 
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
@@ -199,20 +200,6 @@ public class ComputedPartProcessor {
 			newIntervals.add(splitVertices.get(i));
 		}
 
-		// updating loaded partitions based on partition reload strategy
-		int[] loadedParts = LoadedPartitions.getLoadedParts();
-		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
-			// once a partition is repartitioned, we don't consider it loaded.
-			for (int i = 0; i < splitVertices.size(); i++) {
-				for (int j = 0; j < loadedParts.length; j++) {
-					if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
-						loadedParts[j] = -1;
-						break;
-					}
-				}
-			}
-		}
-
 		int[][] partAllocTable = AllPartitions.getPartAllocTab();
 
 		// add original intervals
@@ -261,6 +248,7 @@ public class ComputedPartProcessor {
 		}
 
 		AllPartitions.setPartAllocTab(newPartAllocTable);
+		UserInput.setNumParts(newPartAllocTable.length);
 
 		// testing PartitionQuerier after changing PAT 2/2
 		// System.out.println("testing findpartition 7:" +
@@ -281,6 +269,21 @@ public class ComputedPartProcessor {
 		// print new partitions test code
 		for (int i = 0; i < newPartAllocTable.length; i++) {
 			System.out.println(newPartAllocTable[i][0] + " " + newPartAllocTable[i][1]);
+		}
+
+
+		// updating loaded partitions based on partition reload strategy
+		int[] loadedParts = LoadedPartitions.getLoadedParts();
+		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+			// once a partition is repartitioned, we don't consider it loaded.
+			for (int i = 0; i < splitVertices.size(); i++) {
+				for (int j = 0; j < loadedParts.length; j++) {
+					if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
+						loadedParts[j] = Integer.MIN_VALUE;
+						break;
+					}
+				}
+			}
 		}
 
 		// System.out.println("Look Here !! ! " +

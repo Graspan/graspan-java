@@ -16,12 +16,12 @@ public class UserInput {
 	static int numPartsPerComputation;
 
 	// The strategy for reloading partitions:
-	// RELOAD_STRATEGY1 - Reload all the requested partitions everytime,
+	// RELOAD_STRATEGY_1 - Reload all the requested partitions everytime,
 	// regardless of which are already in the memory
-	// RELOAD_STRATEGY2 - Reload only the requested partitions that are not in
-	// the memory. If a partition has been repartitioned, we consider to be not
-	// in the memory.
-	// RELOAD_STRATEGY3 - Reload only the requested partitions that are not in
+	// RELOAD_STRATEGY_2 - Reload only the requested partitions that are not in
+	// the memory. If a partition has been repartitioned, we consider it not to
+	// be in the memory.
+	// RELOAD_STRATEGY_3 - Reload only the requested partitions that are not in
 	// the memory, however, if a partition has been repartitioned and a
 	// requested partition is one of its child partitions, we keep the child
 	// partition

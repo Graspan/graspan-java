@@ -75,12 +75,12 @@ public class PartitionLoader {
 	 */
 	private void preliminaryInit() {
 
-		int newParts[] = new int[UserInput.getNumPartsPerComputation()];
+		int newPartsToLoad[] = new int[UserInput.getNumPartsPerComputation()];
 		int loadedParts[] = new int[UserInput.getNumPartsPerComputation()];
 		LinkedHashSet<Integer> partsToSaveSet = new LinkedHashSet<Integer>();
 
 		for (int i = 0; i < loadedParts.length; i++) {
-			newParts[i] = Integer.MIN_VALUE;
+			newPartsToLoad[i] = Integer.MIN_VALUE;
 			loadedParts[i] = Integer.MIN_VALUE;
 		}
 
@@ -89,7 +89,7 @@ public class PartitionLoader {
 		byte loadedPartEdgeVals[][][] = new byte[UserInput.getNumPartsPerComputation()][][];
 
 		LoadedPartitions.setPartsToSave(partsToSaveSet);
-		LoadedPartitions.setNewParts(newParts);
+		LoadedPartitions.setNewParts(newPartsToLoad);
 		LoadedPartitions.setLoadedParts(loadedParts);
 		LoadedPartitions.setLoadedPartOutDegs(loadedPartOutDegs);
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
@@ -253,6 +253,11 @@ public class PartitionLoader {
 	 */
 	private void updateNewParts(int partsToLoad[]) {
 
+		// if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_1") == 0) {
+		// int[] newParts = LoadedPartitions.getNewParts();
+		// newParts = partsToLoad;
+		// }
+
 		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_2") == 0) {
 			/*
 			 * Initialize the degrees array for each new partition to load. We
@@ -260,8 +265,8 @@ public class PartitionLoader {
 			 * already been loaded. In addition, at no point will partsToLoad be
 			 * equal to loadedparts
 			 */
-			int[] loadedParts = LoadedPartitions.getLoadedParts();
-			int[] newParts = LoadedPartitions.getNewParts();
+			 int[] loadedParts = LoadedPartitions.getLoadedParts();
+			 int[] newParts = LoadedPartitions.getNewParts();
 			HashSet<Integer> savePartsSet = LoadedPartitions.getPartsToSave();
 			HashSet<Integer> tempSet = new HashSet<Integer>();
 
@@ -270,24 +275,23 @@ public class PartitionLoader {
 			 * initialization above, change name of parameter partsToLoad above)
 			 * 
 			 */
-			// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
-			// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
-			// Integer.MIN_VALUE, Integer.MIN_VALUE,
-			// Integer.MIN_VALUE, Integer.MIN_VALUE };
-			// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
-			// System.out.println("START");
-			// System.out.println("loadedParts");
-			// for (int i = 0; i < loadedParts.length; i++)
-			// System.out.print(loadedParts[i] + " ");
-			// System.out.println();
-			// System.out.println("newParts");
-			// for (int i = 0; i < newParts.length; i++)
-			// System.out.print(newParts[i] + " ");
-			// System.out.println();
-			// System.out.println("partsToLoad");
-			// for (int i = 0; i < partsToLoad.length; i++)
-			// System.out.print(partsToLoad[i] + " ");
-			// System.out.println();
+//			int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
+//			int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE,
+//					Integer.MIN_VALUE, Integer.MIN_VALUE };
+//			int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
+//			System.out.println("START");
+//			System.out.println("loadedParts");
+//			for (int i = 0; i < loadedParts.length; i++)
+//				System.out.print(loadedParts[i] + " ");
+//			System.out.println();
+//			System.out.println("newParts");
+//			for (int i = 0; i < newParts.length; i++)
+//				System.out.print(newParts[i] + " ");
+//			System.out.println();
+//			System.out.println("partsToLoad");
+//			for (int i = 0; i < partsToLoad.length; i++)
+//				System.out.print(partsToLoad[i] + " ");
+//			System.out.println();
 
 			for (int i = 0; i < partsToLoad.length; i++) {
 				tempSet.add(partsToLoad[i]);
@@ -298,6 +302,7 @@ public class PartitionLoader {
 					savePartsSet.add(i);
 				}
 			}
+			//TODO save PartsSet
 
 			tempSet.clear();
 
@@ -382,7 +387,7 @@ public class PartitionLoader {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees" );
+				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
 			}
 		}
 
@@ -585,5 +590,13 @@ public class PartitionLoader {
 			indexSt = indexEd + 1;
 		}
 
+	}
+	
+	/**
+	 * Save Partitions to disk
+	 */
+	private void saveParts(){
+		
+		
 	}
 }
