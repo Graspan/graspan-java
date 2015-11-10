@@ -140,6 +140,8 @@ public class ComputedPartProcessor {
 						// update degrees
 						partSizes[partId] += numOfNodeVertices;
 						loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)] += numOfNodeVertices;
+						vertices[i].setNumOutEdgesPlusNewEdges(
+								loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)]);
 
 						// for each dest vertex
 						for (int k = 0; k < numOfNodeVertices; k++) {
@@ -258,6 +260,8 @@ public class ComputedPartProcessor {
 			}
 		}
 
+		// TODO save repartitioned partition and newly generated partitions
+
 		AllPartitions.setPartAllocTab(newPartAllocTable);
 		UserInput.setNumParts(newPartAllocTable.length);
 
@@ -277,10 +281,11 @@ public class ComputedPartProcessor {
 		// "testing getPartArrIdFrmActualId src 8, part 4:" +
 		// PartitionQuerier.getPartArrIdFrmActualId(8, 4));
 
-		// print new partitions test code
-		for (int i = 0; i < newPartAllocTable.length; i++) {
-			System.out.println(newPartAllocTable[i][0] + " " + newPartAllocTable[i][1]);
-		}
+		// print new partitions /test code
+		// for (int i = 0; i < newPartAllocTable.length; i++) {
+		// System.out.println(newPartAllocTable[i][0] + " " +
+		// newPartAllocTable[i][1]);
+		// }
 
 		// updating loaded partitions based on partition reload strategy
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
@@ -296,7 +301,7 @@ public class ComputedPartProcessor {
 						// once a partition is repartitioned, we don't consider
 						// it loaded, thus we set it to MIN_VALUE
 						loadedParts[j] = Integer.MIN_VALUE;
-						
+
 						break;
 					}
 				}
@@ -304,20 +309,20 @@ public class ComputedPartProcessor {
 		}
 
 		// Post processing - Loaded parts test
-		System.out.println("Loaded parts after processing computed parts");
-		for (int j = 0; j < loadedParts.length; j++) {
-			System.out.println(loadedParts[j]);
-		}
+		// System.out.println("Loaded parts after processing computed parts");
+		// for (int j = 0; j < loadedParts.length; j++) {
+		// System.out.println(loadedParts[j]);
+		// }
+		//
+		// // Post processing - Parts to save test
+		// System.out.println("Printing parts to save");
+		// System.out.println("Reload Strategy : " +
+		// UserInput.getPartReloadStrategy());
+		// for (Integer i : partsToSave) {
+		// System.out.println(i);
+		// }
 
-		// Post processing - Parts to save test
-		System.out.println("Printing parts to save");
-		System.out.println("Reload Strategy : " + UserInput.getPartReloadStrategy());
-		for (Integer i : partsToSave) {
-			System.out.println(i);
-		}
-
-		// System.out.println("Look Here !! ! " +
-		// loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
+		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
 	}
 
 }
