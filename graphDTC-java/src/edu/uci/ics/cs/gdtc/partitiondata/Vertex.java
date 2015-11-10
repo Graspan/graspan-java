@@ -8,6 +8,10 @@ import java.util.Arrays;
  *         Created by Oct 8, 2015
  */
 public class Vertex {
+	
+	// index of the vertex in Vertex[] Vertices array
+	private int idx;
+
 	private int id;
 	private int numOutEdges;
 	private int[] outEdges = null;
@@ -27,7 +31,8 @@ public class Vertex {
 		}
 	}
 
-	public Vertex(int id, int[] outEdges, byte[] outEdgeValues) {
+	public Vertex(int idx, int id, int[] outEdges, byte[] outEdgeValues) {
+		this.idx = idx;
 		this.id = id;
 		this.numOutEdges = outEdges.length;
 		this.outEdges = outEdges;

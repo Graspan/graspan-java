@@ -253,10 +253,11 @@ public class PartitionLoader {
 	 */
 	private void updateNewParts(int partsToLoad[]) {
 
-		// if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_1") == 0) {
-		// int[] newParts = LoadedPartitions.getNewParts();
-		// newParts = partsToLoad;
-		// }
+		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_1") == 0) {
+			int[] newParts = LoadedPartitions.getNewParts();
+			newParts = partsToLoad;
+			LoadedPartitions.setNewParts(newParts);
+		}
 
 		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_2") == 0) {
 			/*
@@ -265,8 +266,8 @@ public class PartitionLoader {
 			 * already been loaded. In addition, at no point will partsToLoad be
 			 * equal to loadedparts
 			 */
-			 int[] loadedParts = LoadedPartitions.getLoadedParts();
-			 int[] newParts = LoadedPartitions.getNewParts();
+			int[] loadedParts = LoadedPartitions.getLoadedParts();
+			int[] newParts = LoadedPartitions.getNewParts();
 			HashSet<Integer> savePartsSet = LoadedPartitions.getPartsToSave();
 			HashSet<Integer> tempSet = new HashSet<Integer>();
 
@@ -275,23 +276,24 @@ public class PartitionLoader {
 			 * initialization above, change name of parameter partsToLoad above)
 			 * 
 			 */
-//			int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
-//			int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE,
-//					Integer.MIN_VALUE, Integer.MIN_VALUE };
-//			int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
-//			System.out.println("START");
-//			System.out.println("loadedParts");
-//			for (int i = 0; i < loadedParts.length; i++)
-//				System.out.print(loadedParts[i] + " ");
-//			System.out.println();
-//			System.out.println("newParts");
-//			for (int i = 0; i < newParts.length; i++)
-//				System.out.print(newParts[i] + " ");
-//			System.out.println();
-//			System.out.println("partsToLoad");
-//			for (int i = 0; i < partsToLoad.length; i++)
-//				System.out.print(partsToLoad[i] + " ");
-//			System.out.println();
+			// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
+			// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE };
+			// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
+			// System.out.println("START");
+			// System.out.println("loadedParts");
+			// for (int i = 0; i < loadedParts.length; i++)
+			// System.out.print(loadedParts[i] + " ");
+			// System.out.println();
+			// System.out.println("newParts");
+			// for (int i = 0; i < newParts.length; i++)
+			// System.out.print(newParts[i] + " ");
+			// System.out.println();
+			// System.out.println("partsToLoad");
+			// for (int i = 0; i < partsToLoad.length; i++)
+			// System.out.print(partsToLoad[i] + " ");
+			// System.out.println();
 
 			for (int i = 0; i < partsToLoad.length; i++) {
 				tempSet.add(partsToLoad[i]);
@@ -302,7 +304,7 @@ public class PartitionLoader {
 					savePartsSet.add(i);
 				}
 			}
-			//TODO save PartsSet
+			// TODO save PartsSet
 
 			tempSet.clear();
 
@@ -363,6 +365,8 @@ public class PartitionLoader {
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
 				partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
+				// remember to use this only for loading partitions that aren't
+				// currently loaded.
 			}
 		}
 
@@ -384,13 +388,15 @@ public class PartitionLoader {
 					int deg = Integer.parseInt(tok[1]);
 
 					partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(newParts[i])] = deg;
+					// this will be later updated in processParts() of
+					// ComputedPartProcessor if new edges were added for this
+					// source vertex during computation.
 				}
 				outDegInStrm.close();
 
 				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
 			}
 		}
-
 	}
 
 	/**
@@ -495,11 +501,12 @@ public class PartitionLoader {
 		}
 
 		// set vertices data structure
-		int count = 0;
+		int vertexIdx = 0;
 		for (int i = 0; i < loadedParts.length; i++) {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
-				int vertexId = PartitionQuerier.getActualIdFrmPartArrId(j, loadedParts[i]);
-				vertices[count++] = new Vertex(vertexId, partEdges[i][j], partEdgeVals[i][j]);
+				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j, loadedParts[i]);
+				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId, partEdges[i][j], partEdgeVals[i][j]);
+				vertexIdx++;
 			}
 		}
 
@@ -591,12 +598,11 @@ public class PartitionLoader {
 		}
 
 	}
-	
+
 	/**
 	 * Save Partitions to disk
 	 */
-	private void saveParts(){
-		
-		
+	private void saveParts() {
+
 	}
 }
