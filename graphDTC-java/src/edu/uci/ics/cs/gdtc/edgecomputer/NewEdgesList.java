@@ -26,6 +26,10 @@ public class NewEdgesList {
 			dstVertices = new int[NODE_SIZE];
 			edgeValues = new byte[NODE_SIZE];
 
+			for (int i = 0; i < NODE_SIZE; i++) {
+				dstVertices[i] = -1;
+			}
+
 		}
 
 		public int[] getDstVertices() {

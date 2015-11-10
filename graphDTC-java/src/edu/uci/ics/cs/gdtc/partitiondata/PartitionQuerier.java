@@ -93,16 +93,16 @@ public class PartitionQuerier {
 	 * Returns the actual Id of the source vertex from the Id of the vertex in
 	 * the loaded partition array.
 	 * 
-	 * @param vertexPartArrId
+	 * @param vertexPartArrIdx
 	 * @param partId
 	 * @return
 	 */
-	public static int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
-		if (findPartition(vertexPartArrId + getMinSrc(partId)) != partId) {
-			logger.info("ERROR: The " + vertexPartArrId + "th element of partition " + partId + "does not exist");
+	public static int getActualIdFrmPartArrIdx(int vertexPartArrIdx, int partId) {
+		if (findPartition(vertexPartArrIdx + getMinSrc(partId)) != partId) {
+			logger.info("ERROR: The " + vertexPartArrIdx + "th element of partition " + partId + "does not exist");
 			return -1;
 		}
-		return vertexPartArrId + getMinSrc(partId);
+		return vertexPartArrIdx + getMinSrc(partId);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class PartitionQuerier {
 	 *            - the partition Id.
 	 * @return
 	 */
-	public static int getPartArrIdFrmActualId(int src, int partId) {
+	public static int getPartArrIdxFrmActualId(int src, int partId) {
 		if (findPartition(src) != partId) {
 			logger.info("ERROR: Source " + src + " does not exist in partition " + partId);
 			return -1;

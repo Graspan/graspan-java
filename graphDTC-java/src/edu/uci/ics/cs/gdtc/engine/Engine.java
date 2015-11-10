@@ -11,6 +11,7 @@ import edu.uci.ics.cs.gdtc.computedpartprocessor.ComputedPartProcessor;
 import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.RepartitioningData;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
@@ -86,6 +87,7 @@ public class Engine {
 		}
 
 		// 3. process computed partitions
+		RepartitioningData.initRepartioningVars();
 		ComputedPartProcessor.initRepartitionConstraints();
 		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 		// 4. determine partitions to store //TODO

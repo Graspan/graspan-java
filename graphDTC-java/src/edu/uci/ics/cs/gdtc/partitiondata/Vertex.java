@@ -8,7 +8,7 @@ import java.util.Arrays;
  *         Created by Oct 8, 2015
  */
 public class Vertex {
-	
+
 	// index of the vertex in Vertex[] Vertices array
 	private int idx;
 
@@ -21,6 +21,7 @@ public class Vertex {
 	// out edges
 	private int combinedDeg;
 
+	// Unused
 	public Vertex(int id, int outDegree) {
 		this.id = id;
 		numOutEdges = outDegree;
