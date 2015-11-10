@@ -10,34 +10,39 @@ import java.util.TreeSet;
  *
  */
 public class RepartitioningData {
-	static // splitVertices
-	ArrayList<Integer> splitVertices = new ArrayList<Integer>();
+	// splitVertices
+	private static ArrayList<Integer> splitVertices;
 
-	static // set of new intervals
-	TreeSet<Integer> newIntervals = new TreeSet<Integer>();
+	// set of new intervals
+	private static TreeSet<Integer> newIntervals;
 
 	// set of partitions that have been repartitioned
-	static HashSet<Integer> repartitionedParts = new HashSet<Integer>();
+	private static HashSet<Integer> repartitionedParts;
 
-	static // set of partitions that have been newly generated from
-			// repartitioning
-	HashSet<Integer> newPartsFrmRepartitioning = new HashSet<Integer>();
+	// set of partitions that have been newly generated from
+	// repartitioning
+	private static HashSet<Integer> newPartsFrmRepartitioning;
 
-	static // set of partitions that have been newly generated from
-			// repartitioning
-	HashSet<Integer> modifiedParts = new HashSet<Integer>();
+	// set of partitions that have been newly generated from
+	// repartitioning
+	private static HashSet<Integer> modifiedParts;
 
-	static // set of partitions that have been newly generated from
-			// repartitioning
-	HashSet<Integer> unchangedParts = new HashSet<Integer>();
+	// set of partitions that have been newly generated from
+	// repartitioning
+	private static HashSet<Integer> unchangedParts;
 
-	public void initRepartioningVars() {
+	// set of partitions that are to be saved (depends on partition reload
+	// strategy)
+	private static HashSet<Integer> partsToSave;
+
+	public static void initRepartioningVars() {
 		splitVertices = new ArrayList<Integer>();
 		newIntervals = new TreeSet<Integer>();
 		repartitionedParts = new HashSet<Integer>();
 		newPartsFrmRepartitioning = new HashSet<Integer>();
 		modifiedParts = new HashSet<Integer>();
 		unchangedParts = new HashSet<Integer>();
+		partsToSave = new HashSet<Integer>();
 	}
 
 	public static HashSet<Integer> getModifiedParts() {
@@ -71,6 +76,10 @@ public class RepartitioningData {
 		newPartsFrmRepartitioning.clear();
 		modifiedParts.clear();
 		unchangedParts.clear();
+	}
+
+	public static HashSet<Integer> getPartsToSave() {
+		return partsToSave;
 	}
 
 }

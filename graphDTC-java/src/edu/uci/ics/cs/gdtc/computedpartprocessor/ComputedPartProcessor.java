@@ -11,6 +11,7 @@ import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.partitiondata.RepartitioningData;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
@@ -75,14 +76,27 @@ public class ComputedPartProcessor {
 		long[] partSizes = SchedulerInfo.getPartSizes();
 		long edgeDestCount[][] = SchedulerInfo.getEdgeDestCount();
 
-		// splitpoints
-		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
-		ArrayList<Integer> splitVertices = new ArrayList<Integer>();
+		// splitVertices
+		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
 
 		// set of new intervals
-		TreeSet<Integer> newIntervals = new TreeSet<Integer>();
+		TreeSet<Integer> newIntervals = RepartitioningData.getNewIntervals();
 
-		HashSet<Integer> partsToSave = new HashSet<Integer>();
+		// set of partitions that have been repartitioned
+		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
+
+		// set of partitions that have been newly generated from repartitioning
+		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();
+
+		// set of partitions that have been newly generated from repartitioning
+		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts();
+
+		// set of partitions that have been newly generated from repartitioning
+		HashSet<Integer> unchangedParts = RepartitioningData.getUnchangedParts();
+
+		// set of partitions that are to be saved (depends on partition reload
+		// strategy)
+		HashSet<Integer> partsToSave = RepartitioningData.getPartsToSave();
 
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
@@ -139,9 +153,9 @@ public class ComputedPartProcessor {
 
 						// update degrees
 						partSizes[partId] += numOfNodeVertices;
-						loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)] += numOfNodeVertices;
-						vertices[i].setNumOutEdgesPlusNewEdges(
-								loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)]);
+						loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] += numOfNodeVertices;
+						vertices[i].setCombinedDeg(
+								loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]);
 
 						// for each dest vertex
 						for (int k = 0; k < numOfNodeVertices; k++) {
@@ -167,14 +181,13 @@ public class ComputedPartProcessor {
 				// get the actual source id
 				src = i - partStart + part.getFirstVertex();
 
-				partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdFrmActualId(src, partId)];
+				partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];
 
 				// if the size of the current partition has become
 				// larger than the limit, this partition is split, and
 				// thus, we add the id of this source vertex as a split
 				// point
 				if (partEdgeCount > partMaxPostNewEdges & i != partEnd) {
-					splitPoints.add(i);
 					splitVertices.add(src);
 					partEdgeCount = 0;
 				}
@@ -182,7 +195,7 @@ public class ComputedPartProcessor {
 		}
 
 		/*
-		 * Creating new partitions based on split points
+		 * Creating new partitions based on split vertices
 		 */
 
 		// testing PartitionQuerier before changing PAT 1/2
@@ -250,17 +263,12 @@ public class ComputedPartProcessor {
 			if (newPartAllocTable[i][0] == -1) {
 				newPartAllocTable[i][0] = newPartId;
 
-				// add id of new partition to partsToSave set if using
-				// RELOAD_STRATEGY_2
-				if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
-					partsToSave.add(newPartId);
-				}
+				// add id of new partition to newPartsFrmRepartitioning set
+				newPartsFrmRepartitioning.add(newPartId);
 
 				newPartId++;
 			}
 		}
-
-		// TODO save repartitioned partition and newly generated partitions
 
 		AllPartitions.setPartAllocTab(newPartAllocTable);
 		UserInput.setNumParts(newPartAllocTable.length);
@@ -295,8 +303,9 @@ public class ComputedPartProcessor {
 				for (int j = 0; j < loadedParts.length; j++) {
 					if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
 
-						// add id of repartitioned partition to partsToSave set
-						partsToSave.add(loadedParts[j]);
+						// add id of repartitioned partition to
+						// repartitionedParts set
+						repartitionedParts.add(loadedParts[j]);
 
 						// once a partition is repartitioned, we don't consider
 						// it loaded, thus we set it to MIN_VALUE
@@ -322,7 +331,17 @@ public class ComputedPartProcessor {
 		// System.out.println(i);
 		// }
 
-		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdFrmActualId(36, 1)]);
+		// add repartitionedParts and newPartsFrmRepartitioning to partsToSave
+		// set if using RELOAD_STRATEGY_2
+		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+			for (Integer partId : repartitionedParts)
+				partsToSave.add(partId);
+			for (Integer partId : newPartsFrmRepartitioning)
+				partsToSave.add(partId);
+		}
+		// TODO save repartitioned partition and newly generated partitions
+
+		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdxFrmActualId(36, 1)]);
 	}
 
 }
