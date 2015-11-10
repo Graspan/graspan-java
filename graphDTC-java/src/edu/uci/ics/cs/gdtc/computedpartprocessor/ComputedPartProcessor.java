@@ -76,28 +76,14 @@ public class ComputedPartProcessor {
 		long[] partSizes = SchedulerInfo.getPartSizes();
 		long edgeDestCount[][] = SchedulerInfo.getEdgeDestCount();
 
-		// splitVertices
 		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
-
-		// set of new intervals
 		TreeSet<Integer> newIntervals = RepartitioningData.getNewIntervals();
-
-		// set of partitions that have been repartitioned
 		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
-
-		// set of partitions that have been newly generated from repartitioning
 		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();
-
-		// set of partitions that have been newly generated from repartitioning
 		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts();
-
-		// set of partitions that have been newly generated from repartitioning
 		HashSet<Integer> unchangedParts = RepartitioningData.getUnchangedParts();
-
-		// set of partitions that are to be saved (depends on partition reload
-		// strategy)
+		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
 		HashSet<Integer> partsToSave = RepartitioningData.getPartsToSave();
-
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
 		// System.out.println("Look Here !! ! " +
@@ -303,10 +289,53 @@ public class ComputedPartProcessor {
 		// newPartAllocTable[i][1]);
 		// }
 
-		// updating loaded partitions based on partition reload strategy
-		int[] loadedParts = LoadedPartitions.getLoadedParts();
-		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+		// collecting all loaded parts post processing in
+		// loadedPartsPostProcessing set
+		for (Integer partId : unchangedParts)
+			loadedPartsPostProcessing.add(partId);
+		for (Integer partId : modifiedParts)
+			loadedPartsPostProcessing.add(partId);
+		for (Integer partId : repartitionedParts)
+			loadedPartsPostProcessing.add(partId);
+		for (Integer partId : newPartsFrmRepartitioning)
+			loadedPartsPostProcessing.add(partId);
 
+		// updating loadedVertexIntervals
+		intervals.clear();
+		for (int i = 0; i < vertices.length; i++) {
+
+		}
+		// for (Integer partId : repartitionedParts) {
+		// LoadedVertexInterval interval = new
+		// LoadedVertexInterval(PartitionQuerier.getMinSrc(partId),
+		// PartitionQuerier.getMaxSrc(partId), partId);
+		// interval.setIndexStart(vertices);
+		// intervals.add(interval);
+		//
+		// }
+
+		// add repartitionedParts and newPartsFrmRepartitioning to partsToSave
+		// set if using RELOAD_STRATEGY_2
+		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+			for (Integer partId : repartitionedParts)
+				partsToSave.add(partId);
+			for (Integer partId : newPartsFrmRepartitioning)
+				partsToSave.add(partId);
+		}
+
+		// // Post processing - Parts to save test
+		// System.out.println("Printing parts to save");
+		// System.out.println("Reload Strategy : " +
+		// UserInput.getPartReloadStrategy());
+		// for (Integer i : partsToSave) {
+		// System.out.println(i);
+		// }
+		// TODO save repartitioned partition and newly generated partitions
+
+		// updating originally loaded partitions for partition RELOAD_STRATEGY_2
+		// (will be needed for next loading using this reload strategy.)
+		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			for (int i = 0; i < splitVertices.size(); i++) {
 				for (int j = 0; j < loadedParts.length; j++) {
 					if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
@@ -332,25 +361,8 @@ public class ComputedPartProcessor {
 		// System.out.println(loadedParts[j]);
 		// }
 		//
-		// // Post processing - Parts to save test
-		// System.out.println("Printing parts to save");
-		// System.out.println("Reload Strategy : " +
-		// UserInput.getPartReloadStrategy());
-		// for (Integer i : partsToSave) {
-		// System.out.println(i);
-		// }
 
-		// add repartitionedParts and newPartsFrmRepartitioning to partsToSave
-		// set if using RELOAD_STRATEGY_2
-		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
-			for (Integer partId : repartitionedParts)
-				partsToSave.add(partId);
-			for (Integer partId : newPartsFrmRepartitioning)
-				partsToSave.add(partId);
-		}
-		// TODO save repartitioned partition and newly generated partitions
-
-		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdxFrmActualId(36, 1)]);
+//		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdxFrmActualId(36, 1)]);
 		RepartitioningData.clearRepartitioningVars();
 	}
 

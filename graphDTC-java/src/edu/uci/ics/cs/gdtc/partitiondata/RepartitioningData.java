@@ -29,6 +29,9 @@ public class RepartitioningData {
 	// set of partitions to which no new edges were added
 	private static HashSet<Integer> unchangedParts;
 
+	// set of all partitions in the memory after repartitioning
+	private static HashSet<Integer> loadedPartsPostProcessing;
+
 	// set of partitions that are to be saved (depends on partition reload
 	// strategy)
 	private static HashSet<Integer> partsToSave;
@@ -40,6 +43,7 @@ public class RepartitioningData {
 		newPartsFrmRepartitioning = new HashSet<Integer>();
 		modifiedParts = new HashSet<Integer>();
 		unchangedParts = new HashSet<Integer>();
+		loadedPartsPostProcessing = new HashSet<Integer>();
 		partsToSave = new HashSet<Integer>();
 	}
 
@@ -74,10 +78,16 @@ public class RepartitioningData {
 		newPartsFrmRepartitioning.clear();
 		modifiedParts.clear();
 		unchangedParts.clear();
+		loadedPartsPostProcessing.clear();
+		partsToSave.clear();
 	}
 
 	public static HashSet<Integer> getPartsToSave() {
 		return partsToSave;
+	}
+
+	public static HashSet<Integer> getLoadedPartsPostProcessing() {
+		return loadedPartsPostProcessing;
 	}
 
 }
