@@ -23,12 +23,10 @@ public class RepartitioningData {
 	// repartitioning
 	private static HashSet<Integer> newPartsFrmRepartitioning;
 
-	// set of partitions that have been newly generated from
-	// repartitioning
+	// set of partitions that have new edges but have not been repartitioned
 	private static HashSet<Integer> modifiedParts;
 
-	// set of partitions that have been newly generated from
-	// repartitioning
+	// set of partitions to which no new edges were added
 	private static HashSet<Integer> unchangedParts;
 
 	// set of partitions that are to be saved (depends on partition reload

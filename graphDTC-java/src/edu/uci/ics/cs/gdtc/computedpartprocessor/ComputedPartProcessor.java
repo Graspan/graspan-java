@@ -116,6 +116,7 @@ public class ComputedPartProcessor {
 			int numOfNodeVertices = 0;
 			int destPartId;
 			int src;
+			boolean partHasNewEdges = false;
 
 			logger.info("Processing partition: " + partId + ".");
 
@@ -144,7 +145,7 @@ public class ComputedPartProcessor {
 
 				// if a new edge for this source exits
 				if (newEdgesLL[i] != null) {
-
+					partHasNewEdges = true;
 					// for each new edge list node
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
 
@@ -168,6 +169,13 @@ public class ComputedPartProcessor {
 						}
 					}
 				}
+			}
+
+			// update changed and unchanged parts sets
+			if (!partHasNewEdges) {
+				unchangedParts.add(partId);
+			} else {
+				modifiedParts.add(partId);
 			}
 
 			// 2. Add repartitioning split points
@@ -306,6 +314,7 @@ public class ComputedPartProcessor {
 						// add id of repartitioned partition to
 						// repartitionedParts set
 						repartitionedParts.add(loadedParts[j]);
+						modifiedParts.remove(loadedParts[j]);
 
 						// once a partition is repartitioned, we don't consider
 						// it loaded, thus we set it to MIN_VALUE
@@ -342,6 +351,7 @@ public class ComputedPartProcessor {
 		// TODO save repartitioned partition and newly generated partitions
 
 		System.out.println("Look Here !! ! " + loadPartOutDegs[0][PartitionQuerier.getPartArrIdxFrmActualId(36, 1)]);
+		RepartitioningData.clearRepartitioningVars();
 	}
 
 }
