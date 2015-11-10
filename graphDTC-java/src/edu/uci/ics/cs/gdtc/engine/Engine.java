@@ -223,8 +223,8 @@ public class Engine {
 			if(size == 0)
 				continue;
 			list.setReadableSize(size);
-			int index = list.getIndex();
-			list.setReadableIndex(index);
+			list.setReadableIndex(list.getIndex());
+			list.setReadableLast(list.getLast());
 		}
 	}
 

@@ -8,10 +8,11 @@ import java.util.Arrays;
  * Created by Oct 8, 2015
  */
 public class NewEdgesList {
-	public static final int NODE_SIZE = 1;
+	public static final int NODE_SIZE = 8;
 	
 	private NewEdgesNode first;
 	private NewEdgesNode last;
+	private NewEdgesNode readableLast;
 	private int size;
 	private int readableSize;
 	private int readableIndex;
@@ -55,6 +56,7 @@ public class NewEdgesList {
 	public NewEdgesList() {
 		last = first = null;
 		size = 0;
+		readableLast = null;
 		readableIndex = 0;
 		readableSize = 0;
 	}
@@ -85,6 +87,14 @@ public class NewEdgesList {
 	
 	public NewEdgesNode getLast() {
 		return last;
+	}
+	
+	public NewEdgesNode getReadableLast() {
+		return readableLast;
+	}
+	
+	public void setReadableLast(NewEdgesNode readableLast) {
+		this.readableLast = readableLast;
 	}
 	
 	public int getIndex() {
