@@ -12,6 +12,7 @@ public class Vertex {
 	private int numOutEdges;
 	private int[] outEdges = null;
 	private byte[] outEdgeValues = null;
+	private int numOutEdges_plus_newEdges;
 
 	public Vertex(int id, int outDegree) {
 		this.id = id;
@@ -32,6 +33,14 @@ public class Vertex {
 
 	public int getNumOutEdges() {
 		return numOutEdges;
+	}
+
+	public int getNumOutEdgesPlusNewEdges() {
+		return numOutEdges_plus_newEdges;
+	}
+
+	public void setNumOutEdgesPlusNewEdges(int num) {
+		numOutEdges_plus_newEdges = num;
 	}
 
 	public int[] getOutEdges() {
