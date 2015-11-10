@@ -12,7 +12,10 @@ public class Vertex {
 	private int numOutEdges;
 	private int[] outEdges = null;
 	private byte[] outEdgeValues = null;
-	private int numOutEdges_plus_newEdges;
+
+	// the degree of the vertex counting original out edges and newly computed
+	// out edges
+	private int combinedDeg;
 
 	public Vertex(int id, int outDegree) {
 		this.id = id;
@@ -35,12 +38,12 @@ public class Vertex {
 		return numOutEdges;
 	}
 
-	public int getNumOutEdgesPlusNewEdges() {
-		return numOutEdges_plus_newEdges;
+	public int getCombinedDeg() {
+		return combinedDeg;
 	}
 
-	public void setNumOutEdgesPlusNewEdges(int num) {
-		numOutEdges_plus_newEdges = num;
+	public void setCombinedDeg(int num) {
+		combinedDeg = num;
 	}
 
 	public int[] getOutEdges() {
