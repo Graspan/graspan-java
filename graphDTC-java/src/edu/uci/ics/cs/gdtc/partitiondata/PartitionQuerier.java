@@ -1,5 +1,9 @@
 package edu.uci.ics.cs.gdtc.partitiondata;
 
+import java.util.logging.Logger;
+
+import edu.uci.ics.cs.gdtc.support.GDTCLogger;
+
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions
  * (used by all phases)
@@ -10,6 +14,8 @@ package edu.uci.ics.cs.gdtc.partitiondata;
 // TODO NEED TO UPDATE THE LOGIC OF ALL FUNCTIONS HERE, IF PARTITION ALLOCATION
 // TABLE IS NOT CONTIGUOUS BY PARTID// u cannot operate on partition id anymore
 public class PartitionQuerier {
+
+	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionquerier");
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
@@ -64,6 +70,7 @@ public class PartitionQuerier {
 				return partAllocTable[i][1];
 			}
 		}
+		logger.info("ERROR: Max source is -1 for partition " + partId);
 		return -1;
 	}
 
@@ -91,12 +98,10 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getActualIdFrmPartArrId(int vertexPartArrId, int partId) {
-		if (vertexPartArrId >= getMaxSrc(partId) - getMinSrc(partId)) {
-			System.out.println(
-					"ERROR: The vertex-partition index " + vertexPartArrId + " is beyond the index range of partition " + partId);
+		if (findPartition(vertexPartArrId + getMinSrc(partId)) != partId) {
+			logger.info("ERROR: The " + vertexPartArrId + "th element of partition " + partId + "does not exist");
 			return -1;
 		}
-
 		return vertexPartArrId + getMinSrc(partId);
 	}
 
@@ -112,7 +117,7 @@ public class PartitionQuerier {
 	 */
 	public static int getPartArrIdFrmActualId(int src, int partId) {
 		if (findPartition(src) != partId) {
-			System.out.println("ERROR: Source " + src + " does not exist in partition " + partId);
+			logger.info("ERROR: Source " + src + " does not exist in partition " + partId);
 			return -1;
 		}
 		return src - getMinSrc(partId);
