@@ -2,6 +2,7 @@ package edu.uci.ics.cs.gdtc.computedpartprocessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -77,8 +78,11 @@ public class ComputedPartProcessor {
 		// splitpoints
 		ArrayList<Integer> splitPoints = new ArrayList<Integer>();
 		ArrayList<Integer> splitVertices = new ArrayList<Integer>();
+
+		// set of new intervals
 		TreeSet<Integer> newIntervals = new TreeSet<Integer>();
-		TreeSet<Integer> newParts = new TreeSet<Integer>();
+
+		HashSet<Integer> partsToSave = new HashSet<Integer>();
 
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
@@ -243,6 +247,13 @@ public class ComputedPartProcessor {
 		for (int i = 0; i < newPartAllocTable.length; i++) {
 			if (newPartAllocTable[i][0] == -1) {
 				newPartAllocTable[i][0] = newPartId;
+
+				// add id of new partition to partsToSave set if using
+				// RELOAD_STRATEGY_2
+				if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+					partsToSave.add(newPartId);
+				}
+
 				newPartId++;
 			}
 		}
@@ -271,19 +282,38 @@ public class ComputedPartProcessor {
 			System.out.println(newPartAllocTable[i][0] + " " + newPartAllocTable[i][1]);
 		}
 
-
 		// updating loaded partitions based on partition reload strategy
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
-			// once a partition is repartitioned, we don't consider it loaded.
+
 			for (int i = 0; i < splitVertices.size(); i++) {
 				for (int j = 0; j < loadedParts.length; j++) {
 					if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
+
+						// add id of repartitioned partition to partsToSave set
+						partsToSave.add(loadedParts[j]);
+
+						// once a partition is repartitioned, we don't consider
+						// it loaded, thus we set it to MIN_VALUE
 						loadedParts[j] = Integer.MIN_VALUE;
+						
 						break;
 					}
 				}
 			}
+		}
+
+		// Post processing - Loaded parts test
+		System.out.println("Loaded parts after processing computed parts");
+		for (int j = 0; j < loadedParts.length; j++) {
+			System.out.println(loadedParts[j]);
+		}
+
+		// Post processing - Parts to save test
+		System.out.println("Printing parts to save");
+		System.out.println("Reload Strategy : " + UserInput.getPartReloadStrategy());
+		for (Integer i : partsToSave) {
+			System.out.println(i);
 		}
 
 		// System.out.println("Look Here !! ! " +
