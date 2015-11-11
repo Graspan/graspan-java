@@ -43,7 +43,7 @@ public class PartitionQuerier {
 	 * @param partId
 	 * @return
 	 */
-	public static int getMinSrc(int partId) {
+	public static int getFirstSrc(int partId) {
 		int[][] partAllocTable = AllPartitions.getPartAllocTab();
 		for (int i = 0; i < partAllocTable.length; i++) {
 			if (partId == partAllocTable[i][0]) {
@@ -63,14 +63,14 @@ public class PartitionQuerier {
 	 * @param partId
 	 * @return
 	 */
-	public static int getMaxSrc(int partId) {
+	public static int getLastSrc(int partId) {
 		int[][] partAllocTable = AllPartitions.getPartAllocTab();
 		for (int i = 0; i < partAllocTable.length; i++) {
 			if (partId == partAllocTable[i][0]) {
 				return partAllocTable[i][1];
 			}
 		}
-		logger.info("ERROR: Max source is -1 for partition " + partId);
+		logger.info("ERROR: Last source is -1 for partition " + partId);
 		return -1;
 	}
 
@@ -82,7 +82,7 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static boolean inPartition(int srcVId, int partId) {
-		if (srcVId >= getMinSrc(partId) & srcVId <= getMaxSrc(partId))
+		if (srcVId >= getFirstSrc(partId) & srcVId <= getLastSrc(partId))
 			return true;
 		else
 			return false;
@@ -98,11 +98,11 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static int getActualIdFrmPartArrIdx(int vertexPartArrIdx, int partId) {
-		if (findPartition(vertexPartArrIdx + getMinSrc(partId)) != partId) {
+		if (findPartition(vertexPartArrIdx + getFirstSrc(partId)) != partId) {
 			logger.info("ERROR: The " + vertexPartArrIdx + "th element of partition " + partId + "does not exist");
 			return -1;
 		}
-		return vertexPartArrIdx + getMinSrc(partId);
+		return vertexPartArrIdx + getFirstSrc(partId);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class PartitionQuerier {
 			logger.info("ERROR: Source " + src + " does not exist in partition " + partId);
 			return -1;
 		}
-		return src - getMinSrc(partId);
+		return src - getFirstSrc(partId);
 	}
 
 	/**
