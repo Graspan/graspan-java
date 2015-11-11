@@ -11,7 +11,6 @@ public class LoadedVertexInterval {
 	private int indexStart;
 	private int indexEnd;
 	private int partitionId;
-	private boolean saved;
 
 	public LoadedVertexInterval(int firstVertex, int lastVertex, int partitionId) {
 		this.firstVertex = firstVertex;
@@ -79,19 +78,4 @@ public class LoadedVertexInterval {
 		return partitionId;
 	}
 
-	/**
-	 * 
-	 * @param val
-	 */
-	public void setSavedFlag(boolean val) {
-		this.saved = val;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean getSavedFlag() {
-		return this.saved;
-	}
 }
