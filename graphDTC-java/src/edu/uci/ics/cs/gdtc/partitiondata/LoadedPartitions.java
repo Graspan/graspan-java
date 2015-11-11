@@ -151,7 +151,7 @@ public class LoadedPartitions {
 		for (int i = 0; i < loadedParts.length; i++) {
 			System.out.println("--- Partition: " + loadedParts[i] + " ---");
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
-				int srcv = j + PartitionQuerier.getMinSrc(loadedParts[i]);
+				int srcv = j + PartitionQuerier.getFirstSrc(loadedParts[i]);
 				System.out.println("SourceV: " + srcv);
 				System.out.println("Dest Vs: ");
 				for (int k = 0; k < loadedPartOutDegs[i][j]; k++) {
