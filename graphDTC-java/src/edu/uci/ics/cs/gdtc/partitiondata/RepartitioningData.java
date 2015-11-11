@@ -13,8 +13,8 @@ public class RepartitioningData {
 	// splitVertices
 	private static ArrayList<Integer> splitVertices;
 
-	// set of new intervals
-	private static TreeSet<Integer> newIntervals;
+	// set of new intervals (the last source vertex Ids of each partition)
+	private static TreeSet<Integer> newPartLimits;
 
 	// set of partitions that have been repartitioned
 	private static HashSet<Integer> repartitionedParts;
@@ -27,7 +27,7 @@ public class RepartitioningData {
 	private static HashSet<Integer> modifiedParts;
 
 	// set of partitions to which no new edges were added
-	private static HashSet<Integer> unchangedParts;
+	private static HashSet<Integer> unModifiedParts;
 
 	// set of all partitions in the memory after repartitioning
 	private static HashSet<Integer> loadedPartsPostProcessing;
@@ -38,11 +38,11 @@ public class RepartitioningData {
 
 	public static void initRepartioningVars() {
 		splitVertices = new ArrayList<Integer>();
-		newIntervals = new TreeSet<Integer>();
+		newPartLimits = new TreeSet<Integer>();
 		repartitionedParts = new HashSet<Integer>();
 		newPartsFrmRepartitioning = new HashSet<Integer>();
 		modifiedParts = new HashSet<Integer>();
-		unchangedParts = new HashSet<Integer>();
+		unModifiedParts = new HashSet<Integer>();
 		loadedPartsPostProcessing = new HashSet<Integer>();
 		partsToSave = new HashSet<Integer>();
 	}
@@ -51,16 +51,16 @@ public class RepartitioningData {
 		return modifiedParts;
 	}
 
-	public static HashSet<Integer> getUnchangedParts() {
-		return unchangedParts;
+	public static HashSet<Integer> getUnModifiedParts() {
+		return unModifiedParts;
 	}
 
 	public static ArrayList<Integer> getSplitVertices() {
 		return splitVertices;
 	}
 
-	public static TreeSet<Integer> getNewIntervals() {
-		return newIntervals;
+	public static TreeSet<Integer> getNewPartLimits() {
+		return newPartLimits;
 	}
 
 	public static HashSet<Integer> getRepartitionedParts() {
@@ -73,11 +73,11 @@ public class RepartitioningData {
 
 	public static void clearRepartitioningVars() {
 		splitVertices.clear();
-		newIntervals.clear();
+		newPartLimits.clear();
 		repartitionedParts.clear();
 		newPartsFrmRepartitioning.clear();
 		modifiedParts.clear();
-		unchangedParts.clear();
+		unModifiedParts.clear();
 		loadedPartsPostProcessing.clear();
 		partsToSave.clear();
 	}

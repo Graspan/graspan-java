@@ -387,7 +387,7 @@ public class PartitionLoader {
 					int srcVId = Integer.parseInt(tok[0]);
 					int deg = Integer.parseInt(tok[1]);
 
-					partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(newParts[i])] = deg;
+					partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(newParts[i])] = deg;
 					// this will be later updated in processParts() of
 					// ComputedPartProcessor if new edges were added for this
 					// source vertex during computation.
@@ -451,7 +451,7 @@ public class PartitionLoader {
 					continue;
 				} else {
 					try {
-						partOutDegs[i][srcVId - PartitionQuerier.getMinSrc(partsToLoad[i])] = deg;
+						partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(partsToLoad[i])] = deg;
 					} catch (ArrayIndexOutOfBoundsException e) {
 					}
 				}
@@ -550,7 +550,7 @@ public class PartitionLoader {
 							int src = partInStrm.readInt();
 
 							// get corresponding arraySrcVId of srcVId
-							int arraySrcVId = src - PartitionQuerier.getMinSrc(newParts[i]);
+							int arraySrcVId = src - PartitionQuerier.getFirstSrc(newParts[i]);
 
 							// get count (number of destVs from srcV in the
 							// current
@@ -588,8 +588,8 @@ public class PartitionLoader {
 
 		for (int i = 0; i < loadedparts.length; i++) {
 			int partId = loadedparts[i];
-			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getMinSrc(partId),
-					PartitionQuerier.getMaxSrc(partId), partId);
+			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
+					PartitionQuerier.getLastSrc(partId), partId);
 			interval.setIndexStart(indexSt);
 			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
 			interval.setIndexEnd(indexEd);
