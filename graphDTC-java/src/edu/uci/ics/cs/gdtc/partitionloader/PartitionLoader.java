@@ -113,7 +113,7 @@ public class PartitionLoader {
 		logger.info("Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
-		updateNewParts(partsToLoad);
+		updateNewPartsAndLoadedParts(partsToLoad);
 
 		// update loadedPartOutDegrees
 		updateDegsOfPartsToLoad();
@@ -253,8 +253,12 @@ public class PartitionLoader {
 	 * 
 	 * @param partsToLoad
 	 */
-	private void updateNewParts(int partsToLoad[]) {
+	private void updateNewPartsAndLoadedParts(int partsToLoad[]) {
+		/*
+		 * NOTE: At no point will partsToLoad be equal to loadedparts.
+		 */
 
+		// TODO TO REVISE THIS
 		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_1") == 0) {
 			int[] newParts = LoadedPartitions.getNewParts();
 			newParts = partsToLoad;
@@ -262,12 +266,6 @@ public class PartitionLoader {
 		}
 
 		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_2") == 0) {
-			/*
-			 * Initialize the degrees array for each new partition to load. We
-			 * shall not reinitialize the degrees of the partitions that have
-			 * already been loaded. In addition, at no point will partsToLoad be
-			 * equal to loadedparts
-			 */
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			int[] newParts = LoadedPartitions.getNewParts();
 			HashSet<Integer> savePartsSet = LoadedPartitions.getPartsToSave();
@@ -278,49 +276,90 @@ public class PartitionLoader {
 			 * initialization above, change name of parameter partsToLoad above)
 			 * 
 			 */
-			// int[] loadedParts = { 8, 2, 3, 5, 6, 7 };
-			// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
-			// Integer.MIN_VALUE, Integer.MIN_VALUE,
-			// Integer.MIN_VALUE, Integer.MIN_VALUE };
-			// int[] partsToLoad = { 1, 3, 10, 2, 4, 6 };
 			// System.out.println("START");
+			//
+			// int[] loadedParts = { 8, 2, 3, Integer.MIN_VALUE, 6, 7 };
 			// System.out.println("loadedParts");
 			// for (int i = 0; i < loadedParts.length; i++)
 			// System.out.print(loadedParts[i] + " ");
 			// System.out.println();
-			// System.out.println("newParts");
-			// for (int i = 0; i < newParts.length; i++)
-			// System.out.print(newParts[i] + " ");
-			// System.out.println();
+			//
+			// int[] partsToLoad = { 1, 3, 8, 7, 10, 11 };
 			// System.out.println("partsToLoad");
 			// for (int i = 0; i < partsToLoad.length; i++)
 			// System.out.print(partsToLoad[i] + " ");
 			// System.out.println();
+			//
+			// int[] newParts = { Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE,
+			// Integer.MIN_VALUE, Integer.MIN_VALUE };
+			//
+			// System.out.println("newParts");
+			// for (int i = 0; i < newParts.length; i++)
+			// System.out.print(newParts[i] + " ");
+			// System.out.println();
 
+			// 1. Get parts that are not part of the next computation and should
+			// be saved.
+
+			// 1.1. Get ids of all parts for next computation.
 			for (int i = 0; i < partsToLoad.length; i++) {
 				tempSet.add(partsToLoad[i]);
 			}
-
+			// 1.2. Add the ones not included for next computation to
+			// savePartsSet
 			for (int i = 0; i < loadedParts.length; i++) {
-				if (!tempSet.contains(loadedParts[i])) {
-					savePartsSet.add(i);
+				if (!tempSet.contains(loadedParts[i]) & loadedParts[i] != Integer.MIN_VALUE) {
+					savePartsSet.add(loadedParts[i]);
 				}
 			}
+
+			// test savePartsSet
+			System.out.println("Partitions to save:");
+			System.out.println(savePartsSet);
+
 			// TODO save PartsSet
 
 			tempSet.clear();
 
+			// 2. Update newParts and loadedParts.
+
+			// 2.1. Get ids of all parts currently loaded
 			for (int i = 0; i < loadedParts.length; i++) {
 				tempSet.add(loadedParts[i]);
 			}
 
+			// 2.2. Get ids of partitions not loaded and store them in the
+			// positions of partitions that are to be saved
 			for (int i = 0; i < partsToLoad.length; i++) {
+				// if the partition is not already loaded
 				if (!tempSet.contains(partsToLoad[i])) {
+					// find the partition that is loaded but no longer required
+					// (i.e. in savePartsSet)
 					for (int j = 0; j < loadedParts.length; j++) {
-						if (savePartsSet.contains(j)) {
+						if (loadedParts[j] == Integer.MIN_VALUE) {
+							// store the new id in loadedParts in place of the
+							// partition to save
 							loadedParts[j] = partsToLoad[i];
+
+							// store the new id in the corresponding location in
+							// newParts
 							newParts[j] = partsToLoad[i];
-							savePartsSet.remove(j);
+
+							break;
+						}
+						if (savePartsSet.contains(loadedParts[j])) {
+
+							// store the new id in loadedParts in place of the
+							// partition to save
+							loadedParts[j] = partsToLoad[i];
+
+							// store the new id in the corresponding location in
+							// newParts
+							newParts[j] = partsToLoad[i];
+
+							// remove this partition from savePartsSet
+							savePartsSet.remove(loadedParts[j]);
 							break;
 						}
 					}
@@ -331,13 +370,13 @@ public class PartitionLoader {
 			 * partid loading test 2/2
 			 */
 			// System.out.println("AFTER STORING NEW PARTS");
-			// System.out.println("loadedParts");
-			// for (int i = 0; i < loadedParts.length; i++)
-			// System.out.print(loadedParts[i] + " ");
-			// System.out.println();
 			// System.out.println("newParts");
 			// for (int i = 0; i < newParts.length; i++)
 			// System.out.print(newParts[i] + " ");
+			// System.out.println();
+			// System.out.println("loadedParts");
+			// for (int i = 0; i < loadedParts.length; i++)
+			// System.out.print(loadedParts[i] + " ");
 			// System.out.println();
 			// System.out.println("partsToLoad");
 			// for (int i = 0; i < partsToLoad.length; i++)
@@ -361,6 +400,12 @@ public class PartitionLoader {
 
 		int[] newParts = LoadedPartitions.getNewParts();
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+
+		/*
+		 * Initialize the degrees array for each new partition to load. We shall
+		 * not reinitialize the degrees of the partitions that have already been
+		 * loaded (This does not apply for RELOAD_STRATEGY_1).
+		 */
 
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
