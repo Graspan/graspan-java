@@ -42,7 +42,7 @@ public class PartitionLoader {
 
 	/**
 	 * Initializes the partition loader, reads in the partition allocation
-	 * table, and reads in the edgedestcountInfo
+	 * table, and reads in the edgedestcountInfo (Should be called only once.)
 	 * 
 	 * @param baseFilename
 	 * @param numParts

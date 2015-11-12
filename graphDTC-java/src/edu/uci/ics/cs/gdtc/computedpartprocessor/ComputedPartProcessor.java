@@ -51,7 +51,6 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		partMaxPostNewEdges = heuristic_newPartMax;
-		System.out.println(partMaxPostNewEdges);
 	}
 
 	/**
@@ -73,9 +72,11 @@ public class ComputedPartProcessor {
 		// }
 		// }
 
+		// TODO THESE ARE ON STANDBY
 		long[] partSizes = SchedulerInfo.getPartSizes();
 		long edgeDestCount[][] = SchedulerInfo.getEdgeDestCount();
 
+		// get repartitioning variables
 		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
 		TreeSet<Integer> newPartLimits = RepartitioningData.getNewPartLimits();
 		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
@@ -102,13 +103,12 @@ public class ComputedPartProcessor {
 			int src;
 			boolean partHasNewEdges = false;
 
-			logger.info("Processing partition: " + partId + ".");
-
-			System.out.println("Processing Partition: " + partId);
-			System.out.println("First Vertex: " + part.getFirstVertex());
-			System.out.println("Last Vertex: " + part.getLastVertex());
-			System.out.println("First Vertex Index: " + part.getIndexStart());
-			System.out.println("Last Vertex Index: " + part.getIndexEnd());
+			// String s = "Processing partition: " + partId + "...\n";
+			// s = s + "First Vertex: " + part.getFirstVertex() + "\n";
+			// s = s + "Last Vertex: " + part.getLastVertex() + "\n";
+			// s = s + "First Vertex Index: " + part.getIndexStart() + "\n";
+			// s = s + "Last Vertex Index: " + part.getIndexEnd() + "\n";
+			// logger.info(s);
 
 			// get partition's indices in "vertices" data structure
 			int partStart = part.getIndexStart();
@@ -341,7 +341,7 @@ public class ComputedPartProcessor {
 		for (int i = 0; i < vertices.length; i++) {
 			minSrcTest = 0;
 			src = vertices[i].getVertexId();
-			logger.info("Scanning src " + src + " idx " + i);
+			// logger.info("Scanning src " + src + " idx " + i);
 			for (Integer loadedPartId : loadedPartsPostProcessing) {
 				if (src == PartitionQuerier.getFirstSrc(loadedPartId)) {
 					LoadedVertexInterval interval = new LoadedVertexInterval(src,
@@ -352,8 +352,9 @@ public class ComputedPartProcessor {
 					interval.setIndexEnd(indexEd);
 					intervals.add(interval);
 
-					logger.info("Interval found from source " + src + ". part: " + loadedPartId + ", intervalSt(i): "
-							+ indexSt + ", intervalEd: " + indexEd);
+					// logger.info("Interval found from source " + src + ".
+					// part: " + loadedPartId + ", intervalSt(i): "
+					// + indexSt + ", intervalEd: " + indexEd);
 
 					// moving i forward ensures we scan only the minimum
 					// vertices
@@ -368,8 +369,12 @@ public class ComputedPartProcessor {
 
 		}
 
-		// 2.4. Add repartitionedParts and newPartsFrmRepartitioning to
-		// partsToSave set if using RELOAD_STRATEGY_2
+		/*
+		 * 3. Save partitions to disk.
+		 */
+
+		// 3.1. Add repartitionedParts and newPartsFrmRepartitioning to
+		// partsToSave set if using RELOAD_STRATEGY_2.
 		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
 			for (Integer Id : repartitionedParts)
 				partsToSave.add(Id);
@@ -378,11 +383,34 @@ public class ComputedPartProcessor {
 		}
 
 		// Post processing - Parts to save test
-		// System.out.println("Printing parts to save");
-		// System.out.println("Reload Strategy : " +
-		// UserInput.getPartReloadStrategy());
-		// System.out.println(partsToSave);
-		// TODO save repartitioned partition and newly generated partitions
+		// String s = "Printing parts to save\n";
+		// s = s + "Reload Strategy : " + UserInput.getPartReloadStrategy() +
+		// "\n";
+		// s = s + partsToSave;
+		// logger.info(s);
+
+		// 3.2. TODO save repartitioned partition and newly generated partitions
+
+		// loaded intervals test before saving partitions 1/2
+		// String s = "Loaded intervals before saving:\n";
+		// for (int i = 0; i < intervals.size(); i++)
+		// s = s + intervals.get(i).getPartitionId() + " ";
+		// logger.info(s);
+
+		// 3.3. Remove saved partitions from LoadedVertexIntervals
+		for (int i = 0; i < intervals.size(); i++) {
+			if (partsToSave.contains(intervals.get(i).getPartitionId())) {
+				intervals.remove(i);
+				// reset i
+				i--;
+			}
+		}
+
+		// loaded intervals test after saving partitions 2/2
+		// String s1 = "Loaded intervals after saving:\n";
+		// for (int i = 0; i < intervals.size(); i++)
+		// s1 = s1 + intervals.get(i).getPartitionId() + " ";
+		// logger.info(s1);
 
 		RepartitioningData.clearRepartitioningVars();
 	}
