@@ -16,21 +16,22 @@ public class UserInput {
 	static int numPartsPerComputation;
 
 	// INPUT 4 : The strategy for reloading partitions;
-	// RELOAD_STRATEGY_1 - Reload all the requested partitions everytime,
+	// RELOAD_PLAN_1 - Reload all the requested partitions everytime,
 	// regardless of which are already in the memory
-	// RELOAD_STRATEGY_2 - Reload only the requested partitions that are not in
+	// RELOAD_PLAN_2 - Reload only the requested partitions that are not in
 	// the memory. If a partition has been repartitioned, we consider it not to
 	// be in the memory.
-	// RELOAD_STRATEGY_3 - Reload only the requested partitions that are not in
+	// RELOAD_PLAN_3 - Reload only the requested partitions that are not in
 	// the memory, however, if a partition has been repartitioned and a
 	// requested partition is one of its child partitions, we keep the child
 	// partition
-	static String partReloadStrategy = "";
+	static String reloadPlan = "";
 
 	// INPUT 5 : The strategy for preserving partitions;
-	// PART_PRESERVE_STRATEGY_1 - User the same Vertices[] and edgelists arrays,
+	// RESTORE_PLAN_1 - User the same Vertices[] and edgelists arrays,
 	// setting it initially by a preset size.
-	static String loadedPartPreservationStrategy = "";
+	// RESTORE_PLAN_2 - redeclare vertices every time
+	static String restorePlan = "";
 
 	/**
 	 * 
@@ -84,32 +85,32 @@ public class UserInput {
 	 * 
 	 * @return
 	 */
-	public static String getPartReloadStrategy() {
-		return partReloadStrategy;
+	public static String getReloadPlan() {
+		return reloadPlan;
 	}
 
 	/**
 	 * 
 	 * @param str
 	 */
-	public static void setPartReloadStrategy(String str) {
-		partReloadStrategy = str;
+	public static void setReloadPlan(String str) {
+		reloadPlan = str;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public static String getPartPreservationStrategy() {
-		return loadedPartPreservationStrategy;
+	public static String getRestorePlan() {
+		return restorePlan;
 	}
 
 	/**
 	 * 
 	 * @param str
 	 */
-	public static void setPartPreservationStrategy(String str) {
-		loadedPartPreservationStrategy = str;
+	public static void setRestorePlan(String str) {
+		restorePlan = str;
 	}
 
 }

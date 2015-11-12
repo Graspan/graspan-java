@@ -32,12 +32,13 @@ public class PartitionLoader {
 
 	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionloader");
 
-	private Vertex[] vertices = null;
+	private static Vertex[] vertices = null;
+
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
 	private String baseFilename = "";
-	private String partReloadStrategy = "";
-	private String loadedPartPreservationStrategy = "";
+	private String reloadPlan = "";
+	private String restorePlan = "";
 
 	private int numParts = 0;
 
@@ -54,8 +55,8 @@ public class PartitionLoader {
 
 		this.baseFilename = UserInput.getBasefilename();
 		this.numParts = UserInput.getNumParts();
-		this.partReloadStrategy = UserInput.getPartReloadStrategy();
-		this.loadedPartPreservationStrategy = UserInput.getPartPreservationStrategy();
+		this.reloadPlan = UserInput.getReloadPlan();
+		this.restorePlan = UserInput.getRestorePlan();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -96,6 +97,10 @@ public class PartitionLoader {
 		LoadedPartitions.setLoadedPartOutDegs(loadedPartOutDegs);
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
+
+		if (restorePlan.compareTo("RESTORE_PLAN_1") == 0) {
+			vertices = new Vertex[40];
+		}
 	}
 
 	/**
@@ -259,13 +264,13 @@ public class PartitionLoader {
 		 */
 
 		// TODO TO REVISE THIS
-		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_1") == 0) {
+		if (this.reloadPlan.compareTo("RELOAD_PLAN_1") == 0) {
 			int[] newParts = LoadedPartitions.getNewParts();
 			newParts = partsToLoad;
 			LoadedPartitions.setNewParts(newParts);
 		}
 
-		if (this.partReloadStrategy.compareTo("RELOAD_STRATEGY_2") == 0) {
+		if (this.reloadPlan.compareTo("RELOAD_PLAN_2") == 0) {
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			int[] newParts = LoadedPartitions.getNewParts();
 			HashSet<Integer> savePartsSet = LoadedPartitions.getPartsToSave();
@@ -404,7 +409,7 @@ public class PartitionLoader {
 		/*
 		 * Initialize the degrees array for each new partition to load. We shall
 		 * not reinitialize the degrees of the partitions that have already been
-		 * loaded (This does not apply for RELOAD_STRATEGY_1).
+		 * loaded (This does not apply for RELOAD_PLAN_1).
 		 */
 
 		for (int i = 0; i < newParts.length; i++) {
@@ -518,12 +523,18 @@ public class PartitionLoader {
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		int[] newParts = LoadedPartitions.getNewParts();
 
-		// initializing new data structures
-		int totalNumVertices = 0;
-		for (int i = 0; i < loadedParts.length; i++) {
-			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(loadedParts[i]);
+		if (UserInput.getRestorePlan().compareTo("RESTORE_PLAN_2") == 0) {
+			// initializing new data structures
+			int totalNumVertices = 0;
+			for (int i = 0; i < loadedParts.length; i++) {
+				totalNumVertices += PartitionQuerier.getNumUniqueSrcs(loadedParts[i]);
+			}
+			vertices = new Vertex[totalNumVertices];
 		}
-		vertices = new Vertex[totalNumVertices];
+
+		// TODO RESTORE PREVIOUS VERTICES
+		// TODO MOVE RELEVANT REFERENCES OF VERTICES AND EDGELISTS FROM PREVIOUS
+		// ITERATION TO TOP
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
@@ -546,6 +557,9 @@ public class PartitionLoader {
 				}
 			}
 		}
+
+		System.out.println("check this");
+		System.out.println(intervals.size());
 
 		// set vertices data structure
 		int vertexIdx = 0;
