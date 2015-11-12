@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
@@ -33,6 +34,7 @@ public class PartitionLoader {
 	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionloader");
 
 	private static Vertex[] vertices = null;
+	private static NewEdgesList[] newEdgeLists = null;
 
 	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
@@ -100,6 +102,7 @@ public class PartitionLoader {
 
 		if (restorePlan.compareTo("RESTORE_PLAN_1") == 0) {
 			vertices = new Vertex[40];
+			newEdgeLists = new NewEdgesList[40];
 		}
 	}
 
@@ -251,6 +254,10 @@ public class PartitionLoader {
 
 	public ArrayList<LoadedVertexInterval> getIntervals() {
 		return intervals;
+	}
+
+	public NewEdgesList[] getNewEdgeLists() {
+		return newEdgeLists;
 	}
 
 	/**
@@ -530,6 +537,7 @@ public class PartitionLoader {
 				totalNumVertices += PartitionQuerier.getNumUniqueSrcs(loadedParts[i]);
 			}
 			vertices = new Vertex[totalNumVertices];
+			newEdgeLists = new NewEdgesList[totalNumVertices];
 		}
 
 		// TODO RESTORE PREVIOUS VERTICES
@@ -666,4 +674,5 @@ public class PartitionLoader {
 	private void saveParts() {
 
 	}
+
 }

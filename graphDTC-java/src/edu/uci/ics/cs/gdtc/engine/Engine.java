@@ -46,8 +46,8 @@ public class Engine {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 
-//		computationExecutor = Executors.newFixedThreadPool(nThreads);
-		 computationExecutor = Executors.newSingleThreadExecutor();
+		// computationExecutor = Executors.newFixedThreadPool(nThreads);
+		computationExecutor = Executors.newSingleThreadExecutor();
 		logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
@@ -57,11 +57,11 @@ public class Engine {
 		loader.loadParts(partsToLoad);
 		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
+		NewEdgesList[] edgesLists=loader.getNewEdgeLists();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 
-		NewEdgesList[] edgesLists = new NewEdgesList[vertices.length];
 		EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 
 		logger.info("VERTEX LENGTH: " + vertices.length);
@@ -90,7 +90,6 @@ public class Engine {
 		RepartitioningData.initRepartioningVars();
 		ComputedPartProcessor.initRepartitionConstraints();
 		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
-		// 4. determine partitions to store //TODO
 		// 5. store partitions //TODO
 	}
 
