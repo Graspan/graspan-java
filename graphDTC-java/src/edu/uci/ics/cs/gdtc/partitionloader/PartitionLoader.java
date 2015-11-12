@@ -37,6 +37,7 @@ public class PartitionLoader {
 
 	private String baseFilename = "";
 	private String partReloadStrategy = "";
+	private String loadedPartPreservationStrategy = "";
 
 	private int numParts = 0;
 
@@ -54,6 +55,7 @@ public class PartitionLoader {
 		this.baseFilename = UserInput.getBasefilename();
 		this.numParts = UserInput.getNumParts();
 		this.partReloadStrategy = UserInput.getPartReloadStrategy();
+		this.loadedPartPreservationStrategy = UserInput.getPartPreservationStrategy();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -389,7 +391,7 @@ public class PartitionLoader {
 
 					partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(newParts[i])] = deg;
 					// this will be later updated in processParts() of
-					// ComputedPartProcessor if new edges were added for this
+					// ComputedPartProcessor if new edges are added for this
 					// source vertex during computation.
 				}
 				outDegInStrm.close();

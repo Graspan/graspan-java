@@ -6,16 +6,16 @@ package edu.uci.ics.cs.gdtc.userinput;
  */
 public class UserInput {
 
-	// input graph full file name and path
+	// INPUT 1 : input graph full file name and path
 	static String baseFilename = "";
 
-	// total number of partitions
+	// INPUT 2 : total number of partitions
 	static int numParts;
 
-	// number of partitions during each computation
+	// INPUT 3 : number of partitions during each computation
 	static int numPartsPerComputation;
 
-	// The strategy for reloading partitions:
+	// INPUT 4 : The strategy for reloading partitions;
 	// RELOAD_STRATEGY_1 - Reload all the requested partitions everytime,
 	// regardless of which are already in the memory
 	// RELOAD_STRATEGY_2 - Reload only the requested partitions that are not in
@@ -27,13 +27,10 @@ public class UserInput {
 	// partition
 	static String partReloadStrategy = "";
 
-	/**
-	 * 
-	 * @param str
-	 */
-	public static void setBasefilename(String str) {
-		baseFilename = str;
-	}
+	// INPUT 5 : The strategy for preserving partitions;
+	// PART_PRESERVE_STRATEGY_1 - User the same Vertices[] and edgelists arrays,
+	// setting it initially by a preset size.
+	static String loadedPartPreservationStrategy = "";
 
 	/**
 	 * 
@@ -45,10 +42,10 @@ public class UserInput {
 
 	/**
 	 * 
-	 * @param n
+	 * @param str
 	 */
-	public static void setNumParts(int n) {
-		numParts = n;
+	public static void setBasefilename(String str) {
+		baseFilename = str;
 	}
 
 	/**
@@ -63,8 +60,8 @@ public class UserInput {
 	 * 
 	 * @param n
 	 */
-	public static void setNumPartsPerComputation(int n) {
-		numPartsPerComputation = n;
+	public static void setNumParts(int n) {
+		numParts = n;
 	}
 
 	/**
@@ -73,6 +70,22 @@ public class UserInput {
 	 */
 	public static int getNumPartsPerComputation() {
 		return numPartsPerComputation;
+	}
+
+	/**
+	 * 
+	 * @param n
+	 */
+	public static void setNumPartsPerComputation(int n) {
+		numPartsPerComputation = n;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static String getPartReloadStrategy() {
+		return partReloadStrategy;
 	}
 
 	/**
@@ -87,8 +100,16 @@ public class UserInput {
 	 * 
 	 * @return
 	 */
-	public static String getPartReloadStrategy() {
-		return partReloadStrategy;
+	public static String getPartPreservationStrategy() {
+		return loadedPartPreservationStrategy;
+	}
+
+	/**
+	 * 
+	 * @param str
+	 */
+	public static void setPartPreservationStrategy(String str) {
+		loadedPartPreservationStrategy = str;
 	}
 
 }
