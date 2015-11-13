@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.edgecomputation;
+package edu.uci.ics.cs.gdtc.scheduler;
 
 /**
  * 
@@ -6,18 +6,17 @@ package edu.uci.ics.cs.gdtc.edgecomputation;
  *
  */
 public interface IScheduler {
-	
+
 	/**
 	 * Initializes the Scheduler with the initial number of input partitions.
 	 * 
-	 * @param numParts
 	 */
-	public void initScheduler(int totalNumParts);
+	public void initScheduler();
 
 	/**
 	 * 
 	 * @return
 	 */
-	public int[] getPartstoLoad(int numPartsPerComputation);
+	public int[] getPartstoLoad();
 
 }

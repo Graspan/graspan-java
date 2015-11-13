@@ -52,7 +52,7 @@ public class EdgeValueAdder {
 			// add remaining edges in buffer to disk
 			writeToDisk(modifedEdgefile, baseFilename);
 		}
-
+		ins.close();
 		modifedEdgefile.close();
 	}
 

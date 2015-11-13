@@ -1,18 +1,18 @@
 package edu.uci.ics.cs.gdtc.engine;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.edgecomputation.EdgeComputer;
-import edu.uci.ics.cs.gdtc.edgecomputation.NewEdgesList;
-import edu.uci.ics.cs.gdtc.edgecomputation.PartitionLoader;
-import edu.uci.ics.cs.gdtc.GraphDTCLogger;
-import edu.uci.ics.cs.gdtc.Vertex;
+import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
+import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
+import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
+import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
+import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 
 
 /**
@@ -21,14 +21,14 @@ import edu.uci.ics.cs.gdtc.Vertex;
  * Created by Oct 8, 2015
  */
 public class Engine {
-	private static final Logger logger = GraphDTCLogger.getLogger("graphdtc engine");
+	private static final Logger logger = GDTCLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
-	private String baseFileName;
+//	private String baseFileName;
 	private int[] partitionsToLoad;
 	
-	public Engine(String baseFileName, int[] partitionsToLoad) {
-		this.baseFileName = baseFileName;
+	public Engine(int[] partitionsToLoad) {
+//		this.baseFileName = baseFileName;
 		this.partitionsToLoad = partitionsToLoad;
 	}
 	
@@ -53,7 +53,7 @@ public class Engine {
 		
 		// 1. load partitions into memory
 		PartitionLoader loader = new PartitionLoader();
-		loader.loadPartitions(baseFileName, partitionsToLoad, 3);
+		loader.loadParts(partitionsToLoad);
 		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
 		Vertex[] vertices = loader.getVertices();
 		List<LoadedVertexInterval> intervals = loader.getIntervals();
