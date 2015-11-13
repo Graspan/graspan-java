@@ -55,7 +55,7 @@ public class Engine {
 		PartitionLoader loader = new PartitionLoader();
 		// TODO need to start loop here
 		loader.loadParts(partsToLoad);
-		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + "ms");
+		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
 		Vertex[] vertices = loader.getVertices();
 		NewEdgesList[] edgesLists=loader.getNewEdgeLists();
 		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();

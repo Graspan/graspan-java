@@ -28,10 +28,10 @@ public class UserInput {
 	static String reloadPlan = "";
 
 	// INPUT 5 : The strategy for preserving partitions;
-	// RESTORE_PLAN_1 - User the same Vertices[] and edgelists arrays,
+	// PRESERVE_PLAN_1 - User the same Vertices[] and edgelists arrays,
 	// setting it initially by a preset size.
-	// RESTORE_PLAN_2 - redeclare vertices every time
-	static String restorePlan = "";
+	// PRESERVE_PLAN_2 - redeclare vertices every time
+	static String preservePlan = "";
 
 	/**
 	 * 
@@ -101,16 +101,16 @@ public class UserInput {
 	 * 
 	 * @return
 	 */
-	public static String getRestorePlan() {
-		return restorePlan;
+	public static String getPreservePlan() {
+		return preservePlan;
 	}
 
 	/**
 	 * 
 	 * @param str
 	 */
-	public static void setRestorePlan(String str) {
-		restorePlan = str;
+	public static void setPreservePlan(String str) {
+		preservePlan = str;
 	}
 
 }

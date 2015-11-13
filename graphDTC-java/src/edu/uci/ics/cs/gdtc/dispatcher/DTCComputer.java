@@ -17,8 +17,8 @@ public class DTCComputer {
 		UserInput.setBasefilename(args[0]);
 		UserInput.setNumParts(Integer.parseInt(args[1]));
 		UserInput.setNumPartsPerComputation(Integer.parseInt(args[2]));
-		UserInput.setPartReloadStrategy(args[3]);
-		UserInput.setPartPreservationStrategy(args[4]);
+		UserInput.setReloadPlan(args[3]);
+		UserInput.setPreservePlan(args[4]);
 
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler();

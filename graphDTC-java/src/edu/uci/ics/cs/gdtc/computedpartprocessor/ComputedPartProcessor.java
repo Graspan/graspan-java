@@ -288,9 +288,9 @@ public class ComputedPartProcessor {
 		// }
 
 		// 2.2. Updating repartitioned/modifiedParts and updating loadedParts
-		// (partitions loaded prior to this computation) for RELOAD_STRATEGY_2.
+		// (partitions loaded prior to this computation) for RELOAD_PLAN_2.
 		// loadedParts will be needed for next loading using this reload
-		// strategy.)
+		// plan.)
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		for (int i = 0; i < splitVertices.size(); i++) {
 			for (int j = 0; j < loadedParts.length; j++) {
@@ -303,7 +303,7 @@ public class ComputedPartProcessor {
 
 					// 2.2.2. once a partition is repartitioned, we don't
 					// consider it loaded, thus we set it to MIN_VALUE
-					if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0)
+					if (UserInput.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
 						loadedParts[j] = Integer.MIN_VALUE;
 
 					break;
@@ -339,34 +339,36 @@ public class ComputedPartProcessor {
 		intervals.clear();
 		int src = 0, indexSt = 0, indexEd = 0, minSrcTest = 0;
 		for (int i = 0; i < vertices.length; i++) {
-			minSrcTest = 0;
-			src = vertices[i].getVertexId();
-			// logger.info("Scanning src " + src + " idx " + i);
-			for (Integer loadedPartId : loadedPartsPostProcessing) {
-				if (src == PartitionQuerier.getFirstSrc(loadedPartId)) {
-					LoadedVertexInterval interval = new LoadedVertexInterval(src,
-							PartitionQuerier.getLastSrc(loadedPartId), loadedPartId);
-					indexSt = i;
-					interval.setIndexStart(indexSt);
-					indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
-					interval.setIndexEnd(indexEd);
-					intervals.add(interval);
+			if (vertices[i] != null) {
+				minSrcTest = 0;
+				src = vertices[i].getVertexId();
+				// logger.info("Scanning src " + src + " idx " + i);
+				for (Integer loadedPartId : loadedPartsPostProcessing) {
+					if (src == PartitionQuerier.getFirstSrc(loadedPartId)) {
+						LoadedVertexInterval interval = new LoadedVertexInterval(src,
+								PartitionQuerier.getLastSrc(loadedPartId), loadedPartId);
+						indexSt = i;
+						interval.setIndexStart(indexSt);
+						indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
+						interval.setIndexEnd(indexEd);
+						intervals.add(interval);
 
-					// logger.info("Interval found from source " + src + ".
-					// part: " + loadedPartId + ", intervalSt(i): "
-					// + indexSt + ", intervalEd: " + indexEd);
+						// logger.info("Interval found from source " + src + ".
+						// part: " + loadedPartId + ", intervalSt(i): "
+						// + indexSt + ", intervalEd: " + indexEd);
 
-					// moving i forward ensures we scan only the minimum
-					// vertices
-					i = indexEd;
+						// moving i forward ensures we scan only the minimum
+						// vertices
+						i = indexEd;
 
-					minSrcTest = 1;
-					break;
+						minSrcTest = 1;
+						break;
+					}
 				}
-			}
-			if (minSrcTest == 0)
-				logger.info("ERROR: Reading a source that is not a minimum for any partition.");
+				if (minSrcTest == 0)
+					logger.info("ERROR: Reading a source that is not a minimum for any partition.");
 
+			}
 		}
 
 		/*
@@ -374,8 +376,8 @@ public class ComputedPartProcessor {
 		 */
 
 		// 3.1. Add repartitionedParts and newPartsFrmRepartitioning to
-		// partsToSave set if using RELOAD_STRATEGY_2.
-		if (UserInput.getPartReloadStrategy().compareTo("RELOAD_STRATEGY_2") == 0) {
+		// partsToSave set if using RELOAD_PLAN_2.
+		if (UserInput.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
 			for (Integer Id : repartitionedParts)
 				partsToSave.add(Id);
 			for (Integer Id : newPartsFrmRepartitioning)
@@ -384,7 +386,7 @@ public class ComputedPartProcessor {
 
 		// Post processing - Parts to save test
 		// String s = "Printing parts to save\n";
-		// s = s + "Reload Strategy : " + UserInput.getPartReloadStrategy() +
+		// s = s + "Reload Plan : " + UserInput.getReloadPlan() +
 		// "\n";
 		// s = s + partsToSave;
 		// logger.info(s);
