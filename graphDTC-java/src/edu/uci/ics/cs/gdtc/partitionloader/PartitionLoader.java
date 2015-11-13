@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
@@ -40,7 +43,7 @@ public class PartitionLoader {
 
 	private String baseFilename = "";
 	private String reloadPlan = "";
-	private String restorePlan = "";
+	private String preservePlan = "";
 
 	private int numParts = 0;
 
@@ -58,7 +61,7 @@ public class PartitionLoader {
 		this.baseFilename = UserInput.getBasefilename();
 		this.numParts = UserInput.getNumParts();
 		this.reloadPlan = UserInput.getReloadPlan();
-		this.restorePlan = UserInput.getRestorePlan();
+		this.preservePlan = UserInput.getPreservePlan();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -100,9 +103,9 @@ public class PartitionLoader {
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
 
-		if (restorePlan.compareTo("RESTORE_PLAN_1") == 0) {
-			vertices = new Vertex[40];
-			newEdgeLists = new NewEdgesList[40];
+		if (preservePlan.compareTo("RESTORE_PLAN_1") == 0) {
+			vertices = new Vertex[200];
+			newEdgeLists = new NewEdgesList[200];
 		}
 	}
 
@@ -530,7 +533,7 @@ public class PartitionLoader {
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		int[] newParts = LoadedPartitions.getNewParts();
 
-		if (UserInput.getRestorePlan().compareTo("RESTORE_PLAN_2") == 0) {
+		if (UserInput.getPreservePlan().compareTo("PRESERVE_PLAN_2") == 0) {
 			// initializing new data structures
 			int totalNumVertices = 0;
 			for (int i = 0; i < loadedParts.length; i++) {
@@ -540,9 +543,114 @@ public class PartitionLoader {
 			newEdgeLists = new NewEdgesList[totalNumVertices];
 		}
 
-		// TODO RESTORE PREVIOUS VERTICES
-		// TODO MOVE RELEVANT REFERENCES OF VERTICES AND EDGELISTS FROM PREVIOUS
-		// ITERATION TO TOP
+		// System.out.println("Loaded Vertex Intervals size");
+		// System.out.println(intervals.size());
+		// System.out.println(vertices.length);
+
+		// TODO PRESERVE PREVIOUS VERTICES
+		TreeSet<Integer> originalLoadedPartIndices = new TreeSet<Integer>();
+		TreeSet<Integer> newLoadedPartIndices = new TreeSet<Integer>();
+		// using arraylist as we need to maintain duplicates and order
+		ArrayList<Integer> indexDiffs = new ArrayList<Integer>();
+
+		// test setting dummy vertices and newedgelists (comment
+		// originalLoadedPartIndices for-loop below when using this.)
+		// int[] my_vertices = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
+		// 10, 11, 9, 8 };
+		// int[] my_newEdges = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
+		// 10, 11, 9, 8 };
+		// int my_temp_newEdges = 0;
+		// int[] my_indexes = { 3, 7, 10, 12, 14, 18 };
+		// for (int i = 0; i < my_indexes.length; i++)
+		// originalLoadedPartIndices.add(my_indexes[i]);
+		// System.out.println("originalLoadedPartIndices:");
+		// System.out.println(originalLoadedPartIndices);
+
+		for (LoadedVertexInterval interval : intervals) {
+			originalLoadedPartIndices.add(interval.getIndexStart());
+			originalLoadedPartIndices.add(interval.getIndexEnd());
+		}
+
+		Iterator<Integer> itr = originalLoadedPartIndices.iterator();
+		int firstIdx = 0, lastIdx = 0;
+		while (itr.hasNext()) {
+			firstIdx = itr.next();
+			lastIdx = itr.next();
+			indexDiffs.add(lastIdx - firstIdx);
+		}
+
+		// test IndexDiffs
+		// System.out.println("indexDiffs:");
+		// System.out.println(indexDiffs);
+
+		int newIndexSt = 0;
+		for (Integer diff : indexDiffs) {
+			newLoadedPartIndices.add(newIndexSt);
+			newLoadedPartIndices.add(newIndexSt + diff);
+			newIndexSt = newIndexSt + diff + 1;
+		}
+
+		// test newLoadedPartIndices
+		// System.out.println("newLoadedPartIndices:");
+		// System.out.println(newLoadedPartIndices);
+
+		NewEdgesList temp_newEdgeList = null;
+		int oldIdxMin, oldIdxMax, newIdxMin, newIdxMax = 0;
+		Iterator<Integer> itrOld = originalLoadedPartIndices.iterator();
+		Iterator<Integer> itrNew = newLoadedPartIndices.iterator();
+		while (itrOld.hasNext()) {
+			newIdxMin = itrNew.next();
+			newIdxMax = itrNew.next();
+			oldIdxMin = itrOld.next();
+			oldIdxMax = itrOld.next();// just to move the index forward
+			for (int i = newIdxMin; i <= newIdxMax; i++) {
+
+				// preserve vertices
+				vertices[i] = vertices[oldIdxMin];
+
+				// test shifting vertices
+				// my_vertices[i] = my_vertices[oldIdxMin];
+
+				// preserve new edges
+				temp_newEdgeList = newEdgeLists[oldIdxMin];
+				newEdgeLists[oldIdxMin] = newEdgeLists[i];
+				newEdgeLists[i] = temp_newEdgeList;
+
+				// test swapping newEdges
+				// my_temp_newEdges = my_newEdges[oldIdxMin];
+				// my_newEdges[oldIdxMin] = my_newEdges[i];
+				// my_newEdges[i] = my_temp_newEdges;
+
+				oldIdxMin++;
+			}
+		}
+
+		// resetting vertices not in loaded partitions (unnecessary)
+		// for (int i = newIdxMax + 1; i < vertices.length; i++) {
+		// vertices[i] = null;
+		// }
+
+		// test (use if above is used)
+		// for (int i = newIdxMax + 1; i < my_vertices.length; i++) {
+		// my_vertices[i] = -1;
+		// }
+
+		// test final vertices and edges
+		// System.out.println("final my_vertices");
+		// System.out.print("[ ");
+		// for (int i = 0; i < my_vertices.length; i++) {
+		// System.out.print(my_vertices[i] + " ");
+		// }
+		// System.out.println(" ]");
+		//
+		// System.out.println("final my_newEdges");
+		// System.out.print("[ ");
+		// for (int i = 0; i < my_newEdges.length; i++) {
+		// System.out.print(my_newEdges[i] + " ");
+		// }
+		// System.out.println(" ]");
+
+		System.exit(0);
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
@@ -565,9 +673,6 @@ public class PartitionLoader {
 				}
 			}
 		}
-
-		System.out.println("check this");
-		System.out.println(intervals.size());
 
 		// set vertices data structure
 		int vertexIdx = 0;
