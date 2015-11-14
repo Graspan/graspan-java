@@ -1,7 +1,7 @@
 package edu.uci.ics.cs.gdtc.engine;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,8 +57,8 @@ public class Engine {
 		loader.loadParts(partsToLoad);
 		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
 		Vertex[] vertices = loader.getVertices();
-		NewEdgesList[] edgesLists=loader.getNewEdgeLists();
-		ArrayList<LoadedVertexInterval> intervals = loader.getIntervals();
+		NewEdgesList[] edgesLists = loader.getNewEdgeLists();
+		List<LoadedVertexInterval> intervals = loader.getIntervals();
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 
@@ -90,6 +90,9 @@ public class Engine {
 		RepartitioningData.initRepartioningVars();
 		ComputedPartProcessor.initRepartitionConstraints();
 		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
+
+		// TODO: decide which partition to store in disk or keep in memory,
+		// set edgelist.clear() accordingly
 		// 5. store partitions //TODO
 	}
 
@@ -216,8 +219,8 @@ public class Engine {
 			if (size == 0)
 				continue;
 			list.setReadableSize(size);
-			int index = list.getIndex();
-			list.setReadableIndex(index);
+			list.setReadableIndex(list.getIndex());
+			list.setReadableLast(list.getLast());
 		}
 	}
 

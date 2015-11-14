@@ -3,6 +3,7 @@ package edu.uci.ics.cs.gdtc.computedpartprocessor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -62,7 +63,7 @@ public class ComputedPartProcessor {
 	 * @throws IOException
 	 */
 	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL,
-			ArrayList<LoadedVertexInterval> intervals) throws IOException {
+			List<LoadedVertexInterval> intervals) throws IOException {
 
 		// TEST print
 		// for (int i = 0; i < vertices.length; i++) {

@@ -39,7 +39,7 @@ public class PartitionLoader {
 	private static Vertex[] vertices = null;
 	private static NewEdgesList[] newEdgeLists = null;
 
-	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	private List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
 	private String baseFilename = "";
 	private String reloadPlan = "";
@@ -255,7 +255,7 @@ public class PartitionLoader {
 		return vertices;
 	}
 
-	public ArrayList<LoadedVertexInterval> getIntervals() {
+	public List<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
 
@@ -547,13 +547,13 @@ public class PartitionLoader {
 		// System.out.println(intervals.size());
 		// System.out.println(vertices.length);
 
-		// TODO PRESERVE PREVIOUS VERTICES
 		TreeSet<Integer> originalLoadedPartIndices = new TreeSet<Integer>();
 		TreeSet<Integer> newLoadedPartIndices = new TreeSet<Integer>();
 		// using arraylist as we need to maintain duplicates and order
 		ArrayList<Integer> indexDiffs = new ArrayList<Integer>();
 
-		// test setting dummy vertices and newedgelists (comment
+		// edge-data preservation test 1/ setting dummy vertices and
+		// newedgelists (comment
 		// originalLoadedPartIndices for-loop below when using this.)
 		// int[] my_vertices = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
 		// 10, 11, 9, 8 };
@@ -579,7 +579,7 @@ public class PartitionLoader {
 			indexDiffs.add(lastIdx - firstIdx);
 		}
 
-		// test IndexDiffs
+		// edge-data preservation test 2/ IndexDiffs
 		// System.out.println("indexDiffs:");
 		// System.out.println(indexDiffs);
 
@@ -590,7 +590,7 @@ public class PartitionLoader {
 			newIndexSt = newIndexSt + diff + 1;
 		}
 
-		// test newLoadedPartIndices
+		// edge-data preservation test 3/ newLoadedPartIndices
 		// System.out.println("newLoadedPartIndices:");
 		// System.out.println(newLoadedPartIndices);
 
@@ -608,7 +608,7 @@ public class PartitionLoader {
 				// preserve vertices
 				vertices[i] = vertices[oldIdxMin];
 
-				// test shifting vertices
+				// edge-data preservation test 4/ shifting vertices
 				// my_vertices[i] = my_vertices[oldIdxMin];
 
 				// preserve new edges
@@ -616,7 +616,7 @@ public class PartitionLoader {
 				newEdgeLists[oldIdxMin] = newEdgeLists[i];
 				newEdgeLists[i] = temp_newEdgeList;
 
-				// test swapping newEdges
+				// edge-data preservation test 5/ swapping newEdges
 				// my_temp_newEdges = my_newEdges[oldIdxMin];
 				// my_newEdges[oldIdxMin] = my_newEdges[i];
 				// my_newEdges[i] = my_temp_newEdges;
@@ -630,12 +630,12 @@ public class PartitionLoader {
 		// vertices[i] = null;
 		// }
 
-		// test (use if above is used)
+		// edge-data preservation test 6/ (use if above is used)
 		// for (int i = newIdxMax + 1; i < my_vertices.length; i++) {
 		// my_vertices[i] = -1;
 		// }
 
-		// test final vertices and edges
+		// edge-data preservation test 7/ final vertices and edges
 		// System.out.println("final my_vertices");
 		// System.out.print("[ ");
 		// for (int i = 0; i < my_vertices.length; i++) {
@@ -649,8 +649,7 @@ public class PartitionLoader {
 		// System.out.print(my_newEdges[i] + " ");
 		// }
 		// System.out.println(" ]");
-
-		System.exit(0);
+		// System.exit(0);
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();

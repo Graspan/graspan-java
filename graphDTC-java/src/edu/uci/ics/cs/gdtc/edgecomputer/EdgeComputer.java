@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.gdtc.edgecomputer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
@@ -11,6 +12,8 @@ import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
  *         Created by Oct 8, 2015
  */
 public class EdgeComputer {
+
+	// test flag for viewing new edges of a source
 	public static int flag = 0;
 	String s = "";
 
@@ -20,7 +23,7 @@ public class EdgeComputer {
 	private boolean terminateStatus;
 	private static NewEdgesList[] edgesLists = null;
 	private static Vertex[] vertices = null;
-	private static ArrayList<LoadedVertexInterval> intervals = null;
+	private static List<LoadedVertexInterval> intervals = null;
 
 	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;
@@ -51,7 +54,7 @@ public class EdgeComputer {
 		vertices = v;
 	}
 
-	public static void setIntervals(ArrayList<LoadedVertexInterval> vertexIntervals) {
+	public static void setIntervals(List<LoadedVertexInterval> vertexIntervals) {
 		intervals = vertexIntervals;
 	}
 
@@ -75,10 +78,10 @@ public class EdgeComputer {
 			byte edgeValue = vertex.getOutEdgeValue(i);
 
 			// get edges of vertex 2 / test code 2
-//			if (flag == 1) {
-//				s = 2 + " ---> " + vertexId;
-//				System.out.println(s);
-//			}
+			// if (flag == 1) {
+			// s = 2 + " ---> " + vertexId;
+			// System.out.println(s);
+			// }
 
 			// check vertex range and scan edges
 			checkRangeAndScanEdges(vertexId, edgeValue);
@@ -111,8 +114,8 @@ public class EdgeComputer {
 		}
 
 		// 2.2 check the last node, the num of elements is index
-		ids = edgeList.getLast().getDstVertices();
-		values = edgeList.getLast().getEdgeValues();
+		ids = edgeList.getReadableLast().getDstVertices();
+		values = edgeList.getReadableLast().getEdgeValues();
 		int readableIndex = edgeList.getReadableIndex();
 		for (int m = 0; m < readableIndex; m++) {
 
@@ -252,12 +255,12 @@ public class EdgeComputer {
 			byte dstEdgeValue = v.getOutEdgeValue(i);
 
 			// get edges of vertex 2 / test code 3
-//			if (flag == 1) {
-//				String olds = s;
-//				s = s + " ---> " + dstId;
-//				System.out.println(s);
-//				s = olds;
-//			}
+			// if (flag == 1) {
+			// String olds = s;
+			// s = s + " ---> " + dstId;
+			// System.out.println(s);
+			// s = olds;
+			// }
 
 			// check grammar, check duplication and add edges
 			// TODO: dstEdgeValue to be fixed based on grammar!!
@@ -287,12 +290,13 @@ public class EdgeComputer {
 			assert(ids.length == NewEdgesList.NODE_SIZE);
 
 			for (int k = 0; k < ids.length; k++) {
-//				if (flag == 1) {
-//					String olds = s;
-//					s = s + " ---> " + ids[k];
-//					System.out.println(s);
-//					s = olds;
-//				}
+				// test
+				// if (flag == 1) {
+				// String olds = s;
+				// s = s + " ---> " + ids[k];
+				// System.out.println(s);
+				// s = olds;
+				// }
 				// check grammar, check duplication and add edges
 				// TODO: values[k] to be fixed based on grammar!!
 				checkGrammarAndAddEdge(ids[k], values[k]);
@@ -329,9 +333,9 @@ public class EdgeComputer {
 				edgeList.add(vertexId, edgeValue);
 
 				// get edges of vertex 2 / test code 4
-//				if (flag == 1) {
-//					System.out.println("edge added " + vertexId);
-//				}
+				// if (flag == 1) {
+				// System.out.println("edge added " + vertexId);
+				// }
 
 				nNewEdges++;
 			}
