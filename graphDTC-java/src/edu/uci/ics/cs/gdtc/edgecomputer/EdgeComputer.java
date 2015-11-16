@@ -305,8 +305,8 @@ public class EdgeComputer {
 		}
 
 		// 2.2 check the last node, the num of elements is index
-		ids = edgesLists[index].getLast().getDstVertices();
-		values = edgesLists[index].getLast().getEdgeValues();
+		ids = edgesLists[index].getReadableLast().getDstVertices();
+		values = edgesLists[index].getReadableLast().getEdgeValues();
 		int readableIndex = edgesLists[index].getReadableIndex();
 		for (int m = 0; m < readableIndex; m++) {
 			// check grammar, check duplication and add edges
