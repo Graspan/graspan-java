@@ -1,0 +1,136 @@
+\begin{thebibliography}{10}
+
+\bibitem{giraph}
+Apache giraph.
+\newblock \url. http://giraph.apache.org.
+
+\bibitem{alias}
+{\sc Appel, A.~W.}
+\newblock {\em Modern Compiler Implementation in ML}.
+\newblock Cambridge University Press, Cambridge, UK, 1998.
+
+\bibitem{aiken08}
+{\sc Bugrara, S., and Aiken, A.}
+\newblock Verifying the safety of user pointer dereferences.
+\newblock In {\em In Proceedings of the 29th IEEE Symposium on Security and
+  Privacy\/} (2008).
+
+\bibitem{kg}
+{\sc Cheng, R., Hong, J., Kyrola, A., Miao, Y., Weng, X., Wu, M., Yang, F.,
+  Zhou, L., Zhao, F., and Chen, E.}
+\newblock Kineograph: Taking the pulse of a fast-changing and connected world.
+\newblock In {\em Proceedings of the 7th ACM European Conference on Computer
+  Systems\/} (2012), EuroSys '12, pp.~85--98.
+
+\bibitem{Chou}
+{\sc Chou, A., Yang, J., Chelf, B., Hallem, S., and Engler, D.}
+\newblock An empirical study of operating systems errors.
+\newblock In {\em Proceedings of the Eighteenth ACM Symposium on Operating
+  Systems Principles\/} (2001), SOSP '01, pp.~73--88.
+
+\bibitem{aiken06}
+{\sc Hackett, B., and Aiken, A.}
+\newblock How is aliasing used in systems software?
+\newblock In {\em SIGSOFT '06/FSE-14 Proceedings of the 14th ACM SIGSOFT
+  international symposium on Foundations of software engineering\/} (2006),
+  pp.~69--80.
+
+\bibitem{hardekopf}
+{\sc Hardekopf, B., and Lin, C.}
+\newblock Flow-sensitive pointer analysis for millions of lines of code.
+\newblock In {\em Code Generation and Optimization (CGO), 2011 9th Annual
+  IEEE/ACM International Symposium on\/} (2011), pp.~289--298.
+
+\bibitem{graphchi}
+{\sc Kyrola, A., Blelloch, G., and Guestrin, C.}
+\newblock Graphchi: large-scale graph computation on just a pc.
+\newblock In {\em OSDI'12 Proceedings of the 10th USENIX conference on
+  Operating Systems Design and Implementation\/} (2012), pp.~31--46.
+
+\bibitem{llvm}
+{\sc Lattner, C., and Adve, V.}
+\newblock Llvm: A compilation framework for lifelong program analysis \&
+  transformation.
+\newblock In {\em Proceedings of the International Symposium on Code Generation
+  and Optimization: Feedback-directed and Runtime Optimization\/} (2004), CGO
+  '04, pp.~75--.
+
+\bibitem{liang}
+{\sc Liang, D., Pennings, M., and Harrold, M.}
+\newblock Evaluating the precision of static reference analysis using
+  profiling.
+\newblock In {\em In Proc. of the International Symposium on Software Testing
+  and Analysis\/} (2002), pp.~22--32.
+
+\bibitem{glab}
+{\sc Low, Y., Bickson, D., Gonzalez, J., Guestrin, C., Kyrola, A., and
+  Hellerstein, J.~M.}
+\newblock Distributed graphlab: A framework for machine learning and data
+  mining in the cloud.
+\newblock {\em Proc. VLDB Endow. 5}, 8 (Apr. 2012), 716--727.
+
+\bibitem{mock}
+{\sc M.~Mock, M.~Das, C.~C., and Eggers, S.}
+\newblock Dynamic points-to sets: A comparison with static analyses and
+  potential applications in program understanding and optimization.
+\newblock In {\em In Proc. of the Workshop on Program Analysis for Software
+  Tools and Engineering\/} (2001), pp.~66--72.
+
+\bibitem{pregel}
+{\sc Malewicz, G., Austern, M.~H., Bik, A.~J., Dehnert, J.~C., Horn, I.,
+  Leiser, N., and Czajkowski, G.}
+\newblock Pregel: A system for large-scale graph processing.
+\newblock In {\em Proceedings of the 2010 ACM SIGMOD International Conference
+  on Management of Data\/} (2010), SIGMOD '10, pp.~135--146.
+
+\bibitem{Palix}
+{\sc Palix, N., Thomas, G., Saha, S., Calv\`{e}s, C., Lawall, J., and Muller,
+  G.}
+\newblock Faults in linux: Ten years later.
+\newblock In {\em Proceedings of the Sixteenth International Conference on
+  Architectural Support for Programming Languages and Operating Systems\/}
+  (2011), ASPLOS XVI, pp.~305--318.
+
+\bibitem{reps}
+{\sc Reps, T.}
+\newblock Program analysis via graph reachability.
+\newblock {\em Information and Software Technology 40}, 11-12 (1998), 701--726.
+
+\bibitem{manu}
+{\sc Sridharan, M., Chandra, S., Dolby, J., Fink, S., and Yahav, E.}
+\newblock {\em Alias Analysis for Object-Oriented Programs}, vol.~7850 of {\em
+  Lecture Notes in Computer Science}.
+\newblock Springer Berlin Heidelberg, 2013.
+
+\bibitem{db-backed}
+{\sc Weiss, C., Rubio-Gonz\'{a}lez, C., and Liblit, B.}
+\newblock Database-backed program analysis for scalable error propagation.
+\newblock In {\em Proceedings of the 37th International Conference on Software
+  Engineering - Volume 1\/} (2015), ICSE '15, pp.~586--597.
+
+\bibitem{liang04}
+{\sc Whaley, J., and Lam, M.~S.}
+\newblock Cloning-based context-sensitive pointer alias analysis using binary
+  decision diagrams.
+\newblock {\em SIGPLAN Not. 39}, 6 (June 2004), 131--144.
+
+\bibitem{wilson}
+{\sc Wilson, R., and Lam, M.}
+\newblock Effcient context-sensitive pointer analysis for c programs.
+\newblock In {\em In Proc. of the Conference on Programming Language Design and
+  Implementation\/} (1995), pp.~1--12.
+
+\bibitem{Xu}
+{\sc Xu, G., Rountev, A., and Sridharan, M.}
+\newblock Scaling cfl-reachability-based points-to analysis using
+  context-sensitive must-not-alias analysis.
+\newblock In {\em Proceedings of the 23rd European Conference on ECOOP 2009 ---
+  Object-Oriented Programming\/} (2009), pp.~98--122.
+
+\bibitem{zhang}
+{\sc Zhang, X., Mangal, R., Grigore, R., Naik, M., and Yang, H.}
+\newblock On abstraction refinement for program analyses in datalog.
+\newblock In {\em Proceedings of the 35th ACM SIGPLAN Conference on Programming
+  Language Design and Implementation\/} (2014), PLDI '14, pp.~239--248.
+
+\end{thebibliography}

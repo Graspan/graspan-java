@@ -1,0 +1,17 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{GraphDTC Computation Model}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Edge-Pair Centric \(EPC\) Model}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Edge Computation Model}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{System Design and Implementation}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Preprocessing \(Partition Generation\)}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.2}{Loading Partitions}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.3}{Edge Computation}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.4}{Post Computation Processing}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.5}{Repartitioning}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.6}{Reloading}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.7}{Scheduling}{section.3}% 12
+\BOOKMARK [1][-]{section.4}{Evaluation Plan}{}% 13
+\BOOKMARK [2][-]{subsection.4.1}{Performance with Large Graphs}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.2}{Comparison with GraphChi}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.3}{Leveraging Current Program Analysis Tools}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 17
