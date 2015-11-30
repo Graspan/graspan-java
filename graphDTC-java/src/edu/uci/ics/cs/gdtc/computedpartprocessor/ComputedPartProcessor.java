@@ -3,6 +3,7 @@ package edu.uci.ics.cs.gdtc.computedpartprocessor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -43,9 +44,7 @@ public class ComputedPartProcessor {
 		}
 
 		// average of edges by no. of partitions
-//		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
-		//TODO:
-		long avgEdgesPerPart = 0;
+		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
 
 		// the heuristic for interval max
 		long partMax = (long) (avgEdgesPerPart * 0.9);
@@ -64,7 +63,7 @@ public class ComputedPartProcessor {
 	 * @throws IOException
 	 */
 	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL,
-			ArrayList<LoadedVertexInterval> intervals) throws IOException {
+			List<LoadedVertexInterval> intervals) throws IOException {
 
 		// TEST print
 		// for (int i = 0; i < vertices.length; i++) {

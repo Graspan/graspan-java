@@ -7,9 +7,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.gdtc.computedpartprocessor.ComputedPartProcessor;
 import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
 import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
 import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.partitiondata.RepartitioningData;
 import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
 import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
@@ -60,14 +62,14 @@ public class Engine {
 		assert(vertices != null && vertices.length > 0);
 		assert(intervals != null && intervals.size() > 0);
 		
-		NewEdgesList[] edgesLists = new NewEdgesList[vertices.length];
+		NewEdgesList[] edgesLists = loader.getNewEdgeLists();
 		EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 		
-		logger.info("VERTEX LENGTH: " + vertices.length);
-		for(int i = 0; i < vertices.length; i++) {
-			logger.info("" + vertices[i]);
-			logger.info("" + edgesLists[i]);
-		}
+//		logger.info("VERTEX LENGTH: " + vertices.length);
+//		for(int i = 0; i < vertices.length; i++) {
+//			logger.info("" + vertices[i]);
+//			logger.info("" + edgesLists[i]);
+//		}
 		
 		logger.info("Finish...");
 		logger.info("Starting computation and edge addition...");
@@ -79,14 +81,16 @@ public class Engine {
 		EdgeComputer.setIntervals(intervals);
 		doComputation(vertices, edgesLists, edgeComputers);
 		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
-		logger.info("VERTEX LENGTH: " + vertices.length);
-		for(int i = 0; i < vertices.length; i++) {
-			logger.info("" + vertices[i]);
-			logger.info("" + edgesLists[i]);
-		}
+//		logger.info("VERTEX LENGTH: " + vertices.length);
+//		for(int i = 0; i < vertices.length; i++) {
+//			logger.info("" + vertices[i]);
+//			logger.info("" + edgesLists[i]);
+//		}
 //		
-//		// 3. store partitions to disk
-//		storePartitions();
+		// 3. process computed partitions
+		RepartitioningData.initRepartioningVars();
+		ComputedPartProcessor.initRepartitionConstraints();
+		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 		
 		//TODO: decide which partition to store in disk or keep in memory,
 		// set edgelist.clear() accordingly
