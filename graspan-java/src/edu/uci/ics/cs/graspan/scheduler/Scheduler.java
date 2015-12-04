@@ -134,9 +134,9 @@ public class Scheduler {
 		assert(intervals.size() == 2);
 		
 		int loadedPartitionOne = intervals.get(0).getPartitionId();
-		boolean isNewEdgeAddedForOne = intervals.get(0).getIsNewEdgeAdded();
+		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
-		boolean isNewEdgeAddedForTwo = intervals.get(1).getIsNewEdgeAdded();
+		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
 		
 		List<Boolean> terminationInfoForOne = allEdgeInfo.get(loadedPartitionOne).getTerminationInfo();
 		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(loadedPartitionTwo).getTerminationInfo();
