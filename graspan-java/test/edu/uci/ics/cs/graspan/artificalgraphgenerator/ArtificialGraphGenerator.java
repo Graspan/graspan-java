@@ -2,7 +2,7 @@
  * HAS ERROR: EDGE VALUES OF GREATER THAN 256 IS OUTPUT
  */
 
-package edu.uci.ics.cs.artificalgraphgenerator;
+package edu.uci.ics.cs.graspan.artificalgraphgenerator;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

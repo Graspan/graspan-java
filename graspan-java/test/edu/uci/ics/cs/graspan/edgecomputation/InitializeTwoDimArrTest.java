@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.edgecomputation;
+package edu.uci.ics.cs.graspan.edgecomputation;
 
 public class InitializeTwoDimArrTest {
 

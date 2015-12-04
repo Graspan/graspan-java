@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.artificalgraphgenerator;
+package edu.uci.ics.cs.graspan.artificalgraphgenerator;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
