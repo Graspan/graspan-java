@@ -54,6 +54,14 @@ public class NewEdgesList {
 			edgeValues[index] = edgeValue;
 			index++;
 		}
+		
+		public int getNewOutEdge(int i) {
+			return dstVertices[i];
+		}
+
+		public byte getNewOutEdgeValue(int i) {
+			return edgeValues[i];
+		}
 	}
 
 	public NewEdgesList() {
