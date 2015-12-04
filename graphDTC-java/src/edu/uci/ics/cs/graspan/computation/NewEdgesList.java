@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.computation;
+package edu.uci.ics.cs.graspan.computation;
 
 import java.util.Arrays;
 

@@ -1,12 +1,12 @@
-package edu.uci.ics.cs.gdtc.dispatcher;
+package edu.uci.ics.cs.graspan.dispatcher;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.computation.Engine;
-import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
-import edu.uci.ics.cs.gdtc.scheduler.BasicScheduler;
-import edu.uci.ics.cs.gdtc.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.computation.Engine;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.scheduler.BasicScheduler;
+import edu.uci.ics.cs.graspan.support.GDTCLogger;
 
 public class DTCComputer {
 

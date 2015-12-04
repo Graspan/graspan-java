@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.scheduler;
+package edu.uci.ics.cs.graspan.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;

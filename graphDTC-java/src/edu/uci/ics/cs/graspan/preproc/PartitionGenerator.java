@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.preproc;
+package edu.uci.ics.cs.graspan.preproc;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import edu.uci.ics.cs.gdtc.datastructures.AllPartitions;
-import edu.uci.ics.cs.gdtc.datastructures.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
+import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
+import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
+import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 
 /**
  * 

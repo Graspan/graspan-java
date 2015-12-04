@@ -1,6 +1,6 @@
-package edu.uci.ics.cs.gdtc.scheduler;
+package edu.uci.ics.cs.graspan.scheduler;
 
-import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
 
 /**
  * 

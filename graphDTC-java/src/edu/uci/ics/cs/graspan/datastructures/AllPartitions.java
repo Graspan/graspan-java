@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.datastructures;
+package edu.uci.ics.cs.graspan.datastructures;
 
 public class AllPartitions {
 

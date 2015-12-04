@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.computation;
+package edu.uci.ics.cs.graspan.computation;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.datastructures.RepartitioningData;
-import edu.uci.ics.cs.gdtc.datastructures.Vertex;
-import edu.uci.ics.cs.gdtc.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
+import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.support.GDTCLogger;
 
 /**
  * @author Kai Wang

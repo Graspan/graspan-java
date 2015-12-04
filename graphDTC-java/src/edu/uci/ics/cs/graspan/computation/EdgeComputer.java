@@ -1,10 +1,10 @@
-package edu.uci.ics.cs.gdtc.computation;
+package edu.uci.ics.cs.graspan.computation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.Vertex;
 
 /**
  * @author Kai Wang

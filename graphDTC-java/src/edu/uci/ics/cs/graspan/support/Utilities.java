@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.support;
+package edu.uci.ics.cs.graspan.support;
 
 /**
  * This class consists of sorting methods.

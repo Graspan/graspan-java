@@ -1,9 +1,9 @@
-package edu.uci.ics.cs.gdtc.scheduler;
+package edu.uci.ics.cs.graspan.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 
 /**
  * @author Kai Wang

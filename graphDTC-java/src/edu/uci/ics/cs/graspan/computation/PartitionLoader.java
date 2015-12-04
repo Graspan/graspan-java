@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.computation;
+package edu.uci.ics.cs.graspan.computation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,15 +15,15 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.datastructures.AllPartitions;
-import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
-import edu.uci.ics.cs.gdtc.datastructures.LoadedPartitions;
-import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.datastructures.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.datastructures.Vertex;
-import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
-import edu.uci.ics.cs.gdtc.support.GDTCLogger;
-import edu.uci.ics.cs.gdtc.support.Utilities;
+import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
+import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
+import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
+import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
  * This program loads partitions into the memory.

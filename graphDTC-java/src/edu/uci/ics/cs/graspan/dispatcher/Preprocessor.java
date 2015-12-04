@@ -1,10 +1,10 @@
-package edu.uci.ics.cs.gdtc.dispatcher;
+package edu.uci.ics.cs.graspan.dispatcher;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import edu.uci.ics.cs.gdtc.preproc.PartitionGenerator;
+import edu.uci.ics.cs.graspan.preproc.PartitionGenerator;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions

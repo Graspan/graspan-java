@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.support;
+package edu.uci.ics.cs.graspan.support;
 
 import java.io.File;
 import java.io.FileInputStream;
