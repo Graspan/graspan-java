@@ -1,6 +1,6 @@
 package edu.uci.ics.cs.graspan.scheduler;
 
-import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class BasicScheduler implements IScheduler {
 	 * this partition pair has been computed.
 	 */
 	public void initScheduler() {
-		int totalNumParts = GlobalParameters.getNumParts();
+		int totalNumParts = GlobalParams.getNumParts();
 		// initialize partScheduleMap
 		for (int i = 0; i < totalNumParts; i++) {
 			for (int j = 0; j < i; j++) {
@@ -46,7 +46,7 @@ public class BasicScheduler implements IScheduler {
 	 */
 	public int[] getPartstoLoad() {
 
-		int numPartsPerComputation = GlobalParameters.getNumPartsPerComputation();
+		int numPartsPerComputation = GlobalParams.getNumPartsPerComputation();
 		for (int i = 0; i < partScheduleMap.length; i++) {
 			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {

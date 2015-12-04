@@ -16,7 +16,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
-import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
@@ -58,10 +58,10 @@ public class Loader {
 	 */
 	public Loader() throws NumberFormatException, IOException {
 
-		this.baseFilename = GlobalParameters.getBasefilename();
-		this.numParts = GlobalParameters.getNumParts();
-		this.reloadPlan = GlobalParameters.getReloadPlan();
-		this.preservePlan = GlobalParameters.getPreservePlan();
+		this.baseFilename = GlobalParams.getBasefilename();
+		this.numParts = GlobalParams.getNumParts();
+		this.reloadPlan = GlobalParams.getReloadPlan();
+		this.preservePlan = GlobalParams.getPreservePlan();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -83,8 +83,8 @@ public class Loader {
 	 */
 	private void preliminaryInit() {
 
-		int newPartsToLoad[] = new int[GlobalParameters.getNumPartsPerComputation()];
-		int loadedParts[] = new int[GlobalParameters.getNumPartsPerComputation()];
+		int newPartsToLoad[] = new int[GlobalParams.getNumPartsPerComputation()];
+		int loadedParts[] = new int[GlobalParams.getNumPartsPerComputation()];
 		LinkedHashSet<Integer> partsToSaveSet = new LinkedHashSet<Integer>();
 
 		for (int i = 0; i < loadedParts.length; i++) {
@@ -92,9 +92,9 @@ public class Loader {
 			loadedParts[i] = Integer.MIN_VALUE;
 		}
 
-		int loadedPartOutDegs[][] = new int[GlobalParameters.getNumPartsPerComputation()][];
-		int loadedPartEdges[][][] = new int[GlobalParameters.getNumPartsPerComputation()][][];
-		byte loadedPartEdgeVals[][][] = new byte[GlobalParameters.getNumPartsPerComputation()][][];
+		int loadedPartOutDegs[][] = new int[GlobalParams.getNumPartsPerComputation()][];
+		int loadedPartEdges[][][] = new int[GlobalParams.getNumPartsPerComputation()][][];
+		byte loadedPartEdgeVals[][][] = new byte[GlobalParams.getNumPartsPerComputation()][][];
 
 		LoadedPartitions.setPartsToSave(partsToSaveSet);
 		LoadedPartitions.setNewParts(newPartsToLoad);
@@ -533,7 +533,7 @@ public class Loader {
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		int[] newParts = LoadedPartitions.getNewParts();
 
-		if (GlobalParameters.getPreservePlan().compareTo("PRESERVE_PLAN_2") == 0) {
+		if (GlobalParams.getPreservePlan().compareTo("PRESERVE_PLAN_2") == 0) {
 			// initializing new data structures
 			int totalNumVertices = 0;
 			for (int i = 0; i < loadedParts.length; i++) {
