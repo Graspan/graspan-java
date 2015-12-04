@@ -15,7 +15,7 @@ import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class ComputedPartProcessor {
 
 	// private static PrintWriter[] partDegOutStrms;
 	private static long partMaxPostNewEdges;
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc computedpartprocessor");
+	private static final Logger logger = GraspanLogger.getLogger("graphdtc computedpartprocessor");
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition

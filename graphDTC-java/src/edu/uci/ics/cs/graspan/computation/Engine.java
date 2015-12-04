@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
@@ -18,7 +18,7 @@ import edu.uci.ics.cs.graspan.support.GDTCLogger;
  *         Created by Oct 8, 2015
  */
 public class Engine {
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc engine");
+	private static final Logger logger = GraspanLogger.getLogger("graphdtc engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private int[] partsToLoad;

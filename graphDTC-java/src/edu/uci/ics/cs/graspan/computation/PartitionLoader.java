@@ -22,7 +22,7 @@ import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
@@ -33,7 +33,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class PartitionLoader {
 
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionloader");
+	private static final Logger logger = GraspanLogger.getLogger("graphdtc partitionloader");
 
 	private static Vertex[] vertices = null;
 	private static NewEdgesList[] newEdgeLists = null;

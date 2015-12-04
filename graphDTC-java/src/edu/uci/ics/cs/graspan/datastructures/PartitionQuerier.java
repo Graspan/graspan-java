@@ -2,7 +2,7 @@ package edu.uci.ics.cs.graspan.datastructures;
 
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * Contains of methods for retrieving miscellaneous info of loaded partitions
@@ -15,7 +15,7 @@ import edu.uci.ics.cs.graspan.support.GDTCLogger;
 // TABLE IS NOT CONTIGUOUS BY PARTID// u cannot operate on partition id anymore
 public class PartitionQuerier {
 
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionquerier");
+	private static final Logger logger = GraspanLogger.getLogger("graphdtc partitionquerier");
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
