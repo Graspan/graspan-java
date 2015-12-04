@@ -273,7 +273,7 @@ public class Loader {
 		 * NOTE: At no point will partsToLoad be equal to loadedparts.
 		 */
 
-		// TODO TO REVISE THIS
+		// TODO INCOMPLETE - SINCE RELOAD PLAN 1 IS THE WORST PLAN, WE SHALL IGNORE THIS
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_1") == 0) {
 			int[] newParts = LoadedPartitions.getNewParts();
 			newParts = partsToLoad;
