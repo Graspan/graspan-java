@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
@@ -48,7 +49,7 @@ public class Engine {
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
-		PartitionLoader loader = new PartitionLoader();
+		Loader loader = new Loader();
 		// TODO need to start loop here
 		loader.loadParts(partsToLoad);
 		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");

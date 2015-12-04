@@ -8,7 +8,7 @@ import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
 import edu.uci.ics.cs.graspan.scheduler.BasicScheduler;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
-public class DTCComputer {
+public class DTCComputerClient {
 
 	private static final Logger logger = GraspanLogger.getLogger("graphdtc dtccomputer");
 

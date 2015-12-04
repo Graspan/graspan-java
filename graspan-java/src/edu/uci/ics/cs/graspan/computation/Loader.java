@@ -19,6 +19,7 @@ import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
@@ -31,7 +32,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  * @author Aftab
  *
  */
-public class PartitionLoader {
+public class Loader {
 
 	private static final Logger logger = GraspanLogger.getLogger("graphdtc partitionloader");
 
@@ -55,7 +56,7 @@ public class PartitionLoader {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public PartitionLoader() throws NumberFormatException, IOException {
+	public Loader() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParameters.getBasefilename();
 		this.numParts = GlobalParameters.getNumParts();

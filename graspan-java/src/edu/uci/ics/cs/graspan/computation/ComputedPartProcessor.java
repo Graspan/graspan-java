@@ -11,6 +11,7 @@ import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
@@ -72,7 +73,7 @@ public class ComputedPartProcessor {
 		// }
 		// }
 
-		// TODO THESE ARE ON STANDBY
+		// TODO THESE ARE ON STANDBY (Scheduling)
 		long[] partSizes = SchedulerInfo.getPartSizes();
 		long edgeDestCount[][] = SchedulerInfo.getEdgeDestCount();
 

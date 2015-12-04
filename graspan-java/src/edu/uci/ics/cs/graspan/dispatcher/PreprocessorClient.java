@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import edu.uci.ics.cs.graspan.preproc.PartitionGenerator;
+import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
@@ -12,7 +12,7 @@ import edu.uci.ics.cs.graspan.preproc.PartitionGenerator;
  * @author Aftab
  *
  */
-public class Preprocessor {
+public class PreprocessorClient {
 
 	public static void main(String[] args) throws IOException {
 
@@ -24,7 +24,7 @@ public class Preprocessor {
 		// initialize Partition Generator Program
 		System.out.println("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
-		PartitionGenerator partgenerator = initPartGenerator(baseFilename, numInParts);
+		Preprocessor partgenerator = initPartGenerator(baseFilename, numInParts);
 
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
@@ -47,12 +47,12 @@ public class Preprocessor {
 	}
 
 	/**
-	 * Initialize the PartitionGenerator-program
+	 * Initialize the Preprocessor-program
 	 * 
 	 * @param inputGraphPath
 	 * @param numParts
 	 */
-	protected static PartitionGenerator initPartGenerator(String inputGraphPath, int numParts) throws IOException {
-		return new PartitionGenerator(inputGraphPath, numParts);
+	protected static Preprocessor initPartGenerator(String inputGraphPath, int numParts) throws IOException {
+		return new Preprocessor(inputGraphPath, numParts);
 	}
 }
