@@ -19,4 +19,9 @@ public interface IScheduler {
 	 */
 	public int[] getPartstoLoad();
 
+	/**
+	 * Update Scheduler map
+	 */
+	public void updateSchedulerInfo();
+
 }
