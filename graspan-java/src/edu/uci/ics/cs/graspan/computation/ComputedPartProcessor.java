@@ -8,13 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
@@ -37,9 +33,6 @@ public class ComputedPartProcessor {
 
 	private static long partMaxPostNewEdges;
 	private static final Logger logger = GraspanLogger.getLogger("graphdtc computedpartprocessor");
-
-	private DataOutputStream[] partOutStrms;
-	private PrintWriter[] partDegOutStrms;
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -397,11 +390,15 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		/*
-		 * 3. Save partitions to disk.
-		 */
+		//TODO
+		//updating basic scheduler
+		
+		
+		
+		
+		// 2.4. Create partsToSave set.
 
-		// 3.1. Add repartitionedParts and newPartsFrmRepartitioning to
+		// Add repartitionedParts and newPartsFrmRepartitioning to
 		// partsToSave set if using RELOAD_PLAN_2.
 		if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
 			for (Integer Id : repartitionedParts)
@@ -416,16 +413,22 @@ public class ComputedPartProcessor {
 		// "\n";
 		// s = s + partsToSave;
 		// logger.info(s);
+		
+		
 
-		// 3.2. save repartitioned partition and newly generated partitions
+		/*
+		 * 3. Save partitions to disk.
+		 */
+
+		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSave)
 			storePart(vertices, newEdgesLL, intervals, partitionId);
 
-		// 3.3. save degree of those partitions.
+		// 3.2. save degree of those partitions.
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSave)
-			storePartDegs(vertices,intervals,partitionId);
+			storePartDegs(vertices, intervals, partitionId);
 
 		// loaded intervals test before saving partitions 1/2
 		// String s = "Loaded intervals before saving:\n";
@@ -433,7 +436,7 @@ public class ComputedPartProcessor {
 		// s = s + intervals.get(i).getPartitionId() + " ";
 		// logger.info(s);
 
-		// 3.4. Remove saved partitions from LoadedVertexIntervals
+		// 3.3. Remove saved partitions from LoadedVertexIntervals
 		for (int i = 0; i < intervals.size(); i++) {
 			if (partsToSave.contains(intervals.get(i).getPartitionId())) {
 				intervals.remove(i);
@@ -455,15 +458,15 @@ public class ComputedPartProcessor {
 
 	/**
 	 * Stores a partition to disk.
-	 *  
+	 * 
 	 * @param vertices
 	 * @param newEdgesLL
 	 * @param intervals
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
-			List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
+	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
+			Integer partitionId) throws IOException {
 
 		// clear current file
 		DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(
