@@ -4,10 +4,10 @@ package edu.uci.ics.cs.graspan.datastructures;
  * 
  * @author Aftab 1 November 2015
  */
-public class GlobalParameters {
+public class GlobalParams {
 
 	// INPUT 1 : input graph full file name and path
-	static String baseFilename = "";
+	public static String baseFilename = "";
 
 	// INPUT 2 : total number of partitions
 	static int numParts;
