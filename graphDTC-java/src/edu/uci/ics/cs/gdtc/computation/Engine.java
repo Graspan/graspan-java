@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.engine;
+package edu.uci.ics.cs.gdtc.computation;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,13 +7,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.computedpartprocessor.ComputedPartProcessor;
-import edu.uci.ics.cs.gdtc.edgecomputer.EdgeComputer;
-import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.partitiondata.RepartitioningData;
-import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
-import edu.uci.ics.cs.gdtc.partitionloader.PartitionLoader;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.datastructures.RepartitioningData;
+import edu.uci.ics.cs.gdtc.datastructures.Vertex;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
 
 /**

@@ -1,10 +1,10 @@
-package edu.uci.ics.cs.gdtc.edgecomputer;
+package edu.uci.ics.cs.gdtc.computation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.datastructures.Vertex;
 
 /**
  * @author Kai Wang

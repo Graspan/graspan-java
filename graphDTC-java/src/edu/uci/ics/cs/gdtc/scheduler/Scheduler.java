@@ -3,7 +3,7 @@ package edu.uci.ics.cs.gdtc.scheduler;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
 
 /**
  * @author Kai Wang

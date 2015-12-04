@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.edgecomputer;
+package edu.uci.ics.cs.gdtc.computation;
 
 import java.util.Arrays;
 

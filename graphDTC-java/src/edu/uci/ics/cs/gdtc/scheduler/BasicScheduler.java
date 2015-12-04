@@ -1,6 +1,6 @@
 package edu.uci.ics.cs.gdtc.scheduler;
 
-import edu.uci.ics.cs.gdtc.userinput.UserInput;
+import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class BasicScheduler implements IScheduler {
 	 * this partition pair has been computed.
 	 */
 	public void initScheduler() {
-		int totalNumParts = UserInput.getNumParts();
+		int totalNumParts = GlobalParameters.getNumParts();
 		// initialize partScheduleMap
 		for (int i = 0; i < totalNumParts; i++) {
 			for (int j = 0; j < i; j++) {
@@ -46,7 +46,7 @@ public class BasicScheduler implements IScheduler {
 	 */
 	public int[] getPartstoLoad() {
 
-		int numPartsPerComputation = UserInput.getNumPartsPerComputation();
+		int numPartsPerComputation = GlobalParameters.getNumPartsPerComputation();
 		for (int i = 0; i < partScheduleMap.length; i++) {
 			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {

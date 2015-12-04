@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.partitionloader;
+package edu.uci.ics.cs.gdtc.computation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,16 +15,15 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
-import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
+import edu.uci.ics.cs.gdtc.datastructures.AllPartitions;
+import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.datastructures.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.datastructures.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
-import edu.uci.ics.cs.gdtc.support.Optimizers;
-import edu.uci.ics.cs.gdtc.userinput.UserInput;
+import edu.uci.ics.cs.gdtc.support.Utilities;
 
 /**
  * This program loads partitions into the memory.
@@ -58,10 +57,10 @@ public class PartitionLoader {
 	 */
 	public PartitionLoader() throws NumberFormatException, IOException {
 
-		this.baseFilename = UserInput.getBasefilename();
-		this.numParts = UserInput.getNumParts();
-		this.reloadPlan = UserInput.getReloadPlan();
-		this.preservePlan = UserInput.getPreservePlan();
+		this.baseFilename = GlobalParameters.getBasefilename();
+		this.numParts = GlobalParameters.getNumParts();
+		this.reloadPlan = GlobalParameters.getReloadPlan();
+		this.preservePlan = GlobalParameters.getPreservePlan();
 
 		// get the partition allocation table
 		readPartAllocTable();
@@ -83,8 +82,8 @@ public class PartitionLoader {
 	 */
 	private void preliminaryInit() {
 
-		int newPartsToLoad[] = new int[UserInput.getNumPartsPerComputation()];
-		int loadedParts[] = new int[UserInput.getNumPartsPerComputation()];
+		int newPartsToLoad[] = new int[GlobalParameters.getNumPartsPerComputation()];
+		int loadedParts[] = new int[GlobalParameters.getNumPartsPerComputation()];
 		LinkedHashSet<Integer> partsToSaveSet = new LinkedHashSet<Integer>();
 
 		for (int i = 0; i < loadedParts.length; i++) {
@@ -92,9 +91,9 @@ public class PartitionLoader {
 			loadedParts[i] = Integer.MIN_VALUE;
 		}
 
-		int loadedPartOutDegs[][] = new int[UserInput.getNumPartsPerComputation()][];
-		int loadedPartEdges[][][] = new int[UserInput.getNumPartsPerComputation()][][];
-		byte loadedPartEdgeVals[][][] = new byte[UserInput.getNumPartsPerComputation()][][];
+		int loadedPartOutDegs[][] = new int[GlobalParameters.getNumPartsPerComputation()][];
+		int loadedPartEdges[][][] = new int[GlobalParameters.getNumPartsPerComputation()][][];
+		byte loadedPartEdgeVals[][][] = new byte[GlobalParameters.getNumPartsPerComputation()][][];
 
 		LoadedPartitions.setPartsToSave(partsToSaveSet);
 		LoadedPartitions.setNewParts(newPartsToLoad);
@@ -146,7 +145,7 @@ public class PartitionLoader {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
 				int low = 0;
 				int high = loadedPartOutDegs[i][j] - 1;
-				Optimizers.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
+				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
 			}
 		}
 		logger.info("Sorted loaded partitions.");
@@ -533,7 +532,7 @@ public class PartitionLoader {
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		int[] newParts = LoadedPartitions.getNewParts();
 
-		if (UserInput.getPreservePlan().compareTo("PRESERVE_PLAN_2") == 0) {
+		if (GlobalParameters.getPreservePlan().compareTo("PRESERVE_PLAN_2") == 0) {
 			// initializing new data structures
 			int totalNumVertices = 0;
 			for (int i = 0; i < loadedParts.length; i++) {

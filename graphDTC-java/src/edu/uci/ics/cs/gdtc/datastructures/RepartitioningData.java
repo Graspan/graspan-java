@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.partitiondata;
+package edu.uci.ics.cs.gdtc.datastructures;
 
 import java.util.ArrayList;
 import java.util.HashSet;

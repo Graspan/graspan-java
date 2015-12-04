@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
-import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.datastructures.AllPartitions;
+import edu.uci.ics.cs.gdtc.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 
 /**

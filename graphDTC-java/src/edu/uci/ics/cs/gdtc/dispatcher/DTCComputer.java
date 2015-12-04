@@ -3,10 +3,10 @@ package edu.uci.ics.cs.gdtc.dispatcher;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.engine.Engine;
+import edu.uci.ics.cs.gdtc.computation.Engine;
+import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
 import edu.uci.ics.cs.gdtc.scheduler.BasicScheduler;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
-import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 public class DTCComputer {
 
@@ -14,11 +14,11 @@ public class DTCComputer {
 
 	public static void main(String args[]) throws IOException {
 
-		UserInput.setBasefilename(args[0]);
-		UserInput.setNumParts(Integer.parseInt(args[1]));
-		UserInput.setNumPartsPerComputation(Integer.parseInt(args[2]));
-		UserInput.setReloadPlan(args[3]);
-		UserInput.setPreservePlan(args[4]);
+		GlobalParameters.setBasefilename(args[0]);
+		GlobalParameters.setNumParts(Integer.parseInt(args[1]));
+		GlobalParameters.setNumPartsPerComputation(Integer.parseInt(args[2]));
+		GlobalParameters.setReloadPlan(args[3]);
+		GlobalParameters.setPreservePlan(args[4]);
 
 		BasicScheduler basicScheduler = new BasicScheduler();
 		basicScheduler.initScheduler();

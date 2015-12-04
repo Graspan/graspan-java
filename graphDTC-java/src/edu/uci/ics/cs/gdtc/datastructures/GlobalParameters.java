@@ -1,10 +1,10 @@
-package edu.uci.ics.cs.gdtc.userinput;
+package edu.uci.ics.cs.gdtc.datastructures;
 
 /**
  * 
  * @author Aftab 1 November 2015
  */
-public class UserInput {
+public class GlobalParameters {
 
 	// INPUT 1 : input graph full file name and path
 	static String baseFilename = "";

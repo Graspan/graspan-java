@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.gdtc.computedpartprocessor;
+package edu.uci.ics.cs.gdtc.computation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,16 +7,15 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.gdtc.edgecomputer.NewEdgesList;
-import edu.uci.ics.cs.gdtc.partitiondata.AllPartitions;
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedPartitions;
-import edu.uci.ics.cs.gdtc.partitiondata.LoadedVertexInterval;
-import edu.uci.ics.cs.gdtc.partitiondata.PartitionQuerier;
-import edu.uci.ics.cs.gdtc.partitiondata.RepartitioningData;
-import edu.uci.ics.cs.gdtc.partitiondata.Vertex;
+import edu.uci.ics.cs.gdtc.datastructures.AllPartitions;
+import edu.uci.ics.cs.gdtc.datastructures.GlobalParameters;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedPartitions;
+import edu.uci.ics.cs.gdtc.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.gdtc.datastructures.PartitionQuerier;
+import edu.uci.ics.cs.gdtc.datastructures.RepartitioningData;
+import edu.uci.ics.cs.gdtc.datastructures.Vertex;
 import edu.uci.ics.cs.gdtc.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.gdtc.support.GDTCLogger;
-import edu.uci.ics.cs.gdtc.userinput.UserInput;
 
 /**
  * 
@@ -264,7 +263,7 @@ public class ComputedPartProcessor {
 		}
 
 		AllPartitions.setPartAllocTab(newPartAllocTable);
-		UserInput.setNumParts(newPartAllocTable.length);
+		GlobalParameters.setNumParts(newPartAllocTable.length);
 
 		// testing PartitionQuerier after changing PAT 2/2
 		// System.out.println("testing findPartition 7:" +
@@ -304,7 +303,7 @@ public class ComputedPartProcessor {
 
 					// 2.2.2. once a partition is repartitioned, we don't
 					// consider it loaded, thus we set it to MIN_VALUE
-					if (UserInput.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
+					if (GlobalParameters.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
 						loadedParts[j] = Integer.MIN_VALUE;
 
 					break;
@@ -378,7 +377,7 @@ public class ComputedPartProcessor {
 
 		// 3.1. Add repartitionedParts and newPartsFrmRepartitioning to
 		// partsToSave set if using RELOAD_PLAN_2.
-		if (UserInput.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
+		if (GlobalParameters.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
 			for (Integer Id : repartitionedParts)
 				partsToSave.add(Id);
 			for (Integer Id : newPartsFrmRepartitioning)
@@ -387,7 +386,7 @@ public class ComputedPartProcessor {
 
 		// Post processing - Parts to save test
 		// String s = "Printing parts to save\n";
-		// s = s + "Reload Plan : " + UserInput.getReloadPlan() +
+		// s = s + "Reload Plan : " + GlobalParameters.getReloadPlan() +
 		// "\n";
 		// s = s + partsToSave;
 		// logger.info(s);

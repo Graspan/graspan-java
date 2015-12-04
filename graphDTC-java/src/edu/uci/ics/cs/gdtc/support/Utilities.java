@@ -6,7 +6,7 @@ package edu.uci.ics.cs.gdtc.support;
  * @author Aftab
  *
  */
-public class Optimizers {
+public class Utilities {
 	
 	/**
 	 * (Called by loadPartitions method()) Rendered from:
