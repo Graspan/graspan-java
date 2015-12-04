@@ -526,7 +526,6 @@ public class ComputedPartProcessor {
 					}
 				}
 			}
-			break;
 		}
 
 		partOutStrm.close();
