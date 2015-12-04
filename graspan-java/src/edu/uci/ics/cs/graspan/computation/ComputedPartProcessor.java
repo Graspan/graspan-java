@@ -1,8 +1,10 @@
 package edu.uci.ics.cs.graspan.computation;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
@@ -417,7 +420,12 @@ public class ComputedPartProcessor {
 		// 3.2. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSave)
-			storeRepAndNewParts(vertices, newEdgesLL, intervals, partitionId);
+			storePart(vertices, newEdgesLL, intervals, partitionId);
+
+		// 3.3. save degree of those partitions.
+		// iterate over saveParts and get partitionId
+		for (Integer partitionId : partsToSave)
+			storePartDegs(vertices,intervals,partitionId);
 
 		// loaded intervals test before saving partitions 1/2
 		// String s = "Loaded intervals before saving:\n";
@@ -425,7 +433,7 @@ public class ComputedPartProcessor {
 		// s = s + intervals.get(i).getPartitionId() + " ";
 		// logger.info(s);
 
-		// 3.3. Remove saved partitions from LoadedVertexIntervals
+		// 3.4. Remove saved partitions from LoadedVertexIntervals
 		for (int i = 0; i < intervals.size(); i++) {
 			if (partsToSave.contains(intervals.get(i).getPartitionId())) {
 				intervals.remove(i);
@@ -445,7 +453,16 @@ public class ComputedPartProcessor {
 		RepartitioningData.clearRepartitioningVars();
 	}
 
-	private static void storeRepAndNewParts(Vertex[] vertices, NewEdgesList[] newEdgesLL,
+	/**
+	 * Stores a partition to disk.
+	 *  
+	 * @param vertices
+	 * @param newEdgesLL
+	 * @param intervals
+	 * @param partitionId
+	 * @throws IOException
+	 */
+	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
 			List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
 
 		// clear current file
@@ -514,6 +531,50 @@ public class ComputedPartProcessor {
 
 		partOutStrm.close();
 
+	}
+
+	/**
+	 * Stores degrees of a partition.
+	 * 
+	 * @param vertices
+	 * @param intervals
+	 * @param partitionId
+	 * @throws IOException
+	 */
+	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
+			throws IOException {
+
+		System.out.print("Generating degrees file for each partition... ");
+
+		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
+				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
+		partDegOutStrm.close();
+
+		partDegOutStrm = new PrintWriter(new BufferedWriter(
+				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
+
+		int srcVId, deg;
+
+		for (int i = 0; i < intervals.size(); i++) {
+
+			// locate the required interval in "vertices"
+			if (partitionId == intervals.get(i).getPartitionId()) {
+
+				// scan each vertex in this interval in "vertices" datastructure
+				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+
+					// get srcId and deg
+					srcVId = vertices[j].getVertexId();
+					deg = vertices[j].getCombinedDeg();
+					partDegOutStrm.println(srcVId + "\t" + deg);
+
+				}
+			}
+		}
+
+		partDegOutStrm.close();
+
+		System.out.println("Done");
 	}
 
 }
