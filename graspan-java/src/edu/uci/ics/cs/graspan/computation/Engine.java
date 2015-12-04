@@ -11,6 +11,7 @@ import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
@@ -23,11 +24,14 @@ public class Engine {
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private int[] partsToLoad;
+	private IScheduler scheduler;
 
-	//public Engine(IScheduler){}
-	public Engine(int[] partitionsToLoad) {
-		this.partsToLoad = partitionsToLoad;
+	public Engine(IScheduler scheduler) {
+		this.scheduler = scheduler;
 	}
+	// public Engine(int[] partitionsToLoad) {
+	// this.partsToLoad = partitionsToLoad;
+	// }
 
 	/**
 	 * Description:
@@ -51,54 +55,52 @@ public class Engine {
 
 		// 1. load partitions into memory
 		Loader loader = new Loader();
-		
+
 		// TODO need to start loop here
-		//LOOP PART
-		//partsToLoad= basicScheduler.getPartstoLoad()
-		//while (partsToLoad!=null){
-		
-		loader.loadParts(partsToLoad);
-		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
-		Vertex[] vertices = loader.getVertices();
-		NewEdgesList[] edgesLists = loader.getNewEdgeLists();
-		List<LoadedVertexInterval> intervals = loader.getIntervals();
-		assert(vertices != null && vertices.length > 0);
-		assert(intervals != null && intervals.size() > 0);
+		// LOOP PART
+		// partsToLoad= basicScheduler.getPartstoLoad()
+		partsToLoad = scheduler.getPartstoLoad();
+		while (partsToLoad != null) {
+			loader.loadParts(partsToLoad);
+			logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
+			Vertex[] vertices = loader.getVertices();
+			NewEdgesList[] edgesLists = loader.getNewEdgeLists();
+			List<LoadedVertexInterval> intervals = loader.getIntervals();
+			assert(vertices != null && vertices.length > 0);
+			assert(intervals != null && intervals.size() > 0);
 
-		EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
+			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 
-		logger.info("VERTEX LENGTH: " + vertices.length);
-		for (int i = 0; i < vertices.length; i++) {
-			logger.info("" + vertices[i]);
-			logger.info("" + edgesLists[i]);
+			logger.info("VERTEX LENGTH: " + vertices.length);
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
+
+			logger.info("Finish...");
+			logger.info("Starting computation and edge addition...");
+			t = System.currentTimeMillis();
+
+			// 2. do computation and add edges
+			EdgeComputer.setEdgesLists(edgesLists);
+			EdgeComputer.setVertices(vertices);
+			EdgeComputer.setIntervals(intervals);
+			doComputation(vertices, edgesLists, edgeComputers);
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
+			logger.info("VERTEX LENGTH: " + vertices.length);
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
+
+			// 3. process computed partitions
+			RepartitioningData.initRepartioningVars();
+			ComputedPartProcessor.initRepartitionConstraints();
+			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
+
+			partsToLoad = scheduler.getPartstoLoad();
 		}
 
-		logger.info("Finish...");
-		logger.info("Starting computation and edge addition...");
-		t = System.currentTimeMillis();
-
-		// 2. do computation and add edges
-		EdgeComputer.setEdgesLists(edgesLists);
-		EdgeComputer.setVertices(vertices);
-		EdgeComputer.setIntervals(intervals);
-		doComputation(vertices, edgesLists, edgeComputers);
-		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
-		logger.info("VERTEX LENGTH: " + vertices.length);
-		for (int i = 0; i < vertices.length; i++) {
-			logger.info("" + vertices[i]);
-			logger.info("" + edgesLists[i]);
-		}
-
-		// 3. process computed partitions
-		RepartitioningData.initRepartioningVars();
-		ComputedPartProcessor.initRepartitionConstraints();
-		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
-
-		//TODO
-		//partsToLoad= basicScheduler.getPartstoLoad();
-		//END LOOP }
-		
-		
 	}
 
 	/**
