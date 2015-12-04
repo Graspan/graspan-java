@@ -24,6 +24,7 @@ public class Engine {
 	private long totalNewEdges;
 	private int[] partsToLoad;
 
+	//public Engine(IScheduler){}
 	public Engine(int[] partitionsToLoad) {
 		this.partsToLoad = partitionsToLoad;
 	}
@@ -50,7 +51,12 @@ public class Engine {
 
 		// 1. load partitions into memory
 		Loader loader = new Loader();
+		
 		// TODO need to start loop here
+		//LOOP PART
+		//partsToLoad= basicScheduler.getPartstoLoad()
+		//while (partsToLoad!=null){
+		
 		loader.loadParts(partsToLoad);
 		logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
 		Vertex[] vertices = loader.getVertices();
@@ -88,9 +94,11 @@ public class Engine {
 		ComputedPartProcessor.initRepartitionConstraints();
 		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 
-		// TODO: decide which partition to store in disk or keep in memory,
-		// set edgelist.clear() accordingly
-		// 5. store partitions //TODO
+		//TODO
+		//partsToLoad= basicScheduler.getPartstoLoad();
+		//END LOOP }
+		
+		
 	}
 
 	/**
