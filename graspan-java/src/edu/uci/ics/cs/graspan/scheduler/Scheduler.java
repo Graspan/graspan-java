@@ -41,16 +41,17 @@ public class Scheduler {
 	}
 	
 	// only consider termination (without scheduling)
-	public Scheduler(int[] allPartitions) {
-		if(allPartitions == null)
-			throw new IllegalArgumentException("Null parameter in scheduler!");
+	public Scheduler(int numParts){
+//	public Scheduler(int[] allPartitions) {
+//		if(allPartitions == null)
+//			throw new IllegalArgumentException("Null parameter in scheduler!");
 		
-		for(int i = 0; i < allPartitions.length; i++) {
-			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, allPartitions.length);
+		for(int i = 0; i < numParts; i++) {
+			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, numParts);
 			allEdgeInfo.add(edgeInfo);
 		}
 		
-		numOfPartitions = allPartitions.length;
+		numOfPartitions = numParts;
 	}
 	
 	public void setLoadedIntervals(List<LoadedVertexInterval> intervals) {
