@@ -83,7 +83,7 @@ public class LoadedVertexInterval {
 		this.isNewEdgeAdded = isNewEdgeAdded;
 	}
 	
-	public boolean getIsNewEdgeAdded() {
+	public boolean hasNewEdges() {
 		return isNewEdgeAdded;
 	}
 

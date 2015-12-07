@@ -30,7 +30,7 @@ import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
  * @author Aftab
  *
  */
-public class PartitionGenerator {
+public class Preprocessor {
 
 	// number of input partitions
 	private static int numParts;
@@ -73,7 +73,7 @@ public class PartitionGenerator {
 	 * @param numParts
 	 * @throws IOException
 	 */
-	public PartitionGenerator(String baseFilename, int numParts) throws IOException {
+	public Preprocessor(String baseFilename, int numParts) throws IOException {
 		System.out.print("Initializing partition generator program... ");
 
 		this.numParts = numParts;

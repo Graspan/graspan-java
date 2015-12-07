@@ -1,6 +1,6 @@
 package edu.uci.ics.cs.graspan.scheduler;
 
-import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 
 /**
  * 
@@ -19,19 +19,19 @@ public class BasicScheduler implements IScheduler {
 	// We are assuming at most 50 - numOfOriginalParts will be created after the
 	// complete process
 	private static final int SizeOfPartScheduleMap = 50;
-
+	private int[][] partTerminationMap = new int[GlobalParams.getNumParts()][GlobalParams.getNumParts()];
 	/**
-	 * Initializes the scheduler. An entry of -1 in {@code partScheduleMap}
+	 * Initializes the scheduler. An entry of -1 in {@code partTerminationMap}
 	 * shows no active partition is represented by this row/column. An entry of
 	 * 0 shows this partition pair has not been computed. An entry of 1 shows
 	 * this partition pair has been computed.
 	 */
 	public void initScheduler() {
-		int totalNumParts = GlobalParameters.getNumParts();
-		// initialize partScheduleMap
+		int totalNumParts = GlobalParams.getNumParts();
+		// initialize partTerminationMap
 		for (int i = 0; i < totalNumParts; i++) {
 			for (int j = 0; j < i; j++) {
-				partScheduleMap[i][j] = 0;
+				partTerminationMap[i][j] = 0;
 			}
 		}
 	}
@@ -46,19 +46,24 @@ public class BasicScheduler implements IScheduler {
 	 */
 	public int[] getPartstoLoad() {
 
-		int numPartsPerComputation = GlobalParameters.getNumPartsPerComputation();
-		for (int i = 0; i < partScheduleMap.length; i++) {
+		int numPartsPerComputation = GlobalParams.getNumPartsPerComputation();
+		for (int i = 0; i < partTerminationMap.length; i++) {
 			for (int j = 0; j < i; j++) {
 				if (!isComputed(i, j)) {
 					int[] partsToLoad = new int[numPartsPerComputation];
 					partsToLoad[0] = i;
 					partsToLoad[1] = j;
-					partScheduleMap[i][j] = 1;
+					partTerminationMap[i][j] = 1;
 					return partsToLoad;
 				}
 			}
 		}
 		return null;
+	}
+	
+	public int[][] getPartScheduleMap() {
+		return partTerminationMap;
+			
 	}
 
 	/**
@@ -70,7 +75,7 @@ public class BasicScheduler implements IScheduler {
 	 * @return
 	 */
 	private boolean isComputed(int part1mapId, int part2mapId) {
-		if (partScheduleMap[part1mapId][part2mapId] == 1)
+		if (partTerminationMap[part1mapId][part2mapId] == 1)
 			return true;
 		else
 			return false;

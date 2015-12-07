@@ -1,6 +1,12 @@
 package edu.uci.ics.cs.graspan.computation;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,9 +14,10 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
-import edu.uci.ics.cs.graspan.datastructures.GlobalParameters;
+import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
@@ -27,7 +34,7 @@ public class ComputedPartProcessor {
 	// private static PrintWriter[] partDegOutStrms;
 	private static long partMaxPostNewEdges;
 	private static final Logger logger = GDTCLogger.getLogger("graphdtc computedpartprocessor");
-
+	
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
 	 * of new edges
@@ -61,8 +68,8 @@ public class ComputedPartProcessor {
 	 * @param intervals
 	 * @throws IOException
 	 */
-	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL,
-			List<LoadedVertexInterval> intervals) throws IOException {
+	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
+				throws IOException {
 
 		// TEST print
 		// for (int i = 0; i < vertices.length; i++) {
@@ -263,7 +270,7 @@ public class ComputedPartProcessor {
 		}
 
 		AllPartitions.setPartAllocTab(newPartAllocTable);
-		GlobalParameters.setNumParts(newPartAllocTable.length);
+		GlobalParams.setNumParts(newPartAllocTable.length);
 
 		// testing PartitionQuerier after changing PAT 2/2
 		// System.out.println("testing findPartition 7:" +
@@ -303,7 +310,7 @@ public class ComputedPartProcessor {
 
 					// 2.2.2. once a partition is repartitioned, we don't
 					// consider it loaded, thus we set it to MIN_VALUE
-					if (GlobalParameters.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
+					if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
 						loadedParts[j] = Integer.MIN_VALUE;
 
 					break;
@@ -371,13 +378,13 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		/*
-		 * 3. Save partitions to disk.
-		 */
+		//TODO
+		//updating basic scheduler
+		// 2.4. Create partsToSave set.
 
-		// 3.1. Add repartitionedParts and newPartsFrmRepartitioning to
+		// Add repartitionedParts and newPartsFrmRepartitioning to
 		// partsToSave set if using RELOAD_PLAN_2.
-		if (GlobalParameters.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
+		if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
 			for (Integer Id : repartitionedParts)
 				partsToSave.add(Id);
 			for (Integer Id : newPartsFrmRepartitioning)
@@ -391,7 +398,19 @@ public class ComputedPartProcessor {
 		// s = s + partsToSave;
 		// logger.info(s);
 
-		// 3.2. TODO save repartitioned partition and newly generated partitions
+		/*
+		* 3. Save partitions to disk.
+		*/
+		
+		// 3.1. save repartitioned partition and newly generated partitions
+		// iterate over saveParts and get partitionId
+		for (Integer partitionId : partsToSave)
+			storePart(vertices, newEdgesLL, intervals, partitionId);
+		
+		// 3.2. save degree of those partitions.
+		// iterate over saveParts and get partitionId
+		for (Integer partitionId : partsToSave)
+			storePartDegs(vertices,intervals,partitionId);
 
 		// loaded intervals test before saving partitions 1/2
 		// String s = "Loaded intervals before saving:\n";
@@ -407,7 +426,9 @@ public class ComputedPartProcessor {
 				i--;
 			}
 		}
-
+		
+		partsToSave.clear();
+		
 		// loaded intervals test after saving partitions 2/2
 		// String s1 = "Loaded intervals after saving:\n";
 		// for (int i = 0; i < intervals.size(); i++)
@@ -416,5 +437,127 @@ public class ComputedPartProcessor {
 
 		RepartitioningData.clearRepartitioningVars();
 	}
+	
+	/**
+	* Stores a partition to disk.
+	*  
+	* @param vertices
+	* @param newEdgesLL
+	* @param intervals
+	* @param partitionId
+	* @throws IOException
+	*/
+	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
+	 			List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
 
+		// clear current file
+		DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(
+				new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
+		partOutStrm.close();
+
+		partOutStrm = new DataOutputStream(new BufferedOutputStream(
+				new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, true)));
+
+		int srcVId, destVId, count;
+		int edgeValue;
+		for (int i = 0; i < intervals.size(); i++) {
+
+			// locate the required interval in "vertices"
+			if (partitionId == intervals.get(i).getPartitionId()) {
+
+				// scan each vertex in this interval in "vertices" datastructure
+				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+
+					// write the srcId
+					srcVId = vertices[j].getVertexId();
+					partOutStrm.writeInt(srcVId);
+
+					// write the count
+					count = vertices[j].getCombinedDeg();
+					partOutStrm.writeInt(count);
+
+					// scan each edge (original edge) in list of each vertex in
+					// this interval
+					for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
+
+						// write the destId-edgeValue pair
+						destVId = vertices[j].getOutEdge(k);
+						edgeValue = vertices[j].getOutEdgeValue(k);
+						partOutStrm.writeInt(destVId);
+						partOutStrm.writeByte(edgeValue);
+
+					}
+
+					// scan each newEdge in list of each vertex in
+					// this interval
+
+					if (newEdgesLL[j] != null) {
+
+						// for each new edge list node
+						for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
+
+							// for each edge in the new edge list node
+							for (int l = 0; l < newEdgesLL[j].getNode(k).getIndex(); l++) {
+
+								// write the new destId-edgeValue pair
+								destVId = newEdgesLL[j].getNode(k).getNewOutEdge(l);
+								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
+								partOutStrm.writeInt(destVId);
+								partOutStrm.writeByte(edgeValue);
+
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+		partOutStrm.close();
+
+	}
+	
+	/**
+	* Stores degrees of a partition.
+	* 
+	* @param vertices
+	* @param intervals
+	* @param partitionId
+	* @throws IOException
+	*/
+	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
+				throws IOException {
+	
+			System.out.print("Generating degrees file for each partition... ");
+	
+			PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
+					new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
+			partDegOutStrm.close();
+	
+			partDegOutStrm = new PrintWriter(new BufferedWriter(
+					new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
+	
+			int srcVId, deg;
+	
+			for (int i = 0; i < intervals.size(); i++) {
+	
+				// locate the required interval in "vertices"
+				if (partitionId == intervals.get(i).getPartitionId()) {
+	
+					// scan each vertex in this interval in "vertices" datastructure
+					for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+	
+						// get srcId and deg
+						srcVId = vertices[j].getVertexId();
+						deg = vertices[j].getCombinedDeg();
+						partDegOutStrm.println(srcVId + "\t" + deg);
+	
+					}
+				}
+			}
+	
+			partDegOutStrm.close();
+	
+			System.out.println("Done");
+		}
 }

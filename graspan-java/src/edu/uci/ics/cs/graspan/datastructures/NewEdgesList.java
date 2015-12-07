@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.datastructures;
 
 import java.util.Arrays;
 
@@ -49,6 +49,14 @@ public class NewEdgesList {
 			dstVertices[index] = vertexId;
 			edgeValues[index] = edgeValue;
 			index++;
+		}
+		
+		public int getNewOutEdge(int i) {
+			return dstVertices[i];
+		}
+
+		public byte getNewOutEdgeValue(int i) {
+			return edgeValues[i];
 		}
 
 	}

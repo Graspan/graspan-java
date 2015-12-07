@@ -8,8 +8,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.support.GDTCLogger;
 
 
@@ -23,12 +25,17 @@ public class Engine {
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 //	private String baseFileName;
-	private int[] partitionsToLoad;
+	private int[] partsToLoad;
+	private IScheduler scheduler;
 	
 	public Engine(int[] partitionsToLoad) {
 //		this.baseFileName = baseFileName;
-		this.partitionsToLoad = partitionsToLoad;
+		this.partsToLoad = partitionsToLoad;
 	}
+	
+	public Engine(IScheduler scheduler) {
+		this.scheduler = scheduler;
+ 	}
 	
 	/**
 	 * Description:
@@ -50,46 +57,51 @@ public class Engine {
 		long t = System.currentTimeMillis();
 		
 		// 1. load partitions into memory
-		PartitionLoader loader = new PartitionLoader();
-		loader.loadParts(partitionsToLoad);
-		logger.info("Load took: " + (System.currentTimeMillis() - t) + "ms");
-		Vertex[] vertices = loader.getVertices();
-		List<LoadedVertexInterval> intervals = loader.getIntervals();
-		assert(vertices != null && vertices.length > 0);
-		assert(intervals != null && intervals.size() > 0);
+		Loader loader = new Loader();
+		// LOOP PART
+		// partsToLoad= basicScheduler.getPartstoLoad()
+		partsToLoad = scheduler.getPartstoLoad();
+		while (partsToLoad != null) {
+			loader.loadParts(partsToLoad);
+			logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
+			Vertex[] vertices = loader.getVertices();
+			NewEdgesList[] edgesLists = loader.getNewEdgeLists();
+			List<LoadedVertexInterval> intervals = loader.getIntervals();
+			assert(vertices != null && vertices.length > 0);
+			assert(intervals != null && intervals.size() > 0);
+
+			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
+
+			logger.info("VERTEX LENGTH: " + vertices.length);
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
 		
-		NewEdgesList[] edgesLists = loader.getNewEdgeLists();
-		EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
-		
-//		logger.info("VERTEX LENGTH: " + vertices.length);
-//		for(int i = 0; i < vertices.length; i++) {
-//			logger.info("" + vertices[i]);
-//			logger.info("" + edgesLists[i]);
-//		}
-		
-		logger.info("Finish...");
-		logger.info("Starting computation and edge addition...");
-		t = System.currentTimeMillis();
-		
-		// 2. do computation and add edges
-		EdgeComputer.setEdgesLists(edgesLists);
-		EdgeComputer.setVertices(vertices);
-		EdgeComputer.setIntervals(intervals);
-		doComputation(vertices, edgesLists, edgeComputers);
-		logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
-//		logger.info("VERTEX LENGTH: " + vertices.length);
-//		for(int i = 0; i < vertices.length; i++) {
-//			logger.info("" + vertices[i]);
-//			logger.info("" + edgesLists[i]);
-//		}
-//		
-		// 3. process computed partitions
-		RepartitioningData.initRepartioningVars();
-		ComputedPartProcessor.initRepartitionConstraints();
-		ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
-		
-		//TODO: decide which partition to store in disk or keep in memory,
-		// set edgelist.clear() accordingly
+			logger.info("Finish...");
+			logger.info("Starting computation and edge addition...");
+			t = System.currentTimeMillis();
+			
+			// 2. do computation and add edges
+			EdgeComputer.setEdgesLists(edgesLists);
+			EdgeComputer.setVertices(vertices);
+			EdgeComputer.setIntervals(intervals);
+			doComputation(vertices, edgesLists, edgeComputers);
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+	//		logger.info("VERTEX LENGTH: " + vertices.length);
+	//		for(int i = 0; i < vertices.length; i++) {
+	//			logger.info("" + vertices[i]);
+	//			logger.info("" + edgesLists[i]);
+	//		}
+	//		
+			// 3. process computed partitions
+			RepartitioningData.initRepartioningVars();
+			ComputedPartProcessor.initRepartitionConstraints();
+			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
+			partsToLoad = scheduler.getPartstoLoad();
+			//TODO: decide which partition to store in disk or keep in memory,
+			// set edgelist.clear() accordingly
+		}
 	}
 
 	/**
