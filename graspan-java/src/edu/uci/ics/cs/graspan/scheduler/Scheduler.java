@@ -16,6 +16,10 @@ public class Scheduler {
 	private List<Long> partitionNumEdges = new ArrayList<Long>();
 	private List<LoadedVertexInterval> intervals = null;
 	
+	// for temp use
+	public static int counter;
+	public static int numOfPartitions;
+	
 	/**
 	 * Constructor
 	 * @param partSizes
@@ -34,6 +38,19 @@ public class Scheduler {
 			allEdgeInfo.add(edgeInfo);
 		}
 		
+	}
+	
+	// only consider termination (without scheduling)
+	public Scheduler(int[] allPartitions) {
+		if(allPartitions == null)
+			throw new IllegalArgumentException("Null parameter in scheduler!");
+		
+		for(int i = 0; i < allPartitions.length; i++) {
+			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, allPartitions.length);
+			allEdgeInfo.add(edgeInfo);
+		}
+		
+		numOfPartitions = allPartitions.length;
 	}
 	
 	public void setLoadedIntervals(List<LoadedVertexInterval> intervals) {
@@ -104,9 +121,21 @@ public class Scheduler {
 		return result;
 	}
 	
+	// A very simple sequential scheduler
+	public int[] schedulePartitionSimple() {
+		if(counter >= numOfPartitions)
+			counter = 0;
+		// schedule two partitions every time
+		int[] scheduled = new int[2];
+		scheduled[0] = counter++;
+		scheduled[1] = counter++;
+		
+		return scheduled;
+	}
+	
 	/**
 	 * 
-	 * Description:check whether to be terminated
+	 * Description:check whether to be terminated. call it before every iteration.
 	 * @param:
 	 * @return:boolean
 	 */
@@ -127,7 +156,7 @@ public class Scheduler {
 	
 	/**
 	 * 
-	 * Description:
+	 * Description: set termination status every time after computation.
 	 * @param:
 	 * @return:void
 	 */
@@ -164,5 +193,20 @@ public class Scheduler {
 		
 		terminationInfoForOne.set(loadedPartitionTwo, true);
 		terminationInfoForTwo.set(loadedPartitionOne, true);
+	}
+	
+	// update termination status after repartitioning
+	public void updateSchedulingInfo(int numOfNewPartitions, int totalPartitions) {
+		for(PartitionEdgeInfo info : allEdgeInfo) {
+			for(int i = 0; i < numOfNewPartitions; i++) {
+				info.getTerminationInfo().add(Boolean.FALSE);
+			}
+		}
+		
+		int numOfOldPartitions =  totalPartitions - numOfNewPartitions;
+		for(int i = 0; i < numOfNewPartitions; i++) {
+			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(numOfOldPartitions + i, totalPartitions);
+			allEdgeInfo.add(newInfo);
+		}
 	}
 }

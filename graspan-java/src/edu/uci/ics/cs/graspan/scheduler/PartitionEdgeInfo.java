@@ -30,6 +30,12 @@ public class PartitionEdgeInfo {
 		}
 	}
 	
+	public PartitionEdgeInfo(int partitionId, int size) {
+		this.partitionId = partitionId;
+		for(int i = 0; i < size; i++)
+			terminationInfo.add(Boolean.FALSE);
+	}
+	
 	public List<Long> getPartitionEdgeInfo() {
 		return pEdgeInfo;
 	}
