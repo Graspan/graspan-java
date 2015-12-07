@@ -28,9 +28,9 @@ public class Engine {
 	private int[] partsToLoad;
 	private IScheduler scheduler;
 
-	public Engine(IScheduler scheduler) {
-		this.scheduler = scheduler;
-	}
+//	public Engine(IScheduler scheduler) {
+//		this.scheduler = scheduler;
+//	}
 	// public Engine(int[] partitionsToLoad) {
 	// this.partsToLoad = partitionsToLoad;
 	// }
@@ -55,10 +55,10 @@ public class Engine {
 		logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
-		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
-
 		// 1. load partitions into memory
 		Loader loader = new Loader();
+		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
+
 		while (!scheduler.shouldTerminate()) {
 			partsToLoad = scheduler.schedulePartitionSimple();
 			loader.loadParts(partsToLoad);

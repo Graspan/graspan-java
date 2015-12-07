@@ -20,12 +20,9 @@ public class ComputationClient {
 		GlobalParams.setReloadPlan(args[3]);
 		GlobalParams.setPreservePlan(args[4]);
 
-		BasicScheduler basicScheduler = new BasicScheduler();
-		basicScheduler.initScheduler();
 		logger.info("Initialized scheduler.");
 
-		Engine engine = new Engine(basicScheduler);
-//		Engine engine = new Engine(basicScheduler.getPartstoLoad());
+		Engine engine = new Engine();
 		engine.run();
 	}
 }
