@@ -18,7 +18,6 @@ public class Scheduler {
 	
 	// for temp use
 	public static int counter;
-	public static int numOfPartitions;
 	
 	/**
 	 * Constructor
@@ -41,16 +40,12 @@ public class Scheduler {
 	}
 	
 	// only consider termination (without scheduling)
-	public Scheduler(int[] allPartitions) {
-		if(allPartitions == null)
-			throw new IllegalArgumentException("Null parameter in scheduler!");
-		
-		for(int i = 0; i < allPartitions.length; i++) {
-			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, allPartitions.length);
+	public Scheduler(int numParts) {
+		for(int i = 0; i < numParts; i++) {
+			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, numParts);
 			allEdgeInfo.add(edgeInfo);
 		}
 		
-		numOfPartitions = allPartitions.length;
 	}
 	
 	public void setLoadedIntervals(List<LoadedVertexInterval> intervals) {
@@ -122,12 +117,16 @@ public class Scheduler {
 	}
 	
 	// A very simple sequential scheduler
-	public int[] schedulePartitionSimple() {
+	public int[] schedulePartitionSimple(int numOfPartitions) {
+		int[] scheduled = new int[2];
+		
+		// schedule two partitions every time
 		if(counter >= numOfPartitions)
 			counter = 0;
-		// schedule two partitions every time
-		int[] scheduled = new int[2];
 		scheduled[0] = counter++;
+		
+		if(counter >= numOfPartitions)
+			counter = 0;
 		scheduled[1] = counter++;
 		
 		return scheduled;

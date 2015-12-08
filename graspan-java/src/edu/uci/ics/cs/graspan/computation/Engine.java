@@ -7,11 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.IScheduler;
+import edu.uci.ics.cs.graspan.scheduler.Scheduler;
 import edu.uci.ics.cs.graspan.support.GDTCLogger;
 
 
@@ -28,14 +30,14 @@ public class Engine {
 	private int[] partsToLoad;
 	private IScheduler scheduler;
 	
-	public Engine(int[] partitionsToLoad) {
-//		this.baseFileName = baseFileName;
-		this.partsToLoad = partitionsToLoad;
-	}
-	
-	public Engine(IScheduler scheduler) {
-		this.scheduler = scheduler;
- 	}
+//	public Engine(int[] partitionsToLoad) {
+////		this.baseFileName = baseFileName;
+//		this.partsToLoad = partitionsToLoad;
+//	}
+//	
+//	public Engine(IScheduler scheduler) {
+//		this.scheduler = scheduler;
+// 	}
 	
 	/**
 	 * Description:
@@ -52,16 +54,16 @@ public class Engine {
         }
         
         computationExecutor = Executors.newFixedThreadPool(nThreads);
+        logger.info("Executing partition loader.");
+ 		long t = System.currentTimeMillis();
+ 		
+ 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
         
-		logger.info("Loading Partitions...");
-		long t = System.currentTimeMillis();
-		
 		// 1. load partitions into memory
 		Loader loader = new Loader();
-		// LOOP PART
-		// partsToLoad= basicScheduler.getPartstoLoad()
-		partsToLoad = scheduler.getPartstoLoad();
-		while (partsToLoad != null) {
+		
+		while (!scheduler.shouldTerminate()) {
+			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			loader.loadParts(partsToLoad);
 			logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
 			Vertex[] vertices = loader.getVertices();
@@ -95,12 +97,13 @@ public class Engine {
 	//		}
 	//		
 			// 3. process computed partitions
+			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
-			partsToLoad = scheduler.getPartstoLoad();
-			//TODO: decide which partition to store in disk or keep in memory,
-			// set edgelist.clear() accordingly
+			int numPartsFinal = AllPartitions.getPartAllocTab().length;
+			scheduler.setTerminationStatus();
+			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
 		}
 	}
 
