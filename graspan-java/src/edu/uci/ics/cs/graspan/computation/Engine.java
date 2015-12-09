@@ -60,7 +60,8 @@ public class Engine {
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
 
 		while (!scheduler.shouldTerminate()) {
-			partsToLoad = scheduler.schedulePartitionSimple();
+			int numPartsStart = AllPartitions.getPartAllocTab().length;
+			partsToLoad = scheduler.schedulePartitionSimple(numPartsStart);
 			loader.loadParts(partsToLoad);
 			logger.info("Total time for loading partitions: " + (System.currentTimeMillis() - t) + " ms");
 			Vertex[] vertices = loader.getVertices();
@@ -94,7 +95,6 @@ public class Engine {
 			}
 
 			// 3. process computed partitions
-			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);

@@ -533,7 +533,7 @@ public class Preprocessor {
 	 */
 	private void writeEdgeDestCountstoFile() throws IOException {
 		PrintWriter edgeDestCountsOutStrm = new PrintWriter(
-				new BufferedWriter(new FileWriter(baseFilename + ".edgeDestCounts.", true)));
+				new BufferedWriter(new FileWriter(baseFilename + ".edgeDestCounts", true)));
 		for (int i = 0; i < numParts; i++) {
 			for (int j = 0; j < numParts; j++) {
 				edgeDestCountsOutStrm.println(i + "\t" + j + "\t" + edgeDestCount[i][j]);
@@ -550,7 +550,7 @@ public class Preprocessor {
 	 */
 	private void writeTotalPartEdgestoFile() throws IOException {
 		PrintWriter partSizesOutStrm = new PrintWriter(
-				new BufferedWriter(new FileWriter(baseFilename + ".partSizes.", true)));
+				new BufferedWriter(new FileWriter(baseFilename + ".partSizes", true)));
 		long[] partSizes = SchedulerInfo.getPartSizes();
 		for (int i = 0; i < numParts; i++) {
 			partSizesOutStrm.println(partSizes[i]);
