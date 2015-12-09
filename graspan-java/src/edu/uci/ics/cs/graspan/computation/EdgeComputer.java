@@ -2,10 +2,12 @@ package edu.uci.ics.cs.graspan.computation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
@@ -20,6 +22,7 @@ public class EdgeComputer {
 	private static NewEdgesList[] edgesLists = null;
 	private static Vertex[] vertices = null;
 	private static List<LoadedVertexInterval> intervals = null;
+	private static final Logger logger = GraspanLogger.getLogger("edgecomputer");
 
 	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;

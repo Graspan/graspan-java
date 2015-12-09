@@ -86,5 +86,19 @@ public class LoadedVertexInterval {
 	public boolean hasNewEdges() {
 		return isNewEdgeAdded;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		String NEW_LINE = System.getProperty("line.separator");
+		
+		result.append(NEW_LINE + "interval : " + partitionId);
+		result.append(NEW_LINE + "firstVertex : " + firstVertex);
+		result.append(NEW_LINE + "lasstVertex : " + lastVertex);
+		result.append(NEW_LINE + "indexStart : " + indexStart);
+		result.append(NEW_LINE + "indexEnd : " + indexEnd);
+		
+		return result.toString();
+	}
 
 }

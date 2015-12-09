@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Use ChiLogger.getLogger("object-name") to get a logger object.
  */
 
-public class GDTCLogger {
+public class GraspanLogger {
 
 
 

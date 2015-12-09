@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computation.Engine;
 import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.BasicScheduler;
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class ComputationClient {
 
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc dtccomputer");
+	private static final Logger logger = GraspanLogger.getLogger("graphdtc dtccomputer");
 
 	public static void main(String args[]) throws IOException {
 

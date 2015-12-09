@@ -29,7 +29,7 @@ import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
-import edu.uci.ics.cs.graspan.support.GDTCLogger;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
@@ -40,12 +40,12 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
-	private static final Logger logger = GDTCLogger.getLogger("graphdtc partitionloader");
+	private static final Logger logger = GraspanLogger.getLogger("loader");
 
 	private static Vertex[] vertices = null;
 	private static NewEdgesList[] newEdgeLists = null;
 
-	private ArrayList<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	private List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
 	private String baseFilename = "";
 	private String reloadPlan = "";
@@ -138,7 +138,7 @@ public class Loader {
 		// initialize data structures of the partitions to load
 		initVarsOfPartsToLoad();
 
-		logger.info("Initialized data structures for partitions to load.");
+//		logger.info("Initialized data structures for partitions to load.");
 		// fill the partition data structures
 		fillVarsOfPartsToLoad();
 
@@ -155,7 +155,7 @@ public class Loader {
 				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
 			}
 		}
-		logger.info("Sorted loaded partitions.");
+//		logger.info("Sorted loaded partitions.");
 
 		// reset newParts
 		for (int i = 0; i < newParts.length; i++) {
@@ -200,7 +200,7 @@ public class Loader {
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".partAllocTable");
+//		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 	}
 
@@ -237,7 +237,7 @@ public class Loader {
 
 		inEdgeDestCountStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
+//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 
 		/*
 		 * Scan the partSizes file
@@ -253,7 +253,7 @@ public class Loader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		logger.info("Loaded partition sizes file " + baseFilename + ".partSizes");
+//		logger.info("Loaded partition sizes file " + baseFilename + ".partSizes");
 
 	}
 
@@ -261,7 +261,7 @@ public class Loader {
 		return vertices;
 	}
 
-	public ArrayList<LoadedVertexInterval> getIntervals() {
+	public List<LoadedVertexInterval> getIntervals() {
 		return intervals;
 	}
 
@@ -273,13 +273,15 @@ public class Loader {
 	 * Computes the next set of parts that are to be loaded in the memory.
 	 * 
 	 * @param partsToLoad
+	 * @throws IOException
 	 */
 	private void updateNewPartsAndLoadedParts(int partsToLoad[]) throws IOException {
 		/*
 		 * NOTE: At no point will partsToLoad be equal to loadedparts.
 		 */
 
-		// TODO TO REVISE THIS
+		// TODO INCOMPLETE - SINCE RELOAD PLAN 1 IS THE WORST PLAN, WE SHALL
+		// IGNORE THIS
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_1") == 0) {
 			int[] newParts = LoadedPartitions.getNewParts();
 			newParts = partsToLoad;
@@ -336,11 +338,11 @@ public class Loader {
 			}
 
 			// test partsToSave
-			System.out.println("Partitions to save:");
-			System.out.println(partsToSave);
-			
+//			System.out.println("Partitions to save:");
+//			System.out.println(partsToSave);
+
 			// 2. Save PartsSet
-			
+
 			// 2.1. save repartitioned partition and newly generated partitions
 			// iterate over saveParts and get partitionId
 			for (Integer partitionId : partsToSave)
@@ -359,6 +361,8 @@ public class Loader {
 					i--;
 				}
 			}
+
+			partsToSave.clear();
 
 			tempSet.clear();
 
@@ -481,7 +485,7 @@ public class Loader {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
+//				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
 			}
 		}
 	}
@@ -572,13 +576,13 @@ public class Loader {
 		// System.out.println(intervals.size());
 		// System.out.println(vertices.length);
 
-		// TODO PRESERVE PREVIOUS VERTICES
 		TreeSet<Integer> originalLoadedPartIndices = new TreeSet<Integer>();
 		TreeSet<Integer> newLoadedPartIndices = new TreeSet<Integer>();
 		// using arraylist as we need to maintain duplicates and order
 		ArrayList<Integer> indexDiffs = new ArrayList<Integer>();
 
-		// test setting dummy vertices and newedgelists (comment
+		// edge-data preservation test 1/ setting dummy vertices and
+		// newedgelists (comment
 		// originalLoadedPartIndices for-loop below when using this.)
 		// int[] my_vertices = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
 		// 10, 11, 9, 8 };
@@ -604,7 +608,7 @@ public class Loader {
 			indexDiffs.add(lastIdx - firstIdx);
 		}
 
-		// test IndexDiffs
+		// edge-data preservation test 2/ IndexDiffs
 		// System.out.println("indexDiffs:");
 		// System.out.println(indexDiffs);
 
@@ -615,7 +619,7 @@ public class Loader {
 			newIndexSt = newIndexSt + diff + 1;
 		}
 
-		// test newLoadedPartIndices
+		// edge-data preservation test 3/ newLoadedPartIndices
 		// System.out.println("newLoadedPartIndices:");
 		// System.out.println(newLoadedPartIndices);
 
@@ -633,7 +637,7 @@ public class Loader {
 				// preserve vertices
 				vertices[i] = vertices[oldIdxMin];
 
-				// test shifting vertices
+				// edge-data preservation test 4/ shifting vertices
 				// my_vertices[i] = my_vertices[oldIdxMin];
 
 				// preserve new edges
@@ -641,7 +645,7 @@ public class Loader {
 				newEdgeLists[oldIdxMin] = newEdgeLists[i];
 				newEdgeLists[i] = temp_newEdgeList;
 
-				// test swapping newEdges
+				// edge-data preservation test 5/ swapping newEdges
 				// my_temp_newEdges = my_newEdges[oldIdxMin];
 				// my_newEdges[oldIdxMin] = my_newEdges[i];
 				// my_newEdges[i] = my_temp_newEdges;
@@ -655,12 +659,12 @@ public class Loader {
 		// vertices[i] = null;
 		// }
 
-		// test (use if above is used)
+		// edge-data preservation test 6/ (use if above is used)
 		// for (int i = newIdxMax + 1; i < my_vertices.length; i++) {
 		// my_vertices[i] = -1;
 		// }
 
-		// test final vertices and edges
+		// edge-data preservation test 7/ final vertices and edges
 		// System.out.println("final my_vertices");
 		// System.out.print("[ ");
 		// for (int i = 0; i < my_vertices.length; i++) {
@@ -674,8 +678,7 @@ public class Loader {
 		// System.out.print(my_newEdges[i] + " ");
 		// }
 		// System.out.println(" ]");
-
-		System.exit(0);
+		// System.exit(0);
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
@@ -781,7 +784,7 @@ public class Loader {
 
 				partInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
+//				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
 			}
 		}
 
@@ -799,7 +802,13 @@ public class Loader {
 	}
 
 	/**
-	 * Save Partitions to disk
+	 * Stores a partition to disk.
+	 * 
+	 * @param vertices
+	 * @param newEdgesLL
+	 * @param intervals
+	 * @param partitionId
+	 * @throws IOException
 	 */
 	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
@@ -870,9 +879,9 @@ public class Loader {
 			}
 
 		}
- 
- 	}
-	
+
+	}
+
 	/**
 	 * Stores degrees of a partition.
 	 * 
@@ -914,5 +923,4 @@ public class Loader {
 		}
 
 	}
-
 }
