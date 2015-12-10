@@ -1,7 +1,9 @@
 package edu.uci.ics.cs.graspan.datastructures;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * This class maintains all the variables used for loaded partitions.
@@ -33,6 +35,9 @@ public class LoadedPartitions {
 	// source vertex, Dimension 3 indicates an out-edge from each source vertex
 	private static int loadedPartEdges[][][];
 	private static byte loadedPartEdgeVals[][][];
+	
+	//Loaded partition intervals
+	public static List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
 	/**
 	 * 

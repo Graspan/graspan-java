@@ -3,8 +3,10 @@ package edu.uci.ics.cs.graspan.dispatcher;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
@@ -13,16 +15,18 @@ import edu.uci.ics.cs.graspan.preproc.Preprocessor;
  *
  */
 public class PreprocessorClient {
+	
+	private static final Logger logger = GraspanLogger.getLogger("PreprocessorClient");
 
 	public static void main(String[] args) throws IOException {
 
 		String baseFilename = args[0];
 		int numInParts = Integer.parseInt(args[1]);
-		System.out.println(">Input graph: " + args[0]);
-		System.out.println(">Requested number of partitions to generate: " + args[1]);
+		logger.info("Input graph: " + args[0]);
+		logger.info("Requested number of partitions to generate: " + args[1]);
 
 		// initialize Partition Generator Program
-		System.out.println("Starting preprocessing...");
+		logger.info("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
 		Preprocessor partgenerator = initPartGenerator(baseFilename, numInParts);
 
@@ -30,7 +34,7 @@ public class PreprocessorClient {
 		long degGenStartTime = System.nanoTime();
 		partgenerator.generateGraphDegs(new FileInputStream(new File(baseFilename)));
 		long degGenDuration = System.nanoTime() - degGenStartTime;
-		System.out.println(">Total time for generating degrees file (nanoseconds): " + degGenDuration);
+		logger.info(">Total time for generating degrees file (nanoseconds): " + degGenDuration);
 
 		// creating the partitions
 		long creatingPartsStartTime = System.nanoTime();
@@ -38,11 +42,11 @@ public class PreprocessorClient {
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 		partgenerator.generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
-		System.out.println(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
+		logger.info(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
 
-		System.out.println("Preprocessing complete.");
+		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
-		System.out.println(">Total preprocessing time (nanoseconds): " + preprocDuration);
+		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);
 
 	}
 

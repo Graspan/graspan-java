@@ -2,8 +2,10 @@ package edu.uci.ics.cs.graspan.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 
 /**
@@ -15,6 +17,7 @@ public class Scheduler {
 	private List<PartitionEdgeInfo> allEdgeInfo = new ArrayList<PartitionEdgeInfo>();
 	private List<Long> partitionNumEdges = new ArrayList<Long>();
 	private List<LoadedVertexInterval> intervals = null;
+	private static final Logger logger = GraspanLogger.getLogger("scheduler");
 	
 	// for temp use
 	public static int counter;
@@ -167,6 +170,9 @@ public class Scheduler {
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
 		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
 		
+		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : " + isNewEdgeAddedForOne);
+		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : " + isNewEdgeAddedForTwo);
+		
 		List<Boolean> terminationInfoForOne = allEdgeInfo.get(loadedPartitionOne).getTerminationInfo();
 		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(loadedPartitionTwo).getTerminationInfo();
 		
@@ -207,5 +213,16 @@ public class Scheduler {
 			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(numOfOldPartitions + i, totalPartitions);
 			allEdgeInfo.add(newInfo);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		String NEW_LINE = System.getProperty("line.separator");
+		result.append(NEW_LINE + "number of partitions : " + allEdgeInfo.size());
+		for(PartitionEdgeInfo info : allEdgeInfo)
+			result.append(NEW_LINE + info.toString());
+		
+		return result.toString();
 	}
 }

@@ -40,7 +40,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
-	private static final Logger logger = GraspanLogger.getLogger("graphdtc partitionloader");
+	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	private static Vertex[] vertices = null;
 	private static NewEdgesList[] newEdgeLists = null;
@@ -253,7 +253,7 @@ public class Loader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		logger.info("Loaded partition sizes file " + baseFilename + ".partSizes");
+		logger.info(baseFilename + ".partSizes");
 
 	}
 
@@ -338,8 +338,8 @@ public class Loader {
 			}
 
 			// test partsToSave
-			System.out.println("Partitions to save:");
-			System.out.println(partsToSave);
+//			System.out.println("Partitions to save:");
+//			System.out.println(partsToSave);
 
 			// 2. Save PartsSet
 

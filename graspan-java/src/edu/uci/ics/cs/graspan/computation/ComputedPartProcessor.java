@@ -32,7 +32,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 public class ComputedPartProcessor {
 
 	private static long partMaxPostNewEdges;
-	private static final Logger logger = GraspanLogger.getLogger("graphdtc computedpartprocessor");
+	private static final Logger logger = GraspanLogger.getLogger("ComputedPartProcessor");
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -393,9 +393,6 @@ public class ComputedPartProcessor {
 		//TODO
 		//updating basic scheduler
 		
-		
-		
-		
 		// 2.4. Create partsToSave set.
 
 		// Add repartitionedParts and newPartsFrmRepartitioning to
@@ -546,7 +543,7 @@ public class ComputedPartProcessor {
 	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		System.out.print("Generating degrees file for each partition... ");
+		logger.info("Generating degrees file for each partition... ");
 
 		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
 				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
@@ -576,7 +573,6 @@ public class ComputedPartProcessor {
 
 		partDegOutStrm.close();
 
-		System.out.println("Done");
 	}
 
 }

@@ -51,4 +51,15 @@ public class PartitionEdgeInfo {
 	public List<Boolean> getTerminationInfo() {
 		return terminationInfo;
 	}
+	
+		@Override
+		public String toString() {
+			StringBuilder result = new StringBuilder();
+			String NEW_LINE = System.getProperty("line.separator");
+			result.append(NEW_LINE + "partition id : " + partitionId);
+			result.append(NEW_LINE + "termination info : " + terminationInfo);
+			
+			return result.toString();
+			
+		}
 }

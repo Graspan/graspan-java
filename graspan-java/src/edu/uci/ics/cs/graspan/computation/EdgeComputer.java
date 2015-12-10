@@ -1,11 +1,12 @@
 package edu.uci.ics.cs.graspan.computation;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
@@ -13,6 +14,8 @@ import edu.uci.ics.cs.graspan.datastructures.Vertex;
  *         Created by Oct 8, 2015
  */
 public class EdgeComputer {
+	
+	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
 	// test flag for viewing new edges of a source
 	public static int flag = 0;

@@ -15,7 +15,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 // TABLE IS NOT CONTIGUOUS BY PARTID// u cannot operate on partition id anymore
 public class PartitionQuerier {
 
-	private static final Logger logger = GraspanLogger.getLogger("graphdtc partitionquerier");
+	private static final Logger logger = GraspanLogger.getLogger("PartitionQuerier");
 
 	/**
 	 * Returns the number of unique sources of in partition partId. IMP: we
