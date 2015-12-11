@@ -56,7 +56,8 @@ public class ComputedPartProcessor {
 
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
-		partMaxPostNewEdges = heuristic_newPartMax;
+		// partMaxPostNewEdges = heuristic_newPartMax;
+		partMaxPostNewEdges = 50;
 	}
 
 	/**
@@ -355,8 +356,9 @@ public class ComputedPartProcessor {
 
 		// 2.3.2. Scan vertices data structure and store partition interval
 		// indices in LoadedVertexIntervals
-		intervals.clear();
+		// intervals.clear();
 		int src = 0, indexSt = 0, indexEd = 0, minSrcTest = 0;
+		boolean intervalFound;
 		for (int i = 0; i < vertices.length; i++) {
 			if (vertices[i] != null) {
 				minSrcTest = 0;
@@ -364,13 +366,32 @@ public class ComputedPartProcessor {
 				// logger.info("Scanning src " + src + " idx " + i);
 				for (Integer loadedPartId : loadedPartsPostProcessing) {
 					if (src == PartitionQuerier.getFirstSrc(loadedPartId)) {
-						LoadedVertexInterval interval = new LoadedVertexInterval(src,
-								PartitionQuerier.getLastSrc(loadedPartId), loadedPartId);
-						indexSt = i;
-						interval.setIndexStart(indexSt);
-						indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
-						interval.setIndexEnd(indexEd);
-						intervals.add(interval);
+
+						// For an existing interval
+						// find the interval
+						intervalFound = false;
+						for (LoadedVertexInterval interval : intervals) {
+							if (interval.getPartitionId() == loadedPartId) {
+								intervalFound = true;
+								interval.setLastVertex(PartitionQuerier.getLastSrc(loadedPartId));
+								indexSt = i;
+								interval.setIndexStart(indexSt);
+								indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
+								interval.setIndexEnd(indexEd);
+								break;
+							}
+						}
+
+						if (!intervalFound) {
+							// we have a new interval to add
+							LoadedVertexInterval interval = new LoadedVertexInterval(src,
+									PartitionQuerier.getLastSrc(loadedPartId), loadedPartId);
+							indexSt = i;
+							interval.setIndexStart(indexSt);
+							indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
+							interval.setIndexEnd(indexEd);
+							intervals.add(interval);
+						}
 
 						// logger.info("Interval found from source " + src + ".
 						// part: " + loadedPartId + ", intervalSt(i): "
@@ -390,9 +411,9 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		//TODO
-		//updating basic scheduler
-		
+		// TODO
+		// updating basic scheduler
+
 		// 2.4. Create partsToSave set.
 
 		// Add repartitionedParts and newPartsFrmRepartitioning to
@@ -410,8 +431,6 @@ public class ComputedPartProcessor {
 		// "\n";
 		// s = s + partsToSave;
 		// logger.info(s);
-		
-		
 
 		/*
 		 * 3. Save partitions to disk.

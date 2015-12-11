@@ -24,7 +24,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  * Created by Oct 8, 2015
  */
 public class Engine {
-	private static final Logger logger = GraspanLogger.getLogger("engine");
+	private static final Logger logger = GraspanLogger.getLogger("Engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
 	private long newEdgesInOne;
@@ -80,11 +80,11 @@ public class Engine {
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
-//			logger.info("VERTEX LENGTH: " + vertices.length);
-//			for (int i = 0; i < vertices.length; i++) {
-//				logger.info("" + vertices[i]);
-//				logger.info("" + edgesLists[i]);
-//			}
+			logger.info("VERTEX LENGTH: " + vertices.length);
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
 		
 			logger.info("Finish loading...");
 			logger.info("Start computation and edge addition...");

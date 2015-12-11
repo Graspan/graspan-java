@@ -109,7 +109,7 @@ public class Loader {
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
 
-		if (preservePlan.compareTo("RESTORE_PLAN_1") == 0) {
+		if (preservePlan.compareTo("PRESERVE_PLAN_1") == 0) {
 			vertices = new Vertex[200];
 			newEdgeLists = new NewEdgesList[200];
 		}
@@ -869,17 +869,13 @@ public class Loader {
 								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
 								partOutStrm.writeInt(destVId);
 								partOutStrm.writeByte(edgeValue);
-
 							}
 						}
-
 					}
 				}
 				partOutStrm.close();
 			}
-
 		}
-
 	}
 
 	/**

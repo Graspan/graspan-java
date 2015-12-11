@@ -32,6 +32,7 @@ public class GlobalParams {
 	// setting it initially by a preset size.
 	// PRESERVE_PLAN_2 - redeclare vertices every time
 	static String preservePlan = "";
+	
 
 	/**
 	 * 
