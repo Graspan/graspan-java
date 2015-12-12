@@ -57,7 +57,7 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		// partMaxPostNewEdges = heuristic_newPartMax;
-		partMaxPostNewEdges = 50;
+		partMaxPostNewEdges = 200;
 	}
 
 	/**

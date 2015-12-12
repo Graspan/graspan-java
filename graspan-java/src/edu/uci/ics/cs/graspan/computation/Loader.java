@@ -338,8 +338,8 @@ public class Loader {
 			}
 
 			// test partsToSave
-//			System.out.println("Partitions to save:");
-//			System.out.println(partsToSave);
+			// System.out.println("Partitions to save:");
+			// System.out.println(partsToSave);
 
 			// 2. Save PartsSet
 
@@ -727,9 +727,6 @@ public class Loader {
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
 
-		int indexSt = 0;
-		int indexEd = 0;
-
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
@@ -788,16 +785,43 @@ public class Loader {
 			}
 		}
 
+		// test TODO - COMMENT THIS CHUNK
+		// logger.info("partEdges content after loading:");
+		// int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+		// String str = "";
+		// for (int i = 0; i < newParts.length; i++) {
+		// logger.info("Partition number:" + newParts[i]);
+		// for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]);
+		// j++) {
+		// logger.info("Vertex number (array id - not actual id): " + j);
+		// str = "";
+		// for (int k = 0; k < partOutDegs[i][j]; k++) {
+		// str = str + partEdges[i][j][k] + " ";
+		// }
+		// logger.info(str);
+		// }
+		// }
+
+		logger.info("Look Here" + loadedparts[1]);
+		int indexSt = 0;
+		int indexEd = 0;
 		for (int i = 0; i < loadedparts.length; i++) {
 			int partId = loadedparts[i];
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
 					PartitionQuerier.getLastSrc(partId), partId);
 			interval.setIndexStart(indexSt);
-			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
+			indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
 			interval.setIndexEnd(indexEd);
 			intervals.add(interval);
 			indexSt = indexEd + 1;
 		}
+
+		// test TODO - COMMENT THIS CHUNK
+		// logger.info("lvi content after loading:");
+
+		// for (int i = 0; i < loadedparts.length; i++) {
+		//
+		// }
 
 	}
 

@@ -80,13 +80,20 @@ public class Engine {
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
-			logger.info("VERTEX LENGTH: " + vertices.length);
-			for (int i = 0; i < vertices.length; i++) {
-				logger.info("" + vertices[i]);
-				logger.info("" + edgesLists[i]);
-			}
+//			logger.info("VERTEX LENGTH: " + vertices.length);
+//			for (int i = 0; i < vertices.length; i++) {
+//				logger.info("" + vertices[i]);
+//				logger.info("" + edgesLists[i]);
+//			}
 		
-			logger.info("Finish loading...");
+			
+			
+			
+			logger.info("Loading complete.");
+			
+			//TODO remove this!!!
+//			System.exit(0);
+			
 			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 			
@@ -96,13 +103,13 @@ public class Engine {
 			EdgeComputer.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers);
 			logger.info("Finish computation...");
-//			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
-	//		logger.info("VERTEX LENGTH: " + vertices.length);
-	//		for(int i = 0; i < vertices.length; i++) {
-	//			logger.info("" + vertices[i]);
-	//			logger.info("" + edgesLists[i]);
-	//		}
-	//		
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+			logger.info("VERTEX LENGTH: " + vertices.length);
+			for(int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
+			
 			logger.info("Start storing partitions...");
 			// 3. process computed partitions
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
@@ -110,10 +117,10 @@ public class Engine {
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
-			logger.info("termination map before: " + scheduler.toString());
+//			logger.info("termination map before: " + scheduler.toString());
 			
 			scheduler.setTerminationStatus();
-			logger.info("termination map after: " + scheduler.toString());
+//			logger.info("termination map after: " + scheduler.toString());
 //			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
 		}
 		
