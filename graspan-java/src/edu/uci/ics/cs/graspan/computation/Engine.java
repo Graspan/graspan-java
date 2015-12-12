@@ -77,7 +77,7 @@ public class Engine {
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
 			scheduler.setLoadedIntervals(intervals);
-			logger.info("\nintervals : " + intervals);
+			logger.info("\nintervals: " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
 //			logger.info("VERTEX LENGTH: " + vertices.length);
@@ -96,6 +96,7 @@ public class Engine {
 			EdgeComputer.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers);
 			logger.info("Finish computation...");
+			logger.info("---after computation---" + intervals.get(0).hasNewEdges());
 //			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
 	//		logger.info("VERTEX LENGTH: " + vertices.length);
 	//		for(int i = 0; i < vertices.length; i++) {
@@ -110,14 +111,17 @@ public class Engine {
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
-			logger.info("termination map before: " + scheduler.toString());
-			
+			logger.info("---after store---" + intervals.get(0).hasNewEdges());
+			logger.info("termination map before: " + scheduler);
+			logger.info("++++++" + scheduler.getLoadedIntervals().get(0).hasNewEdges());
+			logger.info("------" + intervals.get(0).hasNewEdges());
+			logger.info("intervals : " + scheduler.getLoadedIntervals());
 			scheduler.setTerminationStatus();
-			logger.info("termination map after: " + scheduler.toString());
+			logger.info("termination map after: " + scheduler);
 //			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
 		}
 		
-		return;
+		computationExecutor.shutdown();
 	}
 
 	/**
@@ -243,12 +247,18 @@ public class Engine {
 	                	logger.info("Waiting for execution to finish: countDown:" + countDown.get());
 	            }
 	        }
-//	      logger.info("========total new edges: " + totalNewEdges);  
+	      logger.info("========total new edges: " + totalNewEdges);  
         } while(totalNewEdges > 0);
         
+        logger.info("========newEdgesInOne: " + newEdgesInOne);
+        logger.info("========newEdgesInTwo: " + newEdgesInTwo);
         // set new edge added flag for scheduler
-        if(newEdgesInOne > 0)
-        	intervals.get(0).setIsNewEdgeAdded(true);
+        if(newEdgesInOne > 0) {
+        	logger.info("set new edges TRUE!!!!");
+        	intervals.get(0).setIsNewEdgeAdded(true); 
+        	logger.info("here: " + intervals.get(0).hasNewEdges());
+        	
+        	}
         if(newEdgesInTwo > 0)
         	intervals.get(1).setIsNewEdgeAdded(true);
     }

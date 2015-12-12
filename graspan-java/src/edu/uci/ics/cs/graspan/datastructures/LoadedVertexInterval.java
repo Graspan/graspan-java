@@ -94,7 +94,7 @@ public class LoadedVertexInterval {
 		
 		result.append(NEW_LINE + "interval : " + partitionId);
 		result.append(NEW_LINE + "firstVertex : " + firstVertex);
-		result.append(NEW_LINE + "lasstVertex : " + lastVertex);
+		result.append(NEW_LINE + "lastVertex : " + lastVertex);
 		result.append(NEW_LINE + "indexStart : " + indexStart);
 		result.append(NEW_LINE + "indexEnd : " + indexEnd);
 		

@@ -109,9 +109,9 @@ public class Loader {
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
 
-		if (preservePlan.compareTo("RESTORE_PLAN_1") == 0) {
-			vertices = new Vertex[200];
-			newEdgeLists = new NewEdgesList[200];
+		if (preservePlan.compareTo("PRESERVE_PLAN_1") == 0) {
+			vertices = new Vertex[50];
+			newEdgeLists = new NewEdgesList[50];
 		}
 	}
 
@@ -793,7 +793,7 @@ public class Loader {
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
 					PartitionQuerier.getLastSrc(partId), partId);
 			interval.setIndexStart(indexSt);
-			indexEd = indexEd + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
+			indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
 			interval.setIndexEnd(indexEd);
 			intervals.add(interval);
 			indexSt = indexEd + 1;

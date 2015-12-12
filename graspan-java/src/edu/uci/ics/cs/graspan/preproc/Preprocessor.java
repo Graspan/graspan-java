@@ -19,11 +19,13 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 import java.util.TreeMap;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * 
@@ -31,6 +33,8 @@ import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
  *
  */
 public class Preprocessor {
+	
+	private static final Logger logger = GraspanLogger.getLogger("Preprocessor");
 
 	// number of input partitions
 	private static int numParts;
@@ -170,9 +174,7 @@ public class Preprocessor {
 		System.out.print("Allocating vertices to partitions (creating partition allocation table)...\n");
 
 		// average of edges by no. of partitions
-//		long avgEdgesPerPartition = Math.floorDiv(numEdges, numParts);
-		//TODO
-		long avgEdgesPerPartition = 0;
+		long avgEdgesPerPartition = Math.floorDiv(numEdges, numParts);
 
 		// the heuristic for interval max
 		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
@@ -279,9 +281,7 @@ public class Preprocessor {
 
 		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for "
 				+ numParts + " partitions)... ");
-//		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
-		//TODO
-		long partitionBufferSize = 0;
+		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;
