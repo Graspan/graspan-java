@@ -354,6 +354,7 @@ public class ComputedPartProcessor {
 		// loadedPartsPostProcessing test
 		// System.out.println(loadedPartsPostProcessing);
 
+
 		// 2.3.2. Scan vertices data structure and store partition interval
 		// indices in LoadedVertexIntervals
 		// intervals.clear();

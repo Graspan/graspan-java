@@ -58,7 +58,7 @@ public class Engine {
         }
         
         computationExecutor = Executors.newFixedThreadPool(nThreads);
-        logger.info("Executing partition loader.");
+//        logger.info("Executing partition loader.");
  		long t = System.currentTimeMillis();
  		
  		// 1. load partitions into memory
@@ -68,8 +68,8 @@ public class Engine {
  		
 		while (!scheduler.shouldTerminate()) {
 			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
-			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
-			logger.info("Start loading partitions...");
+//			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
+//			logger.info("Start loading partitions...");
 			loader.loadParts(partsToLoad);
 //			logger.info("Total time for loading partitions : " + (System.currentTimeMillis() - t) + " ms");
 			Vertex[] vertices = loader.getVertices();
@@ -77,7 +77,7 @@ public class Engine {
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
 			scheduler.setLoadedIntervals(intervals);
-			logger.info("\nintervals : " + intervals);
+//			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
 //			logger.info("VERTEX LENGTH: " + vertices.length);
@@ -89,12 +89,12 @@ public class Engine {
 			
 			
 			
-			logger.info("Loading complete.");
+//			logger.info("Loading complete.");
 			
 			//TODO remove this!!!
 //			System.exit(0);
 			
-			logger.info("Start computation and edge addition...");
+//			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 			
 			// 2. do computation and add edges
@@ -102,15 +102,15 @@ public class Engine {
 			EdgeComputer.setVertices(vertices);
 			EdgeComputer.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers);
-			logger.info("Finish computation...");
-			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
-			logger.info("VERTEX LENGTH: " + vertices.length);
-			for(int i = 0; i < vertices.length; i++) {
-				logger.info("" + vertices[i]);
-				logger.info("" + edgesLists[i]);
-			}
-			
-			logger.info("Start storing partitions...");
+//			logger.info("Finish computation...");
+//			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+//			logger.info("VERTEX LENGTH: " + vertices.length);
+//			for(int i = 0; i < vertices.length; i++) {
+//				logger.info("" + vertices[i]);
+//				logger.info("" + edgesLists[i]);
+//			}
+//			
+//			logger.info("Start storing partitions...");
 			// 3. process computed partitions
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();

@@ -12,8 +12,6 @@ public class ComputationClient {
 	private static final Logger logger = GraspanLogger.getLogger("ComputationClient");
 
 	public static void main(String args[]) throws IOException {
-
-		
 		
 		GlobalParams.setBasefilename(args[0]);
 		GlobalParams.setNumParts(Integer.parseInt(args[1]));
