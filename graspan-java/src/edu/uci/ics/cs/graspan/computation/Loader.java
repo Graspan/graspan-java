@@ -40,7 +40,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
-	private static final Logger logger = GraspanLogger.getLogger("loader");
+	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	private static Vertex[] vertices = null;
 	private static NewEdgesList[] newEdgeLists = null;
@@ -110,8 +110,8 @@ public class Loader {
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
 
 		if (preservePlan.compareTo("PRESERVE_PLAN_1") == 0) {
-			vertices = new Vertex[50];
-			newEdgeLists = new NewEdgesList[50];
+			vertices = new Vertex[200];
+			newEdgeLists = new NewEdgesList[200];
 		}
 	}
 
@@ -123,11 +123,16 @@ public class Loader {
 	 */
 	public void loadParts(int[] partsToLoad) throws IOException {
 
+//		logger.info("Loaded intervals at the beginning of loading.");
+//		for (LoadedVertexInterval interval : intervals) {
+//			logger.info(interval.getPartitionId() + "");
+//		}
+
 		String str = "";
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("Loading partitions : " + str + "...");
+//		logger.info("Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
@@ -168,6 +173,11 @@ public class Loader {
 		// loaded parts degrees test
 		// LoadedPartitions.printLoadedPartOutDegs();
 		// System.exit(0);
+
+//		logger.info("Loaded intervals at the end of loading.");
+		for (LoadedVertexInterval interval : intervals) {
+//			logger.info(interval.getPartitionId() + "");
+		}
 	}
 
 	/**
@@ -253,7 +263,7 @@ public class Loader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-//		logger.info("Loaded partition sizes file " + baseFilename + ".partSizes");
+//		logger.info("Loaded " + baseFilename + ".partSizes");
 
 	}
 
@@ -338,8 +348,8 @@ public class Loader {
 			}
 
 			// test partsToSave
-//			System.out.println("Partitions to save:");
-//			System.out.println(partsToSave);
+//			logger.info("Partitions to save:");
+//			logger.info("" + partsToSave);
 
 			// 2. Save PartsSet
 
@@ -354,15 +364,15 @@ public class Loader {
 				storePartDegs(getVertices(), getIntervals(), partitionId);
 
 			// 2.3. Remove saved partitions from LoadedVertexIntervals
-			for (int i = 0; i < getIntervals().size(); i++) {
-				if (partsToSave.contains(getIntervals().get(i).getPartitionId())) {
-					getIntervals().remove(i);
+			for (int i = 0; i < intervals.size(); i++) {
+				if (partsToSave.contains(intervals.get(i).getPartitionId())) {
+					intervals.remove(i);
 					// reset i
 					i--;
 				}
 			}
 
-			partsToSave.clear();
+			// TODO CHECK LVI HERE
 
 			tempSet.clear();
 
@@ -372,6 +382,11 @@ public class Loader {
 			for (int i = 0; i < loadedParts.length; i++) {
 				tempSet.add(loadedParts[i]);
 			}
+
+//			logger.info("Currently loaded partitions:");
+			// System.out.println("newParts");
+//			for (int i = 0; i < loadedParts.length; i++)
+//				logger.info(loadedParts[i] + " ");
 
 			// 3.2. Get ids of partitions not loaded and store them in the
 			// positions of partitions that are to be saved
@@ -394,6 +409,8 @@ public class Loader {
 						}
 						if (partsToSave.contains(loadedParts[j])) {
 
+//							logger.info("see here now" +loadedParts[j]);
+
 							// store the new id in loadedParts in place of the
 							// partition to save
 							loadedParts[j] = partsToLoad[i];
@@ -402,21 +419,21 @@ public class Loader {
 							// newParts
 							newParts[j] = partsToLoad[i];
 
-							// remove this partition from savePartsSet
-							partsToSave.remove(loadedParts[j]);
 							break;
 						}
 					}
 				}
 			}
+			
+			partsToSave.clear();
 
 			/*
 			 * partid loading test 2/2
 			 */
-			// System.out.println("AFTER STORING NEW PARTS");
+//			logger.info("New partitions:");
 			// System.out.println("newParts");
-			// for (int i = 0; i < newParts.length; i++)
-			// System.out.print(newParts[i] + " ");
+//			for (int i = 0; i < newParts.length; i++)
+//				logger.info(newParts[i] + " ");
 			// System.out.println();
 			// System.out.println("loadedParts");
 			// for (int i = 0; i < loadedParts.length; i++)
@@ -727,9 +744,6 @@ public class Loader {
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
 
-		int indexSt = 0;
-		int indexEd = 0;
-
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
@@ -788,8 +802,27 @@ public class Loader {
 			}
 		}
 
-		for (int i = 0; i < loadedparts.length; i++) {
-			int partId = loadedparts[i];
+		// test TODO - COMMENT THIS CHUNK
+		// logger.info("partEdges content after loading:");
+		// int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+		// String str = "";
+		// for (int i = 0; i < newParts.length; i++) {
+		// logger.info("Partition number:" + newParts[i]);
+		// for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]);
+		// j++) {
+		// logger.info("Vertex number (array id - not actual id): " + j);
+		// str = "";
+		// for (int k = 0; k < partOutDegs[i][j]; k++) {
+		// str = str + partEdges[i][j][k] + " ";
+		// }
+		// logger.info(str);
+		// }
+		// }
+
+		int indexSt = 0;
+		int indexEd = 0;
+		for (int i = 0; i < newParts.length; i++) {
+			int partId = newParts[i];
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
 					PartitionQuerier.getLastSrc(partId), partId);
 			interval.setIndexStart(indexSt);
@@ -798,6 +831,13 @@ public class Loader {
 			intervals.add(interval);
 			indexSt = indexEd + 1;
 		}
+
+		// test TODO - COMMENT THIS CHUNK
+		// logger.info("lvi content after loading:");
+
+		// for (int i = 0; i < loadedparts.length; i++) {
+		//
+		// }
 
 	}
 
@@ -869,17 +909,13 @@ public class Loader {
 								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
 								partOutStrm.writeInt(destVId);
 								partOutStrm.writeByte(edgeValue);
-
 							}
 						}
-
 					}
 				}
 				partOutStrm.close();
 			}
-
 		}
-
 	}
 
 	/**

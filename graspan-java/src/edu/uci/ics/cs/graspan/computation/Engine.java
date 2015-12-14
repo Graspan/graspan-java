@@ -114,7 +114,7 @@ public class Engine {
 			logger.info("---after store---" + intervals.get(0).hasNewEdges());
 			logger.info("termination map before: " + scheduler);
 			logger.info("++++++" + scheduler.getLoadedIntervals().get(0).hasNewEdges());
-			logger.info("------" + intervals.get(0).hasNewEdges());
+//			logger.info("------" + intervals.get(0).hasNewEdges());
 			logger.info("intervals : " + scheduler.getLoadedIntervals());
 			scheduler.setTerminationStatus();
 			logger.info("termination map after: " + scheduler);
