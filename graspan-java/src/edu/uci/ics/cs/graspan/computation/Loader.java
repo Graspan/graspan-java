@@ -822,6 +822,7 @@ public class Loader {
 		int indexSt = 0;
 		int indexEd = 0;
 		for (int i = 0; i < newParts.length; i++) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 			int partId = newParts[i];
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
 					PartitionQuerier.getLastSrc(partId), partId);
@@ -829,7 +830,7 @@ public class Loader {
 			indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
 			interval.setIndexEnd(indexEd);
 			intervals.add(interval);
-			indexSt = indexEd + 1;
+			indexSt = indexEd + 1;}
 		}
 
 		// test TODO - COMMENT THIS CHUNK

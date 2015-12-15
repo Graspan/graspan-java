@@ -123,17 +123,20 @@ public class Scheduler {
 	// A very simple sequential scheduler
 	public int[] schedulePartitionSimple(int numOfPartitions) {
 		int[] scheduled = new int[2];
-		
+
 		// schedule two partitions every time
-		if(counterOne >= numOfPartitions - 2)
-			counterOne = 0;
-		if(counterTwo >= numOfPartitions - 1)
-			scheduled[0] = counterOne++;
-		
-		if(counterTwo >= numOfPartitions - 1)
-			counterTwo = 1;
+		scheduled[0] = counterOne;
 		scheduled[1] = counterTwo++;
 		
+		if(counterTwo >= numOfPartitions) {
+			counterOne++;
+			counterTwo = counterOne + 1;
+		}
+		
+		if(counterOne >= numOfPartitions -1) {
+			counterOne = 0;
+			counterTwo = counterOne + 1;
+		}
 		return scheduled;
 	}
 	
