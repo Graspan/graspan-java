@@ -109,7 +109,7 @@ public class Engine {
 //				logger.info("" + vertices[i]);
 //				logger.info("" + edgesLists[i]);
 //			}
-//			
+			
 //			logger.info("Start storing partitions...");
 			// 3. process computed partitions
 			int numPartsStart = AllPartitions.getPartAllocTab().length;

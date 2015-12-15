@@ -20,7 +20,8 @@ public class Scheduler {
 	private static final Logger logger = GraspanLogger.getLogger("scheduler");
 	
 	// for temp use
-	public static int counter;
+	public static int counterOne = 0;
+	public static int counterTwo = 1;
 	
 	/**
 	 * Constructor
@@ -124,13 +125,14 @@ public class Scheduler {
 		int[] scheduled = new int[2];
 		
 		// schedule two partitions every time
-		if(counter >= numOfPartitions)
-			counter = 0;
-		scheduled[0] = counter++;
+		if(counterOne >= numOfPartitions - 2)
+			counterOne = 0;
+		if(counterTwo >= numOfPartitions - 1)
+			scheduled[0] = counterOne++;
 		
-		if(counter >= numOfPartitions)
-			counter = 0;
-		scheduled[1] = counter++;
+		if(counterTwo >= numOfPartitions - 1)
+			counterTwo = 1;
+		scheduled[1] = counterTwo++;
 		
 		return scheduled;
 	}
@@ -170,8 +172,8 @@ public class Scheduler {
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
 		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
 		
-//		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : " + isNewEdgeAddedForOne);
-//		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : " + isNewEdgeAddedForTwo);
+		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : " + isNewEdgeAddedForOne);
+		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : " + isNewEdgeAddedForTwo);
 		
 		List<Boolean> terminationInfoForOne = allEdgeInfo.get(loadedPartitionOne).getTerminationInfo();
 		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(loadedPartitionTwo).getTerminationInfo();

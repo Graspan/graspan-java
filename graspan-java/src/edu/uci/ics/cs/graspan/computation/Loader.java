@@ -383,7 +383,7 @@ public class Loader {
 				tempSet.add(loadedParts[i]);
 			}
 
-			logger.info("Currently loaded partitions:");
+			logger.info("Loaded partitions at the beginning of loading (loadedParts):");
 			// System.out.println("newParts");
 			for (int i = 0; i < loadedParts.length; i++)
 				logger.info(loadedParts[i] + " ");
@@ -409,7 +409,7 @@ public class Loader {
 						}
 						if (partsToSave.contains(loadedParts[j])) {
 
-							logger.info("see here now" +loadedParts[j]);
+							logger.info("see here now" + loadedParts[j]);
 
 							// store the new id in loadedParts in place of the
 							// partition to save
@@ -419,25 +419,28 @@ public class Loader {
 							// newParts
 							newParts[j] = partsToLoad[i];
 
-							// remove this partition from savePartsSet
-							partsToSave.remove(loadedParts[j]);
 							break;
 						}
 					}
 				}
 			}
 
+			partsToSave.clear();
+
+			// test partsToSave
+			logger.info("Partitions to save after saving them and adding to newParts:");
+			logger.info("" + partsToSave);
+
 			/*
 			 * partid loading test 2/2
 			 */
 			logger.info("New partitions:");
-			// System.out.println("newParts");
 			for (int i = 0; i < newParts.length; i++)
 				logger.info(newParts[i] + " ");
-			// System.out.println();
-			// System.out.println("loadedParts");
-			// for (int i = 0; i < loadedParts.length; i++)
-			// System.out.print(loadedParts[i] + " ");
+
+			logger.info("Loaded partitions at the end of loading (loadedParts):");
+			for (int i = 0; i < loadedParts.length; i++)
+				logger.info(loadedParts[i] + " ");
 			// System.out.println();
 			// System.out.println("partsToLoad");
 			// for (int i = 0; i < partsToLoad.length; i++)
@@ -822,6 +825,7 @@ public class Loader {
 		int indexSt = 0;
 		int indexEd = 0;
 		for (int i = 0; i < newParts.length; i++) {
+			if (newParts[i] != Integer.MIN_VALUE) {
 			int partId = newParts[i];
 			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
 					PartitionQuerier.getLastSrc(partId), partId);
@@ -830,6 +834,7 @@ public class Loader {
 			interval.setIndexEnd(indexEd);
 			intervals.add(interval);
 			indexSt = indexEd + 1;
+			}
 		}
 
 		// test TODO - COMMENT THIS CHUNK
