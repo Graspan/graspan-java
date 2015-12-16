@@ -78,7 +78,7 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	public Preprocessor(String baseFilename, int numParts) throws IOException {
-		System.out.print("Initializing partition generator program... ");
+		logger.info("Initializing partition generator program... ");
 
 		this.numParts = numParts;
 		this.baseFilename = baseFilename;
@@ -101,7 +101,7 @@ public class Preprocessor {
 			partDegOutStrms[i] = new PrintWriter(
 					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i + ".degrees", true)));
 		}
-		System.out.print("Done\n");
+		logger.info("Done");
 	}
 
 	/**
@@ -114,22 +114,21 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	public void generateGraphDegs(InputStream inputStream) throws IOException {
-		System.out.println("Generating degrees file...");
+		logger.info("Generating degrees file...");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
 		TreeMap<Integer, Integer> outDegs = new TreeMap<Integer, Integer>();
 		// read inputgraph line-by-line and keep incrementing degree
-		System.out.print("Performing first scan on input graph... ");
+		logger.info("Performing first scan on input graph... ");
 		long lineCount = 0;
 		long readStartTime = System.nanoTime();
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
 			if (lineCount % 30000000 == 0) {
-				System.out
-						.print("\nReading edge #" + NumberFormat.getNumberInstance(Locale.US).format(lineCount) + ".");
+				logger.info("Reading edge #" + NumberFormat.getNumberInstance(Locale.US).format(lineCount) + ".");
 				double readSpeed = 30000000 / ((System.nanoTime() - readStartTime) / 1000000000);
-				System.out.print(" Read speed: " + readSpeed + " edges/sec");
+				logger.info(" Read speed: " + readSpeed + " edges/sec");
 				readStartTime = System.nanoTime();
 			}
 			if (!ln.startsWith("#")) {
@@ -143,13 +142,13 @@ public class Preprocessor {
 				numEdges++;
 			}
 		}
-		System.out.println("\nDone");
+		logger.info("Done");
 
 		this.numEdges = numEdges;
-		System.out.print(">Total number of edges in input graph: " + numEdges + "\n");
+		logger.info(">Total number of edges in input graph: " + numEdges );
 
 		// Save the degrees on disk
-		System.out.print("Saving degrees file " + baseFilename + ".degrees... ");
+		logger.info("Saving degrees file " + baseFilename + ".degrees... ");
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
 		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees", "UTF-8");
@@ -160,7 +159,7 @@ public class Preprocessor {
 		outDegOutStrm.close();
 		this.outDegs = outDegs;
 
-		System.out.println("Done");
+		logger.info("Done");
 	}
 
 	/**
@@ -171,14 +170,14 @@ public class Preprocessor {
 	 */
 	public void createPartVIntervals() throws FileNotFoundException, UnsupportedEncodingException {
 
-		System.out.print("Allocating vertices to partitions (creating partition allocation table)...\n");
+		logger.info("Allocating vertices to partitions (creating partition allocation table)...");
 
 		// average of edges by no. of partitions
 		long avgEdgesPerPartition = Math.floorDiv(numEdges, numParts);
 
 		// the heuristic for interval max
 		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
-		System.out.println(">Calculated partition size threshold: " + intervalMaxSize + " edges");
+		logger.info(">Calculated partition size threshold: " + intervalMaxSize + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
 		int intervalMaxVId = 0;
@@ -224,12 +223,12 @@ public class Preprocessor {
 			}
 		}
 
-		System.out.print("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
+		logger.info("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
 		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
 			partAllocTableOutStrm.println(partAllocTable[i][0]+"\t"+partAllocTable[i][1]);
 		}
-		System.out.println("Done");
+		logger.info("Done");
 
 		SchedulerInfo.setPartSizes(partSizes);
 		AllPartitions.setPartAllocTab(partAllocTable);
@@ -244,7 +243,7 @@ public class Preprocessor {
 	 */
 	public void generatePartDegs() throws IOException {
 
-		System.out.print("Generating degrees file for each partition... ");
+		logger.info("Generating degrees file for each partition... ");
 
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 		int partId = 0;
@@ -259,7 +258,7 @@ public class Preprocessor {
 			partDegOutStrms[i].close();
 		}
 
-		System.out.println("Done");
+		logger.info("Done");
 
 		outDegs.clear();
 
@@ -274,12 +273,12 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	public void writePartitionEdgestoFiles(InputStream inputStream) throws IOException {
-		System.out.println("Generating partition files...");
+		logger.info("Generating partition files...");
 
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
 
-		System.out.print("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for "
+		logger.info("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for "
 				+ numParts + " partitions)... ");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
@@ -290,10 +289,10 @@ public class Preprocessor {
 		this.partBuffers = partitionBuffers;
 		this.partBufferSize = partitionBufferSize;
 		this.partBufferFreespace = partitionBufferFreespace;
-		System.out.print("Done\n");
+		logger.info("Done");
 
 		// read the input graph edge-wise and process each edge
-		System.out.println("Performing second scan on input graph...");
+		logger.info("Performing second scan on input graph...");
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long lineCount = 0;
@@ -301,7 +300,7 @@ public class Preprocessor {
 			lineCount++;
 			if (lineCount % 30000000 == 0) {
 				double percentComplete = (lineCount / numEdges) * 100;
-				System.out.println("Sending edges to buffer, reading line "
+				logger.info("Sending edges to buffer, reading line "
 						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete
 						+ "%)...");
 			}
@@ -323,14 +322,14 @@ public class Preprocessor {
 		// }
 
 		// write edge dest counts to file
-		System.out.print("Saving edge destination counts to file... ");
+		logger.info("Saving edge destination counts to file... ");
 		writeEdgeDestCountstoFile();
-		System.out.println("Done");
+		logger.info("Done");
 
 		// write part edge sizes to file
-		System.out.print("Saving partition sizes to file... ");
+		logger.info("Saving partition sizes to file... ");
 		writeTotalPartEdgestoFile();
-		System.out.println("Done");
+		logger.info("Done");
 
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 
@@ -344,8 +343,8 @@ public class Preprocessor {
 			partOutStrms[i].close();
 		}
 
-		System.out.println("Partition files created.");
-		System.out.println(">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
+		logger.info("Partition files created.");
+		logger.info(">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
 
 	}
 
@@ -428,6 +427,7 @@ public class Preprocessor {
 			// write the srcId
 			srcVId = pair.getKey();
 			adjListOutputStream.writeInt(srcVId);
+			logger.info("src="+srcVId);
 
 			// get the relevant srcVIdrow row from the adjacencyList
 			ArrayList<Integer[]> srcVIdRow = pair.getValue();
@@ -435,6 +435,7 @@ public class Preprocessor {
 			// write the count
 			count = srcVIdRow.size();
 			adjListOutputStream.writeInt(count);
+			logger.info("count="+count);
 
 			// write the destId edgeValue pair
 			for (int i = 0; i < srcVIdRow.size(); i++) {

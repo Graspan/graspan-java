@@ -66,9 +66,7 @@ public class Engine {
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
 
-		int iteration_count = 0;
 		while (!scheduler.shouldTerminate()) {
-			iteration_count++;
 			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			// logger.info("Scheduling Partitions : " +
 			// Arrays.toString(partsToLoad));
@@ -81,14 +79,14 @@ public class Engine {
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
 			scheduler.setLoadedIntervals(intervals);
-			// logger.info("\nintervals : " + intervals);
+			 logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
 			// logger.info("VERTEX LENGTH: " + vertices.length);
-			// for (int i = 0; i < vertices.length; i++) {
-			// logger.info("" + vertices[i]);
+//			 for (int i = 0; i < vertices.length; i++) {
+//			 logger.info("" + vertices[i]);
 			// logger.info("" + edgesLists[i]);
-			// }
+//			 }
 
 			// logger.info("Loading complete.");
 
@@ -125,13 +123,9 @@ public class Engine {
 			// logger.info("termination map after: " + scheduler.toString());
 			// scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart,
 			// numPartsFinal);
-			// TODO REMOVE THIS!
-//			if (iteration_count == 2){
-//				logger.info("stop!");
-//				System.exit(0);}
 		}
 
-		return;
+		computationExecutor.shutdown();
 	}
 
 	/**

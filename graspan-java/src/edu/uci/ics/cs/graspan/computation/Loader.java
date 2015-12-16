@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.TreeSet;
@@ -123,7 +124,7 @@ public class Loader {
 	 */
 	public void loadParts(int[] partsToLoad) throws IOException {
 
-		logger.info("Loaded intervals at the beginning of loading.");
+		logger.info("Loaded intervals at the beginning of loading:");
 		for (LoadedVertexInterval interval : intervals) {
 			logger.info(interval.getPartitionId() + "");
 		}
@@ -132,7 +133,7 @@ public class Loader {
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("Loading partitions : " + str + "...");
+		logger.info("NEW ITERATION: Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
@@ -301,7 +302,7 @@ public class Loader {
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_2") == 0) {
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			int[] newParts = LoadedPartitions.getNewParts();
-			HashSet<Integer> partsToSave = LoadedPartitions.getPartsToSave();
+			HashSet<Integer> partsToSaveByLoader = LoadedPartitions.getPartsToSave();
 			HashSet<Integer> tempSet = new HashSet<Integer>();
 
 			/*
@@ -343,36 +344,34 @@ public class Loader {
 			// partsToSave
 			for (int i = 0; i < loadedParts.length; i++) {
 				if (!tempSet.contains(loadedParts[i]) & loadedParts[i] != Integer.MIN_VALUE) {
-					partsToSave.add(loadedParts[i]);
+					partsToSaveByLoader.add(loadedParts[i]);
 				}
 			}
 
 			// test partsToSave
 			logger.info("Partitions to save:");
-			logger.info("" + partsToSave);
+			logger.info("" + partsToSaveByLoader);
 
 			// 2. Save PartsSet
 
 			// 2.1. save repartitioned partition and newly generated partitions
 			// iterate over saveParts and get partitionId
-			for (Integer partitionId : partsToSave)
+			for (Integer partitionId : partsToSaveByLoader)
 				storePart(getVertices(), getNewEdgeLists(), getIntervals(), partitionId);
 
 			// 2.2. save degree of those partitions.
 			// iterate over saveParts and get partitionId
-			for (Integer partitionId : partsToSave)
+			for (Integer partitionId : partsToSaveByLoader)
 				storePartDegs(getVertices(), getIntervals(), partitionId);
 
 			// 2.3. Remove saved partitions from LoadedVertexIntervals
 			for (int i = 0; i < intervals.size(); i++) {
-				if (partsToSave.contains(intervals.get(i).getPartitionId())) {
+				if (partsToSaveByLoader.contains(intervals.get(i).getPartitionId())) {
 					intervals.remove(i);
 					// reset i
 					i--;
 				}
 			}
-
-			// TODO CHECK LVI HERE
 
 			tempSet.clear();
 
@@ -384,7 +383,6 @@ public class Loader {
 			}
 
 			logger.info("Loaded partitions at the beginning of loading (loadedParts):");
-			// System.out.println("newParts");
 			for (int i = 0; i < loadedParts.length; i++)
 				logger.info(loadedParts[i] + " ");
 
@@ -407,9 +405,9 @@ public class Loader {
 
 							break;
 						}
-						if (partsToSave.contains(loadedParts[j])) {
+						if (partsToSaveByLoader.contains(loadedParts[j])) {
 
-							logger.info("see here now" + loadedParts[j]);
+							// logger.info("see here now" + loadedParts[j]);
 
 							// store the new id in loadedParts in place of the
 							// partition to save
@@ -425,11 +423,11 @@ public class Loader {
 				}
 			}
 
-			partsToSave.clear();
+			partsToSaveByLoader.clear();
 
 			// test partsToSave
 			logger.info("Partitions to save after saving them and adding to newParts:");
-			logger.info("" + partsToSave);
+			logger.info("" + partsToSaveByLoader);
 
 			/*
 			 * partid loading test 2/2
@@ -438,7 +436,7 @@ public class Loader {
 			for (int i = 0; i < newParts.length; i++)
 				logger.info(newParts[i] + " ");
 
-			logger.info("Loaded partitions at the end of loading (loadedParts):");
+			logger.info("Partitions for next computation (loadedParts):");
 			for (int i = 0; i < loadedParts.length; i++)
 				logger.info(loadedParts[i] + " ");
 			// System.out.println();
@@ -596,109 +594,114 @@ public class Loader {
 		// System.out.println(intervals.size());
 		// System.out.println(vertices.length);
 
-		TreeSet<Integer> originalLoadedPartIndices = new TreeSet<Integer>();
-		TreeSet<Integer> newLoadedPartIndices = new TreeSet<Integer>();
-		// using arraylist as we need to maintain duplicates and order
-		ArrayList<Integer> indexDiffs = new ArrayList<Integer>();
+		if (GlobalParams.getPreservePlan().compareTo("PRESERVE_PLAN_1") == 0) {
 
-		// edge-data preservation test 1/ setting dummy vertices and
-		// newedgelists (comment
-		// originalLoadedPartIndices for-loop below when using this.)
-		// int[] my_vertices = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
-		// 10, 11, 9, 8 };
-		// int[] my_newEdges = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7, 3, 2,
-		// 10, 11, 9, 8 };
-		// int my_temp_newEdges = 0;
-		// int[] my_indexes = { 3, 7, 10, 12, 14, 18 };
-		// for (int i = 0; i < my_indexes.length; i++)
-		// originalLoadedPartIndices.add(my_indexes[i]);
-		// System.out.println("originalLoadedPartIndices:");
-		// System.out.println(originalLoadedPartIndices);
+			TreeSet<Integer> originalLoadedPartIndices = new TreeSet<Integer>();
+			TreeSet<Integer> newLoadedPartIndices = new TreeSet<Integer>();
+			// using arraylist as we need to maintain duplicates and order
+			ArrayList<Integer> indexDiffs = new ArrayList<Integer>();
 
-		for (LoadedVertexInterval interval : intervals) {
-			originalLoadedPartIndices.add(interval.getIndexStart());
-			originalLoadedPartIndices.add(interval.getIndexEnd());
-		}
+			// edge-data preservation test 1/ setting dummy vertices and
+			// newedgelists (comment
+			// originalLoadedPartIndices for-loop below when using this.)
+			// int[] my_vertices = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7,
+			// 3, 2,
+			// 10, 11, 9, 8 };
+			// int[] my_newEdges = { 5, 12, 13, 10, 1, 2, 3, 3, 4, 8, 7, 6, 7,
+			// 3, 2,
+			// 10, 11, 9, 8 };
+			// int my_temp_newEdges = 0;
+			// int[] my_indexes = { 3, 7, 10, 12, 14, 18 };
+			// for (int i = 0; i < my_indexes.length; i++)
+			// originalLoadedPartIndices.add(my_indexes[i]);
+			// System.out.println("originalLoadedPartIndices:");
+			// System.out.println(originalLoadedPartIndices);
 
-		Iterator<Integer> itr = originalLoadedPartIndices.iterator();
-		int firstIdx = 0, lastIdx = 0;
-		while (itr.hasNext()) {
-			firstIdx = itr.next();
-			lastIdx = itr.next();
-			indexDiffs.add(lastIdx - firstIdx);
-		}
-
-		// edge-data preservation test 2/ IndexDiffs
-		// System.out.println("indexDiffs:");
-		// System.out.println(indexDiffs);
-
-		int newIndexSt = 0;
-		for (Integer diff : indexDiffs) {
-			newLoadedPartIndices.add(newIndexSt);
-			newLoadedPartIndices.add(newIndexSt + diff);
-			newIndexSt = newIndexSt + diff + 1;
-		}
-
-		// edge-data preservation test 3/ newLoadedPartIndices
-		// System.out.println("newLoadedPartIndices:");
-		// System.out.println(newLoadedPartIndices);
-
-		NewEdgesList temp_newEdgeList = null;
-		int oldIdxMin, oldIdxMax, newIdxMin, newIdxMax = 0;
-		Iterator<Integer> itrOld = originalLoadedPartIndices.iterator();
-		Iterator<Integer> itrNew = newLoadedPartIndices.iterator();
-		while (itrOld.hasNext()) {
-			newIdxMin = itrNew.next();
-			newIdxMax = itrNew.next();
-			oldIdxMin = itrOld.next();
-			oldIdxMax = itrOld.next();// just to move the index forward
-			for (int i = newIdxMin; i <= newIdxMax; i++) {
-
-				// preserve vertices
-				vertices[i] = vertices[oldIdxMin];
-
-				// edge-data preservation test 4/ shifting vertices
-				// my_vertices[i] = my_vertices[oldIdxMin];
-
-				// preserve new edges
-				temp_newEdgeList = newEdgeLists[oldIdxMin];
-				newEdgeLists[oldIdxMin] = newEdgeLists[i];
-				newEdgeLists[i] = temp_newEdgeList;
-
-				// edge-data preservation test 5/ swapping newEdges
-				// my_temp_newEdges = my_newEdges[oldIdxMin];
-				// my_newEdges[oldIdxMin] = my_newEdges[i];
-				// my_newEdges[i] = my_temp_newEdges;
-
-				oldIdxMin++;
+			for (LoadedVertexInterval interval : intervals) {
+				originalLoadedPartIndices.add(interval.getIndexStart());
+				originalLoadedPartIndices.add(interval.getIndexEnd());
 			}
+
+			Iterator<Integer> itr = originalLoadedPartIndices.iterator();
+			int firstIdx = 0, lastIdx = 0;
+			while (itr.hasNext()) {
+				firstIdx = itr.next();
+				lastIdx = itr.next();
+				indexDiffs.add(lastIdx - firstIdx);
+			}
+
+			// edge-data preservation test 2/ IndexDiffs
+			// System.out.println("indexDiffs:");
+			// System.out.println(indexDiffs);
+
+			int newIndexSt = 0;
+			for (Integer diff : indexDiffs) {
+				newLoadedPartIndices.add(newIndexSt);
+				newLoadedPartIndices.add(newIndexSt + diff);
+				newIndexSt = newIndexSt + diff + 1;
+			}
+
+			// edge-data preservation test 3/ newLoadedPartIndices
+			// System.out.println("newLoadedPartIndices:");
+			// System.out.println(newLoadedPartIndices);
+
+			NewEdgesList temp_newEdgeList = null;
+			int oldIdxMin, oldIdxMax, newIdxMin, newIdxMax = 0;
+			Iterator<Integer> itrOld = originalLoadedPartIndices.iterator();
+			Iterator<Integer> itrNew = newLoadedPartIndices.iterator();
+			while (itrOld.hasNext()) {
+				newIdxMin = itrNew.next();
+				newIdxMax = itrNew.next();
+				oldIdxMin = itrOld.next();
+				oldIdxMax = itrOld.next();// just to move the index forward
+				for (int i = newIdxMin; i <= newIdxMax; i++) {
+
+					// preserve vertices
+					vertices[i] = vertices[oldIdxMin];
+
+					// edge-data preservation test 4/ shifting vertices
+					// my_vertices[i] = my_vertices[oldIdxMin];
+
+					// preserve new edges
+					temp_newEdgeList = newEdgeLists[oldIdxMin];
+					newEdgeLists[oldIdxMin] = newEdgeLists[i];
+					newEdgeLists[i] = temp_newEdgeList;
+
+					// edge-data preservation test 5/ swapping newEdges
+					// my_temp_newEdges = my_newEdges[oldIdxMin];
+					// my_newEdges[oldIdxMin] = my_newEdges[i];
+					// my_newEdges[i] = my_temp_newEdges;
+
+					oldIdxMin++;
+				}
+			}
+
+			// resetting vertices not in loaded partitions (unnecessary)
+			// for (int i = newIdxMax + 1; i < vertices.length; i++) {
+			// vertices[i] = null;
+			// }
+
+			// edge-data preservation test 6/ (use if above is used)
+			// for (int i = newIdxMax + 1; i < my_vertices.length; i++) {
+			// my_vertices[i] = -1;
+			// }
+
+			// edge-data preservation test 7/ final vertices and edges
+			// System.out.println("final my_vertices");
+			// System.out.print("[ ");
+			// for (int i = 0; i < my_vertices.length; i++) {
+			// System.out.print(my_vertices[i] + " ");
+			// }
+			// System.out.println(" ]");
+			//
+			// System.out.println("final my_newEdges");
+			// System.out.print("[ ");
+			// for (int i = 0; i < my_newEdges.length; i++) {
+			// System.out.print(my_newEdges[i] + " ");
+			// }
+			// System.out.println(" ]");
+			// System.exit(0);
 		}
-
-		// resetting vertices not in loaded partitions (unnecessary)
-		// for (int i = newIdxMax + 1; i < vertices.length; i++) {
-		// vertices[i] = null;
-		// }
-
-		// edge-data preservation test 6/ (use if above is used)
-		// for (int i = newIdxMax + 1; i < my_vertices.length; i++) {
-		// my_vertices[i] = -1;
-		// }
-
-		// edge-data preservation test 7/ final vertices and edges
-		// System.out.println("final my_vertices");
-		// System.out.print("[ ");
-		// for (int i = 0; i < my_vertices.length; i++) {
-		// System.out.print(my_vertices[i] + " ");
-		// }
-		// System.out.println(" ]");
-		//
-		// System.out.println("final my_newEdges");
-		// System.out.print("[ ");
-		// for (int i = 0; i < my_newEdges.length; i++) {
-		// System.out.print(my_newEdges[i] + " ");
-		// }
-		// System.out.println(" ]");
-		// System.exit(0);
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
@@ -784,6 +787,12 @@ public class Loader {
 
 								// dstVId
 								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
+								
+								//test
+								if (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] >152){
+									logger.info("ERROR: read vertex id > 152!");
+//									System.exit(0);
+								}
 
 								// edgeVal
 								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
@@ -824,17 +833,60 @@ public class Loader {
 
 		int indexSt = 0;
 		int indexEd = 0;
-		for (int i = 0; i < newParts.length; i++) {
-			if (newParts[i] != Integer.MIN_VALUE) {
-			int partId = newParts[i];
-			LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
-					PartitionQuerier.getLastSrc(partId), partId);
-			interval.setIndexStart(indexSt);
+		int partId = 0;
+		// set the new indexes
+		ArrayList<Integer> intervalIndices = new ArrayList<Integer>();
+		for (int i = 0; i < loadedparts.length; i++) {
+			partId = loadedparts[i];
+			intervalIndices.add(indexSt);
 			indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(partId) - 1;
-			interval.setIndexEnd(indexEd);
-			intervals.add(interval);
+			intervalIndices.add(indexEd);
 			indexSt = indexEd + 1;
+		}
+
+		boolean alreadyLoaded;
+		int intrvlIndxMarker = 0;
+		for (int i = 0; i < loadedparts.length; i++) {
+			alreadyLoaded = false;
+			partId = loadedparts[i];
+
+			// lvi update for partitions ALREADY loaded
+			for (LoadedVertexInterval interval : intervals) {
+				if (partId == interval.getPartitionId()) {
+					alreadyLoaded = true;
+
+					interval.setIndexStart(intervalIndices.get(intrvlIndxMarker));
+					intrvlIndxMarker++;
+
+					interval.setIndexEnd(intervalIndices.get(intrvlIndxMarker));
+					intrvlIndxMarker++;
+
+					logger.info("Updated interval parameters for partition: " + partId);
+					break;
+				}
 			}
+
+			// lvi update for new partitions that are to be loaded
+			if (!alreadyLoaded) {
+				LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
+						PartitionQuerier.getLastSrc(partId), partId);
+
+				interval.setIndexStart(intervalIndices.get(intrvlIndxMarker));
+				intrvlIndxMarker++;
+
+				interval.setIndexEnd(intervalIndices.get(intrvlIndxMarker));
+				intrvlIndxMarker++;
+
+				intervals.add(interval);
+
+				logger.info("Added a new interval for partition: " + partId);
+			}
+
+		}
+		
+		//update vertices degrees
+		for (int i=0;i<vertices.length;i++){
+			vertices[i].setCombinedDeg(vertices[i].getNumOutEdges());
 		}
 
 		// test TODO - COMMENT THIS CHUNK
@@ -858,6 +910,8 @@ public class Loader {
 	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
 
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
+
 		for (int i = 0; i < intervals.size(); i++) {
 
 			// locate the required interval in "vertices", and if it has new
@@ -877,13 +931,17 @@ public class Loader {
 
 				// scan each vertex in this interval in "vertices" datastructure
 				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+					count = vertices[j].getCombinedDeg();
+
+					if (count == 0) {
+						continue;
+					}
 
 					// write the srcId
 					srcVId = vertices[j].getVertexId();
 					partOutStrm.writeInt(srcVId);
 
 					// write the count
-					count = vertices[j].getCombinedDeg();
 					partOutStrm.writeInt(count);
 
 					// scan each edge (original edge) in list of each vertex in
@@ -895,6 +953,12 @@ public class Loader {
 						edgeValue = vertices[j].getOutEdgeValue(k);
 						partOutStrm.writeInt(destVId);
 						partOutStrm.writeByte(edgeValue);
+						
+						//test
+						if (destVId >152){
+							logger.info("ERROR: wrote vertex id > 152!");
+							System.exit(0);
+						}
 
 					}
 
@@ -914,6 +978,12 @@ public class Loader {
 								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
 								partOutStrm.writeInt(destVId);
 								partOutStrm.writeByte(edgeValue);
+								
+								//test
+								if (destVId >152){
+									logger.info("ERROR: wrote vertex id > 152!");
+									System.exit(0);
+								}
 							}
 						}
 					}
@@ -933,6 +1003,8 @@ public class Loader {
 	 */
 	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
+
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
 
 		for (int i = 0; i < intervals.size(); i++) {
 
@@ -956,6 +1028,11 @@ public class Loader {
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
 					deg = vertices[j].getCombinedDeg();
+					if (srcVId==4){
+						logger.info("Look here: 4's degree is "+deg);
+					}
+					if (deg == 0)
+						continue;
 					partDegOutStrm.println(srcVId + "\t" + deg);
 
 				}
