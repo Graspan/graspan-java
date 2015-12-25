@@ -43,10 +43,10 @@ public class Loader {
 
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
-	private static Vertex[] vertices = null;
-	private static NewEdgesList[] newEdgeLists = null;
-
-	private List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	public static Vertex[] vertices = null;
+	public static NewEdgesList[] newEdgeLists = null;
+	public List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
+	
 
 	private String baseFilename = "";
 	private String reloadPlan = "";
@@ -895,6 +895,7 @@ public class Loader {
 		// for (int i = 0; i < loadedparts.length; i++) {
 		//
 		// }
+		
 
 	}
 

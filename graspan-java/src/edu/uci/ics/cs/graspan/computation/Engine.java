@@ -1,7 +1,6 @@
 package edu.uci.ics.cs.graspan.computation;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,10 +27,13 @@ public class Engine {
 	private long totalNewEdges;
 	private long newEdgesInOne;
 	private long newEdgesInTwo;
-	List<LoadedVertexInterval> intervals = null;
 	// private String baseFileName;
 	private int[] partsToLoad;
 	private IScheduler scheduler;
+
+	public static Vertex[] vertices_prevIt = null;
+	public static NewEdgesList[] newEdgeLists_prevIt = null;
+	public List<LoadedVertexInterval> intervals_prevIt = null;
 
 	// public Engine(int[] partitionsToLoad) {
 	//// this.baseFileName = baseFileName;
@@ -74,19 +76,36 @@ public class Engine {
 			loader.loadParts(partsToLoad);
 			// logger.info("Total time for loading partitions : " +
 			// (System.currentTimeMillis() - t) + " ms");
-			Vertex[] vertices = loader.getVertices();
-			NewEdgesList[] edgesLists = loader.getNewEdgeLists();
+
+			Vertex[] vertices;
+			NewEdgesList[] edgesLists;
+			vertices = loader.getVertices();
+			List<LoadedVertexInterval> intervals=null;
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
 			scheduler.setLoadedIntervals(intervals);
-			 logger.info("\nintervals : " + intervals);
+			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
+			if (vertices_prevIt == null) {// if there was no previous iteration
+				edgesLists = loader.getNewEdgeLists();
+			} else {
+				//use intervals_prevIt to set up edge lists;
+				for (LoadedVertexInterval intvNew:intervals){
+					for (LoadedVertexInterval intvOld:intervals){
+						if (intvNew.getPartitionId()==intvOld.getPartitionId()){
+							
+//							newEdgeLists
+						}
+					}
+				}
+				edgesLists = newEdgeLists_prevIt;
+			}
 			// logger.info("VERTEX LENGTH: " + vertices.length);
-//			 for (int i = 0; i < vertices.length; i++) {
-//			 logger.info("" + vertices[i]);
-			// logger.info("" + edgesLists[i]);
-//			 }
+			// logger.info("The vertices before setting degree after new
+			// edges:");
+			// logger.info(vertices[i]+"");
+			// logger.info("New Edges: "+newEdgesLL[i]+"");
 
 			// logger.info("Loading complete.");
 
@@ -100,7 +119,7 @@ public class Engine {
 			EdgeComputer.setEdgesLists(edgesLists);
 			EdgeComputer.setVertices(vertices);
 			EdgeComputer.setIntervals(intervals);
-			doComputation(vertices, edgesLists, edgeComputers);
+			doComputation(vertices, edgesLists, edgeComputers, intervals);
 			// logger.info("Finish computation...");
 			// logger.info("Computation and edge addition took: " +
 			// (System.currentTimeMillis() - t) + "ms");
@@ -119,6 +138,14 @@ public class Engine {
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
 			// logger.info("termination map before: " + scheduler.toString());
 
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("" + vertices[i]);
+				logger.info("" + edgesLists[i]);
+			}
+
+			vertices_prevIt = vertices;
+			newEdgeLists_prevIt = edgesLists;
+			intervals_prevIt = intervals;
 			scheduler.setTerminationStatus();
 			// logger.info("termination map after: " + scheduler.toString());
 			// scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart,
@@ -145,7 +172,7 @@ public class Engine {
 	 * @return:
 	 */
 	private void doComputation(final Vertex[] vertices, final NewEdgesList[] edgesLists,
-			final EdgeComputer[] edgeComputers) {
+			final EdgeComputer[] edgeComputers, List<LoadedVertexInterval> intervals) {
 		if (vertices == null || vertices.length == 0)
 			return;
 

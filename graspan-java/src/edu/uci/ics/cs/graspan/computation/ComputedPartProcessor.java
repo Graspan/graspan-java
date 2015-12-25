@@ -152,10 +152,6 @@ public class ComputedPartProcessor {
 				if (newEdgesLL[i] != null) {
 					partHasNewEdges = true;
 					
-					logger.info("The vertices before setting degree after new edges:");
-					logger.info(vertices[i]+"");
-					logger.info(newEdgesLL[i]+"");
-					
 					// for each new edge list node
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
 
