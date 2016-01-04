@@ -922,13 +922,13 @@ public class Loader {
 						}
 
 						int l = oldIntvIdxSt;
-						for (int k = newIntvIdxSt; k < newIntvIdxEnd; k++) {
+						for (int k = newIntvIdxSt; k < newIntvIdxEnd + 1; k++) {
 							try {
-							newEdgeLists[k] = oldNewEdgeLists[l];
-							l++;}
-							catch ( ArrayIndexOutOfBoundsException e){
-								logger.info(""+k+" "+newEdgeLists.length);
-								logger.info(""+l+" "+oldNewEdgeLists.length);
+								newEdgeLists[k] = oldNewEdgeLists[l];
+								l++;
+							} catch (ArrayIndexOutOfBoundsException e) {
+								logger.info("" + k + " " + newEdgeLists.length);
+								logger.info("" + l + " " + oldNewEdgeLists.length);
 							}
 						}
 
