@@ -81,6 +81,7 @@ public class Vertex {
 		result.append("out edges: " + Arrays.toString(outEdges) + NEW_LINE);
 		// result.append("edge value: " + Arrays.toString(outEdgeValues) +
 		// NEW_LINE);//TODO UNCOMMENT THIS LATER
+		result.append("degree: "+combinedDeg + NEW_LINE);
 
 		return result.toString();
 	}

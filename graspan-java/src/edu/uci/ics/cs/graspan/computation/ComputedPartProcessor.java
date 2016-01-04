@@ -57,7 +57,7 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		// partMaxPostNewEdges = heuristic_newPartMax;
-		partMaxPostNewEdges = 200;
+		partMaxPostNewEdges = 1000;
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ComputedPartProcessor {
 	 */
 	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
 			throws IOException {
-		
+
 		logger.info("Processing partitions after computation.");
 
 		// TEST print
@@ -93,7 +93,7 @@ public class ComputedPartProcessor {
 		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts();
 		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();
 		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
-		HashSet<Integer> partsToSave = RepartitioningData.getPartsToSave();
+		HashSet<Integer> partsToSaveByCPP = RepartitioningData.getPartsToSave();
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 
@@ -105,21 +105,21 @@ public class ComputedPartProcessor {
 		// for each loaded partition
 		for (int a = 0; a < loadedParts.length; a++) {
 
-			LoadedVertexInterval part=null;
-			//get this partition interval in LVI
-			for (int b=0;b<intervals.size();b++){
-				if (intervals.get(b).getPartitionId()==loadedParts[a])
-				part = intervals.get(b);
+			LoadedVertexInterval part = null;
+			// get this partition interval in LVI
+			for (int b = 0; b < intervals.size(); b++) {
+				if (intervals.get(b).getPartitionId() == loadedParts[a])
+					part = intervals.get(b);
 			}
-			if (part==null){
+			if (part == null) {
 				logger.info("Error: LVI does not contain a corresponding interval for any partition in loaded parts.");
 			}
 			int partId = part.getPartitionId();
 			int nodeDestVs[];
-			int numOfNodeVertices = 0;
 			int destPartId;
 			int src;
 			boolean partHasNewEdges = false;
+			
 
 			// String s = "Processing partition: " + partId + "...\n";
 			// s = s + "First Vertex: " + part.getFirstVertex() + "\n";
@@ -131,15 +131,18 @@ public class ComputedPartProcessor {
 			// get partition's indices in "vertices" data structure
 			int partStart = part.getIndexStart();
 			int partEnd = part.getIndexEnd();
+			
+//			logger.info("LOOOOOOK HEREEEE "+partId+" pstart "+partStart+" partEnd "+partEnd);
 
-			// 1.1. Scan the new edges and update partSizes, loadPartOutDegs,
-			// edgeDestCounts
+			// 1.1. Scan the new edges and update loadPartOutDegs,
 
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
+				int numOfNodeVertices = 0;
 
 				// get the actual source id
-				src = i - partStart + part.getFirstVertex();
+//				src = i - partStart + part.getFirstVertex();
+				src=vertices[i].getVertexId();
 
 				// src extraction test
 				// System.out.println("Index of Src in DataStructure" + i);
@@ -148,40 +151,30 @@ public class ComputedPartProcessor {
 				// if a new edge for this source exits
 				if (newEdgesLL[i] != null) {
 					partHasNewEdges = true;
+					
 					// for each new edge list node
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
 
-						numOfNodeVertices = newEdgesLL[i].getNode(j).getIndex();
-						// TODO
-						// TO
-						// CHECK
-						// GETINDEX
-						// WITH
-						// KAI,
-						// IS
-						// INDEX
-						// INCREMENTED
-						// IF
-						// NODE
-						// IS
-						// FULL?
+						numOfNodeVertices += newEdgesLL[i].getNode(j).getIndex();
 						nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-
-						// 1.1.1. update degrees data
-						partSizes[partId] += numOfNodeVertices;
-						loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] += numOfNodeVertices;
-						vertices[i].setCombinedDeg(
-								loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]);
-
-						// 1.1.2. update edgeDestCount for each dest vertex
-						for (int k = 0; k < numOfNodeVertices; k++) {
-							destPartId = PartitionQuerier.findPartition(nodeDestVs[k]);
-							if (destPartId != -1) {
-								edgeDestCount[partId][destPartId]++;
-							}
-						}
+						
+//						// 1.1.2. update edgeDestCount for each dest vertex //TODO to ignore for now
+//						for (int k = 0; k < numOfNodeVertices; k++) {
+//							destPartId = PartitionQuerier.findPartition(nodeDestVs[k]);
+//							if (destPartId != -1) {
+//								edgeDestCount[partId][destPartId]++;
+//							}
+//						}
 					}
+					
 				}
+				if (src==14){
+//					logger.info("LOOK HERE NOWWWWWW"+vertices[i].getCombinedDeg());
+				}
+				// 1.1.1. update degrees data
+				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]=vertices[i].getNumOutEdges()+numOfNodeVertices;
+				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges()+numOfNodeVertices);
+				logger.info("Set Degree of vertex "+vertices[i].getVertexId()+" to "+vertices[i].getCombinedDeg());
 			}
 
 			// 1.2. update changed and unchanged parts sets
@@ -204,23 +197,31 @@ public class ComputedPartProcessor {
 
 				try {
 					partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];
-//					logger.info("partId "+partId);
-//					logger.info("loadPartOutDegs[a].length: " + loadPartOutDegs[a].length+"");
-//					logger.info("loadPartOutDegs.length: " + loadPartOutDegs.length+"");
-//					logger.info("-------------------");
-//					logger.info("a "+a);
-//					logger.info("actual id "+PartitionQuerier.getPartArrIdxFrmActualId(src, partId));
-//					logger.info("src "+src);
+					// logger.info("partId "+partId);
+					// logger.info("loadPartOutDegs[a].length: " +
+					// loadPartOutDegs[a].length+"");
+					// logger.info("loadPartOutDegs.length: " +
+					// loadPartOutDegs.length+"");
+					// logger.info("-------------------");
+					// logger.info("a "+a);
+					// logger.info("actual id
+					// "+PartitionQuerier.getPartArrIdxFrmActualId(src,
+					// partId));
+					// logger.info("src "+src);
 				} catch (ArrayIndexOutOfBoundsException e) {
-//					logger.info("partId "+partId);
-//					logger.info("Error for Partition Id: " + partId);
-//					logger.info(loadPartOutDegs[a].length+"");
-//					logger.info(loadPartOutDegs.length+"");
-//					logger.info("a "+a);
-//					logger.info("actual id "+PartitionQuerier.getPartArrIdxFrmActualId(src, partId));
-//					logger.info("src "+src);
-//					logger.info(
-//							"ArrayIndexOutOfBoundsException in: partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];");
+					// logger.info("partId "+partId);
+					// logger.info("Error for Partition Id: " + partId);
+					// logger.info(loadPartOutDegs[a].length+"");
+					// logger.info(loadPartOutDegs.length+"");
+					// logger.info("a "+a);
+					// logger.info("actual id
+					// "+PartitionQuerier.getPartArrIdxFrmActualId(src,
+					// partId));
+					// logger.info("src "+src);
+					// logger.info(
+					// "ArrayIndexOutOfBoundsException in: partEdgeCount +=
+					// loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src,
+					// partId)];");
 				}
 
 				// if the size of the current partition has become
@@ -232,6 +233,12 @@ public class ComputedPartProcessor {
 					partEdgeCount = 0;
 				}
 			}
+			
+			int edgeCount=0;
+			for (int i=part.getIndexStart();i<part.getIndexEnd()+1;i++){
+				edgeCount+=vertices[i].getCombinedDeg();
+			}
+			partSizes[part.getPartitionId()] = edgeCount;
 		}
 
 		/*
@@ -385,7 +392,6 @@ public class ComputedPartProcessor {
 
 		// 2.3.2. Scan vertices data structure and store partition interval
 		// indices in LoadedVertexIntervals
-		// intervals.clear();
 		int src = 0, indexSt = 0, indexEd = 0, minSrcTest = 0;
 		boolean intervalFound;
 		for (int i = 0; i < vertices.length; i++) {
@@ -449,9 +455,18 @@ public class ComputedPartProcessor {
 		// partsToSave set if using RELOAD_PLAN_2.
 		if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
 			for (Integer Id : repartitionedParts)
-				partsToSave.add(Id);
+				partsToSaveByCPP.add(Id);
 			for (Integer Id : newPartsFrmRepartitioning)
-				partsToSave.add(Id);
+				partsToSaveByCPP.add(Id);
+
+			logger.info("Partitions that have been repartitioned:");
+			for (Integer Id : repartitionedParts)
+				logger.info(Id + "");
+
+			logger.info("Partitions that have been newly created as a result of repartitioning:");
+			for (Integer Id : newPartsFrmRepartitioning)
+				logger.info(Id + "");
+
 		}
 
 		// Post processing - Parts to save test
@@ -465,14 +480,18 @@ public class ComputedPartProcessor {
 		 * 3. Save partitions to disk.
 		 */
 
+		logger.info("The partitions to save as determined by Computed-part-processor:");
+		for (Integer partitionId : partsToSaveByCPP)
+			logger.info("" + partitionId);
+
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
-		for (Integer partitionId : partsToSave)
+		for (Integer partitionId : partsToSaveByCPP)
 			storePart(vertices, newEdgesLL, intervals, partitionId);
 
 		// 3.2. save degree of those partitions.
 		// iterate over saveParts and get partitionId
-		for (Integer partitionId : partsToSave)
+		for (Integer partitionId : partsToSaveByCPP)
 			storePartDegs(vertices, intervals, partitionId);
 
 		// loaded intervals test before saving partitions 1/2
@@ -483,14 +502,14 @@ public class ComputedPartProcessor {
 
 		// 3.3. Remove saved partitions from LoadedVertexIntervals
 		for (int i = 0; i < intervals.size(); i++) {
-			if (partsToSave.contains(intervals.get(i).getPartitionId())) {
+			if (partsToSaveByCPP.contains(intervals.get(i).getPartitionId())) {
 				intervals.remove(i);
 				// reset i
 				i--;
 			}
 		}
 
-		partsToSave.clear();
+		partsToSaveByCPP.clear();
 
 		// loaded intervals test after saving partitions 2/2
 		// String s1 = "Loaded intervals after saving:\n";
@@ -513,6 +532,8 @@ public class ComputedPartProcessor {
 	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
 
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
+
 		// clear current file
 		DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(
 				new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
@@ -531,12 +552,15 @@ public class ComputedPartProcessor {
 				// scan each vertex in this interval in "vertices" datastructure
 				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
 
+					count = vertices[j].getCombinedDeg();
+					if (count == 0) {
+						continue;
+					}
 					// write the srcId
 					srcVId = vertices[j].getVertexId();
 					partOutStrm.writeInt(srcVId);
 
 					// write the count
-					count = vertices[j].getCombinedDeg();
 					partOutStrm.writeInt(count);
 
 					// scan each edge (original edge) in list of each vertex in
@@ -591,7 +615,7 @@ public class ComputedPartProcessor {
 	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Generating degrees file for each partition... ");
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
 
 		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
 				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
@@ -613,6 +637,8 @@ public class ComputedPartProcessor {
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
 					deg = vertices[j].getCombinedDeg();
+					if (deg == 0)
+						continue;
 					partDegOutStrm.println(srcVId + "\t" + deg);
 
 				}
