@@ -87,20 +87,23 @@ public class Engine {
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
-			if (vertices_prevIt == null) {// if there was no previous iteration
-				edgesLists = loader.getNewEdgeLists();
-			} else {
-				//use intervals_prevIt to set up edge lists;
-				for (LoadedVertexInterval intvNew:intervals){
-					for (LoadedVertexInterval intvOld:intervals){
-						if (intvNew.getPartitionId()==intvOld.getPartitionId()){
-							
-//							newEdgeLists
-						}
-					}
-				}
-				edgesLists = newEdgeLists_prevIt;
-			}
+			
+			edgesLists = loader.getNewEdgeLists();
+			
+//			if (vertices_prevIt == null) {// if there was no previous iteration
+//				edgesLists = loader.getNewEdgeLists();
+//			} else {
+//				//use intervals_prevIt to set up edge lists;
+//				for (LoadedVertexInterval intvNew:intervals){
+//					for (LoadedVertexInterval intvOld:intervals){
+//						if (intvNew.getPartitionId()==intvOld.getPartitionId()){
+//							
+////							newEdgeLists
+//						}
+//					}
+//				}
+//				edgesLists = newEdgeLists_prevIt;
+//			}
 			// logger.info("VERTEX LENGTH: " + vertices.length);
 			// logger.info("The vertices before setting degree after new
 			// edges:");

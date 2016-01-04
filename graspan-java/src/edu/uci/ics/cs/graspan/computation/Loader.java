@@ -46,7 +46,9 @@ public class Loader {
 	public static Vertex[] vertices = null;
 	public static NewEdgesList[] newEdgeLists = null;
 	public List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
-	
+
+	public static NewEdgesList[] oldNewEdgeLists = null;
+	List<LoadedVertexInterval> oldIntervals = null;
 
 	private String baseFilename = "";
 	private String reloadPlan = "";
@@ -110,6 +112,7 @@ public class Loader {
 		LoadedPartitions.setLoadedPartEdges(loadedPartEdges);
 		LoadedPartitions.setLoadedPartEdgeVals(loadedPartEdgeVals);
 
+		// UNUSED
 		if (preservePlan.compareTo("PRESERVE_PLAN_1") == 0) {
 			vertices = new Vertex[200];
 			newEdgeLists = new NewEdgesList[200];
@@ -123,6 +126,14 @@ public class Loader {
 	 * @throws IOException
 	 */
 	public void loadParts(int[] partsToLoad) throws IOException {
+
+		// save previous round's new edges and previous round's lvi
+		if (newEdgeLists != null) {
+			oldNewEdgeLists = new NewEdgesList[newEdgeLists.length];
+			System.arraycopy(newEdgeLists, 0, oldNewEdgeLists, 0, newEdgeLists.length);
+			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(intervals);
+			this.oldIntervals = oldIntervals;
+		}
 
 		logger.info("Loaded intervals at the beginning of loading:");
 		for (LoadedVertexInterval interval : intervals) {
@@ -787,11 +798,11 @@ public class Loader {
 
 								// dstVId
 								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
-								
-								//test
-								if (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] >152){
+
+								// test
+								if (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] > 152) {
 									logger.info("ERROR: read vertex id > 152!");
-//									System.exit(0);
+									// System.exit(0);
 								}
 
 								// edgeVal
@@ -883,9 +894,53 @@ public class Loader {
 			}
 
 		}
-		
-		//update vertices degrees
-		for (int i=0;i<vertices.length;i++){
+
+		if (oldIntervals != null) {
+			int oldIntvIdxSt = 0, oldIntvIdxEnd = 0, newIntvIdxSt = 0, newIntvIdxEnd = 0;
+			for (int i = 0; i < intervals.size(); i++) {
+				for (int j = 0; j < oldIntervals.size(); j++) {
+					if (intervals.get(i).getPartitionId() == oldIntervals.get(j).getPartitionId()) {
+						// preserve the edges generated in previous iteration
+						// using
+						// info
+						// from old Intervals
+						newIntvIdxSt = intervals.get(i).getIndexStart();
+						newIntvIdxEnd = intervals.get(i).getIndexEnd();
+						oldIntvIdxSt = oldIntervals.get(j).getIndexStart();
+						oldIntvIdxEnd = oldIntervals.get(j).getIndexEnd();
+
+						// this preservation strategy assumes that when an
+						// interval
+						// is repartitioned it is immediately saved to disk by
+						// the
+						// computed
+						// part processor
+
+						if (oldIntvIdxSt - oldIntvIdxEnd != newIntvIdxSt - newIntvIdxEnd) {
+							logger.info("ERROR: number of vertices in an interval has changed!");
+							System.exit(0);
+						}
+
+						int l = oldIntvIdxSt;
+						for (int k = newIntvIdxSt; k < newIntvIdxEnd; k++) {
+							try {
+							newEdgeLists[k] = oldNewEdgeLists[l];
+							l++;}
+							catch ( ArrayIndexOutOfBoundsException e){
+								logger.info(""+k+" "+newEdgeLists.length);
+								logger.info(""+l+" "+oldNewEdgeLists.length);
+							}
+						}
+
+					}
+				}
+			}
+		}
+		// TODO - COMMENT THIS AS WE SHALL NOT PRESERVE DEGREES, WE SHALL
+		// COMPUTE
+		// IT EVERYTIME
+		// update vertices degrees
+		for (int i = 0; i < vertices.length; i++) {
 			vertices[i].setCombinedDeg(vertices[i].getNumOutEdges());
 		}
 
@@ -895,8 +950,6 @@ public class Loader {
 		// for (int i = 0; i < loadedparts.length; i++) {
 		//
 		// }
-		
-
 	}
 
 	/**
@@ -954,9 +1007,9 @@ public class Loader {
 						edgeValue = vertices[j].getOutEdgeValue(k);
 						partOutStrm.writeInt(destVId);
 						partOutStrm.writeByte(edgeValue);
-						
-						//test
-						if (destVId >152){
+
+						// test
+						if (destVId > 152) {
 							logger.info("ERROR: wrote vertex id > 152!");
 							System.exit(0);
 						}
@@ -979,9 +1032,9 @@ public class Loader {
 								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
 								partOutStrm.writeInt(destVId);
 								partOutStrm.writeByte(edgeValue);
-								
-								//test
-								if (destVId >152){
+
+								// test
+								if (destVId > 152) {
 									logger.info("ERROR: wrote vertex id > 152!");
 									System.exit(0);
 								}
@@ -1029,8 +1082,8 @@ public class Loader {
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
 					deg = vertices[j].getCombinedDeg();
-					if (srcVId==4){
-						logger.info("Look here: 4's degree is "+deg);
+					if (srcVId == 4) {
+						logger.info("Look here: 4's degree is " + deg);
 					}
 					if (deg == 0)
 						continue;
