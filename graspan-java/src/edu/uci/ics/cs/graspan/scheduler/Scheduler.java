@@ -158,6 +158,7 @@ public class Scheduler {
 			}
 		}
 		
+		logger.info("=================Terminate!=================");
 		return true;
 	}
 	

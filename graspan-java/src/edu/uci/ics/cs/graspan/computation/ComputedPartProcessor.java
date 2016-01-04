@@ -70,6 +70,8 @@ public class ComputedPartProcessor {
 	 */
 	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
 			throws IOException {
+		
+		logger.info("Processing partitions after computation.");
 
 		// TEST print
 		// for (int i = 0; i < vertices.length; i++) {
@@ -93,6 +95,7 @@ public class ComputedPartProcessor {
 		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
 		HashSet<Integer> partsToSave = RepartitioningData.getPartsToSave();
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
+		int[] loadedParts = LoadedPartitions.getLoadedParts();
 
 		/*
 		 * 1. Scanning each loaded partition, updating degrees data &
@@ -100,9 +103,17 @@ public class ComputedPartProcessor {
 		 */
 
 		// for each loaded partition
-		for (int a = 0; a < intervals.size(); a++) {
+		for (int a = 0; a < loadedParts.length; a++) {
 
-			LoadedVertexInterval part = intervals.get(a);
+			LoadedVertexInterval part=null;
+			//get this partition interval in LVI
+			for (int b=0;b<intervals.size();b++){
+				if (intervals.get(b).getPartitionId()==loadedParts[a])
+				part = intervals.get(b);
+			}
+			if (part==null){
+				logger.info("Error: LVI does not contain a corresponding interval for any partition in loaded parts.");
+			}
 			int partId = part.getPartitionId();
 			int nodeDestVs[];
 			int numOfNodeVertices = 0;
@@ -191,7 +202,26 @@ public class ComputedPartProcessor {
 				// get the actual source id
 				src = i - partStart + part.getFirstVertex();
 
-				partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];
+				try {
+					partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];
+//					logger.info("partId "+partId);
+//					logger.info("loadPartOutDegs[a].length: " + loadPartOutDegs[a].length+"");
+//					logger.info("loadPartOutDegs.length: " + loadPartOutDegs.length+"");
+//					logger.info("-------------------");
+//					logger.info("a "+a);
+//					logger.info("actual id "+PartitionQuerier.getPartArrIdxFrmActualId(src, partId));
+//					logger.info("src "+src);
+				} catch (ArrayIndexOutOfBoundsException e) {
+//					logger.info("partId "+partId);
+//					logger.info("Error for Partition Id: " + partId);
+//					logger.info(loadPartOutDegs[a].length+"");
+//					logger.info(loadPartOutDegs.length+"");
+//					logger.info("a "+a);
+//					logger.info("actual id "+PartitionQuerier.getPartArrIdxFrmActualId(src, partId));
+//					logger.info("src "+src);
+//					logger.info(
+//							"ArrayIndexOutOfBoundsException in: partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];");
+				}
 
 				// if the size of the current partition has become
 				// larger than the limit, this partition is split, and
@@ -311,7 +341,6 @@ public class ComputedPartProcessor {
 		// (partitions loaded prior to this computation) for RELOAD_PLAN_2.
 		// loadedParts will be needed for next loading using this reload
 		// plan.)
-		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		for (int i = 0; i < splitVertices.size(); i++) {
 			for (int j = 0; j < loadedParts.length; j++) {
 				if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
