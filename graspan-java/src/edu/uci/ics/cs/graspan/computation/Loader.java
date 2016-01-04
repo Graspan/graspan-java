@@ -940,9 +940,9 @@ public class Loader {
 		// COMPUTE
 		// IT EVERYTIME
 		// update vertices degrees
-		for (int i = 0; i < vertices.length; i++) {
-			vertices[i].setCombinedDeg(vertices[i].getNumOutEdges());
-		}
+		// for (int i = 0; i < vertices.length; i++) {
+		// vertices[i].setCombinedDeg(vertices[i].getNumOutEdges());
+		// }
 
 		// test TODO - COMMENT THIS CHUNK
 		// logger.info("lvi content after loading:");
