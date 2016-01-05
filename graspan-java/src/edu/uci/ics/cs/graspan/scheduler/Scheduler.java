@@ -169,6 +169,7 @@ public class Scheduler {
 	 * @return:void
 	 */
 	public void setTerminationStatus() {
+		logger.info("\nintervals : " + intervals);
 		assert(intervals.size() == 2);
 		
 		int loadedPartitionOne = intervals.get(0).getPartitionId();

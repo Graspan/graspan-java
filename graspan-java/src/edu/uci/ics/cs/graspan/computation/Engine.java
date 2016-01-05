@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.graspan.computation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -83,7 +84,8 @@ public class Engine {
 			List<LoadedVertexInterval> intervals=null;
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
-			scheduler.setLoadedIntervals(intervals);
+			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(intervals);
+			scheduler.setLoadedIntervals(intervalsForScheduler);
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
@@ -135,7 +137,7 @@ public class Engine {
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
-			// logger.info("termination map before: " + scheduler.toString());
+			logger.info("termination map before: " + scheduler.toString());
 
 //			for (int i = 0; i < vertices.length; i++) {
 //				logger.info("" + vertices[i]);
@@ -147,8 +149,8 @@ public class Engine {
 			intervals_prevIt = intervals;
 			scheduler.setTerminationStatus();
 			// logger.info("termination map after: " + scheduler.toString());
-			// scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart,
-			// numPartsFinal);
+			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
+			logger.info("termination map after: " + scheduler.toString());
 		}
 
 		computationExecutor.shutdown();

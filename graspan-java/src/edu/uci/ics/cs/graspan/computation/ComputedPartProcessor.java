@@ -57,7 +57,7 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		// partMaxPostNewEdges = heuristic_newPartMax;
-		partMaxPostNewEdges = 1000;
+		partMaxPostNewEdges = 20;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class ComputedPartProcessor {
 	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
 			throws IOException {
 
-		logger.info("Processing partitions after computation.");
+//		logger.info("Processing partitions after computation.");
 
 		// TEST print
 		// for (int i = 0; i < vertices.length; i++) {
@@ -112,7 +112,7 @@ public class ComputedPartProcessor {
 					part = intervals.get(b);
 			}
 			if (part == null) {
-				logger.info("Error: LVI does not contain a corresponding interval for any partition in loaded parts.");
+//				logger.info("Error: LVI does not contain a corresponding interval for any partition in loaded parts.");
 			}
 			int partId = part.getPartitionId();
 			int nodeDestVs[];
@@ -174,7 +174,7 @@ public class ComputedPartProcessor {
 				// 1.1.1. update degrees data
 				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]=vertices[i].getNumOutEdges()+numOfNodeVertices;
 				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges()+numOfNodeVertices);
-				logger.info("Set Degree of vertex "+vertices[i].getVertexId()+" to "+vertices[i].getCombinedDeg());
+//				logger.info("Set Degree of vertex "+vertices[i].getVertexId()+" to "+vertices[i].getCombinedDeg());
 			}
 
 			// 1.2. update changed and unchanged parts sets
@@ -440,8 +440,8 @@ public class ComputedPartProcessor {
 						break;
 					}
 				}
-				if (minSrcTest == 0)
-					logger.info("ERROR: Reading a source that is not a minimum for any partition.");
+//				if (minSrcTest == 0)
+//					logger.info("ERROR: Reading a source that is not a minimum for any partition.");
 
 			}
 		}
@@ -480,9 +480,9 @@ public class ComputedPartProcessor {
 		 * 3. Save partitions to disk.
 		 */
 
-		logger.info("The partitions to save as determined by Computed-part-processor:");
-		for (Integer partitionId : partsToSaveByCPP)
-			logger.info("" + partitionId);
+//		logger.info("The partitions to save as determined by Computed-part-processor:");
+//		for (Integer partitionId : partsToSaveByCPP)
+//			logger.info("" + partitionId);
 
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
@@ -532,7 +532,7 @@ public class ComputedPartProcessor {
 	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
 
 		// clear current file
 		DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(
@@ -615,7 +615,7 @@ public class ComputedPartProcessor {
 	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
 
 		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
 				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));

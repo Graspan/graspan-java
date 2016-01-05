@@ -135,16 +135,16 @@ public class Loader {
 			this.oldIntervals = oldIntervals;
 		}
 
-		logger.info("Loaded intervals at the beginning of loading:");
+//		logger.info("Loaded intervals at the beginning of loading:");
 		for (LoadedVertexInterval interval : intervals) {
-			logger.info(interval.getPartitionId() + "");
+//			logger.info(interval.getPartitionId() + "");
 		}
 
 		String str = "";
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("NEW ITERATION: Loading partitions : " + str + "...");
+//		logger.info("NEW ITERATION: Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
@@ -155,7 +155,7 @@ public class Loader {
 		// initialize data structures of the partitions to load
 		initVarsOfPartsToLoad();
 
-		logger.info("Initialized data structures for partitions to load.");
+//		logger.info("Initialized data structures for partitions to load.");
 		// fill the partition data structures
 		fillVarsOfPartsToLoad();
 
@@ -172,7 +172,7 @@ public class Loader {
 				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
 			}
 		}
-		logger.info("Sorted loaded partitions.");
+//		logger.info("Sorted loaded partitions.");
 
 		// reset newParts
 		for (int i = 0; i < newParts.length; i++) {
@@ -186,9 +186,9 @@ public class Loader {
 		// LoadedPartitions.printLoadedPartOutDegs();
 		// System.exit(0);
 
-		logger.info("Loaded intervals at the end of loading.");
+//		logger.info("Loaded intervals at the end of loading.");
 		for (LoadedVertexInterval interval : intervals) {
-			logger.info(interval.getPartitionId() + "");
+//			logger.info(interval.getPartitionId() + "");
 		}
 	}
 
@@ -222,7 +222,7 @@ public class Loader {
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".partAllocTable");
+//		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 	}
 
@@ -259,7 +259,7 @@ public class Loader {
 
 		inEdgeDestCountStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
+//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 
 		/*
 		 * Scan the partSizes file
@@ -275,7 +275,7 @@ public class Loader {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		logger.info("Loaded " + baseFilename + ".partSizes");
+//		logger.info("Loaded " + baseFilename + ".partSizes");
 
 	}
 
@@ -360,8 +360,8 @@ public class Loader {
 			}
 
 			// test partsToSave
-			logger.info("Partitions to save:");
-			logger.info("" + partsToSaveByLoader);
+//			logger.info("Partitions to save:");
+//			logger.info("" + partsToSaveByLoader);
 
 			// 2. Save PartsSet
 
@@ -393,9 +393,9 @@ public class Loader {
 				tempSet.add(loadedParts[i]);
 			}
 
-			logger.info("Loaded partitions at the beginning of loading (loadedParts):");
-			for (int i = 0; i < loadedParts.length; i++)
-				logger.info(loadedParts[i] + " ");
+//			logger.info("Loaded partitions at the beginning of loading (loadedParts):");
+//			for (int i = 0; i < loadedParts.length; i++)
+//				logger.info(loadedParts[i] + " ");
 
 			// 3.2. Get ids of partitions not loaded and store them in the
 			// positions of partitions that are to be saved
@@ -437,19 +437,19 @@ public class Loader {
 			partsToSaveByLoader.clear();
 
 			// test partsToSave
-			logger.info("Partitions to save after saving them and adding to newParts:");
-			logger.info("" + partsToSaveByLoader);
+//			logger.info("Partitions to save after saving them and adding to newParts:");
+//			logger.info("" + partsToSaveByLoader);
 
 			/*
 			 * partid loading test 2/2
 			 */
-			logger.info("New partitions:");
-			for (int i = 0; i < newParts.length; i++)
-				logger.info(newParts[i] + " ");
+//			logger.info("New partitions:");
+//			for (int i = 0; i < newParts.length; i++)
+//				logger.info(newParts[i] + " ");
 
-			logger.info("Partitions for next computation (loadedParts):");
-			for (int i = 0; i < loadedParts.length; i++)
-				logger.info(loadedParts[i] + " ");
+//			logger.info("Partitions for next computation (loadedParts):");
+//			for (int i = 0; i < loadedParts.length; i++)
+//				logger.info(loadedParts[i] + " ");
 			// System.out.println();
 			// System.out.println("partsToLoad");
 			// for (int i = 0; i < partsToLoad.length; i++)
@@ -514,7 +514,7 @@ public class Loader {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
+//				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
 			}
 		}
 	}
@@ -801,7 +801,7 @@ public class Loader {
 
 								// test
 								if (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] > 152) {
-									logger.info("ERROR: read vertex id > 152!");
+//									logger.info("ERROR: read vertex id > 152!");
 									// System.exit(0);
 								}
 
@@ -821,7 +821,7 @@ public class Loader {
 
 				partInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
+//				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
 			}
 		}
 
@@ -872,7 +872,7 @@ public class Loader {
 					interval.setIndexEnd(intervalIndices.get(intrvlIndxMarker));
 					intrvlIndxMarker++;
 
-					logger.info("Updated interval parameters for partition: " + partId);
+//					logger.info("Updated interval parameters for partition: " + partId);
 					break;
 				}
 			}
@@ -890,7 +890,7 @@ public class Loader {
 
 				intervals.add(interval);
 
-				logger.info("Added a new interval for partition: " + partId);
+//				logger.info("Added a new interval for partition: " + partId);
 			}
 
 		}
@@ -917,7 +917,7 @@ public class Loader {
 						// part processor
 
 						if (oldIntvIdxSt - oldIntvIdxEnd != newIntvIdxSt - newIntvIdxEnd) {
-							logger.info("ERROR: number of vertices in an interval has changed!");
+//							logger.info("ERROR: number of vertices in an interval has changed!");
 							System.exit(0);
 						}
 
@@ -927,8 +927,8 @@ public class Loader {
 								newEdgeLists[k] = oldNewEdgeLists[l];
 								l++;
 							} catch (ArrayIndexOutOfBoundsException e) {
-								logger.info("" + k + " " + newEdgeLists.length);
-								logger.info("" + l + " " + oldNewEdgeLists.length);
+//								logger.info("" + k + " " + newEdgeLists.length);
+//								logger.info("" + l + " " + oldNewEdgeLists.length);
 							}
 						}
 
@@ -964,7 +964,7 @@ public class Loader {
 	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
 
 		for (int i = 0; i < intervals.size(); i++) {
 
@@ -1010,7 +1010,7 @@ public class Loader {
 
 						// test
 						if (destVId > 152) {
-							logger.info("ERROR: wrote vertex id > 152!");
+//							logger.info("ERROR: wrote vertex id > 152!");
 							System.exit(0);
 						}
 
@@ -1058,7 +1058,7 @@ public class Loader {
 	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
 
 		for (int i = 0; i < intervals.size(); i++) {
 
@@ -1083,7 +1083,7 @@ public class Loader {
 					srcVId = vertices[j].getVertexId();
 					deg = vertices[j].getCombinedDeg();
 					if (srcVId == 4) {
-						logger.info("Look here: 4's degree is " + deg);
+//						logger.info("Look here: 4's degree is " + deg);
 					}
 					if (deg == 0)
 						continue;
