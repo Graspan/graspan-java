@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.graspan.computation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,7 +84,10 @@ public class Engine {
 			List<LoadedVertexInterval> intervals=null;
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
-			scheduler.setLoadedIntervals(intervals);
+//			scheduler.setLoadedIntervals(intervals);
+			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(intervals);
+			scheduler.setLoadedIntervals(intervalsForScheduler);
+			
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);

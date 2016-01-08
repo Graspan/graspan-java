@@ -169,7 +169,7 @@ public class Scheduler {
 	 */
 	public void setTerminationStatus() {
 		assert(intervals.size() == 2);
-		
+		logger.info("thisisi "+intervals.size());
 		int loadedPartitionOne = intervals.get(0).getPartitionId();
 		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();

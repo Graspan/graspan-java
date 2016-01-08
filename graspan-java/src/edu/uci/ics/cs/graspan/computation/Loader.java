@@ -365,13 +365,11 @@ public class Loader {
 
 			// 2. Save PartsSet
 
-			// 2.1. save repartitioned partition and newly generated partitions
-			// iterate over saveParts and get partitionId
+			// 2.1. save partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
 				storePart(getVertices(), getNewEdgeLists(), getIntervals(), partitionId);
 
-			// 2.2. save degree of those partitions.
-			// iterate over saveParts and get partitionId
+			// 2.2. save degrees of partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
 				storePartDegs(getVertices(), getIntervals(), partitionId);
 

@@ -55,9 +55,10 @@ public class ComputedPartProcessor {
 		long partMax = (long) (avgEdgesPerPart * 0.9);
 
 		// the heuristic for interval max after new edge addition
+		// if this threshold is exceeded, the partition is repartitioned
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		// partMaxPostNewEdges = heuristic_newPartMax;
-		partMaxPostNewEdges = 1000;
+		partMaxPostNewEdges = 60;
 	}
 
 	/**
@@ -119,7 +120,6 @@ public class ComputedPartProcessor {
 			int destPartId;
 			int src;
 			boolean partHasNewEdges = false;
-			
 
 			// String s = "Processing partition: " + partId + "...\n";
 			// s = s + "First Vertex: " + part.getFirstVertex() + "\n";
@@ -131,8 +131,9 @@ public class ComputedPartProcessor {
 			// get partition's indices in "vertices" data structure
 			int partStart = part.getIndexStart();
 			int partEnd = part.getIndexEnd();
-			
-//			logger.info("LOOOOOOK HEREEEE "+partId+" pstart "+partStart+" partEnd "+partEnd);
+
+			// logger.info("LOOOOOOK HEREEEE "+partId+" pstart "+partStart+"
+			// partEnd "+partEnd);
 
 			// 1.1. Scan the new edges and update loadPartOutDegs,
 
@@ -141,8 +142,8 @@ public class ComputedPartProcessor {
 				int numOfNodeVertices = 0;
 
 				// get the actual source id
-//				src = i - partStart + part.getFirstVertex();
-				src=vertices[i].getVertexId();
+				// src = i - partStart + part.getFirstVertex();
+				src = vertices[i].getVertexId();
 
 				// src extraction test
 				// System.out.println("Index of Src in DataStructure" + i);
@@ -151,30 +152,35 @@ public class ComputedPartProcessor {
 				// if a new edge for this source exits
 				if (newEdgesLL[i] != null) {
 					partHasNewEdges = true;
-					
+
 					// for each new edge list node
 					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
 
 						numOfNodeVertices += newEdgesLL[i].getNode(j).getIndex();
 						nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-						
-//						// 1.1.2. update edgeDestCount for each dest vertex //TODO to ignore for now
-//						for (int k = 0; k < numOfNodeVertices; k++) {
-//							destPartId = PartitionQuerier.findPartition(nodeDestVs[k]);
-//							if (destPartId != -1) {
-//								edgeDestCount[partId][destPartId]++;
-//							}
-//						}
+
+						// // 1.1.2. update edgeDestCount for each dest vertex
+						// //TODO to ignore for now
+						// for (int k = 0; k < numOfNodeVertices; k++) {
+						// destPartId =
+						// PartitionQuerier.findPartition(nodeDestVs[k]);
+						// if (destPartId != -1) {
+						// edgeDestCount[partId][destPartId]++;
+						// }
+						// }
 					}
-					
+
 				}
-				if (src==14){
-//					logger.info("LOOK HERE NOWWWWWW"+vertices[i].getCombinedDeg());
+				if (src == 14) {
+					// logger.info("LOOK HERE
+					// NOWWWWWW"+vertices[i].getCombinedDeg());
 				}
 				// 1.1.1. update degrees data
-				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]=vertices[i].getNumOutEdges()+numOfNodeVertices;
-				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges()+numOfNodeVertices);
-				logger.info("Set Degree of vertex "+vertices[i].getVertexId()+" to "+vertices[i].getCombinedDeg());
+				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] = vertices[i]
+						.getNumOutEdges() + numOfNodeVertices;
+				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges() + numOfNodeVertices);
+				logger.info(
+						"Set Degree of vertex " + vertices[i].getVertexId() + " to " + vertices[i].getCombinedDeg());
 			}
 
 			// 1.2. update changed and unchanged parts sets
@@ -233,10 +239,10 @@ public class ComputedPartProcessor {
 					partEdgeCount = 0;
 				}
 			}
-			
-			int edgeCount=0;
-			for (int i=part.getIndexStart();i<part.getIndexEnd()+1;i++){
-				edgeCount+=vertices[i].getCombinedDeg();
+
+			int edgeCount = 0;
+			for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1; i++) {
+				edgeCount += vertices[i].getCombinedDeg();
 			}
 			partSizes[part.getPartitionId()] = edgeCount;
 		}
