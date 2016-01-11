@@ -240,14 +240,14 @@ public class ComputedPartProcessor {
 				}
 			}
 
-			long edgeCount = 0;
-			for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1; i++) {
-				edgeCount += vertices[i].getCombinedDeg();
-			}
-
-			logger.info("" + part.getPartitionId());
-			logger.info("" + partSizes.length);
-			partSizes[part.getPartitionId()][1] = edgeCount;
+//			long edgeCount = 0;
+//			for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1; i++) {
+//				edgeCount += vertices[i].getCombinedDeg();
+//			}
+//
+//			logger.info("" + part.getPartitionId());
+//			logger.info("" + partSizes.length);
+//			partSizes[part.getPartitionId()][1] = edgeCount;
 		}
 
 		/*
@@ -455,15 +455,16 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		// TODO
-		// updating basic scheduler
+		// updating basic scheduler (Part Sizes)
 		int[][] pat = AllPartitions.getPartAllocTab();
 		long[][] newPartSizes = new long[pat.length][2];
 
+		//get ids in newPartsizes
 		for (int i = 0; i < pat.length; i++) {
 			newPartSizes[i][0] = pat[i][0];
 		}
 
+		//get current partSizes values in newPartSizes
 		for (int i = 0; i < partSizes.length; i++) {
 			for (int j = 0; j < newPartSizes.length; j++) {
 				if (newPartSizes[j][0] == partSizes[i][0]) {
