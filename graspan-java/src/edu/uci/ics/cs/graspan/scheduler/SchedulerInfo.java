@@ -2,7 +2,7 @@ package edu.uci.ics.cs.graspan.scheduler;
 
 public class SchedulerInfo {
 
-	public static long[] partSizes;
+	public static long[][] partSizes;
 	private static long[][] edgeDestCount;
 	private int[][] terminationMap;
 
@@ -10,7 +10,7 @@ public class SchedulerInfo {
 	 * 
 	 * @param arr
 	 */
-	public static void setPartSizes(long[] arr) {
+	public static void setPartSizes(long[][] arr) {
 		partSizes = arr;
 	}
 
@@ -18,7 +18,7 @@ public class SchedulerInfo {
 	 * 
 	 * @return long[] partSizes
 	 */
-	public static long[] getPartSizes() {
+	public static long[][] getPartSizes() {
 		return partSizes;
 	}
 

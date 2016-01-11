@@ -43,9 +43,9 @@ public class ComputedPartProcessor {
 
 		// get the total number of edges
 		long numEdges = 0;
-		long[] partSizes = SchedulerInfo.getPartSizes();
+		long[][] partSizes = SchedulerInfo.getPartSizes();
 		for (int i = 0; i < partSizes.length; i++) {
-			numEdges = numEdges + partSizes[i];
+			numEdges = numEdges + partSizes[i][1];
 		}
 
 		// average of edges by no. of partitions
@@ -83,7 +83,7 @@ public class ComputedPartProcessor {
 		// }
 
 		// TODO THESE ARE ON STANDBY (Scheduling)
-		long[] partSizes = SchedulerInfo.getPartSizes();
+		long[][] partSizes = SchedulerInfo.getPartSizes();
 		long edgeDestCount[][] = SchedulerInfo.getEdgeDestCount();
 
 		// get repartitioning variables
@@ -240,11 +240,14 @@ public class ComputedPartProcessor {
 				}
 			}
 
-			int edgeCount = 0;
+			long edgeCount = 0;
 			for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1; i++) {
 				edgeCount += vertices[i].getCombinedDeg();
 			}
-			partSizes[part.getPartitionId()] = edgeCount;
+
+			logger.info("" + part.getPartitionId());
+			logger.info("" + partSizes.length);
+			partSizes[part.getPartitionId()][1] = edgeCount;
 		}
 
 		/*
@@ -454,12 +457,47 @@ public class ComputedPartProcessor {
 
 		// TODO
 		// updating basic scheduler
+		int[][] pat = AllPartitions.getPartAllocTab();
+		long[][] newPartSizes = new long[pat.length][2];
+
+		for (int i = 0; i < pat.length; i++) {
+			newPartSizes[i][0] = pat[i][0];
+		}
+
+		for (int i = 0; i < partSizes.length; i++) {
+			for (int j = 0; j < newPartSizes.length; j++) {
+				if (newPartSizes[j][0] == partSizes[i][0]) {
+					newPartSizes[j][1] = partSizes[i][1];
+				}
+			}
+		}
+
+		long edgeCount = 0;
+		for (LoadedVertexInterval interval : intervals) {
+			for (int i = interval.getIndexStart(); i < interval.getIndexEnd() + 1; i++) {
+				edgeCount += vertices[i].getCombinedDeg();
+			}
+			for (int j = 0; j < newPartSizes.length; j++) {
+				if (newPartSizes[j][0] == interval.getPartitionId()) {
+					newPartSizes[j][1] = edgeCount;
+				}
+			}
+			logger.info(interval.getPartitionId() + "");
+		}
+
+		SchedulerInfo.setPartSizes(newPartSizes);
+
+		for (int i = 0; i < pat.length; i++) {
+			logger.info("hehre" + pat[i][0]);
+		}
 
 		// 2.4. Create partsToSave set.
 
 		// Add repartitionedParts and newPartsFrmRepartitioning to
 		// partsToSave set if using RELOAD_PLAN_2.
-		if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0) {
+		if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
+
+		{
 			for (Integer Id : repartitionedParts)
 				partsToSaveByCPP.add(Id);
 			for (Integer Id : newPartsFrmRepartitioning)
@@ -487,12 +525,15 @@ public class ComputedPartProcessor {
 		 */
 
 		logger.info("The partitions to save as determined by Computed-part-processor:");
-		for (Integer partitionId : partsToSaveByCPP)
+		for (
+
+		Integer partitionId : partsToSaveByCPP)
 			logger.info("" + partitionId);
 
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSaveByCPP)
+
 			storePart(vertices, newEdgesLL, intervals, partitionId);
 
 		// 3.2. save degree of those partitions.

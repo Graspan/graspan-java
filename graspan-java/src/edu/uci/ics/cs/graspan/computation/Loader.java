@@ -236,7 +236,7 @@ public class Loader {
 
 		// initialize edgeDestCount and partSizes variables
 		long edgeDestCount[][] = new long[numParts][numParts];
-		long partSizes[] = new long[numParts];
+		long partSizes[][] = new long[numParts][2];
 
 		/*
 		 * Scan the edge destination counts file
@@ -270,7 +270,9 @@ public class Loader {
 		int j = 0;
 		while ((ln = inPartSizesStrm.readLine()) != null) {
 			// store partSizes in memory
-			partSizes[j++] = Long.parseLong(ln);
+			partSizes[j][0] = j;
+			partSizes[j][1] = Long.parseLong(ln);
+			j++;
 		}
 		SchedulerInfo.setPartSizes(partSizes);
 

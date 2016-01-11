@@ -193,7 +193,7 @@ public class Preprocessor {
 		// creating the Partition Allocation Table
 		int[][] partAllocTable = new int[numParts][2];
 
-		long partSizes[] = new long[numParts];
+		long partSizes[][] = new long[numParts][2];
 		long totalEdgeCount = 0;
 
 		while (it.hasNext()) {
@@ -206,7 +206,7 @@ public class Preprocessor {
 			if (intervalEdgeCount > intervalMaxSize & !isLastPartition(partTabIdx)) {
 				partAllocTable[partTabIdx][0] = partTabIdx;
 				partAllocTable[partTabIdx][1] = intervalMaxVId;
-				partSizes[partTabIdx] = intervalEdgeCount;
+				partSizes[partTabIdx][1] = intervalEdgeCount;
 				totalEdgeCount = totalEdgeCount + intervalEdgeCount;
 				intervalEdgeCount = 0;
 				partTabIdx++;
@@ -218,7 +218,7 @@ public class Preprocessor {
 				intervalMaxVId = outDegs.lastKey();
 				partAllocTable[partTabIdx][0] = partTabIdx;
 				partAllocTable[partTabIdx][1] = intervalMaxVId;
-				partSizes[partTabIdx] = numEdges - totalEdgeCount;
+				partSizes[partTabIdx][1] = numEdges - totalEdgeCount;
 				break;
 			}
 		}
@@ -556,9 +556,9 @@ public class Preprocessor {
 	private void writeTotalPartEdgestoFile() throws IOException {
 		PrintWriter partSizesOutStrm = new PrintWriter(
 				new BufferedWriter(new FileWriter(baseFilename + ".partSizes", true)));
-		long[] partSizes = SchedulerInfo.getPartSizes();
+		long[][] partSizes = SchedulerInfo.getPartSizes();
 		for (int i = 0; i < numParts; i++) {
-			partSizesOutStrm.println(partSizes[i]);
+			partSizesOutStrm.println(partSizes[i][1]);
 		}
 		partSizesOutStrm.close();
 	}
