@@ -2,6 +2,7 @@ package edu.uci.ics.cs.graspan.computation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,9 +72,8 @@ public class Engine {
 
 		while (!scheduler.shouldTerminate()) {
 			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
-			// logger.info("Scheduling Partitions : " +
-			// Arrays.toString(partsToLoad));
-			// logger.info("Start loading partitions...");
+			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
+			logger.info("Start loading partitions...");
 			loader.loadParts(partsToLoad);
 			// logger.info("Total time for loading partitions : " +
 			// (System.currentTimeMillis() - t) + " ms");
@@ -84,10 +84,8 @@ public class Engine {
 			List<LoadedVertexInterval> intervals=null;
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
-//			scheduler.setLoadedIntervals(intervals);
 			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(intervals);
 			scheduler.setLoadedIntervals(intervalsForScheduler);
-			
 			logger.info("\nintervals : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
@@ -116,10 +114,7 @@ public class Engine {
 
 			// logger.info("Loading complete.");
 
-			// TODO remove this!!!
-			// System.exit(0);
-
-			// logger.info("Start computation and edge addition...");
+			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 
 			// 2. do computation and add edges
@@ -127,49 +122,38 @@ public class Engine {
 			EdgeComputer.setVertices(vertices);
 			EdgeComputer.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers, intervals);
-			// logger.info("Finish computation...");
-			// logger.info("Computation and edge addition took: " +
-			// (System.currentTimeMillis() - t) + "ms");
+			logger.info("Finish computation...");
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
 			// logger.info("VERTEX LENGTH: " + vertices.length);
 			// for(int i = 0; i < vertices.length; i++) {
 			// logger.info("" + vertices[i]);
 			// logger.info("" + edgesLists[i]);
 			// }
 
-			// logger.info("Start storing partitions...");
+			logger.info("Start storing partitions...");
 			// 3. process computed partitions
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
-			// logger.info("termination map before: " + scheduler.toString());
+			logger.info("termination map before: " + scheduler.toString());
 
-			for (int i = 0; i < vertices.length; i++) {
-				logger.info("" + vertices[i]);
-				logger.info("" + edgesLists[i]);
-			}
+//			for (int i = 0; i < vertices.length; i++) {
+//				logger.info("" + vertices[i]);
+//				logger.info("" + edgesLists[i]);
+//			}
 
 			vertices_prevIt = vertices;
 			newEdgeLists_prevIt = edgesLists;
 			intervals_prevIt = intervals;
 			scheduler.setTerminationStatus();
 			// logger.info("termination map after: " + scheduler.toString());
-			// scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart,
-			// numPartsFinal);
+			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
+			logger.info("termination map after: " + scheduler.toString());
 		}
 
 		computationExecutor.shutdown();
-	}
-
-	/**
-	 * Description:
-	 * 
-	 * @param:
-	 * @return:
-	 */
-	private void storePartitions() {
-
 	}
 
 	/**

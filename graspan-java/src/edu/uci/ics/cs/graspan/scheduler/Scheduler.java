@@ -158,6 +158,7 @@ public class Scheduler {
 			}
 		}
 		
+		logger.info("=================Terminate!=================");
 		return true;
 	}
 	
@@ -168,8 +169,9 @@ public class Scheduler {
 	 * @return:void
 	 */
 	public void setTerminationStatus() {
+		logger.info("\nintervals : " + intervals);
 		assert(intervals.size() == 2);
-		logger.info("thisisi "+intervals.size());
+		
 		int loadedPartitionOne = intervals.get(0).getPartitionId();
 		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
