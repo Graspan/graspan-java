@@ -11,10 +11,11 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class WholeGraphComputer {
 
-	private static final Logger logger = GraspanLogger.getLogger("PreprocessorClient");
+	private static final Logger logger = GraspanLogger.getLogger("DTC-Oracle");
+	private static final int EDGE_BUFFER_SIZE = 1000;
 
-	public static int gph[][] = new int[1000][2];
-	public static int newEdgesMain[][] = new int[1000][2];
+	public static int gph[][] = new int[EDGE_BUFFER_SIZE][2];
+	public static int newEdgesMain[][] = new int[EDGE_BUFFER_SIZE][2];
 
 	public static void main(String args[]) throws IOException {
 		String baseFilename = args[0];
@@ -45,14 +46,14 @@ public class WholeGraphComputer {
 		logger.info("Finished reading original graph into memory.");
 
 		int nextGphPos = i;
-		logger.info("Number of edges in original graph: " + nextGphPos);
+		logger.info("# edges in original graph: " + nextGphPos);
 
 		int iterationNo = 1;
 		int[][] graphToCompute = gph;
 		boolean isNewEdgeAdded = false;
 		do {
 			printGraph();
-			logger.info("Computation iteration number: " + iterationNo);
+			logger.info("Computation iteration #: " + iterationNo);
 			isNewEdgeAdded = performDTCComputation(graphToCompute);
 			logger.info("New edges added in this iteration?: " + isNewEdgeAdded);
 			for (int j = 0; j < newEdgesMain.length; j++) {
@@ -68,7 +69,7 @@ public class WholeGraphComputer {
 	}
 
 	public static boolean performDTCComputation(int[][] gph) {
-		int newEdges[][] = new int[1000][2];
+		int newEdges[][] = new int[EDGE_BUFFER_SIZE][2];
 		int newEdgesMarker = 0;
 
 		// initializing newEdges
@@ -119,31 +120,34 @@ public class WholeGraphComputer {
 				}
 			}
 		}
-		logger.info("Number of new edges added in this iteration: " + newEdgesMarker);
+		logger.info("# new edges added in this iteration: " + newEdgesMarker);
 		newEdgesMain = newEdges;
-		printNewEdges();
+		if (newEdgesMarker != 0) // if new edges have been added
+		{
+			printNewEdges();
+		}
 		return isNewEdgeAdded;
 	}
 
 	public static void printGraph() {
-		logger.info("Printing graph.");
-		String s = "\n";
+		String s = "";
+		int numOfEdges = 0;
 		for (int i = 0; i < gph.length; i++) {
 			if (gph[i][0] == -1)
 				break;
-			s = s + gph[i][0] + "---->" + gph[i][1] + "\n";
+			s = s + gph[i][0] + "\t" + gph[i][1] + "\n";
+			numOfEdges++;
 		}
-		logger.info(s);
+		logger.info("The complete graph (" + numOfEdges + " edges): " + "\n" + s);
 	}
 
 	public static void printNewEdges() {
-		logger.info("Printing new Edges.");
-		String s = "\n";
+		String s = "";
 		for (int i = 0; i < newEdgesMain.length; i++) {
 			if (newEdgesMain[i][0] == -1)
 				break;
-			s = s + newEdgesMain[i][0] + "---->" + newEdgesMain[i][1] + "\n";
+			s = s + newEdgesMain[i][0] + "\t" + newEdgesMain[i][1] + "\n";
 		}
-		logger.info(s);
+		logger.info("New edges added:" + "\n" + s);
 	}
 }

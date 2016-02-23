@@ -171,16 +171,17 @@ public class ComputedPartProcessor {
 					}
 
 				}
-				if (src == 14) {
-					// logger.info("LOOK HERE
-					// NOWWWWWW"+vertices[i].getCombinedDeg());
-				}
+				// if (src == 14) {
+				// logger.info("LOOK HERE
+				// NOWWWWWW"+vertices[i].getCombinedDeg());
+				// }
 				// 1.1.1. update degrees data
 				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] = vertices[i]
 						.getNumOutEdges() + numOfNodeVertices;
 				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges() + numOfNodeVertices);
-				logger.info(
-						"Set Degree of vertex " + vertices[i].getVertexId() + " to " + vertices[i].getCombinedDeg());
+				// logger.info(
+				// "Set Degree of vertex " + vertices[i].getVertexId() + " to "
+				// + vertices[i].getCombinedDeg());
 			}
 
 			// 1.2. update changed and unchanged parts sets
@@ -240,14 +241,15 @@ public class ComputedPartProcessor {
 				}
 			}
 
-//			long edgeCount = 0;
-//			for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1; i++) {
-//				edgeCount += vertices[i].getCombinedDeg();
-//			}
-//
-//			logger.info("" + part.getPartitionId());
-//			logger.info("" + partSizes.length);
-//			partSizes[part.getPartitionId()][1] = edgeCount;
+			// long edgeCount = 0;
+			// for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1;
+			// i++) {
+			// edgeCount += vertices[i].getCombinedDeg();
+			// }
+			//
+			// logger.info("" + part.getPartitionId());
+			// logger.info("" + partSizes.length);
+			// partSizes[part.getPartitionId()][1] = edgeCount;
 		}
 
 		/*
@@ -455,16 +457,16 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		// updating basic scheduler (Part Sizes)
+		// 2.4. updating basic scheduler (Part Sizes)
 		int[][] pat = AllPartitions.getPartAllocTab();
 		long[][] newPartSizes = new long[pat.length][2];
 
-		//get ids in newPartsizes
+		// 2.4.1. get ids in newPartsizes
 		for (int i = 0; i < pat.length; i++) {
 			newPartSizes[i][0] = pat[i][0];
 		}
 
-		//get current partSizes values in newPartSizes
+		// 2.4.2. get current partSizes values in newPartSizes
 		for (int i = 0; i < partSizes.length; i++) {
 			for (int j = 0; j < newPartSizes.length; j++) {
 				if (newPartSizes[j][0] == partSizes[i][0]) {
@@ -473,6 +475,8 @@ public class ComputedPartProcessor {
 			}
 		}
 
+		// 2.4.3. get the sizes from by calling getCombinedDeg from each
+		// interval
 		long edgeCount = 0;
 		for (LoadedVertexInterval interval : intervals) {
 			for (int i = interval.getIndexStart(); i < interval.getIndexEnd() + 1; i++) {
@@ -488,11 +492,11 @@ public class ComputedPartProcessor {
 
 		SchedulerInfo.setPartSizes(newPartSizes);
 
-		for (int i = 0; i < pat.length; i++) {
-			logger.info("hehre" + pat[i][0]);
-		}
+		// for (int i = 0; i < pat.length; i++) {
+		// logger.info("hehre" + pat[i][0]);
+		// }
 
-		// 2.4. Create partsToSave set.
+		// 2.5. Create partsToSave set.
 
 		// Add repartitionedParts and newPartsFrmRepartitioning to
 		// partsToSave set if using RELOAD_PLAN_2.

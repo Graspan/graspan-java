@@ -145,7 +145,7 @@ public class Preprocessor {
 		logger.info("Done");
 
 		this.numEdges = numEdges;
-		logger.info(">Total number of edges in input graph: " + numEdges );
+		logger.info("Total number of edges in input graph: " + numEdges );
 
 		// Save the degrees on disk
 		logger.info("Saving degrees file " + baseFilename + ".degrees... ");
@@ -177,7 +177,7 @@ public class Preprocessor {
 
 		// the heuristic for interval max
 		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
-		logger.info(">Calculated partition size threshold: " + intervalMaxSize + " edges");
+		logger.info("Calculated partition size threshold: " + intervalMaxSize + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
 		int intervalMaxVId = 0;
