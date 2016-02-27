@@ -27,13 +27,6 @@ public class GlobalParams {
 	// partition
 	static String reloadPlan = "";
 
-	// INPUT 5 : The strategy for preserving partitions;
-	// PRESERVE_PLAN_1 - User the same Vertices[] and edgelists arrays,
-	// setting it initially by a preset size.
-	// PRESERVE_PLAN_2 - redeclare vertices every time
-	static String preservePlan = "";
-	
-
 	/**
 	 * 
 	 * @return String baseFilename
@@ -98,20 +91,5 @@ public class GlobalParams {
 		reloadPlan = str;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public static String getPreservePlan() {
-		return preservePlan;
-	}
-
-	/**
-	 * 
-	 * @param str
-	 */
-	public static void setPreservePlan(String str) {
-		preservePlan = str;
-	}
 
 }
