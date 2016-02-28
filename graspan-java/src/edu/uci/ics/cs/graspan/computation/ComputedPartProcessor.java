@@ -526,7 +526,6 @@ public class ComputedPartProcessor {
 							// destination v does not lie in any partition
 							continue;
 						}
-						logger.info("look herer " + partA + " " + partB);
 						if (!EDC_alterationMap[partA][partB]) {
 							edc[partA][partB] = 1;
 							EDC_alterationMap[partA][partB] = true;

@@ -344,7 +344,7 @@ public class Preprocessor {
 		}
 
 		logger.info("Partition files created.");
-		logger.info(">Total number of writes to disk for creating partition files: " + partitionDiskWriteCount);
+		logger.info("Total # writes to disk for creating partition files: " + partitionDiskWriteCount);
 
 	}
 
@@ -427,7 +427,7 @@ public class Preprocessor {
 			// write the srcId
 			srcVId = pair.getKey();
 			adjListOutputStream.writeInt(srcVId);
-			logger.info("src="+srcVId);
+//			logger.info("src="+srcVId);
 
 			// get the relevant srcVIdrow row from the adjacencyList
 			ArrayList<Integer[]> srcVIdRow = pair.getValue();
@@ -435,7 +435,7 @@ public class Preprocessor {
 			// write the count
 			count = srcVIdRow.size();
 			adjListOutputStream.writeInt(count);
-			logger.info("count="+count);
+//			logger.info("count="+count);
 
 			// write the destId edgeValue pair
 			for (int i = 0; i < srcVIdRow.size(); i++) {
