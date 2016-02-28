@@ -3,8 +3,9 @@ package edu.uci.ics.cs.graspan.scheduler;
 public class SchedulerInfo {
 
 	public static long[][] partSizes;
-	private static long[][] edgeDestCount;
+	public static long[][] edgeDestCount;
 	private int[][] terminationMap;
+	public static double[][] edcPercentage = new double[50][50];
 
 	/**
 	 * 
@@ -39,6 +40,22 @@ public class SchedulerInfo {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public static double[][] getEdcPercentage() {
+		return edcPercentage;
+	}
+
+	/**
+	 * 
+	 * @param arr
+	 */
+	public static void setEdcPercentage(double[][] arr) {
+		edcPercentage = arr;
+	}
+
+	/**
 	 * Prints the partition sizes and the partition edge counts
 	 */
 	public static void printData() {
@@ -56,17 +73,17 @@ public class SchedulerInfo {
 		}
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-
-		for (int i = 0; i < 50; i++) {
-			result.append(NEW_LINE + i + " : ");
-			for (int j = 0; j < 50; j++) {
-				result.append("(" + j + "," + edgeDestCount[i][j] + ") ");
-			}
-		}
-		return result.toString();
-	}
+	// @Override
+	// public String toString() {
+	// StringBuilder result = new StringBuilder();
+	// String NEW_LINE = System.getProperty("line.separator");
+	//
+	// for (int i = 0; i < 50; i++) {
+	// result.append(NEW_LINE + i + " : ");
+	// for (int j = 0; j < 50; j++) {
+	// result.append("(" + j + "," + edgeDestCount[i][j] + ") ");
+	// }
+	// }
+	// return result.toString();
+	// }
 }
