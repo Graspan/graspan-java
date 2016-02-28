@@ -23,7 +23,7 @@ public class PreprocessorClient {
 		String baseFilename = args[0];
 		int numInParts = Integer.parseInt(args[1]);
 		logger.info("Input graph: " + args[0]);
-		logger.info("Requested number of partitions to generate: " + args[1]);
+		logger.info("Requested # partitions to generate: " + args[1]);
 
 		// initialize Partition Generator Program
 		logger.info("Starting preprocessing...");
@@ -34,7 +34,7 @@ public class PreprocessorClient {
 		long degGenStartTime = System.nanoTime();
 		partgenerator.generateGraphDegs(new FileInputStream(new File(baseFilename)));
 		long degGenDuration = System.nanoTime() - degGenStartTime;
-		logger.info(">Total time for generating degrees file (nanoseconds): " + degGenDuration);
+		logger.info("Total time to create degrees file (nanoseconds): " + degGenDuration);
 
 		// creating the partitions
 		long creatingPartsStartTime = System.nanoTime();
@@ -42,7 +42,7 @@ public class PreprocessorClient {
 		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(baseFilename)));
 		partgenerator.generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
-		logger.info(">Total time for creating partitions (nanoseconds):" + creatingPartsDuration);
+		logger.info("Total time to create partitions (nanoseconds):" + creatingPartsDuration);
 
 		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;

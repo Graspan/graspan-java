@@ -92,11 +92,8 @@ public class LoadedVertexInterval {
 		StringBuilder result = new StringBuilder();
 		String NEW_LINE = System.getProperty("line.separator");
 
-		result.append(NEW_LINE + "interval : " + partitionId);
-		result.append(NEW_LINE + "firstVertex : " + firstVertex);
-		result.append(NEW_LINE + "lastVertex : " + lastVertex);
-		result.append(NEW_LINE + "indexStart : " + indexStart);
-		result.append(NEW_LINE + "indexEnd : " + indexEnd);
+		result.append(NEW_LINE + "(PartId: " + partitionId + ", VRange: " + firstVertex + "-" + lastVertex
+				+ ", IdRange: " + indexStart + "-" + indexEnd + ")");
 
 		return result.toString();
 	}
