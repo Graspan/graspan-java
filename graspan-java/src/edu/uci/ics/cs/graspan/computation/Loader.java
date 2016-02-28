@@ -40,6 +40,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
+	private static final int EDC_size = 50;
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	public static Vertex[] vertices = null;
@@ -232,8 +233,15 @@ public class Loader {
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
 
 		// initialize edgeDestCount and partSizes variables
-		long edgeDestCount[][] = new long[numParts][numParts];
+		long edgeDestCount[][] = new long[EDC_size][EDC_size];
 		long partSizes[][] = new long[numParts][2];
+		double edcPercentages[][] = new double[EDC_size][EDC_size];
+
+		for (int i = 0; i < EDC_size; i++) {
+			for (int j = 0; j < EDC_size; j++) {
+				edcPercentages[i][j] = -1;
+			}
+		}
 
 		/*
 		 * Scan the edge destination counts file
@@ -252,6 +260,7 @@ public class Loader {
 			edgeDestCount[partA][partB] = Long.parseLong(tok[2]);
 		}
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
+		SchedulerInfo.setEdcPercentage(edcPercentages);
 
 		inEdgeDestCountStrm.close();
 

@@ -69,9 +69,13 @@ public class Engine {
 		Loader loader = new Loader();
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
+		// Scheduler scheduler = new
+		// Scheduler(SchedulerInfo.getEdgeDestCount());
 
 		while (!scheduler.shouldTerminate()) {
-			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			// partsToLoad =
+			// scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			partsToLoad = scheduler.schedulePartitionEDC(AllPartitions.partAllocTable.length);
 			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
 			logger.info("Start loading partitions...");
 			loader.loadParts(partsToLoad);
@@ -81,31 +85,34 @@ public class Engine {
 			Vertex[] vertices;
 			NewEdgesList[] edgesLists;
 			vertices = loader.getVertices();
-			List<LoadedVertexInterval> intervals=null;
+			List<LoadedVertexInterval> intervals = null;
 			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
 			intervals = loader.getIntervals();
+
+			// this only does a shallow copy
 			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(intervals);
 			scheduler.setLoadedIntervals(intervalsForScheduler);
-			logger.info("\nintervals : " + intervals);
+			logger.info("\nLVI after loading : " + intervals);
 			assert(vertices != null && vertices.length > 0);
 			assert(intervals != null && intervals.size() > 0);
-			
+
 			edgesLists = loader.getNewEdgeLists();
-			
-//			if (vertices_prevIt == null) {// if there was no previous iteration
-//				edgesLists = loader.getNewEdgeLists();
-//			} else {
-//				//use intervals_prevIt to set up edge lists;
-//				for (LoadedVertexInterval intvNew:intervals){
-//					for (LoadedVertexInterval intvOld:intervals){
-//						if (intvNew.getPartitionId()==intvOld.getPartitionId()){
-//							
-////							newEdgeLists
-//						}
-//					}
-//				}
-//				edgesLists = newEdgeLists_prevIt;
-//			}
+
+			// if (vertices_prevIt == null) {// if there was no previous
+			// iteration
+			// edgesLists = loader.getNewEdgeLists();
+			// } else {
+			// //use intervals_prevIt to set up edge lists;
+			// for (LoadedVertexInterval intvNew:intervals){
+			// for (LoadedVertexInterval intvOld:intervals){
+			// if (intvNew.getPartitionId()==intvOld.getPartitionId()){
+			//
+			//// newEdgeLists
+			// }
+			// }
+			// }
+			// edgesLists = newEdgeLists_prevIt;
+			// }
 			// logger.info("VERTEX LENGTH: " + vertices.length);
 			// logger.info("The vertices before setting degree after new
 			// edges:");
@@ -137,19 +144,20 @@ public class Engine {
 			ComputedPartProcessor.initRepartitionConstraints();
 			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
-			logger.info("termination map before: " + scheduler.toString());
-
-//			for (int i = 0; i < vertices.length; i++) {
-//				logger.info("" + vertices[i]);
-//				logger.info("" + edgesLists[i]);
-//			}
+			// logger.info("termination map before: " + scheduler.toString());
+			// for (int i = 0; i < vertices.length; i++) {
+			// logger.info("" + vertices[i]);
+			// logger.info("" + edgesLists[i]);
+			// }
 
 			vertices_prevIt = vertices;
 			newEdgeLists_prevIt = edgesLists;
 			intervals_prevIt = intervals;
+			logger.info("\nLVI after computedPartProcessor saves partitions : " + intervals);
+			logger.info("\nLVI (scheduler) after computedPartProcessor saves partitions : " + intervalsForScheduler);
 			scheduler.setTerminationStatus();
 			// logger.info("termination map after: " + scheduler.toString());
-			scheduler.updateSchedulingInfo(numPartsFinal - numPartsStart, numPartsFinal);
+			scheduler.updateSchedInfoPostRepart(numPartsFinal - numPartsStart, numPartsFinal);
 			logger.info("termination map after: " + scheduler.toString());
 		}
 
