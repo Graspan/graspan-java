@@ -55,4 +55,18 @@ public class SchedulerInfo {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		String NEW_LINE = System.getProperty("line.separator");
+
+		for (int i = 0; i < 50; i++) {
+			result.append(NEW_LINE + i + " : ");
+			for (int j = 0; j < 50; j++) {
+				result.append("(" + j + "," + edgeDestCount[i][j] + ") ");
+			}
+		}
+		return result.toString();
+	}
 }
