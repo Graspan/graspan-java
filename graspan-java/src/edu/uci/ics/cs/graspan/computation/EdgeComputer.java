@@ -360,28 +360,16 @@ public class EdgeComputer {
 	}
 
 	/**
-	 * Description:
+	 * Description: TODO: CALL THIS METHOD INSTEAD OF checkGrammarAndAddEdge()
 	 * 
 	 * @param:
 	 * @return:
 	 */
 	private void checkGrammarAndAddEdgeComplete(int vertexId, byte edgeValue1, byte edgeValue2) {
-
 		byte edgeValue3 = checkGrammarAndGetNewEdgeVal(edgeValue1, edgeValue2);
-
 		if (edgeValue3 != -1) {
-			// TODO: dstEdgeValue to be fixed based on grammar!!
 			if (!isDuplicationEdge(vertexId, edgeValue3)) {
-				// no duplication, needs to add edge to linked array
-				// TODO: assume happens-before relationship is guaranteed
-				// by main thread waiting for all threads finish
 				edgeList.add(vertexId, edgeValue3);
-
-				// get edges of vertex 2 / test code 4
-				// if (flag == 1) {
-				// System.out.println("edge added " + vertexId);
-				// }
-
 				nNewEdges++;
 			}
 		}
@@ -395,14 +383,12 @@ public class EdgeComputer {
 
 		byte[][] grammarTab = GlobalParams.getGrammarTab();
 		byte edgeVal3 = -1;
-
 		for (int i = 0; i < grammarTab.length; i++) {
 			if (grammarTab[i][0] == edgeVal1 & grammarTab[i][1] == edgeVal2) {
 				edgeVal3 = grammarTab[i][2];
 				break;
 			}
 		}
-
 		return edgeVal3;
 	}
 }
