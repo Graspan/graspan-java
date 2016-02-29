@@ -166,8 +166,9 @@ public class Scheduler {
 	 */
 	public int[] schedulePartitionEDC(int numOfPartitions) {
 		int[] scheduled = new int[2];
-		int partA = 0;
+		int partA = 0, partB = 0;
 		long partA_Size = 0;
+		long partB_Size = 0;
 		double[][] edcPercentage = SchedulerInfo.getEdcPercentage();
 
 		for (int i = 0; i < numOfPartitions; i++) {
@@ -183,7 +184,23 @@ public class Scheduler {
 
 			for (int j = 0; j < numOfPartitions; j++) {
 
+				// OPTION 1-----
 				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
+				partB = j;
+				// -------------
+
+				// OPTION 2-----
+				// find size of partB
+				for (int k = 0; k < SchedulerInfo.getPartSizes().length; k++) {
+					if (SchedulerInfo.getPartSizes()[k][0] == partB) {
+						partB_Size = SchedulerInfo.getPartSizes()[k][1];
+						break;
+					}
+				}
+
+				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size
+						+ (double) SchedulerInfo.getEdgeDestCount()[j][i] / partB_Size;
+				// -------------
 			}
 		}
 
