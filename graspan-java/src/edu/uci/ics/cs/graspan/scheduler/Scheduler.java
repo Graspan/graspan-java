@@ -185,12 +185,13 @@ public class Scheduler {
 			for (int j = 0; j < numOfPartitions; j++) {
 
 				// OPTION 1-----
-				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
-				partB = j;
+				// edcPercentage[i][j] = (double)
+				// SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
 				// -------------
 
 				// OPTION 2-----
 				// find size of partB
+				partB = j;
 				for (int k = 0; k < SchedulerInfo.getPartSizes().length; k++) {
 					if (SchedulerInfo.getPartSizes()[k][0] == partB) {
 						partB_Size = SchedulerInfo.getPartSizes()[k][1];
