@@ -3,6 +3,7 @@ package edu.uci.ics.cs.graspan.computation;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
@@ -14,7 +15,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  *         Created by Oct 8, 2015
  */
 public class EdgeComputer {
-	
+
 	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
 	// test flag for viewing new edges of a source
@@ -240,7 +241,7 @@ public class EdgeComputer {
 	 * @param:
 	 * @return:
 	 */
-	private void scanEdges(int vertexId, byte edgeValue) {
+	private void scanEdges(int vertexId, byte edgeValue1) {
 		if (vertices == null || vertices.length == 0)
 			return;
 
@@ -258,6 +259,8 @@ public class EdgeComputer {
 			int dstId = v.getOutEdge(i);
 			byte dstEdgeValue = v.getOutEdgeValue(i);
 
+			byte edgeValue2 = dstEdgeValue;
+
 			// get edges of vertex 2 / test code 3
 			// if (flag == 1) {
 			// String olds = s;
@@ -268,7 +271,7 @@ public class EdgeComputer {
 
 			// check grammar, check duplication and add edges
 			// TODO: dstEdgeValue to be fixed based on grammar!!
-			checkGrammarAndAddEdge(dstId, dstEdgeValue);
+			checkGrammarAndAddEdge(dstId, edgeValue2);
 		}
 
 		// 2. scan new edges linked array
@@ -354,5 +357,52 @@ public class EdgeComputer {
 	 */
 	private static boolean checkGrammar() {
 		return true;
+	}
+
+	/**
+	 * Description:
+	 * 
+	 * @param:
+	 * @return:
+	 */
+	private void checkGrammarAndAddEdgeComplete(int vertexId, byte edgeValue1, byte edgeValue2) {
+
+		byte edgeValue3 = checkGrammarAndGetNewEdgeVal(edgeValue1, edgeValue2);
+
+		if (edgeValue3 != -1) {
+			// TODO: dstEdgeValue to be fixed based on grammar!!
+			if (!isDuplicationEdge(vertexId, edgeValue3)) {
+				// no duplication, needs to add edge to linked array
+				// TODO: assume happens-before relationship is guaranteed
+				// by main thread waiting for all threads finish
+				edgeList.add(vertexId, edgeValue3);
+
+				// get edges of vertex 2 / test code 4
+				// if (flag == 1) {
+				// System.out.println("edge added " + vertexId);
+				// }
+
+				nNewEdges++;
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private static byte checkGrammarAndGetNewEdgeVal(byte edgeVal1, byte edgeVal2) {
+
+		byte[][] grammarTab = GlobalParams.getGrammarTab();
+		byte edgeVal3 = -1;
+
+		for (int i = 0; i < grammarTab.length; i++) {
+			if (grammarTab[i][0] == edgeVal1 & grammarTab[i][1] == edgeVal2) {
+				edgeVal3 = grammarTab[i][2];
+				break;
+			}
+		}
+
+		return edgeVal3;
 	}
 }

@@ -27,6 +27,10 @@ public class GlobalParams {
 	// partition
 	static String reloadPlan = "";
 
+	private static final int GRAMMAR_SIZE = 200;
+	// The grammar file
+	public static byte[][] grammarTab = new byte[GRAMMAR_SIZE][3];
+
 	/**
 	 * 
 	 * @return String baseFilename
@@ -91,5 +95,20 @@ public class GlobalParams {
 		reloadPlan = str;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public static byte[][] getGrammarTab() {
+		return grammarTab;
+	}
+
+	/**
+	 * 
+	 * @param str
+	 */
+	public static void setGrammarTab(byte[][] arr) {
+		grammarTab = arr;
+	}
 
 }

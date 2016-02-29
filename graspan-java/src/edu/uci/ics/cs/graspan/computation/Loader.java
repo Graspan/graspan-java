@@ -298,7 +298,7 @@ public class Loader {
 	private void readGrammarTab() throws NumberFormatException, IOException {
 
 		// initialize edgeDestCount and partSizes variables
-		int[][] grammarTab = GlobalParams.getGrammarTab();
+		byte[][] grammarTab = GlobalParams.getGrammarTab();
 		int i = 0;
 
 		/*
@@ -311,9 +311,9 @@ public class Loader {
 		String[] tok;
 		while ((ln = inGrammarStrm.readLine()) != null) {
 			tok = ln.split("\t");
-			grammarTab[i][0] = Integer.parseInt(tok[0]);
-			grammarTab[i][1] = Integer.parseInt(tok[1]);
-			grammarTab[i][2] = Integer.parseInt(tok[2]);
+			grammarTab[i][0] = (byte) Integer.parseInt(tok[0]);
+			grammarTab[i][1] = (byte) Integer.parseInt(tok[1]);
+			grammarTab[i][2] = (byte) Integer.parseInt(tok[2]);
 			i++;
 		}
 
