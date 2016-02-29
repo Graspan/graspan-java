@@ -74,10 +74,13 @@ public class Loader {
 		this.reloadPlan = GlobalParams.getReloadPlan();
 
 		// get the partition allocation table
-		readPartAllocTable();
+		this.readPartAllocTable();
 
 		// get the scheduling info
-		readSchedulingInfo();
+		this.readSchedulingInfo();
+		
+		//get the grammar info
+		this.readGrammarTab();
 
 		// initialize variables for partition loading based on number of
 		// partitions to load.
@@ -284,6 +287,38 @@ public class Loader {
 		inPartSizesStrm.close();
 		logger.info("Loaded " + baseFilename + ".partSizes");
 
+	}
+
+	/**
+	 * Gets the Scheduling Info. (Should be called only once during first load)
+	 * 
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	private void readGrammarTab() throws NumberFormatException, IOException {
+
+		// initialize edgeDestCount and partSizes variables
+		int[][] grammarTab = GlobalParams.getGrammarTab();
+		int i = 0;
+
+		/*
+		 * Scan the edge destination counts file
+		 */
+		BufferedReader inGrammarStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
+		String ln;
+
+		String[] tok;
+		while ((ln = inGrammarStrm.readLine()) != null) {
+			tok = ln.split("\t");
+			grammarTab[i][0] = Integer.parseInt(tok[0]);
+			grammarTab[i][1] = Integer.parseInt(tok[1]);
+			grammarTab[i][2] = Integer.parseInt(tok[2]);
+			i++;
+		}
+
+		inGrammarStrm.close();
+		logger.info("Loaded " + baseFilename + ".grammar");
 	}
 
 	public Vertex[] getVertices() {
