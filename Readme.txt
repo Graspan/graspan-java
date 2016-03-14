@@ -9,5 +9,5 @@ Preprocessor Client Input
 E:\graspan\graph 4 2
 
 Computation Client Input 
-E:\graspan\graph 4 2 RELOAD_PLAN_2 PRESERVE_PLAN_2
+E:\graspan\graph 4 2 RELOAD_PLAN_2
 -----------------------------------------------------------------------
