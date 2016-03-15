@@ -33,7 +33,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  *
  */
 public class Preprocessor {
-	
+
 	private static final Logger logger = GraspanLogger.getLogger("Preprocessor");
 
 	// number of input partitions
@@ -49,7 +49,11 @@ public class Preprocessor {
 	private TreeMap<Integer, Integer> outDegs;
 
 	// the total number of edges that can be kept in all partition buffers
-	private static final long BUFFER_FOR_PARTS = 100000000;
+	private static final long BUFFER_FOR_PARTS = 10000000;
+
+	// for tracking progress after processing every
+	// "OUTPUT_EDGE_TRACKER_INTERVAL" edges
+	private static final long OUTPUT_EDGE_TRACKER_INTERVAL = 500000;
 
 	// the total number of edges that can be kept in each partition buffer
 	private long partBufferSize;
@@ -123,29 +127,41 @@ public class Preprocessor {
 		logger.info("Performing first scan on input graph... ");
 		long lineCount = 0;
 		long readStartTime = System.nanoTime();
+		int src = 0;
+		double readSpeed = 0;
+		String[] tok;
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
-			if (lineCount % 30000000 == 0) {
+			if (lineCount % OUTPUT_EDGE_TRACKER_INTERVAL == 0) {
 				logger.info("Reading edge #" + NumberFormat.getNumberInstance(Locale.US).format(lineCount) + ".");
-				double readSpeed = 30000000 / ((System.nanoTime() - readStartTime) / 1000000000);
-				logger.info(" Read speed: " + readSpeed + " edges/sec");
+				readSpeed = OUTPUT_EDGE_TRACKER_INTERVAL * 1000000000 / ((System.nanoTime() - readStartTime));
+				logger.info("Read speed: " + readSpeed + " edges/sec");
 				readStartTime = System.nanoTime();
 			}
 			if (!ln.startsWith("#")) {
-				String[] tok = ln.split("\t");
-				int src = Integer.parseInt(tok[0]);
-				if (!outDegs.containsKey(src)) {
-					outDegs.put(src, 1);
-				} else {
-					outDegs.put(src, outDegs.get(src) + 1);
+				tok = ln.split("\t");
+				try {
+					// use if graph number starts from 1
+					// src = Integer.parseInt(tok[0]);
+
+					// use if graph number starts from 0
+					src = Integer.parseInt(tok[0]) + 1;
+
+					if (!outDegs.containsKey(src)) {
+						outDegs.put(src, 1);
+					} else {
+						outDegs.put(src, outDegs.get(src) + 1);
+					}
+					numEdges++;
+				} catch (Exception e) {
+					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 				}
-				numEdges++;
 			}
 		}
-		logger.info("Done");
+		logger.info("Completed first scan of input graph and got full degree information in the memory.");
 
 		this.numEdges = numEdges;
-		logger.info("Total number of edges in input graph: " + numEdges );
+		logger.info("Total number of edges in input graph: " + numEdges);
 
 		// Save the degrees on disk
 		logger.info("Saving degrees file " + baseFilename + ".degrees... ");
@@ -159,7 +175,7 @@ public class Preprocessor {
 		outDegOutStrm.close();
 		this.outDegs = outDegs;
 
-		logger.info("Done");
+		logger.info("Completed saving all degrees files.");
 	}
 
 	/**
@@ -226,7 +242,7 @@ public class Preprocessor {
 		logger.info("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
 		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
-			partAllocTableOutStrm.println(partAllocTable[i][0]+"\t"+partAllocTable[i][1]);
+			partAllocTableOutStrm.println(partAllocTable[i][0] + "\t" + partAllocTable[i][1]);
 		}
 		logger.info("Done");
 
@@ -278,8 +294,8 @@ public class Preprocessor {
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
 
-		logger.info("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for "
-				+ numParts + " partitions)... ");
+		logger.info("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for " + numParts
+				+ " partitions)... ");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {
@@ -296,19 +312,34 @@ public class Preprocessor {
 		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long lineCount = 0;
+		double percentComplete = 0;
+		String[] tok;
+		logger.info("The total number of edges in graph: " + numEdges);
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
-			if (lineCount % 30000000 == 0) {
-				double percentComplete = (lineCount / numEdges) * 100;
-				logger.info("Sending edges to buffer, reading line "
-						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "(" + percentComplete
-						+ "%)...");
+			if (lineCount % OUTPUT_EDGE_TRACKER_INTERVAL == 0) {
+				percentComplete = ((double) lineCount / numEdges) * 100;
+				logger.info("Reading edges to buffer from disk. Reading line #"
+						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "("
+						+ (double) Math.round(percentComplete * 100) / 100 + "%)...");
 			}
 			if (!ln.startsWith("#")) {
-				String[] tok = ln.split("\t");
-				// Edge list: <src> <dst> <value>
-				incrementEdgeDestCount(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]));
-				addEdgetoBuffer(Integer.parseInt(tok[0]), Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
+				try {
+					tok = ln.split("\t");
+					// Edge list: <src> <dst> <value>
+					// use + 1 if graph vertex no. starts from 0
+					incrementEdgeDestCount(Integer.parseInt(tok[0]) + 1, Integer.parseInt(tok[1]) + 1);
+
+					// TODO SWITCH POINT USE 0 for third entry if graph has no
+					// edge
+					// values
+					// addEdgetoBuffer(Integer.parseInt(tok[0]),
+					// Integer.parseInt(tok[1]), Integer.parseInt(tok[2]));
+					addEdgetoBuffer(Integer.parseInt(tok[0]) + 1, Integer.parseInt(tok[1]) + 1, 0);
+
+				} catch (Exception e) {
+					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
+				}
 			}
 		}
 
@@ -360,6 +391,8 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue) throws IOException {
+		if (srcVId == 0)
+			logger.info("BOOOO");
 
 		int partitionId = PartitionQuerier.findPartition(srcVId);
 
@@ -389,6 +422,8 @@ public class Preprocessor {
 
 		// if partition buffer is full transfer the partition buffer to file
 		if (isPartitionBufferFull(partitionId)) {
+			logger.info("Partition buffer is full for partition id " + partitionId
+					+ ", writing the edges for this buffer to disk.");
 			// System.out.print("Partition buffer for partition # " +
 			// partitionId + " full, writing to disk... ");
 			sendBufferEdgestoDisk_ByteFmt(partitionId);
@@ -427,7 +462,7 @@ public class Preprocessor {
 			// write the srcId
 			srcVId = pair.getKey();
 			adjListOutputStream.writeInt(srcVId);
-//			logger.info("src="+srcVId);
+			// logger.info("src="+srcVId);
 
 			// get the relevant srcVIdrow row from the adjacencyList
 			ArrayList<Integer[]> srcVIdRow = pair.getValue();
@@ -435,7 +470,7 @@ public class Preprocessor {
 			// write the count
 			count = srcVIdRow.size();
 			adjListOutputStream.writeInt(count);
-//			logger.info("count="+count);
+			// logger.info("count="+count);
 
 			// write the destId edgeValue pair
 			for (int i = 0; i < srcVIdRow.size(); i++) {
