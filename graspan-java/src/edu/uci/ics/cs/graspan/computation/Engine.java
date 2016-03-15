@@ -130,7 +130,7 @@ public class Engine {
 			EdgeComputer.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers, intervals);
 			logger.info("Finish computation...");
-			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + "ms");
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
 			// logger.info("VERTEX LENGTH: " + vertices.length);
 			// for(int i = 0; i < vertices.length; i++) {
 			// logger.info("" + vertices[i]);
@@ -158,7 +158,7 @@ public class Engine {
 			scheduler.setTerminationStatus();
 			// logger.info("termination map after: " + scheduler.toString());
 			scheduler.updateSchedInfoPostRepart(numPartsFinal - numPartsStart, numPartsFinal);
-			logger.info("termination map after: " + scheduler.toString());
+//			logger.info("termination map after: " + scheduler.toString());
 		}
 
 		computationExecutor.shutdown();
@@ -176,7 +176,8 @@ public class Engine {
 			return;
 
 		final Object termationLock = new Object();
-		final int chunkSize = 1 + vertices.length / 64;
+//		final int chunkSize = 1 + vertices.length / 64;
+		final int chunkSize = 1 + vertices.length / 4;
 
 		final int nWorkers = vertices.length / chunkSize + 1;
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
@@ -301,11 +302,12 @@ public class Engine {
 		if (edgesList == null || edgesList.length == 0)
 			return;
 
+		int size;
 		for (int i = 0; i < edgesList.length; i++) {
 			NewEdgesList list = edgesList[i];
 			if (list == null)
 				continue;
-			int size = list.getSize();
+			size = list.getSize();
 			if (size == 0)
 				continue;
 			list.setReadableSize(size);

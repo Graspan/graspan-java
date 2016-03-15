@@ -28,8 +28,21 @@ public class GlobalParams {
 	static String reloadPlan = "";
 
 	private static final int GRAMMAR_SIZE = 200;
+
 	// The grammar file
 	public static byte[][] grammarTab = new byte[GRAMMAR_SIZE][3];
+
+	// The size of the Edge Destination Count Table
+	public static final int EDC_SIZE = 200;
+
+	// Output edge tracker interval
+	public static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
+
+	// Size of each new edges node
+	public static final int NEW_EDGE_NODE_SIZE = 100;
+
+	// Maximum size of a partition after adding new edges
+	public static final long PART_MAX_POST_NEW_EDGES = 400000;
 
 	/**
 	 * 

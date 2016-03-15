@@ -25,5 +25,6 @@ public class ComputationClient {
 
 		Engine engine = new Engine();
 		engine.run();
+		logger.info("FINISHED.");
 	}
 }

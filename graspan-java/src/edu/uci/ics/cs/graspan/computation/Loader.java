@@ -40,7 +40,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
-	private static final int EDC_size = 50;
+	private static final int EDC_SIZE = GlobalParams.EDC_SIZE;
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	public static Vertex[] vertices = null;
@@ -78,9 +78,9 @@ public class Loader {
 
 		// get the scheduling info
 		this.readSchedulingInfo();
-		
-		//get the grammar info
-		this.readGrammarTab();
+
+		// get the grammar info
+		// this.readGrammarTab();
 
 		// initialize variables for partition loading based on number of
 		// partitions to load.
@@ -236,12 +236,12 @@ public class Loader {
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
 
 		// initialize edgeDestCount and partSizes variables
-		long edgeDestCount[][] = new long[EDC_size][EDC_size];
+		long edgeDestCount[][] = new long[EDC_SIZE][EDC_SIZE];
 		long partSizes[][] = new long[numParts][2];
-		double edcPercentages[][] = new double[EDC_size][EDC_size];
+		double edcPercentages[][] = new double[EDC_SIZE][EDC_SIZE];
 
-		for (int i = 0; i < EDC_size; i++) {
-			for (int j = 0; j < EDC_size; j++) {
+		for (int i = 0; i < EDC_SIZE; i++) {
+			for (int j = 0; j < EDC_SIZE; j++) {
 				edcPercentages[i][j] = -1;
 			}
 		}
@@ -548,8 +548,12 @@ public class Loader {
 					// get the srcVId and degree
 					int srcVId = Integer.parseInt(tok[0]);
 					int deg = Integer.parseInt(tok[1]);
+					try {
+						partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(newParts[i])] = deg;
+					} catch (Exception e) {
+						logger.info("ERROR!: " + srcVId + " " + PartitionQuerier.getFirstSrc(newParts[i]));
 
-					partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(newParts[i])] = deg;
+					}
 					// this will be later updated in processParts() of
 					// ComputedPartProcessor if new edges are added for this
 					// source vertex during computation.
@@ -730,11 +734,13 @@ public class Loader {
 								// dstVId
 								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
 
-								// test
-								if (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] > 152) {
-									logger.info("ERROR: read vertex id > 152!");
-									// System.exit(0);
-								}
+								// test for artifical input graph
+								// if
+								// (partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId]
+								// + 1] > 152) {
+								// logger.info("ERROR: read vertex id > 152!");
+								// // System.exit(0);
+								// }
 
 								// edgeVal
 								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();

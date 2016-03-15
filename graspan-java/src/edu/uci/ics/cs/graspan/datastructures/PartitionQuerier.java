@@ -24,13 +24,12 @@ public class PartitionQuerier {
 	 * @param partId
 	 */
 	public static int getNumUniqueSrcs(int partId) {
-		int[][] partAllocTable = AllPartitions.getPartAllocTab();
-		for (int i = 0; i < partAllocTable.length; i++) {
-			if (partId == partAllocTable[i][0]) {
+		for (int i = 0; i < AllPartitions.getPartAllocTab().length; i++) {
+			if (partId == AllPartitions.getPartAllocTab()[i][0]) {
 				if (i == 0) {
-					return partAllocTable[i][1];
+					return AllPartitions.getPartAllocTab()[i][1];
 				} else {
-					return partAllocTable[i][1] - partAllocTable[i - 1][1];
+					return AllPartitions.getPartAllocTab()[i][1] - AllPartitions.getPartAllocTab()[i - 1][1];
 				}
 			}
 		}

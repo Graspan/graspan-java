@@ -7,10 +7,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -32,13 +33,15 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  */
 public class ComputedPartProcessor {
 
-	private static long partMaxPostNewEdges;
 	private static final Logger logger = GraspanLogger.getLogger("ComputedPartProcessor");
 
 	private static String repartPartsOP = "";
 	private static String newPartsfrmRepartOP = "";
 	private static String partsToSaveOP = "";
 	private static String patOP = "";
+
+	private static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
+	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams.PART_MAX_POST_NEW_EDGES;
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -63,8 +66,7 @@ public class ComputedPartProcessor {
 		// the heuristic for interval max after new edge addition
 		// if this threshold is exceeded, the partition is repartitioned
 		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
-		// partMaxPostNewEdges = heuristic_newPartMax;
-		partMaxPostNewEdges = 60;
+		// PART_MAX_POST_NEW_EDGES = heuristic_newPartMax;
 	}
 
 	/**
@@ -125,6 +127,8 @@ public class ComputedPartProcessor {
 			int src;
 			boolean partHasNewEdges = false;
 
+			logger.info("Processing loaded partition # " + partId);
+
 			// String s = "Processing partition: " + partId + "...\n";
 			// s = s + "First Vertex: " + part.getFirstVertex() + "\n";
 			// s = s + "Last Vertex: " + part.getLastVertex() + "\n";
@@ -137,10 +141,12 @@ public class ComputedPartProcessor {
 			int partEnd = part.getIndexEnd();
 
 			// 1.1. Scan the new edges and update loadPartOutDegs,
+			logger.info("Updating loadPartOutDegs for loaded partition " + partId);
 
+			int numOfNodeVertices;
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
-				int numOfNodeVertices = 0;
+				numOfNodeVertices = 0;
 
 				// get the actual source id
 				// src = i - partStart + part.getFirstVertex();
@@ -180,6 +186,7 @@ public class ComputedPartProcessor {
 			}
 
 			// 1.3. Add repartitioning split vertices
+			logger.info("Adding repartitioning split points for loaded partition " + partId);
 
 			// keeps track of the size of the current partition
 			long partEdgeCount = 0;
@@ -223,7 +230,7 @@ public class ComputedPartProcessor {
 				// larger than the limit, this partition is split, and
 				// thus, we add the id of this source vertex as a split
 				// point
-				if (partEdgeCount > partMaxPostNewEdges & i != partEnd) {
+				if (partEdgeCount > PART_MAX_POST_NEW_EDGES & i != partEnd) {
 					splitVertices.add(src);
 					partEdgeCount = 0;
 				}
@@ -244,6 +251,7 @@ public class ComputedPartProcessor {
 		 * 2. Creating new partitions based on split vertices, and updating all
 		 * relevant data structures
 		 */
+		logger.info("Creating new partitions based on split vertices, and updating all relevant data structures");
 
 		// testing PartitionQuerier before changing PAT 1/2
 		// System.out.println("testing findpartition 13:" +
@@ -262,6 +270,7 @@ public class ComputedPartProcessor {
 		// PartitionQuerier.getPartArrIdxFrmActualId(38, 2));
 
 		// 2.1. Updating Partition Allocation Table.
+		logger.info("Updating partition allocation table");
 
 		int[][] partAllocTab = AllPartitions.getPartAllocTab();
 
@@ -321,11 +330,12 @@ public class ComputedPartProcessor {
 		AllPartitions.setPartAllocTab(newPartAllocTab);
 		GlobalParams.setNumParts(newPartAllocTab.length);
 
-		patOP = "Part Alloc Table after processing: ";
-		for (int i = 0; i < newPartAllocTab.length; i++) {
-			patOP = patOP + "[" + newPartAllocTab[i][0] + "," + newPartAllocTab[i][1] + "] ";
-		}
-		logger.info(patOP);
+		// patOP = "Part Alloc Table after processing: ";
+		// for (int i = 0; i < newPartAllocTab.length; i++) {
+		// patOP = patOP + "[" + newPartAllocTab[i][0] + "," +
+		// newPartAllocTab[i][1] + "] ";
+		// }
+		// logger.info(patOP);
 
 		// testing PartitionQuerier after changing PAT 2/2
 		// System.out.println("testing findPartition 7:" +
@@ -354,6 +364,7 @@ public class ComputedPartProcessor {
 		// (partitions loaded prior to this computation) for RELOAD_PLAN_2.
 		// loadedParts will be needed for next loading using this reload
 		// plan.)
+		logger.info("Updating repartitioned/modifiedParts and loadedParts");
 		for (int i = 0; i < splitVertices.size(); i++) {
 			for (int j = 0; j < loadedParts.length; j++) {
 				if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
@@ -381,20 +392,21 @@ public class ComputedPartProcessor {
 		//
 
 		if (repartitionedParts.size() > 0) {
-			repartPartsOP = "Repartitioned Parts: ";
-			for (Integer Id : repartitionedParts)
-				repartPartsOP = repartPartsOP + Id + " ";
-			logger.info(repartPartsOP);
-
-			newPartsfrmRepartOP = "Parts created by Repartitioning: ";
-			for (Integer Id : newPartsFrmRepartitioning)
-				newPartsfrmRepartOP = newPartsfrmRepartOP + Id + " ";
-			logger.info(newPartsfrmRepartOP);
+			// repartPartsOP = "Repartitioned Parts: ";
+			// for (Integer Id : repartitionedParts)
+			// repartPartsOP = repartPartsOP + Id + " ";
+			// logger.info(repartPartsOP);
+			//
+			// newPartsfrmRepartOP = "Parts created by Repartitioning: ";
+			// for (Integer Id : newPartsFrmRepartitioning)
+			// newPartsfrmRepartOP = newPartsfrmRepartOP + Id + " ";
+			// logger.info(newPartsfrmRepartOP);
 		} else {
 			logger.info("No Parts Repartitioned.");
 		}
 
 		// 2.3. Update LoadedVertexIntervals
+		logger.info("Updating LoadedVertexIntervals");
 
 		// 2.3.1. Collect Ids of all loaded partitions in
 		// loadedPartsPostProcessing
@@ -414,6 +426,8 @@ public class ComputedPartProcessor {
 		// indices in LoadedVertexIntervals
 		int src = 0, indexSt = 0, indexEd = 0, minSrcTest = 0;
 		boolean intervalFound;
+		logger.info("Total number of source vertices in memory: " + vertices.length);
+		double percentComplete = 0;
 		for (int i = 0; i < vertices.length; i++) {
 			if (vertices[i] != null) {
 				minSrcTest = 0;
@@ -465,9 +479,10 @@ public class ComputedPartProcessor {
 			}
 		}
 
-		logger.info("\nLVI after repartitn. process : " + intervals);
+		// logger.info("\nLVI after repartitn. process : " + intervals);
 
 		// 2.4. Updating Scheduler Information
+		logger.info("Updating scheduler information");
 		int[][] pat = AllPartitions.getPartAllocTab();
 		long[][] newPartSizes = new long[pat.length][2];
 
@@ -503,7 +518,7 @@ public class ComputedPartProcessor {
 		// 2.4.4. update edge-dest-count
 		int srcV, destV, partA, partB;
 		int[] nodeDestVs;
-		boolean[][] EDC_alterationMap = new boolean[50][50];
+		boolean[][] EDC_alterationMap = new boolean[GlobalParams.EDC_SIZE][GlobalParams.EDC_SIZE];
 		for (int i = 0; i < 50; i++) {
 			for (int j = 0; j < 50; j++) {
 				EDC_alterationMap[i][j] = false;
