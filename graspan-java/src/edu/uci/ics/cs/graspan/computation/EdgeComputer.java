@@ -3,20 +3,21 @@ package edu.uci.ics.cs.graspan.computation;
 import java.util.List;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
- *
+ * 
  *         Created by Oct 8, 2015
  */
 public class EdgeComputer {
 
-	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
+	private static final Logger logger = GraspanLogger
+			.getLogger("EdgeComputer");
 
 	// test flag for viewing new edges of a source
 	public static int flag = 0;
@@ -24,7 +25,7 @@ public class EdgeComputer {
 
 	private Vertex vertex = null;
 	private NewEdgesList edgeList = null;
-	private int nNewEdges;
+	private int nNewEdges, nDupEdges;
 	private boolean terminateStatus;
 	private static NewEdgesList[] edgesLists = null;
 	private static Vertex[] vertices = null;
@@ -41,6 +42,14 @@ public class EdgeComputer {
 
 	public void setNumNewEdges(int nNewEdges) {
 		this.nNewEdges = nNewEdges;
+	}
+
+	public int getNumDupEdges() {
+		return nDupEdges;
+	}
+
+	public void setNumDupEdges(int nDupEdges) {
+		this.nDupEdges = nDupEdges;
 	}
 
 	public boolean getTerminateStatus() {
@@ -108,7 +117,7 @@ public class EdgeComputer {
 		for (int j = 0; j < readableSize - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
-			assert(ids.length == NewEdgesList.NODE_SIZE);
+			assert (ids.length == NewEdgesList.NODE_SIZE);
 
 			for (int k = 0; k < ids.length; k++) {
 
@@ -197,7 +206,7 @@ public class EdgeComputer {
 		for (int j = 0; j < size - 1; j++) {
 			ids = edgeList.getNode(j).getDstVertices();
 			values = edgeList.getNode(j).getEdgeValues();
-			assert(ids.length == NewEdgesList.NODE_SIZE);
+			assert (ids.length == NewEdgesList.NODE_SIZE);
 
 			for (int k = 0; k < ids.length; k++) {
 				// TODO: JUST for testing, change back soon!!!
@@ -242,6 +251,7 @@ public class EdgeComputer {
 	 * @return:
 	 */
 	private void scanEdges(int vertexId, byte edgeValue1) {
+		// logger.info("scanning edges for vertex " + vertexId);
 		if (vertices == null || vertices.length == 0)
 			return;
 
@@ -249,6 +259,8 @@ public class EdgeComputer {
 		if (index == -1)
 			return;
 
+//		logger.info("candidate!");
+		
 		assert index >= 0 && index < vertices.length;
 		Vertex v = vertices[index];
 		if (v == null || v.getNumOutEdges() == 0)
@@ -294,7 +306,7 @@ public class EdgeComputer {
 		for (int j = 0; j < readableSize - 1; j++) {
 			ids = edgesLists[index].getNode(j).getDstVertices();
 			values = edgesLists[index].getNode(j).getEdgeValues();
-			assert(ids.length == NewEdgesList.NODE_SIZE);
+			assert (ids.length == NewEdgesList.NODE_SIZE);
 
 			for (int k = 0; k < ids.length; k++) {
 				// test
@@ -320,6 +332,7 @@ public class EdgeComputer {
 			// TODO: values[m] to be fixed based on grammar!!
 			checkGrammarAndAddEdge(ids[m], values[m]);
 		}
+		// logger.info("Completed Scanning edges for " + vertexId);
 	}
 
 	/**
@@ -345,6 +358,8 @@ public class EdgeComputer {
 				// }
 
 				nNewEdges++;
+			} else {
+				nDupEdges++;
 			}
 		}
 	}
@@ -365,7 +380,8 @@ public class EdgeComputer {
 	 * @param:
 	 * @return:
 	 */
-	private void checkGrammarAndAddEdgeComplete(int vertexId, byte edgeValue1, byte edgeValue2) {
+	private void checkGrammarAndAddEdgeComplete(int vertexId, byte edgeValue1,
+			byte edgeValue2) {
 		byte edgeValue3 = checkGrammarAndGetNewEdgeVal(edgeValue1, edgeValue2);
 		if (edgeValue3 != -1) {
 			if (!isDuplicationEdge(vertexId, edgeValue3)) {
@@ -379,7 +395,8 @@ public class EdgeComputer {
 	 * 
 	 * @return
 	 */
-	private static byte checkGrammarAndGetNewEdgeVal(byte edgeVal1, byte edgeVal2) {
+	private static byte checkGrammarAndGetNewEdgeVal(byte edgeVal1,
+			byte edgeVal2) {
 
 		byte[][] grammarTab = GlobalParams.getGrammarTab();
 		byte edgeVal3 = -1;

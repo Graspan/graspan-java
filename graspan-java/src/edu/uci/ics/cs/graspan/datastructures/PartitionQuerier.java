@@ -2,6 +2,7 @@ package edu.uci.ics.cs.graspan.datastructures;
 
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**

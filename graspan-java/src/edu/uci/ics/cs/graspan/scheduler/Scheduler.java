@@ -9,7 +9,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
- *
+ * 
  *         Created by Oct 30, 2015
  */
 public class Scheduler {
@@ -33,7 +33,7 @@ public class Scheduler {
 			allEdgeInfo.add(edgeInfo);
 		}
 
-		////
+		// //
 		// Scheduler Output
 		// StringBuilder result = new StringBuilder();
 		// String NEW_LINE = System.getProperty("line.separator");
@@ -45,7 +45,7 @@ public class Scheduler {
 		// }
 		// }
 		// logger.info("Edge Dest Count" + result);
-		////
+		// //
 	}
 
 	/**
@@ -63,7 +63,8 @@ public class Scheduler {
 		}
 
 		for (int i = 0; i < edgeDstCount.length; i++) {
-			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i, edgeDstCount[i]);
+			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i,
+					edgeDstCount[i]);
 			allEdgeInfo.add(edgeInfo);
 		}
 	}
@@ -87,7 +88,7 @@ public class Scheduler {
 	// int partitionId = edgeInfo.getPartitionId();
 	// // get edgeInfo and priorityInfo for each partition
 	// List<Long> pEdgeInfo = edgeInfo.getPartitionEdgeInfo();
-	//// List<Long> priorityInfo = edgeInfo.getPriorityInfo();
+	// // List<Long> priorityInfo = edgeInfo.getPriorityInfo();
 	//
 	// // compute priority, starting from (partitionId + 1)
 	// // for example, if there are 3 partitions, 0, 1, 2,
@@ -98,7 +99,7 @@ public class Scheduler {
 	// // get edgeInfo for the next partition
 	// long edgesNextPartition = pEdgeInfo.get(i);
 	// // compute priority and set priority
-	//// priorityInfo.set(i, edgesCurrentPartition + edgesNextPartition);
+	// // priorityInfo.set(i, edgesCurrentPartition + edgesNextPartition);
 	// }
 	// }
 	//
@@ -120,7 +121,7 @@ public class Scheduler {
 	// for(PartitionEdgeInfo edgeInfo : allEdgeInfo) {
 	// int partitionId = edgeInfo.getPartitionId();
 	// scheduledOne = partitionId;
-	//// List<Long> priorityInfo = edgeInfo.getPriorityInfo();
+	// // List<Long> priorityInfo = edgeInfo.getPriorityInfo();
 	// for(int i = 0; i < priorityInfo.size(); i++) {
 	// if(priorityInfo.get(i) > maxPriority) {
 	// maxPriority = priorityInfo.get(i);
@@ -187,6 +188,8 @@ public class Scheduler {
 				// OPTION 1-----
 				// edcPercentage[i][j] = (double)
 				// SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
+				// the remaining implementation needs to be changed if you want to
+				// implement this one
 				// -------------
 
 				// OPTION 2-----
@@ -199,8 +202,10 @@ public class Scheduler {
 					}
 				}
 
-				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size
-						+ (double) SchedulerInfo.getEdgeDestCount()[j][i] / partB_Size;
+				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j]
+						/ partA_Size
+						+ (double) SchedulerInfo.getEdgeDestCount()[j][i]
+						/ partB_Size;
 				// -------------
 			}
 		}
@@ -212,7 +217,8 @@ public class Scheduler {
 			for (int j = 0; j < numOfPartitions; j++) {
 				// logger.info("hello world" + edcPercentage[i][j] + " " + max);
 				if (edcPercentage[i][j] > max & i != j) {
-					List<Boolean> terminationInfoForOne = allEdgeInfo.get(i).getTerminationInfo();
+					List<Boolean> terminationInfoForOne = allEdgeInfo.get(i)
+							.getTerminationInfo();
 					if (terminationInfoForOne.get(j) == false) {
 						max = edcPercentage[i][j];
 						maxPartA = i;
@@ -242,14 +248,15 @@ public class Scheduler {
 
 		for (int i = 0; i < allEdgeInfo.size(); i++) {
 			int partitionId = allEdgeInfo.get(i).getPartitionId();
-			List<Boolean> terminationInfo = allEdgeInfo.get(i).getTerminationInfo();
+			List<Boolean> terminationInfo = allEdgeInfo.get(i)
+					.getTerminationInfo();
 			for (int j = (partitionId + 1); j < size; j++) {
 				if (!terminationInfo.get(j))
 					return false;
 			}
 		}
 
-		////
+		// //
 		// Scheduler Output
 		// StringBuilder result = new StringBuilder();
 		// String NEW_LINE = System.getProperty("line.separator");
@@ -261,7 +268,7 @@ public class Scheduler {
 		// }
 		// }
 		// logger.info("Edge Dest Count" + result);
-		////
+		// //
 
 		logger.info("=================Terminate!=================");
 		return true;
@@ -276,18 +283,22 @@ public class Scheduler {
 	 */
 	public void setTerminationStatus() {
 		logger.info("\nintervals : " + intervals);
-		assert(intervals.size() == 2);
+		assert (intervals.size() == 2);
 
 		int loadedPartitionOne = intervals.get(0).getPartitionId();
 		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
 		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
 
-		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : " + isNewEdgeAddedForOne);
-		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : " + isNewEdgeAddedForTwo);
+		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : "
+				+ isNewEdgeAddedForOne);
+		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : "
+				+ isNewEdgeAddedForTwo);
 
-		List<Boolean> terminationInfoForOne = allEdgeInfo.get(loadedPartitionOne).getTerminationInfo();
-		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(loadedPartitionTwo).getTerminationInfo();
+		List<Boolean> terminationInfoForOne = allEdgeInfo.get(
+				loadedPartitionOne).getTerminationInfo();
+		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(
+				loadedPartitionTwo).getTerminationInfo();
 
 		if (isNewEdgeAddedForOne) {
 			// set the row to false
@@ -296,7 +307,8 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionTwo, false);
+				allEdgeInfo.get(i).getTerminationInfo()
+						.set(loadedPartitionTwo, false);
 		}
 
 		if (isNewEdgeAddedForTwo) {
@@ -306,7 +318,8 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionOne, false);
+				allEdgeInfo.get(i).getTerminationInfo()
+						.set(loadedPartitionOne, false);
 		}
 
 		terminationInfoForOne.set(loadedPartitionTwo, true);
@@ -319,7 +332,8 @@ public class Scheduler {
 	 * @param numOfNewPartitions
 	 * @param totalPartitions
 	 */
-	public void updateSchedInfoPostRepart(int numOfNewPartitions, int totalPartitions) {
+	public void updateSchedInfoPostRepart(int numOfNewPartitions,
+			int totalPartitions) {
 
 		// for each of the old partitions, add "false" for each new partition
 		for (PartitionEdgeInfo info : allEdgeInfo) {
@@ -331,7 +345,8 @@ public class Scheduler {
 		// create records for each new partition created
 		int numOfOldPartitions = totalPartitions - numOfNewPartitions;
 		for (int i = 0; i < numOfNewPartitions; i++) {
-			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(numOfOldPartitions + i, totalPartitions);
+			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(
+					numOfOldPartitions + i, totalPartitions);
 			allEdgeInfo.add(newInfo);
 		}
 	}

@@ -16,13 +16,13 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
-import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
@@ -41,7 +41,7 @@ public class ComputedPartProcessor {
 	private static String patOP = "";
 
 	private static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
-	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams.PART_MAX_POST_NEW_EDGES;
+	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams.getPartMaxPostNewEdges();
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -518,7 +518,7 @@ public class ComputedPartProcessor {
 		// 2.4.4. update edge-dest-count
 		int srcV, destV, partA, partB;
 		int[] nodeDestVs;
-		boolean[][] EDC_alterationMap = new boolean[GlobalParams.EDC_SIZE][GlobalParams.EDC_SIZE];
+		boolean[][] EDC_alterationMap = new boolean[GlobalParams.getEdcSize()][GlobalParams.getEdcSize()];
 		for (int i = 0; i < 50; i++) {
 			for (int j = 0; j < 50; j++) {
 				EDC_alterationMap[i][j] = false;

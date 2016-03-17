@@ -22,12 +22,12 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
-import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
@@ -40,8 +40,9 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class Loader {
 
-	private static final int EDC_SIZE = GlobalParams.EDC_SIZE;
+	private static final int EDC_SIZE = GlobalParams.getEdcSize();
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
+	
 
 	public static Vertex[] vertices = null;
 	public static NewEdgesList[] newEdgeLists = null;

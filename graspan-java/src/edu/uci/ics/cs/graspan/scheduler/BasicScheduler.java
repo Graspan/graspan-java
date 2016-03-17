@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.uci.ics.cs.graspan.datastructures.GlobalParams;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 
 /**
  * 

@@ -1,14 +1,20 @@
 package edu.uci.ics.cs.graspan.datastructures;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
+
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * @author Kai Wang
- *
+ * 
  *         Created by Oct 8, 2015
  */
 public class NewEdgesList {
-	public static final int NODE_SIZE = GlobalParams.NEW_EDGE_NODE_SIZE;
+	private static final Logger logger = GraspanLogger
+			.getLogger("NewEdgesList");
+	public static final int NODE_SIZE = GlobalParams.getNewEdgesNodeSize();
 
 	private NewEdgesNode first;
 	private NewEdgesNode last;
@@ -54,7 +60,7 @@ public class NewEdgesList {
 			edgeValues[index] = edgeValue;
 			index++;
 		}
-		
+
 		public int getNewOutEdge(int i) {
 			return dstVertices[i];
 		}
@@ -98,39 +104,39 @@ public class NewEdgesList {
 	public NewEdgesNode getLast() {
 		return last;
 	}
-	
+
 	public NewEdgesNode getReadableLast() {
 		return readableLast;
 	}
-	
+
 	public void setReadableLast(NewEdgesNode readableLast) {
 		this.readableLast = readableLast;
 	}
-	
 
 	public int getIndex() {
 		return last.getIndex();
 	}
 
 	public void add(int vertexId, byte edgeValue) {
-		if(size == 0 && first == null) { // empty linklist
+		if (size == 0 && first == null) { // empty linklist
 			first = new NewEdgesNode();
 			size++;
 			last = first;
-		} else if(size == 0) { // nodes already allocated, data invalid, reuse nodes
+		} else if (size == 0) { // nodes already allocated, data invalid, reuse
+								// nodes
 			size++;
-	
+
 		} else {
 			int index = last.getIndex();
-			if(index >= NODE_SIZE) {
-				if(last.next == null)
+			if (index >= NODE_SIZE) {
+				if (last.next == null)
 					last.next = new NewEdgesNode(); // modify for nodes reuse
 				last = last.next;
 				size++;
 			}
-			
+
 		}
-		
+
 		last.add(vertexId, edgeValue);
 	}
 
@@ -147,7 +153,7 @@ public class NewEdgesList {
 
 		return node;
 	}
-	
+
 	public void clear() {
 		NewEdgesNode currentNode = first;
 		if (first == null)
@@ -172,7 +178,8 @@ public class NewEdgesList {
 		NewEdgesNode temp = first;
 		for (int i = 0; i < size; i++) {
 			result.append(NEW_LINE + "edge list size : " + size);
-			result.append(NEW_LINE + "dst vertex id : " + Arrays.toString(temp.getDstVertices()));
+			result.append(NEW_LINE + "dst vertex id : "
+					+ Arrays.toString(temp.getDstVertices()));
 			// result.append(NEW_LINE + "edge value : " +
 			// Arrays.toString(temp.getEdgeValues()));//TODO UNCOMMENT THIS
 			// LATER

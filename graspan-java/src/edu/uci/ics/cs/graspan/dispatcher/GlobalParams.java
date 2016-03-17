@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.datastructures;
+package edu.uci.ics.cs.graspan.dispatcher;
 
 /**
  * 
@@ -6,16 +6,16 @@ package edu.uci.ics.cs.graspan.datastructures;
  */
 public class GlobalParams {
 
-	// INPUT 1 : input graph full file name and path
+	// input graph full file name and path
 	public static String baseFilename = "";
 
-	// INPUT 2 : total number of partitions
+	// total number of partitions
 	static int numParts;
 
-	// INPUT 3 : number of partitions during each computation
-	static int numPartsPerComputation;
+	// number of partitions during each computation
+	static final int NUM_PARTS_PER_COMPUTATION = 2;
 
-	// INPUT 4 : The strategy for reloading partitions;
+	// The strategy for reloading partitions;
 	// RELOAD_PLAN_1 - Reload all the requested partitions everytime,
 	// regardless of which are already in the memory
 	// RELOAD_PLAN_2 - Reload only the requested partitions that are not in
@@ -30,19 +30,51 @@ public class GlobalParams {
 	private static final int GRAMMAR_SIZE = 200;
 
 	// The grammar file
-	public static byte[][] grammarTab = new byte[GRAMMAR_SIZE][3];
+	private static byte[][] grammarTab = new byte[GRAMMAR_SIZE][3];
 
 	// The size of the Edge Destination Count Table
-	public static final int EDC_SIZE = 200;
+	private static int EdcSize;
 
 	// Output edge tracker interval
-	public static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
+	private static int OpEdgeTrackerInterval;
 
 	// Size of each new edges node
-	public static final int NEW_EDGE_NODE_SIZE = 100;
+	private static int NewEdgeNodeSize;
 
 	// Maximum size of a partition after adding new edges
-	public static final long PART_MAX_POST_NEW_EDGES = 400000;
+	private static long PartMaxPostNewEdges;
+
+	public static void setEdcSize(int num) {
+		EdcSize = num;
+	}
+
+	public static int getEdcSize() {
+		return EdcSize;
+	}
+
+	public static void setOpEdgeTrackerInterval(int num) {
+		OpEdgeTrackerInterval = num;
+	}
+
+	public static int getOpEdgeTrackerInterval() {
+		return OpEdgeTrackerInterval;
+	}
+
+	public static void setNewEdgesNodeSize(int num) {
+		NewEdgeNodeSize = num;
+	}
+
+	public static int getNewEdgesNodeSize() {
+		return NewEdgeNodeSize;
+	}
+
+	public static void setPartMaxPostNewEdges(long num) {
+		PartMaxPostNewEdges = num;
+	}
+
+	public static long getPartMaxPostNewEdges() {
+		return PartMaxPostNewEdges;
+	}
 
 	/**
 	 * 
@@ -81,15 +113,7 @@ public class GlobalParams {
 	 * @return int numPartsPerComputation
 	 */
 	public static int getNumPartsPerComputation() {
-		return numPartsPerComputation;
-	}
-
-	/**
-	 * 
-	 * @param n
-	 */
-	public static void setNumPartsPerComputation(int n) {
-		numPartsPerComputation = n;
+		return NUM_PARTS_PER_COMPUTATION;
 	}
 
 	/**
