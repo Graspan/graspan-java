@@ -27,11 +27,15 @@ public class Engine {
 	private static final Logger logger = GraspanLogger.getLogger("Engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
+	private long totalDupEdges;
 	private long newEdgesInOne;
 	private long newEdgesInTwo;
 	// private String baseFileName;
 	private int[] partsToLoad;
 	private IScheduler scheduler;
+	public static boolean memFull;
+
+	public static boolean premature_Terminate;
 
 	public static Vertex[] vertices_prevIt = null;
 	public static NewEdgesList[] newEdgeLists_prevIt = null;
@@ -127,6 +131,9 @@ public class Engine {
 			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 
+			MemUsageCheckThread job1 = new MemUsageCheckThread();
+			job1.start();
+
 			// 2. do computation and add edges
 			EdgeComputer.setEdgesLists(edgesLists);
 			EdgeComputer.setVertices(vertices);
@@ -207,6 +214,7 @@ public class Engine {
 			setReadableIndex(edgesLists);
 
 			totalNewEdges = 0;
+			totalDupEdges = 0;
 			countDown.set(nWorkers);
 			// Parallel updates
 			for (int id = 0; id < nWorkers; id++) {
@@ -218,6 +226,7 @@ public class Engine {
 
 					public void run() {
 						int threadUpdates = 0;
+						int dups = 0;
 
 						try {
 							int end = chunkEnd;
@@ -252,6 +261,7 @@ public class Engine {
 									edgeComputer.execUpdate();
 									threadUpdates = edgeComputer
 											.getNumNewEdges();
+									dups = edgeComputer.getNumDupEdges();
 
 									// if (edgeComputer.getNumNewEdges() >=
 									// 1000) {
@@ -261,11 +271,11 @@ public class Engine {
 									// + edgeComputer.getNumNewEdges());
 									// }
 
-									 if (edgeComputer.getNumDupEdges()>=1000){
-									 logger.info("No. of Duplicate edges for vertex "
-									 + vertices[i].getVertexId()
-									 + " is "
-									 + edgeComputer.getNumDupEdges());}
+									// if (edgeComputer.getNumDupEdges()>=1000){
+									// logger.info("No. of Duplicate edges for vertex "
+									// + vertices[i].getVertexId()
+									// + " is "
+									// + edgeComputer.getNumDupEdges());}
 
 									// check if there are new edges added in
 									// partition one and two
@@ -281,7 +291,7 @@ public class Engine {
 									if (threadUpdates == 0)
 										edgeComputer.setTerminateStatus(true);
 									edgeComputer.setNumNewEdges(0);
-									// edgeComputer.setNumDupEdges(0);
+									edgeComputer.setNumDupEdges(0);
 								}
 							}
 
@@ -291,6 +301,7 @@ public class Engine {
 							int pending = countDown.decrementAndGet();
 							synchronized (termationLock) {
 								totalNewEdges += threadUpdates;
+								totalDupEdges += dups;
 								if (pending == 0) {
 									termationLock.notifyAll();
 								}
@@ -316,7 +327,9 @@ public class Engine {
 			}
 			logger.info("========total # new edges for this iteration: "
 					+ totalNewEdges);
-		} while (totalNewEdges > 0);
+			logger.info("========total # dup edges for this iteration: "
+					+ totalDupEdges);
+		} while (totalNewEdges > 0 );
 
 		// set new edge added flag for scheduler
 		if (newEdgesInOne > 0)

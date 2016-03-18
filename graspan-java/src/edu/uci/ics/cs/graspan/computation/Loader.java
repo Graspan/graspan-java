@@ -145,7 +145,7 @@ public class Loader {
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("NEW ITERATION: Loading partitions : " + str + "...");
+		logger.info("NEW COMPUTATION SET: Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
