@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.computationEL;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -38,7 +38,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  * @author Aftab
  *
  */
-public class Loader {
+public class LoaderEL {
 
 	private static final int EDC_SIZE = GlobalParams.getEdcSize();
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
@@ -68,7 +68,7 @@ public class Loader {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public Loader() throws NumberFormatException, IOException {
+	public LoaderEL() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParams.getBasefilename();
 		this.numParts = GlobalParams.getNumParts();

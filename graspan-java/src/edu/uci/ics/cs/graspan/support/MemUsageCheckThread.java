@@ -1,9 +1,9 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.support;
 
 import java.text.NumberFormat;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.computationM.EngineM;
 
 public class MemUsageCheckThread extends Thread {
 	private static final Logger logger = GraspanLogger
@@ -27,7 +27,7 @@ public class MemUsageCheckThread extends Thread {
 					+ format.format((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
 
 			if (((freeMemory + (maxMemory - allocatedMemory)) / 1048576) > 0) {
-				Engine.memFull = true;
+				EngineM.memFull = true;
 			}
 
 			try {

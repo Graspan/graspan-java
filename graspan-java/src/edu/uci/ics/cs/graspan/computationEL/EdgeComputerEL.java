@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.computationEL;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,7 +14,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  * 
  *         Created by Oct 8, 2015
  */
-public class EdgeComputer {
+public class EdgeComputerEL {
 
 	private static final Logger logger = GraspanLogger
 			.getLogger("EdgeComputer");
@@ -31,7 +31,7 @@ public class EdgeComputer {
 	private static Vertex[] vertices = null;
 	private static List<LoadedVertexInterval> intervals = null;
 
-	public EdgeComputer(Vertex vertex, NewEdgesList edgeList) {
+	public EdgeComputerEL(Vertex vertex, NewEdgesList edgeList) {
 		this.vertex = vertex;
 		this.edgeList = edgeList;
 	}
@@ -178,56 +178,56 @@ public class EdgeComputer {
 	 * @return:
 	 */
 	private boolean isDuplicationEdge(int vertexId, byte edgeValue) {
-		 if (vertex == null || vertex.getNumOutEdges() == 0)
-		 return false;
-		
-		 // 1. check fixed size array
-		 for (int i = 0; i < vertex.getNumOutEdges(); i++) {
-		 int id = vertex.getOutEdge(i);
-		 byte value = vertex.getOutEdgeValue(i);
-		 // if((vertexId == id) && (edgeValue == value))
-		 // TODO: JUST for testing, change back soon!!!
-		 if (vertexId == id)
-		 return true;
-		 }
-		
-		 // 2. check new edges linked array
-		 if (edgeList == null)
-		 return false;
-		
-		 int size = edgeList.getSize();
-		 if (size == 0)
-		 return false;
-		
-		 int[] ids = null;
-		 byte[] values = null;
-		
-		 // 2.1 check (size - 1) node, each node is full of NODE_SIZE elements
-		 for (int j = 0; j < size - 1; j++) {
-		 ids = edgeList.getNode(j).getDstVertices();
-		 values = edgeList.getNode(j).getEdgeValues();
-		 assert (ids.length == NewEdgesList.NODE_SIZE);
-		
-		 for (int k = 0; k < ids.length; k++) {
-		 // TODO: JUST for testing, change back soon!!!
-		 // if((ids[k] == vertexId) && (values[k] == edgeValue))
-		 if (ids[k] == vertexId)
-		 return true;
-		 }
-		 }
-		
-		 // 2.2 check the last node, the num of elements is index
-		 ids = edgeList.getLast().getDstVertices();
-		 values = edgeList.getLast().getEdgeValues();
-		 int index = edgeList.getIndex();
-		 for (int m = 0; m < index; m++) {
-		 // TODO: JUST for testing, change back soon!!!
-		 // if((ids[m] == vertexId) && (values[m] == edgeValue))
-		 if (ids[m] == vertexId)
-		 return true;
-		 }
-		
-		 return false;
+		if (vertex == null || vertex.getNumOutEdges() == 0)
+			return false;
+
+		// 1. check fixed size array
+		for (int i = 0; i < vertex.getNumOutEdges(); i++) {
+			int id = vertex.getOutEdge(i);
+			byte value = vertex.getOutEdgeValue(i);
+			// if((vertexId == id) && (edgeValue == value))
+			// TODO: JUST for testing, change back soon!!!
+			if (vertexId == id)
+				return true;
+		}
+
+		// 2. check new edges linked array
+		if (edgeList == null)
+			return false;
+
+		int size = edgeList.getSize();
+		if (size == 0)
+			return false;
+
+		int[] ids = null;
+		byte[] values = null;
+
+		// 2.1 check (size - 1) node, each node is full of NODE_SIZE elements
+		for (int j = 0; j < size - 1; j++) {
+			ids = edgeList.getNode(j).getDstVertices();
+			values = edgeList.getNode(j).getEdgeValues();
+			assert (ids.length == NewEdgesList.NODE_SIZE);
+
+			for (int k = 0; k < ids.length; k++) {
+				// TODO: JUST for testing, change back soon!!!
+				// if((ids[k] == vertexId) && (values[k] == edgeValue))
+				if (ids[k] == vertexId)
+					return true;
+			}
+		}
+
+		// 2.2 check the last node, the num of elements is index
+		ids = edgeList.getLast().getDstVertices();
+		values = edgeList.getLast().getEdgeValues();
+		int index = edgeList.getIndex();
+		for (int m = 0; m < index; m++) {
+			// TODO: JUST for testing, change back soon!!!
+			// if((ids[m] == vertexId) && (values[m] == edgeValue))
+			if (ids[m] == vertexId)
+				return true;
+		}
+
+		return false;
 	}
 
 	private int getDstVertexIndex(int vertexId) {

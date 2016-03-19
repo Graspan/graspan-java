@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.computationM;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -31,7 +31,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  * @author Aftab <br>
  *         Created 30 October 2015
  */
-public class ComputedPartProcessor {
+public class ComputedPartProcessorM {
 
 	private static final Logger logger = GraspanLogger.getLogger("ComputedPartProcessor");
 

@@ -1,4 +1,4 @@
-package edu.uci.ics.cs.graspan.computation;
+package edu.uci.ics.cs.graspan.computationEL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,13 +17,14 @@ import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
 /**
  * @author Kai Wang
  * 
  *         Created by Oct 8, 2015
  */
-public class Engine {
+public class EngineEL {
 	private static final Logger logger = GraspanLogger.getLogger("Engine");
 	private ExecutorService computationExecutor;
 	private long totalNewEdges;
@@ -70,7 +71,7 @@ public class Engine {
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
-		Loader loader = new Loader();
+		LoaderEL loader = new LoaderEL();
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
 		// Scheduler scheduler = new
@@ -92,7 +93,7 @@ public class Engine {
 			NewEdgesList[] edgesLists;
 			vertices = loader.getVertices();
 			List<LoadedVertexInterval> intervals = null;
-			EdgeComputer[] edgeComputers = new EdgeComputer[vertices.length];
+			EdgeComputerEL[] edgeComputers = new EdgeComputerEL[vertices.length];
 			intervals = loader.getIntervals();
 
 			// this only does a shallow copy
@@ -135,9 +136,9 @@ public class Engine {
 			job1.start();
 
 			// 2. do computation and add edges
-			EdgeComputer.setEdgesLists(edgesLists);
-			EdgeComputer.setVertices(vertices);
-			EdgeComputer.setIntervals(intervals);
+			EdgeComputerEL.setEdgesLists(edgesLists);
+			EdgeComputerEL.setVertices(vertices);
+			EdgeComputerEL.setIntervals(intervals);
 			doComputation(vertices, edgesLists, edgeComputers, intervals);
 			logger.info("Finish computation...");
 			logger.info("Computation and edge addition took: "
@@ -152,8 +153,9 @@ public class Engine {
 			// 3. process computed partitions
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
-			ComputedPartProcessor.initRepartitionConstraints();
-			ComputedPartProcessor.processParts(vertices, edgesLists, intervals);
+			ComputedPartProcessorEL.initRepartitionConstraints();
+			ComputedPartProcessorEL.processParts(vertices, edgesLists,
+					intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
 			// logger.info("termination map before: " + scheduler.toString());
 			// for (int i = 0; i < vertices.length; i++) {
@@ -186,7 +188,7 @@ public class Engine {
 	 */
 	private void doComputation(final Vertex[] vertices,
 			final NewEdgesList[] edgesLists,
-			final EdgeComputer[] edgeComputers,
+			final EdgeComputerEL[] edgeComputers,
 			List<LoadedVertexInterval> intervals) {
 		if (vertices == null || vertices.length == 0)
 			return;
@@ -239,7 +241,7 @@ public class Engine {
 								// each vertex is associated with an edgeList
 								Vertex vertex = vertices[i];
 								NewEdgesList edgeList = edgesLists[i];
-								EdgeComputer edgeComputer = edgeComputers[i];
+								EdgeComputerEL edgeComputer = edgeComputers[i];
 
 								if (vertex != null
 										&& vertex.getNumOutEdges() != 0) {
@@ -249,8 +251,8 @@ public class Engine {
 									}
 
 									if (edgeComputer == null) {
-										edgeComputer = new EdgeComputer(vertex,
-												edgeList);
+										edgeComputer = new EdgeComputerEL(
+												vertex, edgeList);
 										edgeComputers[i] = edgeComputer;
 									}
 
@@ -329,7 +331,7 @@ public class Engine {
 					+ totalNewEdges);
 			logger.info("========total # dup edges for this iteration: "
 					+ totalDupEdges);
-		} while (totalNewEdges > 0 );
+		} while (totalNewEdges > 0);
 
 		// set new edge added flag for scheduler
 		if (newEdgesInOne > 0)
