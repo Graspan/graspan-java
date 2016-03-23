@@ -3,7 +3,7 @@ package edu.uci.ics.cs.graspan.datastructures;
 /**
  * @author Kai Wang
  *
- *         Created by Oct 28, 2015
+ *         Created Oct 28, 2015
  */
 public class LoadedVertexInterval {
 	private int firstVertex;

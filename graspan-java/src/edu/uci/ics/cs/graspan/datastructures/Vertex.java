@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * @author Kai Wang
- *
+ * 
  *         Created by Oct 8, 2015
  */
 public class Vertex {
@@ -72,6 +72,10 @@ public class Vertex {
 		return id;
 	}
 
+	public int getVertexIdx() {
+		return idx;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
@@ -81,7 +85,7 @@ public class Vertex {
 		result.append("out edges: " + Arrays.toString(outEdges) + NEW_LINE);
 		// result.append("edge value: " + Arrays.toString(outEdgeValues) +
 		// NEW_LINE);//TODO UNCOMMENT THIS LATER
-		result.append("degree: "+combinedDeg + NEW_LINE);
+		result.append("degree: " + combinedDeg + NEW_LINE);
 
 		return result.toString();
 	}
