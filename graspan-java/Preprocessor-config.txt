@@ -1,0 +1,2 @@
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/artificialgraph3/graph
+TOTAL_NUM_PARTS = 4
