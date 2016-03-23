@@ -77,7 +77,7 @@ public class ComputedPartProcessorM {
 	 * @param intervals
 	 * @throws IOException
 	 */
-	public static void processParts(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
+	public static void processParts(Vertex[] vertices, List<LoadedVertexInterval> intervals)
 			throws IOException {
 
 		logger.info("Processing partitions after computation.");
@@ -122,8 +122,6 @@ public class ComputedPartProcessorM {
 				logger.info("Error: LVI does not contain a corresponding interval for any partition in loaded parts.");
 			}
 			int partId = part.getPartitionId();
-			int nodeDestVs[];
-			int destPartId;
 			int src;
 			boolean partHasNewEdges = false;
 
@@ -156,18 +154,18 @@ public class ComputedPartProcessorM {
 				// System.out.println("Index of Src in DataStructure" + i);
 				// System.out.println("Actual Id of Src" + src);
 
+				//TODO: NEED TO UPDATE partHasNewEdges flag and numOfNodeVertices (the total number of new edges)
 				// if a new edge for this source exits
-				if (newEdgesLL[i] != null) {
-					partHasNewEdges = true;
-
-					// for each new edge list node
-					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-
-						numOfNodeVertices += newEdgesLL[i].getNode(j).getIndex();
-						nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-					}
-
-				}
+//				if (newEdgesLL[i] != null) {
+//					partHasNewEdges = true;
+//
+//					// for each new edge list node
+//					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
+//
+//						numOfNodeVertices += newEdgesLL[i].getNode(j).getIndex();
+//					}
+//
+//				}
 
 				// 1.1.1. update degrees data
 				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] = vertices[i]
@@ -529,27 +527,28 @@ public class ComputedPartProcessorM {
 			srcV = vertices[i].getVertexId();
 			partA = PartitionQuerier.findPartition(srcV);
 			// if a new edge for this source exits
-			if (newEdgesLL[i] != null) {
-				// for each new edge list node
-				for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-					nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-					// for each dest vertex of new edge list node
-					for (int k = 0; k < newEdgesLL[i].NODE_SIZE; k++) {
-						destV = nodeDestVs[k];
-						partB = PartitionQuerier.findPartition(destV);
-						if (partB == -1) {
-							// destination v does not lie in any partition
-							continue;
-						}
-						if (!EDC_alterationMap[partA][partB]) {
-							edc[partA][partB] = 1;
-							EDC_alterationMap[partA][partB] = true;
-						} else {
-							edc[partA][partB]++;
-						}
-					}
-				}
-			}
+			//TODO: INSTEAD OF DOING THE FOLLOWING ON NEWEDGES, DO IT ON THE NEWEDGE ARRAYS. 
+//			if (newEdgesLL[i] != null) {
+//				// for each new edge list node
+//				for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
+//					nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
+//					// for each dest vertex of new edge list node
+//					for (int k = 0; k < newEdgesLL[i].NODE_SIZE; k++) {
+//						destV = nodeDestVs[k];
+//						partB = PartitionQuerier.findPartition(destV);
+//						if (partB == -1) {
+//							// destination v does not lie in any partition
+//							continue;
+//						}
+//						if (!EDC_alterationMap[partA][partB]) {
+//							edc[partA][partB] = 1;
+//							EDC_alterationMap[partA][partB] = true;
+//						} else {
+//							edc[partA][partB]++;
+//						}
+//					}
+//				}
+//			}
 
 		}
 
@@ -593,7 +592,7 @@ public class ComputedPartProcessorM {
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSaveByCPP)
-			storePart(vertices, newEdgesLL, intervals, partitionId);
+			storePart(vertices, intervals, partitionId);
 
 		// 3.2. save degree of those partitions.
 		// iterate over saveParts and get partitionId
@@ -636,7 +635,7 @@ public class ComputedPartProcessorM {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
+	private static void storePart(Vertex[] vertices, List<LoadedVertexInterval> intervals,
 			Integer partitionId) throws IOException {
 
 		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
@@ -684,25 +683,25 @@ public class ComputedPartProcessorM {
 
 					// scan each newEdge in list of each vertex in
 					// this interval
-
-					if (newEdgesLL[j] != null) {
-
-						// for each new edge list node
-						for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
-
-							// for each edge in the new edge list node
-							for (int l = 0; l < newEdgesLL[j].getNode(k).getIndex(); l++) {
-
-								// write the new destId-edgeValue pair
-								destVId = newEdgesLL[j].getNode(k).getNewOutEdge(l);
-								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
-								partOutStrm.writeInt(destVId);
-								partOutStrm.writeByte(edgeValue);
-
-							}
-						}
-
-					}
+//TODO: just write the edges from vertices to disk (it should contain new edges also)
+//					if (newEdgesLL[j] != null) {
+//
+//						// for each new edge list node
+//						for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
+//
+//							// for each edge in the new edge list node
+//							for (int l = 0; l < newEdgesLL[j].getNode(k).getIndex(); l++) {
+//
+//								// write the new destId-edgeValue pair
+//								destVId = newEdgesLL[j].getNode(k).getNewOutEdge(l);
+//								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
+//								partOutStrm.writeInt(destVId);
+//								partOutStrm.writeByte(edgeValue);
+//
+//							}
+//						}
+//
+//					}
 				}
 			}
 		}
