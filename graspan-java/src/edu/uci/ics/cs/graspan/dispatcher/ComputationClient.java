@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
-import edu.uci.ics.cs.graspan.computationEL.EngineEL;
+import edu.uci.ics.cs.graspan.computationM.EngineM;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class ComputationClient {
@@ -17,14 +17,14 @@ public class ComputationClient {
 
 	public static void main(String args[]) throws IOException {
 
-		String baseFilename = args[0];
+		String computationConfigFilename = args[0];
 
 		/*
-		 * Scan the edge destination counts file
+		 * Scan the Computer-client config file
 		 */
 		BufferedReader computationConfigStream = new BufferedReader(
-				new InputStreamReader(new FileInputStream(
-						new File(baseFilename))));
+				new InputStreamReader(new FileInputStream(new File(
+						computationConfigFilename))));
 		String ln;
 
 		String[] tok;
@@ -61,7 +61,8 @@ public class ComputationClient {
 				+ GlobalParams.getNumPartsPerComputation());
 		logger.info("Reload plan: " + GlobalParams.getReloadPlan());
 
-		EngineEL engine = new EngineEL();
+		// EngineEL engine = new EngineEL();
+		EngineM engine = new EngineM();
 		engine.run();
 		logger.info("FINISHED.");
 	}

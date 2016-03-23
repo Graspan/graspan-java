@@ -17,14 +17,14 @@ public class MemUsageCheckThread extends Thread {
 			long maxMemory = runtime.maxMemory();
 			long allocatedMemory = runtime.totalMemory();
 			long freeMemory = runtime.freeMemory();
-			logger.info("Free memory (MB): "
-					+ format.format(freeMemory / 1048576));
-			logger.info("Allocated memory (MB): "
-					+ format.format(allocatedMemory / 1048576));
-			logger.info("Max memory (MB): "
-					+ format.format(maxMemory / 1048576));
-			logger.info("Total free memory (MB): "
-					+ format.format((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
+//			logger.info("Free memory (MB): "
+//					+ format.format(freeMemory / 1048576));
+//			logger.info("Allocated memory (MB): "
+//					+ format.format(allocatedMemory / 1048576));
+//			logger.info("Max memory (MB): "
+//					+ format.format(maxMemory / 1048576));
+//			logger.info("Total free memory (MB): "
+//					+ format.format((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
 
 			if (((freeMemory + (maxMemory - allocatedMemory)) / 1048576) > 0) {
 				EngineM.memFull = true;
