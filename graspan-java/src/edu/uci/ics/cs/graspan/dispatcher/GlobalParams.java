@@ -44,6 +44,13 @@ public class GlobalParams {
 	// Maximum size of a partition after adding new edges
 	private static long PartMaxPostNewEdges;
 
+	// The type of input graph: DATAFLOW OR POINTS-TO (used to indicate whether
+	// or not edge values exist)
+	private static String inputGraphType;
+
+	// The id of the first vertex of the graph
+	private static int firstVId;
+
 	public static void setEdcSize(int num) {
 		EdcSize = num;
 	}
@@ -146,6 +153,23 @@ public class GlobalParams {
 	 */
 	public static void setGrammarTab(byte[][] arr) {
 		grammarTab = arr;
+	}
+
+	public static String getInputGraphType() {
+		return inputGraphType;
+	}
+
+	public static void setInputGraphType(String ipgraphtype) {
+		inputGraphType = ipgraphtype;
+
+	}
+
+	public static int getFirstVertexID() {
+		return firstVId;
+	}
+
+	public static void setFirstVertexID(int id) {
+		firstVId = id;
 	}
 
 }

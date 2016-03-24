@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.graspan.computationEL.EngineEL;
 import edu.uci.ics.cs.graspan.computationM.EngineM;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
@@ -61,8 +62,8 @@ public class ComputationClient {
 				+ GlobalParams.getNumPartsPerComputation());
 		logger.info("Reload plan: " + GlobalParams.getReloadPlan());
 
-		// EngineEL engine = new EngineEL();
-		EngineM engine = new EngineM();
+		 EngineEL engine = new EngineEL();
+//		EngineM engine = new EngineM();
 		engine.run();
 		logger.info("FINISHED.");
 	}

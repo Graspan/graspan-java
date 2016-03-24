@@ -42,6 +42,12 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("TOTAL_NUM_PARTS") == 0) {
 				GlobalParams.setNumParts(Integer.parseInt(tok[2]));
 			}
+			if (tok[0].compareTo("INPUT_GRAPH_TYPE") == 0) {
+				GlobalParams.setInputGraphType(tok[2]);
+			}
+			if (tok[0].compareTo("INPUT_GRAPH_NUMBERING_STARTS_FROM") == 0) {
+				GlobalParams.setFirstVertexID(Integer.parseInt(tok[2]));
+			}
 		}
 
 		preprocessorConfigStream.close();

@@ -10,13 +10,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
-import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
+import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
@@ -32,6 +32,7 @@ public class EngineM {
 	private long totalDupEdges;
 	private long newEdgesInOne;
 	private long newEdgesInTwo;
+	// private String baseFileName;
 	private int[] partsToLoad;
 	private IScheduler scheduler;
 	public static boolean memFull;
@@ -41,6 +42,15 @@ public class EngineM {
 	public static Vertex[] vertices_prevIt = null;
 	public static NewEdgesList[] newEdgeLists_prevIt = null;
 	public List<LoadedVertexInterval> intervals_prevIt = null;
+
+	// public Engine(int[] partitionsToLoad) {
+	// // this.baseFileName = baseFileName;
+	// this.partsToLoad = partitionsToLoad;
+	// }
+	//
+	// public Engine(IScheduler scheduler) {
+	// this.scheduler = scheduler;
+	// }
 
 	/**
 	 * Description:
@@ -58,14 +68,21 @@ public class EngineM {
 		}
 
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
+		// logger.info("Executing partition loader.");
 		long t = System.currentTimeMillis();
 
 		// 1. load partitions into memory
 		LoaderM loader = new LoaderM();
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
+		
+		//TODO: AVOID USING THIS SECOND SCHEDULER CONSTRUCTOR
+//		 Scheduler scheduler = new
+//		 Scheduler(SchedulerInfo.getEdgeDestCount());
 
 		while (!scheduler.shouldTerminate()) {
+//			 partsToLoad =
+//			 scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			partsToLoad = scheduler
 					.schedulePartitionEDC(AllPartitions.partAllocTable.length);
 			logger.info("Scheduling Partitions : "
@@ -76,10 +93,12 @@ public class EngineM {
 			// (System.currentTimeMillis() - t) + " ms");
 
 			Vertex[] vertices;
+			NewEdgesList[] edgesLists;
 			vertices = loader.getVertices();
-
 			List<LoadedVertexInterval> intervals = null;
+			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
 			intervals = loader.getIntervals();
+
 			// this only does a shallow copy
 			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(
 					intervals);
@@ -88,28 +107,42 @@ public class EngineM {
 			assert (vertices != null && vertices.length > 0);
 			assert (intervals != null && intervals.size() > 0);
 
-			// initialize computation sets
-			ComputationSet[] computationSets = new ComputationSet[vertices.length];
+			edgesLists = loader.getNewEdgeLists();
 
-			for (int i = 0; i < vertices.length; i++) {
-				computationSets[i] = new ComputationSet();
-				computationSets[i].setNewTgts(vertices[i]
-						.getOutEdges());
-				computationSets[i].setNewTgtEdgeVals(vertices[i]
-						.getOutEdgeValues());
-			}
+			// if (vertices_prevIt == null) {// if there was no previous
+			// iteration
+			// edgesLists = loader.getNewEdgeLists();
+			// } else {
+			// //use intervals_prevIt to set up edge lists;
+			// for (LoadedVertexInterval intvNew:intervals){
+			// for (LoadedVertexInterval intvOld:intervals){
+			// if (intvNew.getPartitionId()==intvOld.getPartitionId()){
+			//
+			// // newEdgeLists
+			// }
+			// }
+			// }
+			// edgesLists = newEdgeLists_prevIt;
+			// }
+			// logger.info("VERTEX LENGTH: " + vertices.length);
+			// logger.info("The vertices before setting degree after new
+			// edges:");
+			// logger.info(vertices[i]+"");
+			// logger.info("New Edges: "+newEdgesLL[i]+"");
 
-			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
-			EdgeComputerM.setVertices(vertices);
-			EdgeComputerM.setIntervals(intervals);
-			EdgeComputerM.setComputationSets(computationSets);
+			// logger.info("Loading complete.");
 
-			MemUsageCheckThread job1 = new MemUsageCheckThread();
-			job1.start();
-			logger.info("Start computation...");
+			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 
-			doComputation(vertices, computationSets, edgeComputers, intervals);
+//			MemUsageCheckThread job1 = new MemUsageCheckThread();
+//			job1.start();
+
+			// 2. do computation and add edges
+//			EdgeComputerM.setEdgesLists(edgesLists);
+			EdgeComputerM.setVertices(vertices);
+			EdgeComputerM.setIntervals(intervals);
+			doComputation(vertices, edgesLists, edgeComputers, intervals);
 			logger.info("Finish computation...");
 			logger.info("Computation and edge addition took: "
 					+ (System.currentTimeMillis() - t) + " ms");
@@ -124,13 +157,17 @@ public class EngineM {
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
 			ComputedPartProcessorM.initRepartitionConstraints();
-			// ComputedPartProcessorM.processParts(vertices, edgesLists,
-			// intervals);
-			ComputedPartProcessorM.processParts(vertices, intervals);
+			ComputedPartProcessorM.processParts(vertices, edgesLists,
+					intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
+			// logger.info("termination map before: " + scheduler.toString());
+			// for (int i = 0; i < vertices.length; i++) {
+			// logger.info("" + vertices[i]);
+			// logger.info("" + edgesLists[i]);
+			// }
 
 			vertices_prevIt = vertices;
-			// newEdgeLists_prevIt = edgesLists;
+			newEdgeLists_prevIt = edgesLists;
 			intervals_prevIt = intervals;
 			logger.info("\nLVI after computedPartProcessor saves partitions : "
 					+ intervals);
@@ -153,7 +190,7 @@ public class EngineM {
 	 * @return:
 	 */
 	private void doComputation(final Vertex[] vertices,
-			final ComputationSet[] computationSets,
+			final NewEdgesList[] edgesLists,
 			final EdgeComputerM[] edgeComputers,
 			List<LoadedVertexInterval> intervals) {
 		if (vertices == null || vertices.length == 0)
@@ -175,6 +212,11 @@ public class EngineM {
 		final int indexEndForTwo = intervals.get(1).getIndexEnd();
 
 		do {
+			// set readable index, for read and write concurrency
+			// for current iteration, readable index points to the last new edge
+			// in the previous iteration
+			// which is readable for the current iteration
+			setReadableIndex(edgesLists);
 
 			totalNewEdges = 0;
 			totalDupEdges = 0;
@@ -199,20 +241,23 @@ public class EngineM {
 							// logger.info(vertices.length + " vertex length");
 
 							for (int i = chunkStart; i < end; i++) {
-								// each vertex is associated with a
-								// ComputationSet
+								// each vertex is associated with an edgeList
 								Vertex vertex = vertices[i];
-								ComputationSet computationSet = computationSets[i];
+								NewEdgesList edgeList = edgesLists[i];
 								EdgeComputerM edgeComputer = edgeComputers[i];
 
 								if (vertex != null
 										&& vertex.getNumOutEdges() != 0) {
+									if (edgeList == null) {
+										edgeList = new NewEdgesList();
+										edgesLists[i] = edgeList;
+									}
 
-									// initialize edgeComputer
 									if (edgeComputer == null) {
-										edgeComputer = new EdgeComputerM(
-												vertex, computationSet);
-										edgeComputers[i] = edgeComputer;
+										//TODO: FIX THIS
+//										edgeComputer = new EdgeComputerM(
+//												vertex, edgeList);
+//										edgeComputers[i] = edgeComputer;
 									}
 
 									// get termination status for each vertex
@@ -223,6 +268,20 @@ public class EngineM {
 									threadUpdates = edgeComputer
 											.getNumNewEdges();
 									dups = edgeComputer.getNumDupEdges();
+
+									// if (edgeComputer.getNumNewEdges() >=
+									// 1000) {
+									// logger.info("No. of New edges added for vertex "
+									// + vertices[i].getVertexId()
+									// + " is "
+									// + edgeComputer.getNumNewEdges());
+									// }
+
+									// if (edgeComputer.getNumDupEdges()>=1000){
+									// logger.info("No. of Duplicate edges for vertex "
+									// + vertices[i].getVertexId()
+									// + " is "
+									// + edgeComputer.getNumDupEdges());}
 
 									// check if there are new edges added in
 									// partition one and two
@@ -267,9 +326,9 @@ public class EngineM {
 						e.printStackTrace();
 					}
 
-					if (countDown.get() > 0)
-						logger.info("Waiting for execution to finish: countDown:"
-								+ countDown.get());
+					// if (countDown.get() > 0)
+//						logger.info("Waiting for execution to finish: countDown:"
+//								+ countDown.get());
 				}
 			}
 			logger.info("========total # new edges for this iteration: "
@@ -283,6 +342,30 @@ public class EngineM {
 			intervals.get(0).setIsNewEdgeAdded(true);
 		if (newEdgesInTwo > 0)
 			intervals.get(1).setIsNewEdgeAdded(true);
+	}
+
+	/**
+	 * Description:
+	 * 
+	 * @param:
+	 * @return:
+	 */
+	private void setReadableIndex(NewEdgesList[] edgesList) {
+		if (edgesList == null || edgesList.length == 0)
+			return;
+
+		int size;
+		for (int i = 0; i < edgesList.length; i++) {
+			NewEdgesList list = edgesList[i];
+			if (list == null)
+				continue;
+			size = list.getSize();
+			if (size == 0)
+				continue;
+			list.setReadableSize(size);
+			list.setReadableIndex(list.getIndex());
+			list.setReadableLast(list.getLast());
+		}
 	}
 
 }

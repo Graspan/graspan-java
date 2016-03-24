@@ -948,8 +948,8 @@ public class LoaderEL {
 
 						// test
 						if (destVId > 152) {
-							logger.info("ERROR: wrote vertex id > 152!");
-							System.exit(0);
+//							logger.info("ERROR: wrote vertex id > 152!");
+//							System.exit(0);
 						}
 
 					}
@@ -972,10 +972,10 @@ public class LoaderEL {
 								partOutStrm.writeByte(edgeValue);
 
 								// test
-								if (destVId > 152) {
-									logger.info("ERROR: wrote vertex id > 152!");
-									System.exit(0);
-								}
+								// if (destVId > 152) {
+								// logger.info("ERROR: wrote vertex id > 152!");
+								// System.exit(0);
+								// }
 							}
 						}
 					}
@@ -1020,9 +1020,9 @@ public class LoaderEL {
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
 					deg = vertices[j].getCombinedDeg();
-					if (srcVId == 4) {
-						logger.info("Look here: 4's degree is " + deg);
-					}
+					// if (srcVId == 4) {
+					// logger.info("Look here: 4's degree is " + deg);
+					// }
 					if (deg == 0)
 						continue;
 					partDegOutStrm.println(srcVId + "\t" + deg);

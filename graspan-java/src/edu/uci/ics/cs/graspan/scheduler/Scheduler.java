@@ -186,26 +186,30 @@ public class Scheduler {
 			for (int j = 0; j < numOfPartitions; j++) {
 
 				// OPTION 1-----
-				// edcPercentage[i][j] = (double)
-				// SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
-				// the remaining implementation needs to be changed if you want to
+				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j]
+						/ partA_Size;
+				// the remaining implementation needs to be changed if you want
+				// to
 				// implement this one
 				// -------------
 
 				// OPTION 2-----
+				//TODO: don't use this for now, double check first
 				// find size of partB
-				partB = j;
-				for (int k = 0; k < SchedulerInfo.getPartSizes().length; k++) {
-					if (SchedulerInfo.getPartSizes()[k][0] == partB) {
-						partB_Size = SchedulerInfo.getPartSizes()[k][1];
-						break;
-					}
-				}
-
-				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j]
-						/ partA_Size
-						+ (double) SchedulerInfo.getEdgeDestCount()[j][i]
-						/ partB_Size;
+				// partB = j;
+				// for (int k = 0; k < SchedulerInfo.getPartSizes().length; k++)
+				// {
+				// if (SchedulerInfo.getPartSizes()[k][0] == partB) {
+				// partB_Size = SchedulerInfo.getPartSizes()[k][1];
+				// break;
+				// }
+				// }
+				//
+				// edcPercentage[i][j] = (double)
+				// SchedulerInfo.getEdgeDestCount()[i][j]
+				// / partA_Size
+				// + (double) SchedulerInfo.getEdgeDestCount()[j][i]
+				// / partB_Size;
 				// -------------
 			}
 		}

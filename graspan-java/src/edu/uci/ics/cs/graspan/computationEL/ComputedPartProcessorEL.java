@@ -580,13 +580,13 @@ public class ComputedPartProcessorEL {
 
 		SchedulerInfo.setPartSizes(newPartSizes);
 
-		String partSizesOP;
-		partSizesOP = "Part sizes after processing: ";
-		for (int i = 0; i < newPartSizes.length; i++) {
-			partSizesOP = partSizesOP + "[" + newPartSizes[i][0] + ","
-					+ newPartSizes[i][1] + "] ";
-		}
-		logger.info(partSizesOP);
+		// String partSizesOP;
+		// partSizesOP = "Part sizes after processing: ";
+		// for (int i = 0; i < newPartSizes.length; i++) {
+		// partSizesOP = partSizesOP + "[" + newPartSizes[i][0] + ","
+		// + newPartSizes[i][1] + "] ";
+		// }
+		// logger.info(partSizesOP);
 
 		// 2.5. Create partsToSave set.
 

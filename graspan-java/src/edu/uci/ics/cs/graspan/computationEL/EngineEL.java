@@ -16,6 +16,7 @@ import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
+import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
@@ -74,12 +75,14 @@ public class EngineEL {
 		LoaderEL loader = new LoaderEL();
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
-		// Scheduler scheduler = new
-		// Scheduler(SchedulerInfo.getEdgeDestCount());
+		
+		//TODO: AVOID USING THIS SECOND SCHEDULER CONSTRUCTOR
+//		 Scheduler scheduler = new
+//		 Scheduler(SchedulerInfo.getEdgeDestCount());
 
 		while (!scheduler.shouldTerminate()) {
-			// partsToLoad =
-			// scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+//			 partsToLoad =
+//			 scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			partsToLoad = scheduler
 					.schedulePartitionEDC(AllPartitions.partAllocTable.length);
 			logger.info("Scheduling Partitions : "
@@ -132,8 +135,8 @@ public class EngineEL {
 			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 
-			MemUsageCheckThread job1 = new MemUsageCheckThread();
-			job1.start();
+//			MemUsageCheckThread job1 = new MemUsageCheckThread();
+//			job1.start();
 
 			// 2. do computation and add edges
 			EdgeComputerEL.setEdgesLists(edgesLists);
@@ -322,9 +325,9 @@ public class EngineEL {
 						e.printStackTrace();
 					}
 
-					if (countDown.get() > 0)
-						logger.info("Waiting for execution to finish: countDown:"
-								+ countDown.get());
+					// if (countDown.get() > 0)
+//						logger.info("Waiting for execution to finish: countDown:"
+//								+ countDown.get());
 				}
 			}
 			logger.info("========total # new edges for this iteration: "
