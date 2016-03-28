@@ -9,63 +9,109 @@ package edu.uci.ics.cs.graspan.datastructures;
  */
 public class ComputationSet {
 
-	// computation set
+	// old
 
-	// vertex ids
-	private int oldTgts[] = null;
-	private int newTgts[] = null;
-	private int compOP[] = null;
+	private int oldEdgs[] = null;
+	private byte oldVals[] = null;
 
-	// edge vals
-	private byte oldTgtEdgeVals[] = null;
-	private byte newTgtEdgeVals[] = null;
-	private byte compOpEdgeVals[] = null;
-
-	public byte[] getOldTgtEdgeVals() {
-		return oldTgtEdgeVals;
+	public int[] getOldEdgs() {
+		return oldEdgs;
 	}
 
-	public void setOldTgtEdgeVals(byte[] oldTgtEdgeVals) {
-		this.oldTgtEdgeVals = oldTgtEdgeVals;
+	public void setOldEdgs(int[] oldEdgs) {
+		this.oldEdgs = oldEdgs;
 	}
 
-	public byte[] getNewTgtEdgeVals() {
-		return newTgtEdgeVals;
+	public byte[] getOldVals() {
+		return oldVals;
 	}
 
-	public void setNewTgtEdgeVals(byte[] newTgtEdgeVals) {
-		this.newTgtEdgeVals = newTgtEdgeVals;
+	public void setOldVals(byte[] oldVals) {
+		this.oldVals = oldVals;
 	}
 
-	public byte[] getOpEdgeVals() {
-		return compOpEdgeVals;
+	// new
+
+	private int newEdgs[] = null;
+	private byte newVals[] = null;
+
+	public int[] getNewEdgs() {
+		return newEdgs;
 	}
 
-	public void setOpEdgeVals(byte[] compOpEdgeVals) {
-		this.compOpEdgeVals = compOpEdgeVals;
+	public void setNewEdgs(int[] newEdgs) {
+		this.newEdgs = newEdgs;
 	}
 
-	public int[] getOldTgts() {
-		return oldTgts;
+	public byte[] getNewVals() {
+		return newVals;
 	}
 
-	public void setOldTgts(int[] oldTgts) {
-		this.oldTgts = oldTgts;
+	public void setNewVals(byte[] newVals) {
+		this.newVals = newVals;
 	}
 
-	public int[] getNewTgts() {
-		return newTgts;
+	// delta
+
+	private int deltaEdgs[] = null;
+	private byte deltaVals[] = null;
+
+	public int[] getDeltaEdgs() {
+		return deltaEdgs;
 	}
 
-	public void setNewTgts(int[] newTgts) {
-		this.newTgts = newTgts;
+	public void setDeltaEdges(int[] deltaEdgs) {
+		this.deltaEdgs = deltaEdgs;
 	}
 
-	public int[] getOp() {
-		return compOP;
+	public byte[] getDeltaVals() {
+		return deltaVals;
 	}
 
-	public void setOp(int[] compOP) {
-		this.compOP = compOP;
+	public void setDeltaVals(byte[] deltaVals) {
+		this.deltaVals = deltaVals;
 	}
+
+	// oldUnew
+
+	private int oldUnewEdgs[] = null;
+	private byte oldUnewVals[] = null;
+
+	public int[] getOldUnewEdgs() {
+		return oldUnewEdgs;
+	}
+
+	public void setOldUnewEdgs(int[] oldUnewEdgs) {
+		this.oldUnewEdgs = oldUnewEdgs;
+	}
+
+	public byte[] getOldUnewVals() {
+		return oldUnewVals;
+	}
+
+	public void setOldUnewVals(byte[] oldUnewVals) {
+		this.oldUnewVals = oldUnewVals;
+	}
+
+	// oldUnewUdelta
+
+	private int oldUnewUdeltaEdgs[] = null;
+	private byte oldUnewUdeltaVals[] = null;
+
+	public int[] getOldUnewUdeltaEdgs() {
+		return oldUnewUdeltaEdgs;
+	}
+
+	public void setOldUnewUdeltaEdgs(int[] oldUnewUdeltaEdgs) {
+		this.oldUnewUdeltaEdgs = oldUnewUdeltaEdgs;
+	}
+
+	public byte[] getOldUnewUdeltaVals() {
+		return oldUnewUdeltaVals;
+	}
+
+	public void setOldUnewUdeltaVals(byte[] oldUnewUdeltaVals) {
+		this.oldUnewUdeltaVals = oldUnewUdeltaVals;
+	}
+
 }
