@@ -130,10 +130,12 @@ public class SortedArrMerger {
 		// generate the minSets for all rows to merge
 		int i = 0;
 		for (MinSet minSet : minSets) {
-			if (minSet.getPtr() == -1 & edgArrstoMerge[i].length > 0) {
-				minSet.incrementPtr();
+			if (edgArrstoMerge[i].length > 0) {
+				if (minSet.getPtr() == -1) {
+					minSet.incrementPtr();
+				}
+				createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			}
-			createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			i++;
 		}
 
@@ -145,7 +147,6 @@ public class SortedArrMerger {
 
 		System.out.println("Starting processing of Minsets");
 
-		int le = 0;
 		while (true) {
 			// pick the min set from source row and min set from target rows
 			minSetFromSrcRow = minSets[srcRowId];
@@ -272,7 +273,9 @@ public class SortedArrMerger {
 				}
 			}
 			// increment the pointers for this minset
-			createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
+			if (tgtEdgRow.length > 0) {
+				createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
+			}
 			return;
 
 		}

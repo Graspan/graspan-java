@@ -35,7 +35,13 @@ public class Vertex {
 	public Vertex(int idx, int id, int[] outEdges, byte[] outEdgeValues) {
 		this.idx = idx;
 		this.id = id;
-		this.numOutEdges = outEdges.length;
+		this.numOutEdges = 0;
+		// TODO:potential spot for a slow-down
+		for (int i = 0; i < outEdges.length; i++) {
+			if (outEdges[0] != -1) {
+				this.numOutEdges++;
+			}
+		}
 		this.outEdges = outEdges;
 		this.outEdgeValues = outEdgeValues;
 	}
@@ -58,6 +64,14 @@ public class Vertex {
 
 	public byte[] getOutEdgeValues() {
 		return outEdgeValues;
+	}
+
+	public void setOutEdges(int outEdges[]) {
+		this.outEdges = outEdges;
+	}
+
+	public void setOutEdgeValues(byte[] outEdgeValues) {
+		this.outEdgeValues = outEdgeValues;
 	}
 
 	public int getOutEdge(int i) {

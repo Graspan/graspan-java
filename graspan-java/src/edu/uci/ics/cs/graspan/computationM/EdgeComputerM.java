@@ -1,5 +1,6 @@
 package edu.uci.ics.cs.graspan.computationM;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,22 +21,23 @@ public class EdgeComputerM {
 			.getLogger("EdgeComputer");
 
 	private static Vertex[] vertices = null;
-	private static ComputationSet[] compSets = null;
+	private static ComputationSet[] compSets;
 	private static List<LoadedVertexInterval> intervals = null;
 
 	String s = "";
 
 	private Vertex vertex = null;
-	private ComputationSet compSet = null;
+	private ComputationSet compSet;
 	private int nNewEdges, nDupEdges;
 	private boolean terminateStatus;
 
 	// vertex id - oldtgt/newtgt - position in row
 	private int[][] minPtrs = null;
 
-	public EdgeComputerM(Vertex vertex, ComputationSet computationSet) {
+	public EdgeComputerM(Vertex vertex, ComputationSet compSet) {
 		this.vertex = vertex;
-		this.compSet = computationSet;
+		this.compSet = compSet;
+		nNewEdges = 0;
 
 		// initialize mergeProgressMarkers
 		this.minPtrs = new int[vertices.length][2];
@@ -49,8 +51,12 @@ public class EdgeComputerM {
 		compSets = csets;
 	}
 
-	public ComputationSet[] getComputationSet() {
+	public ComputationSet[] getComputationSets() {
 		return compSets;
+	}
+
+	public ComputationSet getSrcComputationSet() {
+		return compSet;
 	}
 
 	public int getNumNewEdges() {
@@ -86,107 +92,168 @@ public class EdgeComputerM {
 	}
 
 	public void execUpdate() {
+		
 
-		// initialize the computationSet for the base row
+		// 1. get the compSet components
 
-		int[] oldTgts_BaseRow = this.compSet.getOldTgts();
-		byte[] oldTgtsEdgeVals_BaseRow = this.compSet.getOldTgtEdgeVals();
-		int[] newTgts_BaseRow = this.compSet.getNewTgts();
-		byte[] newTgtEdgeVals_BaseRow = this.compSet.getNewTgtEdgeVals();
-		int[] op_BaseRow = new int[newTgts_BaseRow.length];
-		byte[] opEdgeVals_BaseRow = new byte[newTgts_BaseRow.length];
-		this.compSet.setOp(op_BaseRow);
-		this.compSet.setOpEdgeVals(opEdgeVals_BaseRow);
-		compSets[this.vertex.getVertexIdx()].setOp(op_BaseRow);
-		compSets[this.vertex.getVertexIdx()].setOpEdgeVals(opEdgeVals_BaseRow);
+		// 1.1. we shall scan these to get the targets
+		int[] oldEdgs = this.compSet.getOldEdgs();
+		int[] newEdgs = this.compSet.getNewEdgs();
 
-		// get the ids of the target rows to which the above base row points to
+		// 1.2. if there is nothing to merge, return
+		boolean oldEdgs_empty = false, newEdgs_empty = false;
+		if (oldEdgs != null) {
+			if (oldEdgs.length == 0) {
+				oldEdgs_empty = true;
+			} else if (oldEdgs[0] == -1) {
+				oldEdgs_empty = true;
+			}
+		}
+		if (newEdgs != null) {
+			if (newEdgs.length == 0) {
+				newEdgs_empty = true;
+			} else if (newEdgs[0] == -1) {
+				newEdgs_empty = true;
+			}
+		}
+		if (oldEdgs_empty & newEdgs_empty)
+			return;
 
-		int targetRowId = -1;
+		// 2. get the rows to merge
+
 		LoadedVertexInterval interval;
-		HashSet<Integer> targetRowIds = new HashSet<Integer>();
+		HashSet<Integer> newIdsToMerge = new HashSet<Integer>();
+		HashSet<Integer> oldUnewIdsToMerge = new HashSet<Integer>();
 
-		// TODO: to consider case when newTgts_BaseRow is null
-		int newTgt;
-		for (int i = 0; i < newTgts_BaseRow.length; i++) {
-			newTgt = newTgts_BaseRow[i];
-			for (int j = 0; j < intervals.size(); j++) {
-				interval = intervals.get(j);
-				if (newTgt >= interval.getFirstVertex()
-						& newTgt <= interval.getLastVertex()) {
-					targetRowId = newTgt - interval.getFirstVertex()
-							+ interval.getIndexStart();
-					assert (targetRowId != -1);
-				}
-			}
-			if (targetRowId == -1)
-				continue;
-			targetRowIds.add(targetRowId);
-		}
+		// 2.1. get the ids of the new_components to merge
+		int targetRowId = -1;
+		int newTgt = -1;
+		if (!oldEdgs_empty) {
+			for (int i = 0; i < oldEdgs.length; i++) {
 
-		// logger.info("SEE THIS " + targetRowIds + " ");
+				if (oldEdgs[i] == -1)
+					break;
 
-		// set up merge process pointers for these targetRowIds
+				// if the target is not a source vertex
+				if (oldEdgs[i] != this.vertex.getVertexId()) {
+					newTgt = oldEdgs[i];
+					for (int j = 0; j < intervals.size(); j++) {
+						interval = intervals.get(j);
+						if (newTgt >= interval.getFirstVertex()
+								& newTgt <= interval.getLastVertex()) {
+							targetRowId = newTgt - interval.getFirstVertex()
+									+ interval.getIndexStart();
+							assert (targetRowId != -1);
+						}
+					}
+					if (targetRowId == -1)
+						continue;
 
-		int[] oldTgts_TargetRow;
-		int[] newTgts_TargetRow;
+					if (vertices[targetRowId].getOutEdges().length > 0) {
+						// ignore rows that have no outgoing edges
 
-		for (int id : targetRowIds) {
+						oldUnewIdsToMerge.add(targetRowId);
 
-			oldTgts_TargetRow = compSets[id].getOldTgts();
-			newTgts_TargetRow = compSets[id].getNewTgts();
-
-			if (oldTgts_TargetRow != null) {
-				if (oldTgts_TargetRow.length != 0) {
-					// position at target row with id "id" is 0
-					this.minPtrs[id][0] = 0;
-
-					// indicate that this corresponds to the oldTgtSet
-					this.minPtrs[id][1] = 0;
+					}
 				}
 
-			} else if (oldTgts_TargetRow == null & newTgts_TargetRow != null) {
-				if (newTgts_TargetRow.length != 0) {
-					// position at target row with id "id" is 0
-					this.minPtrs[id][0] = 0;
-
-					// indicate that this corresponds to the newTgtSet
-					this.minPtrs[id][1] = 1;
-				}
 			}
 		}
 
-		// get the minimum target vertex
-		int minTgt = Integer.MAX_VALUE;
-		int minTgtRowId = -1;
-		HashSet<Byte> minTgtEdgeVals = new HashSet<Byte>();
+		// 2.2. get the ids of the oldUnew_components to merge by scanning new
+		// edges
+		targetRowId = -1;
+		newTgt = -1;
+		if (!newEdgs_empty) {
+			for (int i = 0; i < newEdgs.length; i++) {
+				if (newEdgs[i] == -1)
+					break;
 
-		for (int id : targetRowIds) {
+				// if the target is not a source vertex
+				if (newEdgs[i] != this.vertex.getVertexId()) {
+					newTgt = newEdgs[i];
+					for (int j = 0; j < intervals.size(); j++) {
+						interval = intervals.get(j);
+						if (newTgt >= interval.getFirstVertex()
+								& newTgt <= interval.getLastVertex()) {
+							// the target lies on this interval
 
-			if (this.minPtrs[id][1] == 0) {
-				// marker is in oldTgts for this row
-				if (compSets[id].getOldTgts()[this.minPtrs[id][0]] <= minTgt) {
-					minTgt = compSets[id].getOldTgts()[this.minPtrs[id][0]];
-					if (!minTgtEdgeVals.isEmpty())
-						minTgtEdgeVals.clear();
-					minTgtEdgeVals
-							.add(compSets[id].getOldTgtEdgeVals()[this.minPtrs[id][0]]);
-					minTgtRowId = id;
+							targetRowId = newTgt - interval.getFirstVertex()
+									+ interval.getIndexStart();
+							assert (targetRowId != -1);
+						}
+					}
+
+					if (targetRowId == -1)
+						continue;
+
+					if (vertices[targetRowId].getOutEdges().length > 0) {
+						// ignore rows that have no outgoing edges
+
+						newIdsToMerge.add(targetRowId);
+
+					}
 				}
 
-			} else if (this.minPtrs[id][1] == 1) {
-				// marker is in newTgts for this row
-				if (compSets[id].getNewTgts()[this.minPtrs[id][0]] <= minTgt) {
-					minTgt = compSets[id].getNewTgts()[this.minPtrs[id][0]];
-					if (!minTgtEdgeVals.isEmpty())
-						minTgtEdgeVals.clear();
-					minTgtEdgeVals
-							.add(compSets[id].getNewTgtEdgeVals()[this.minPtrs[id][0]]);
-					minTgtRowId = id;
-				}
 			}
-
 		}
+
+		// 2.3. if we have found no rows to merge
+		if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
+			return;
+
+		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size()
+				+ newIdsToMerge.size();
+
+		// 3. store the refs to rows in edgArrstoMerge & valArrstoMerge
+		int[][] edgArrstoMerge = new int[num_of_rows_to_merge][];
+		byte[][] valArrstoMerge = new byte[num_of_rows_to_merge][];
+
+		// 3.1. first store the source row
+		int rows_to_merge_id = 0;
+		// logger.info("The Id of source vertex: " + this.vertex.getVertexId());
+		edgArrstoMerge[0] = this.vertex.getOutEdges();
+		valArrstoMerge[0] = this.vertex.getOutEdgeValues();
+		int srcRowId = 0;
+		rows_to_merge_id++;
+
+		// 3.2. now store the new component rows
+		for (Integer id : newIdsToMerge) {
+			edgArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdges();
+			valArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdgeValues();
+			rows_to_merge_id++;
+		}
+
+		// 3.3. now store the oldUnew component rows of targets
+		for (Integer id : oldUnewIdsToMerge) {
+			edgArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdges();
+			valArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdgeValues();
+			rows_to_merge_id++;
+		}
+
+		// 4. call the SortedArrMerger merge function
+		SortedArrMerger sortedArrMerger = new SortedArrMerger();
+
+		sortedArrMerger
+				.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
+
+		this.compSet.setDeltaEdges(sortedArrMerger.get_src_delta_edgs());
+		// logger.info(" WILL THIS WORK "
+		// + Arrays.toString(this.compSet.getDeltaEdgs()) + " for vertex "
+		// + this.vertex.getVertexId());
+		this.compSet.setDeltaVals(sortedArrMerger.get_src_delta_vals());
+		this.compSet.setOldUnewUdeltaEdgs(sortedArrMerger
+				.get_src_oldUnewUdelta_edgs());
+		this.compSet.setOldUnewUdeltaVals(sortedArrMerger
+				.get_src_oldUnewUdelta_vals());
+
+		// logger.info("deltaEdgs: " + Arrays.toString(deltaEdgs) + " ThreadNo:"
+		// + Thread.currentThread().getId());
+
+		nNewEdges = sortedArrMerger.get_num_new_edges();
+		// TODO: DOUBLE CHECK NEWEDGES
+		logger.info("NEW EDGES!! " + nNewEdges + " for vertex no."
+				+ vertex.getVertexId());
 
 	}
 }

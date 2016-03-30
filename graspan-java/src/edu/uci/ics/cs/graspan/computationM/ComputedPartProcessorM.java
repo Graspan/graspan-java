@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
+import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
@@ -80,7 +81,7 @@ public class ComputedPartProcessorM {
 	 * @throws IOException
 	 */
 	public static void processParts(Vertex[] vertices,
-			NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals)
+			ComputationSet[] compsets, List<LoadedVertexInterval> intervals)
 			throws IOException {
 
 		logger.info("Processing partitions after computation.");
@@ -163,17 +164,19 @@ public class ComputedPartProcessorM {
 				// System.out.println("Index of Src in DataStructure" + i);
 				// System.out.println("Actual Id of Src" + src);
 
-				// if a new edge for this source exits
-				if (newEdgesLL[i] != null) {
-					partHasNewEdges = true;
+				// if new edges for this source exist
+				if (compsets[i].getDeltaEdgs() != null) {
+					if (compsets[i].getDeltaEdgs().length > 0) {
+						if (compsets[i].getDeltaEdgs()[0] != -1) {
+							partHasNewEdges = true;
+						}
 
-					// for each new edge list node
-					for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-
-						numOfNodeVertices += newEdgesLL[i].getNode(j)
-								.getIndex();
+						for (int j = 0; j < compsets[i].getDeltaEdgs().length; j++) {
+							if (compsets[i].getDeltaEdgs()[j] != -1) {
+								numOfNodeVertices++;
+							}
+						}
 					}
-
 				}
 
 				// 1.1.1. update degrees data
@@ -548,35 +551,38 @@ public class ComputedPartProcessorM {
 			}
 		}
 		long[][] edc = SchedulerInfo.getEdgeDestCount();
+		// TODO: we don't have cumulative delta, so need to figure out another
+		// way to do the scheduling
 		// TODO: BELOW ALL NEW EDGES ARE CONSIDERED, NEED TO CONSIDER NEW EDGES
 		// ONLY ADDED DURING THE CURRENT ITERATION
-		for (int i = 0; i < vertices.length; i++) {
-			srcV = vertices[i].getVertexId();
-			partA = PartitionQuerier.findPartition(srcV);
-			// if a new edge for this source exits
-			if (newEdgesLL[i] != null) {
-				// for each new edge list node
-				for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-					nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-					// for each dest vertex of new edge list node
-					for (int k = 0; k < newEdgesLL[i].NODE_SIZE; k++) {
-						destV = nodeDestVs[k];
-						partB = PartitionQuerier.findPartition(destV);
-						if (partB == -1) {
-							// destination v does not lie in any partition
-							continue;
-						}
-						if (!EDC_alterationMap[partA][partB]) {
-							edc[partA][partB] = 1;
-							EDC_alterationMap[partA][partB] = true;
-						} else {
-							edc[partA][partB]++;
-						}
-					}
-				}
-			}
-
-		}
+		// TODO: NEED TO DO THE FOLLOWING (SCHEDULER UPDATE) BUT USING COMPSET
+		// for (int i = 0; i < vertices.length; i++) {
+		// srcV = vertices[i].getVertexId();
+		// partA = PartitionQuerier.findPartition(srcV);
+		// // if a new edge for this source exits
+		// if (newEdgesLL[i] != null) {
+		// // for each new edge list node
+		// for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
+		// nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
+		// // for each dest vertex of new edge list node
+		// for (int k = 0; k < newEdgesLL[i].NODE_SIZE; k++) {
+		// destV = nodeDestVs[k];
+		// partB = PartitionQuerier.findPartition(destV);
+		// if (partB == -1) {
+		// // destination v does not lie in any partition
+		// continue;
+		// }
+		// if (!EDC_alterationMap[partA][partB]) {
+		// edc[partA][partB] = 1;
+		// EDC_alterationMap[partA][partB] = true;
+		// } else {
+		// edc[partA][partB]++;
+		// }
+		// }
+		// }
+		// }
+		//
+		// }
 
 		SchedulerInfo.setPartSizes(newPartSizes);
 
@@ -619,7 +625,7 @@ public class ComputedPartProcessorM {
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSaveByCPP)
-			storePart(vertices, newEdgesLL, intervals, partitionId);
+			storePart(vertices, compsets, intervals, partitionId);
 
 		// 3.2. save degree of those partitions.
 		// iterate over saveParts and get partitionId
@@ -663,7 +669,7 @@ public class ComputedPartProcessorM {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
+	private static void storePart(Vertex[] vertices, ComputationSet[] compsets,
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
@@ -708,6 +714,8 @@ public class ComputedPartProcessorM {
 					for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
 
 						// write the destId-edgeValue pair
+						if (vertices[j].getOutEdge(k) == -1)
+							break;
 						destVId = vertices[j].getOutEdge(k);
 						edgeValue = vertices[j].getOutEdgeValue(k);
 						partOutStrm.writeInt(destVId);
@@ -718,27 +726,28 @@ public class ComputedPartProcessorM {
 					// scan each newEdge in list of each vertex in
 					// this interval
 
-					if (newEdgesLL[j] != null) {
-
-						// for each new edge list node
-						for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
-
-							// for each edge in the new edge list node
-							for (int l = 0; l < newEdgesLL[j].getNode(k)
-									.getIndex(); l++) {
-
-								// write the new destId-edgeValue pair
-								destVId = newEdgesLL[j].getNode(k)
-										.getNewOutEdge(l);
-								edgeValue = newEdgesLL[j].getNode(k)
-										.getNewOutEdgeValue(l);
-								partOutStrm.writeInt(destVId);
-								partOutStrm.writeByte(edgeValue);
-
-							}
-						}
-
-					}
+					// TODO: NEED TO DO THE WRITES USING COMPUTATION SET
+					// if (newEdgesLL[j] != null) {
+					//
+					// // for each new edge list node
+					// for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
+					//
+					// // for each edge in the new edge list node
+					// for (int l = 0; l < newEdgesLL[j].getNode(k)
+					// .getIndex(); l++) {
+					//
+					// // write the new destId-edgeValue pair
+					// destVId = newEdgesLL[j].getNode(k)
+					// .getNewOutEdge(l);
+					// edgeValue = newEdgesLL[j].getNode(k)
+					// .getNewOutEdgeValue(l);
+					// partOutStrm.writeInt(destVId);
+					// partOutStrm.writeByte(edgeValue);
+					//
+					// }
+					// }
+					//
+					// }
 				}
 			}
 		}

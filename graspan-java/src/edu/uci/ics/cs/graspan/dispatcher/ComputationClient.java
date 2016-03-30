@@ -62,8 +62,8 @@ public class ComputationClient {
 				+ GlobalParams.getNumPartsPerComputation());
 		logger.info("Reload plan: " + GlobalParams.getReloadPlan());
 
-		 EngineEL engine = new EngineEL();
-//		EngineM engine = new EngineM();
+//		 EngineEL engine = new EngineEL();
+		EngineM engine = new EngineM();
 		engine.run();
 		logger.info("FINISHED.");
 	}
