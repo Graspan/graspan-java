@@ -52,6 +52,9 @@ public class ComputationClient {
 			if (tok[0].compareTo("NEW_EDGE_NODE_SIZE") == 0) {
 				GlobalParams.setNewEdgesNodeSize(Integer.parseInt(tok[2]));
 			}
+			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) {
+				GlobalParams.setComputationLogic(tok[2]);
+			}
 		}
 
 		computationConfigStream.close();
@@ -62,9 +65,14 @@ public class ComputationClient {
 				+ GlobalParams.getNumPartsPerComputation());
 		logger.info("Reload plan: " + GlobalParams.getReloadPlan());
 
-//		 EngineEL engine = new EngineEL();
-		EngineM engine = new EngineM();
-		engine.run();
+		if (GlobalParams.getComputationLogic().compareTo(
+				"LINEAR_SCAN_OF_LLISTS") == 0) {
+			EngineEL engine = new EngineEL();
+			engine.run();
+		} else if (GlobalParams.getComputationLogic().compareTo("SMART_MERGE") == 0) {
+			EngineM engine = new EngineM();
+			engine.run();
+		}
 		logger.info("FINISHED.");
 	}
 }

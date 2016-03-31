@@ -92,7 +92,6 @@ public class EdgeComputerM {
 	}
 
 	public void execUpdate() {
-		
 
 		// 1. get the compSet components
 
@@ -247,8 +246,10 @@ public class EdgeComputerM {
 		this.compSet.setOldUnewUdeltaVals(sortedArrMerger
 				.get_src_oldUnewUdelta_vals());
 
-		// logger.info("deltaEdgs: " + Arrays.toString(deltaEdgs) + " ThreadNo:"
-		// + Thread.currentThread().getId());
+		logger.info("deltaEdgs: "
+				+ Arrays.toString(this.compSet.getDeltaEdgs())
+				+ ", for vertex #" + this.vertex.getVertexId() + " ThreadNo:"
+				+ Thread.currentThread().getId());
 
 		nNewEdges = sortedArrMerger.get_num_new_edges();
 		// TODO: DOUBLE CHECK NEWEDGES

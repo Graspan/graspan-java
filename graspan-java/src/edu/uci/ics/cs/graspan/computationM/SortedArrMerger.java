@@ -125,8 +125,8 @@ public class SortedArrMerger {
 	 */
 	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge,
 			int srcRowId) {
-		// logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
-		// + " ThreadNo:" + Thread.currentThread().getId());
+		 logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
+		 + " ThreadNo:" + Thread.currentThread().getId());
 		assert (delta_ptr == -1);
 
 		MinSet minSetFrmTgtRows = new MinSet();

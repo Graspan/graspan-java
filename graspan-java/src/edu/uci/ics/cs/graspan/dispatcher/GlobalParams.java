@@ -27,6 +27,8 @@ public class GlobalParams {
 	// partition
 	static String reloadPlan = "";
 
+	static String computation_logic = "";
+
 	private static final int GRAMMAR_SIZE = 200;
 
 	// The grammar file
@@ -170,6 +172,14 @@ public class GlobalParams {
 
 	public static void setFirstVertexID(int id) {
 		firstVId = id;
+	}
+
+	public static void setComputationLogic(String compLogic) {
+		computation_logic = compLogic;
+	}
+
+	public static String getComputationLogic() {
+		return computation_logic;
 	}
 
 }
