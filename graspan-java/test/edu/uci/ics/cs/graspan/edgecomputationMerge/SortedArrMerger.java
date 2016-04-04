@@ -140,10 +140,10 @@ public class SortedArrMerger {
 		}
 
 		// MinSet Test
-		System.out.println("Minsets:");
-		for (MinSet minSet : minSets) {
-			System.out.println(minSet);
-		}
+//		System.out.println("Minsets:");
+//		for (MinSet minSet : minSets) {
+//			System.out.println(minSet);
+//		}
 
 		System.out.println("Starting processing of Minsets");
 
@@ -152,7 +152,7 @@ public class SortedArrMerger {
 			minSetFromSrcRow = minSets[srcRowId];
 			minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
 			if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
-					& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
+					&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
 				break;
 			}
 			System.out.println("minSetFrmTgtRows: " + minSetFrmTgtRows);
@@ -165,18 +165,18 @@ public class SortedArrMerger {
 					valArrstoMerge[rowIdOfTgtMinSet]);
 
 			// MinSet Test
-			System.out.println("MinSets");
-			for (MinSet minSet : minSets) {
-				System.out.println(minSet);
-			}
+//			System.out.println("MinSets");
+//			for (MinSet minSet : minSets) {
+//				System.out.println(minSet);
+//			}
 
-			System.out.println("delta:");
-			System.out.println(Arrays.toString(src_delta_edgs));
-			System.out.println(Arrays.toString(src_delta_vals));
-
-			System.out.println("oldUnewUdelta:");
-			System.out.println(Arrays.toString(src_oldUnewUdelta_edgs));
-			System.out.println(Arrays.toString(src_oldUnewUdelta_vals));
+//			System.out.println("delta:");
+//			System.out.println(Arrays.toString(src_delta_edgs));
+//			System.out.println(Arrays.toString(src_delta_vals));
+//
+//			System.out.println("oldUnewUdelta:");
+//			System.out.println(Arrays.toString(src_oldUnewUdelta_edgs));
+//			System.out.println(Arrays.toString(src_oldUnewUdelta_vals));
 		}
 	}
 

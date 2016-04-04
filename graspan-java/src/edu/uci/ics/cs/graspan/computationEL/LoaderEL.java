@@ -36,13 +36,12 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  * This program loads partitions into the memory.
  * 
  * @author Aftab
- *
+ * 
  */
 public class LoaderEL {
 
 	private static final int EDC_SIZE = GlobalParams.getEdcSize();
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
-	
 
 	public static Vertex[] vertices = null;
 	public static NewEdgesList[] newEdgeLists = null;
@@ -106,9 +105,12 @@ public class LoaderEL {
 			loadedParts[i] = Integer.MIN_VALUE;
 		}
 
-		int loadedPartOutDegs[][] = new int[GlobalParams.getNumPartsPerComputation()][];
-		int loadedPartEdges[][][] = new int[GlobalParams.getNumPartsPerComputation()][][];
-		byte loadedPartEdgeVals[][][] = new byte[GlobalParams.getNumPartsPerComputation()][][];
+		int loadedPartOutDegs[][] = new int[GlobalParams
+				.getNumPartsPerComputation()][];
+		int loadedPartEdges[][][] = new int[GlobalParams
+				.getNumPartsPerComputation()][][];
+		byte loadedPartEdgeVals[][][] = new byte[GlobalParams
+				.getNumPartsPerComputation()][][];
 
 		LoadedPartitions.setPartsToSave(partsToSave);
 		LoadedPartitions.setNewParts(newPartsToLoad);
@@ -130,14 +132,17 @@ public class LoaderEL {
 		// save previous round's new edges and previous round's lvi
 		if (newEdgeLists != null) {
 			oldNewEdgeLists = new NewEdgesList[newEdgeLists.length];
-			System.arraycopy(newEdgeLists, 0, oldNewEdgeLists, 0, newEdgeLists.length);
-			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(intervals);
+			System.arraycopy(newEdgeLists, 0, oldNewEdgeLists, 0,
+					newEdgeLists.length);
+			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(
+					intervals);
 			this.oldIntervals = oldIntervals;
 		}
 
 		loadedIntStartOP = "Loaded intervals at start of loading: ";
 		for (LoadedVertexInterval interval : intervals) {
-			loadedIntStartOP = loadedIntStartOP + interval.getPartitionId() + " ";
+			loadedIntStartOP = loadedIntStartOP + interval.getPartitionId()
+					+ " ";
 		}
 		logger.info(loadedIntStartOP);
 
@@ -170,7 +175,8 @@ public class LoaderEL {
 			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
 				int low = 0;
 				int high = loadedPartOutDegs[i][j] - 1;
-				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low, high);
+				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low,
+						high);
 			}
 		}
 		logger.info("Sorted loaded partitions.");
@@ -210,7 +216,8 @@ public class LoaderEL {
 		 * Scan the partition allocation table file
 		 */
 		BufferedReader inPartAllocTabStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename
+						+ ".partAllocTable"))));
 		String ln, tok[];
 
 		int i = 0;
@@ -251,7 +258,8 @@ public class LoaderEL {
 		 * Scan the edge destination counts file
 		 */
 		BufferedReader inEdgeDestCountStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".edgeDestCounts"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename
+						+ ".edgeDestCounts"))));
 		String ln;
 
 		int partA, partB;
@@ -274,7 +282,8 @@ public class LoaderEL {
 		 * Scan the partSizes file
 		 */
 		BufferedReader inPartSizesStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partSizes"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename
+						+ ".partSizes"))));
 
 		int j = 0;
 		while ((ln = inPartSizesStrm.readLine()) != null) {
@@ -306,7 +315,8 @@ public class LoaderEL {
 		 * Scan the edge destination counts file
 		 */
 		BufferedReader inGrammarStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename
+						+ ".grammar"))));
 		String ln;
 
 		String[] tok;
@@ -340,7 +350,8 @@ public class LoaderEL {
 	 * @param partsToLoad
 	 * @throws IOException
 	 */
-	private void updateNewPartsAndLoadedParts(int partsToLoad[]) throws IOException {
+	private void updateNewPartsAndLoadedParts(int partsToLoad[])
+			throws IOException {
 		/*
 		 * NOTE: At no point will partsToLoad be equal to loadedparts.
 		 */
@@ -356,13 +367,13 @@ public class LoaderEL {
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_2") == 0) {
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			int[] newParts = LoadedPartitions.getNewParts();
-			HashSet<Integer> partsToSaveByLoader = LoadedPartitions.getPartsToSave();
+			HashSet<Integer> partsToSaveByLoader = LoadedPartitions
+					.getPartsToSave();
 			HashSet<Integer> tempSet = new HashSet<Integer>();
 
 			/*
 			 * partid loading test 1/2 (comment loadedParts, newParts
 			 * initialization above, change name of parameter partsToLoad above)
-			 * 
 			 */
 			// System.out.println("START");
 			//
@@ -397,7 +408,8 @@ public class LoaderEL {
 			// 1.2. Add the ones not included for next computation to
 			// partsToSave
 			for (int i = 0; i < loadedParts.length; i++) {
-				if (!tempSet.contains(loadedParts[i]) & loadedParts[i] != Integer.MIN_VALUE) {
+				if (!tempSet.contains(loadedParts[i])
+						&& loadedParts[i] != Integer.MIN_VALUE) {
 					partsToSaveByLoader.add(loadedParts[i]);
 				}
 			}
@@ -413,7 +425,8 @@ public class LoaderEL {
 
 			// 2.1. save partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
-				storePart(getVertices(), getNewEdgeLists(), getIntervals(), partitionId);
+				storePart(getVertices(), getNewEdgeLists(), getIntervals(),
+						partitionId);
 
 			// 2.2. save degrees of partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
@@ -421,7 +434,8 @@ public class LoaderEL {
 
 			// 2.3. Remove saved partitions from LoadedVertexIntervals
 			for (int i = 0; i < intervals.size(); i++) {
-				if (partsToSaveByLoader.contains(intervals.get(i).getPartitionId())) {
+				if (partsToSaveByLoader.contains(intervals.get(i)
+						.getPartitionId())) {
 					intervals.remove(i);
 					// reset i
 					i--;
@@ -527,7 +541,8 @@ public class LoaderEL {
 			if (newParts[i] != Integer.MIN_VALUE) {
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
-				partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
+				partOutDegs[i] = new int[PartitionQuerier
+						.getNumUniqueSrcs(newParts[i])];
 				// remember to use this only for loading partitions that aren't
 				// currently loaded.
 			}
@@ -538,8 +553,10 @@ public class LoaderEL {
 		 */
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
-				BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
-						new FileInputStream(new File(baseFilename + ".partition." + newParts[i] + ".degrees"))));
+				BufferedReader outDegInStrm = new BufferedReader(
+						new InputStreamReader(new FileInputStream(new File(
+								baseFilename + ".partition." + newParts[i]
+										+ ".degrees"))));
 
 				String ln;
 				while ((ln = outDegInStrm.readLine()) != null) {
@@ -550,9 +567,11 @@ public class LoaderEL {
 					int srcVId = Integer.parseInt(tok[0]);
 					int deg = Integer.parseInt(tok[1]);
 					try {
-						partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(newParts[i])] = deg;
+						partOutDegs[i][srcVId
+								- PartitionQuerier.getFirstSrc(newParts[i])] = deg;
 					} catch (Exception e) {
-						logger.info("ERROR!: " + srcVId + " " + PartitionQuerier.getFirstSrc(newParts[i]));
+						logger.info("ERROR!: " + srcVId + " "
+								+ PartitionQuerier.getFirstSrc(newParts[i]));
 
 					}
 					// this will be later updated in processParts() of
@@ -561,7 +580,8 @@ public class LoaderEL {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i] + ".degrees");
+				logger.info("Loaded " + baseFilename + ".partition."
+						+ newParts[i] + ".degrees");
 			}
 		}
 	}
@@ -577,7 +597,8 @@ public class LoaderEL {
 	 * @throws NumberFormatException
 	 */
 	@SuppressWarnings("unused")
-	private void getDegrees(String baseFilename, int[] partsToLoad) throws NumberFormatException, IOException {
+	private void getDegrees(String baseFilename, int[] partsToLoad)
+			throws NumberFormatException, IOException {
 
 		/*
 		 * Initialize the degrees array for each partition
@@ -590,17 +611,20 @@ public class LoaderEL {
 
 			// initialize Dimension 2 (Total no. of Unique SrcVs for a
 			// Partition)
-			partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
+			partOutDegs[i] = new int[PartitionQuerier
+					.getNumUniqueSrcs(partsToLoad[i])];
 		}
 
 		/*
 		 * Scan the degrees file
 		 */
-		BufferedReader outDegInStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".degrees"))));
+		BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
+				new FileInputStream(new File(baseFilename + ".degrees"))));
 
-		System.out.print("Reading degrees file (" + baseFilename
-				+ ".degrees) to obtain degrees of source vertices in partitions to load");
+		System.out
+				.print("Reading degrees file ("
+						+ baseFilename
+						+ ".degrees) to obtain degrees of source vertices in partitions to load");
 
 		String ln;
 		while ((ln = outDegInStrm.readLine()) != null) {
@@ -618,7 +642,8 @@ public class LoaderEL {
 					continue;
 				} else {
 					try {
-						partOutDegs[i][srcVId - PartitionQuerier.getFirstSrc(partsToLoad[i])] = deg;
+						partOutDegs[i][srcVId
+								- PartitionQuerier.getFirstSrc(partsToLoad[i])] = deg;
 					} catch (ArrayIndexOutOfBoundsException e) {
 					}
 				}
@@ -641,7 +666,8 @@ public class LoaderEL {
 		// initializing new data structures
 		int totalNumVertices = 0;
 		for (int i = 0; i < loadedParts.length; i++) {
-			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(loadedParts[i]);
+			totalNumVertices += PartitionQuerier
+					.getNumUniqueSrcs(loadedParts[i]);
 		}
 		vertices = new Vertex[totalNumVertices];
 		newEdgeLists = new NewEdgesList[totalNumVertices];
@@ -653,15 +679,20 @@ public class LoaderEL {
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
+		// reassigning the partEdges and partEdgeVAls only for the newly loaded
+		// partitions in this round
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
-				partEdges[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])][];
-				partEdgeVals[i] = new byte[PartitionQuerier.getNumUniqueSrcs(newParts[i])][];
+				partEdges[i] = new int[PartitionQuerier
+						.getNumUniqueSrcs(newParts[i])][];
+				partEdgeVals[i] = new byte[PartitionQuerier
+						.getNumUniqueSrcs(newParts[i])][];
 
-				for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
+				for (int j = 0; j < PartitionQuerier
+						.getNumUniqueSrcs(newParts[i]); j++) {
 
 					// initialize Dimension 3 (Total no. of Out-edges for a
 					// SrcV)
@@ -675,9 +706,12 @@ public class LoaderEL {
 		// set vertices data structure
 		int vertexIdx = 0;
 		for (int i = 0; i < loadedParts.length; i++) {
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
-				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j, loadedParts[i]);
-				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId, partEdges[i][j], partEdgeVals[i][j]);
+			for (int j = 0; j < PartitionQuerier
+					.getNumUniqueSrcs(loadedParts[i]); j++) {
+				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j,
+						loadedParts[i]);
+				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId,
+						partEdges[i][j], partEdgeVals[i][j]);
 				vertexIdx++;
 			}
 		}
@@ -701,13 +735,15 @@ public class LoaderEL {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
 				DataInputStream partInStrm = new DataInputStream(
-						new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + newParts[i])));
+						new BufferedInputStream(new FileInputStream(
+								baseFilename + ".partition." + newParts[i])));
 
 				// stores the position of last filled edge (destV) and the edge
 				// val
 				// in partEdges and partEdgeVals for a source vertex
 				// for a partition
-				int[] lastAddedEdgePos = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
+				int[] lastAddedEdgePos = new int[PartitionQuerier
+						.getNumUniqueSrcs(newParts[i])];
 				for (int j = 0; j < lastAddedEdgePos.length; j++) {
 					lastAddedEdgePos[j] = -1;
 				}
@@ -719,7 +755,8 @@ public class LoaderEL {
 							int src = partInStrm.readInt();
 
 							// get corresponding arraySrcVId of srcVId
-							int arraySrcVId = src - PartitionQuerier.getFirstSrc(newParts[i]);
+							int arraySrcVId = src
+									- PartitionQuerier.getFirstSrc(newParts[i]);
 
 							// get count (number of destVs from srcV in the
 							// current
@@ -733,7 +770,8 @@ public class LoaderEL {
 							for (int j = 0; j < count; j++) {
 
 								// dstVId
-								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
+								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
+										.readInt();
 
 								// test for artifical input graph
 								// if
@@ -744,7 +782,8 @@ public class LoaderEL {
 								// }
 
 								// edgeVal
-								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
+								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
+										.readByte();
 
 								// increment the last added position for this
 								// row
@@ -759,7 +798,8 @@ public class LoaderEL {
 
 				partInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
+				logger.info("Loaded " + baseFilename + ".partition."
+						+ newParts[i]);
 			}
 		}
 
@@ -804,20 +844,23 @@ public class LoaderEL {
 				if (partId == interval.getPartitionId()) {
 					alreadyLoaded = true;
 
-					interval.setIndexStart(intervalIndices.get(intrvlIndxMarker));
+					interval.setIndexStart(intervalIndices
+							.get(intrvlIndxMarker));
 					intrvlIndxMarker++;
 
 					interval.setIndexEnd(intervalIndices.get(intrvlIndxMarker));
 					intrvlIndxMarker++;
 
-					logger.info("Updated interval parameters for partition: " + partId);
+					logger.info("Updated interval parameters for partition: "
+							+ partId);
 					break;
 				}
 			}
 
 			// lvi update for new partitions that are to be loaded
 			if (!alreadyLoaded) {
-				LoadedVertexInterval interval = new LoadedVertexInterval(PartitionQuerier.getFirstSrc(partId),
+				LoadedVertexInterval interval = new LoadedVertexInterval(
+						PartitionQuerier.getFirstSrc(partId),
 						PartitionQuerier.getLastSrc(partId), partId);
 
 				interval.setIndexStart(intervalIndices.get(intrvlIndxMarker));
@@ -837,7 +880,8 @@ public class LoaderEL {
 			int oldIntvIdxSt = 0, oldIntvIdxEnd = 0, newIntvIdxSt = 0, newIntvIdxEnd = 0;
 			for (int i = 0; i < intervals.size(); i++) {
 				for (int j = 0; j < oldIntervals.size(); j++) {
-					if (intervals.get(i).getPartitionId() == oldIntervals.get(j).getPartitionId()) {
+					if (intervals.get(i).getPartitionId() == oldIntervals
+							.get(j).getPartitionId()) {
 						// preserve the edges generated in previous iteration
 						// using
 						// info
@@ -854,7 +898,8 @@ public class LoaderEL {
 						// computed
 						// part processor
 
-						if (oldIntvIdxSt - oldIntvIdxEnd != newIntvIdxSt - newIntvIdxEnd) {
+						if (oldIntvIdxSt - oldIntvIdxEnd != newIntvIdxSt
+								- newIntvIdxEnd) {
 							logger.info("ERROR: number of vertices in an interval has changed!");
 							System.exit(0);
 						}
@@ -866,7 +911,8 @@ public class LoaderEL {
 								l++;
 							} catch (ArrayIndexOutOfBoundsException e) {
 								logger.info("" + k + " " + newEdgeLists.length);
-								logger.info("" + l + " " + oldNewEdgeLists.length);
+								logger.info("" + l + " "
+										+ oldNewEdgeLists.length);
 							}
 						}
 
@@ -899,30 +945,37 @@ public class LoaderEL {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL, List<LoadedVertexInterval> intervals,
-			Integer partitionId) throws IOException {
+	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
+			List<LoadedVertexInterval> intervals, Integer partitionId)
+			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
+				+ partitionId);
 
 		for (int i = 0; i < intervals.size(); i++) {
 
 			// locate the required interval in "vertices", and if it has new
 			// edges added
-			if (partitionId == intervals.get(i).getPartitionId() & intervals.get(i).hasNewEdges()) {
+			if (partitionId == intervals.get(i).getPartitionId()
+					&& intervals.get(i).hasNewEdges()) {
 
 				// clear current file
-				DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(
-						new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
+				DataOutputStream partOutStrm = new DataOutputStream(
+						new BufferedOutputStream(new FileOutputStream(
+								GlobalParams.baseFilename + ".partition."
+										+ partitionId, false)));
 				partOutStrm.close();
 
 				partOutStrm = new DataOutputStream(new BufferedOutputStream(
-						new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, true)));
+						new FileOutputStream(GlobalParams.baseFilename
+								+ ".partition." + partitionId, true)));
 
 				int srcVId, destVId, count;
 				int edgeValue;
 
 				// scan each vertex in this interval in "vertices" datastructure
-				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+				for (int j = intervals.get(i).getIndexStart(); j < intervals
+						.get(i).getIndexEnd() + 1; j++) {
 					count = vertices[j].getCombinedDeg();
 
 					if (count == 0) {
@@ -948,8 +1001,8 @@ public class LoaderEL {
 
 						// test
 						if (destVId > 152) {
-//							logger.info("ERROR: wrote vertex id > 152!");
-//							System.exit(0);
+							// logger.info("ERROR: wrote vertex id > 152!");
+							// System.exit(0);
 						}
 
 					}
@@ -963,11 +1016,14 @@ public class LoaderEL {
 						for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
 
 							// for each edge in the new edge list node
-							for (int l = 0; l < newEdgesLL[j].getNode(k).getIndex(); l++) {
+							for (int l = 0; l < newEdgesLL[j].getNode(k)
+									.getIndex(); l++) {
 
 								// write the new destId-edgeValue pair
-								destVId = newEdgesLL[j].getNode(k).getNewOutEdge(l);
-								edgeValue = newEdgesLL[j].getNode(k).getNewOutEdgeValue(l);
+								destVId = newEdgesLL[j].getNode(k)
+										.getNewOutEdge(l);
+								edgeValue = newEdgesLL[j].getNode(k)
+										.getNewOutEdgeValue(l);
 								partOutStrm.writeInt(destVId);
 								partOutStrm.writeByte(edgeValue);
 
@@ -993,29 +1049,37 @@ public class LoaderEL {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId)
+	public static void storePartDegs(Vertex[] vertices,
+			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId + ".degrees");
+		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
+				+ partitionId + ".degrees");
 
 		for (int i = 0; i < intervals.size(); i++) {
 
 			// locate the required interval in "vertices", and if it has new
 			// edges added
-			if (partitionId == intervals.get(i).getPartitionId() & intervals.get(i).hasNewEdges()) {
+			if (partitionId == intervals.get(i).getPartitionId()
+					&& intervals.get(i).hasNewEdges()) {
 
 				// clear current degrees file
-				PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
-						new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
+				PrintWriter partDegOutStrm = new PrintWriter(
+						new BufferedWriter(new FileWriter(
+								GlobalParams.baseFilename + ".partition."
+										+ partitionId + ".degrees", false)));
 				partDegOutStrm.close();
 
 				partDegOutStrm = new PrintWriter(new BufferedWriter(
-						new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
+						new FileWriter(GlobalParams.baseFilename
+								+ ".partition." + partitionId + ".degrees",
+								true)));
 
 				int srcVId, deg;
 
 				// scan each vertex in this interval in "vertices" datastructure
-				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
+				for (int j = intervals.get(i).getIndexStart(); j < intervals
+						.get(i).getIndexEnd() + 1; j++) {
 
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();

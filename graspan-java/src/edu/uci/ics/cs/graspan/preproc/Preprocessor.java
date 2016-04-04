@@ -234,7 +234,7 @@ public class Preprocessor {
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
 			if (intervalEdgeCount > intervalMaxSize
-					& !isLastPartition(partTabIdx)) {
+					&& !isLastPartition(partTabIdx)) {
 				partAllocTable[partTabIdx][0] = partTabIdx;
 				partAllocTable[partTabIdx][1] = intervalMaxVId;
 				partSizes[partTabIdx][1] = intervalEdgeCount;
@@ -371,7 +371,7 @@ public class Preprocessor {
 						eval = Integer.parseInt(tok[2]);
 					}
 
-					assert (src != -1 & dst != -1 & eval != -1);
+					assert (src != -1 && dst != -1 && eval != -1);
 					incrementEdgeDestCount(src, dst);
 					addEdgetoBuffer(src, dst, eval);
 

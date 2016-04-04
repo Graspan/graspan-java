@@ -44,10 +44,9 @@ public class LoaderM {
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	public static Vertex[] vertices = null;
-	public static NewEdgesList[] newEdgeLists = null;
 	public List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();
 
-	public static NewEdgesList[] oldNewEdgeLists = null;
+	public static Vertex[] prevRoundVertices = null;
 	List<LoadedVertexInterval> oldIntervals = null;
 
 	private String baseFilename = "";
@@ -129,10 +128,16 @@ public class LoaderM {
 	 */
 	public void loadParts(int[] partsToLoad) throws IOException {
 
-		// save previous round's new edges and previous round's lvi
-		List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(
-				intervals);
-		this.oldIntervals = oldIntervals;
+		// save previous round's vertices and previous round's lvi
+		if (vertices != null) {// TODO CHANGE THIS
+			prevRoundVertices = new Vertex[vertices.length];
+			// prevRoundVertices = vertices;
+			System.arraycopy(vertices, 0, prevRoundVertices, 0, vertices.length);
+			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(
+					intervals);
+			this.oldIntervals = oldIntervals;
+			logger.info("oldIntervals after creation: " + oldIntervals);
+		}
 
 		loadedIntStartOP = "Loaded intervals at start of loading: ";
 		for (LoadedVertexInterval interval : intervals) {
@@ -150,11 +155,20 @@ public class LoaderM {
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
 
+		logger.info("oldIntervals after  update newPartsToLoad: "
+				+ oldIntervals);
+
 		// update loadedPartOutDegrees
 		updateDegsOfPartsToLoad();
 
+		logger.info("oldIntervals after update loadedPartOutDegrees: "
+				+ oldIntervals);
+
 		// initialize data structures of the partitions to load
 		initVarsOfPartsToLoad();
+
+		logger.info("oldIntervals after init of data structures of the partitions to load: "
+				+ oldIntervals);
 
 		logger.info("Initialized data structures for partitions to load.");
 		// fill the partition data structures
@@ -335,10 +349,6 @@ public class LoaderM {
 		return intervals;
 	}
 
-	public NewEdgesList[] getNewEdgeLists() {
-		return newEdgeLists;
-	}
-
 	/**
 	 * Computes the next set of parts that are to be loaded in the memory.
 	 * 
@@ -404,7 +414,7 @@ public class LoaderM {
 			// partsToSave
 			for (int i = 0; i < loadedParts.length; i++) {
 				if (!tempSet.contains(loadedParts[i])
-						& loadedParts[i] != Integer.MIN_VALUE) {
+						&& loadedParts[i] != Integer.MIN_VALUE) {
 					partsToSaveByLoader.add(loadedParts[i]);
 				}
 			}
@@ -420,8 +430,7 @@ public class LoaderM {
 
 			// 2.1. save partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
-				storePart(getVertices(), getNewEdgeLists(), getIntervals(),
-						partitionId);
+				storePart(getVertices(), getIntervals(), partitionId);
 
 			// 2.2. save degrees of partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
@@ -673,6 +682,8 @@ public class LoaderM {
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
+		// reassigning the partEdges and partEdgeVAls only for the newly loaded
+		// partitions in this round
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
@@ -777,6 +788,9 @@ public class LoaderM {
 								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
 										.readByte();
 
+								// TODO: remove this!!
+								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.BYTES;
+
 								// increment the last added position for this
 								// row
 								lastAddedEdgePos[arraySrcVId]++;
@@ -874,6 +888,7 @@ public class LoaderM {
 				for (int j = 0; j < oldIntervals.size(); j++) {
 					if (intervals.get(i).getPartitionId() == oldIntervals
 							.get(j).getPartitionId()) {
+
 						// preserve the edges generated in previous iteration
 						// using
 						// info
@@ -883,6 +898,20 @@ public class LoaderM {
 						oldIntvIdxSt = oldIntervals.get(j).getIndexStart();
 						oldIntvIdxEnd = oldIntervals.get(j).getIndexEnd();
 
+						String s2 = "";
+						for (int u = 0; u < prevRoundVertices.length; u++) {
+							s2 = s2 + " " + prevRoundVertices[u].getVertexId();
+						}
+
+						logger.info("All prevRoundvertices in memory during loading: \n"
+								+ s2);
+						logger.info("oldIntvIdxSt: " + oldIntvIdxSt
+								+ " oldIntvIdxEnd: " + oldIntvIdxEnd
+								+ " oldIntervals partId: "
+								+ oldIntervals.get(j).getPartitionId());
+						logger.info("OldIntervals: " + oldIntervals);
+						logger.info("Current Intervals:" + intervals);
+
 						// this preservation strategy assumes that when an
 						// interval
 						// is repartitioned it is immediately saved to disk by
@@ -890,13 +919,22 @@ public class LoaderM {
 						// computed
 						// part processor
 
-						if (oldIntvIdxSt - oldIntvIdxEnd != newIntvIdxSt
-								- newIntvIdxEnd) {
+						if ((oldIntvIdxSt - oldIntvIdxEnd) != (newIntvIdxSt - newIntvIdxEnd)) {
 							logger.info("ERROR: number of vertices in an interval has changed!");
 							System.exit(0);
 						}
 
 						int l = oldIntvIdxSt;
+						for (int k = newIntvIdxSt; k < newIntvIdxEnd + 1; k++) {
+							try {
+								vertices[k] = prevRoundVertices[l];
+								l++;
+							} catch (ArrayIndexOutOfBoundsException e) {
+								logger.info("" + k + " " + vertices.length);
+								logger.info("" + l + " "
+										+ prevRoundVertices.length);
+							}
+						}
 					}
 				}
 			}
@@ -926,7 +964,7 @@ public class LoaderM {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, NewEdgesList[] newEdgesLL,
+	private static void storePart(Vertex[] vertices,
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
@@ -938,7 +976,7 @@ public class LoaderM {
 			// locate the required interval in "vertices", and if it has new
 			// edges added
 			if (partitionId == intervals.get(i).getPartitionId()
-					& intervals.get(i).hasNewEdges()) {
+					&& intervals.get(i).hasNewEdges()) {
 
 				// clear current file
 				DataOutputStream partOutStrm = new DataOutputStream(
@@ -957,7 +995,7 @@ public class LoaderM {
 				// scan each vertex in this interval in "vertices" datastructure
 				for (int j = intervals.get(i).getIndexStart(); j < intervals
 						.get(i).getIndexEnd() + 1; j++) {
-					count = vertices[j].getCombinedDeg();
+					count = vertices[j].getNumOutEdges();
 
 					if (count == 0) {
 						continue;
@@ -1018,7 +1056,7 @@ public class LoaderM {
 			// locate the required interval in "vertices", and if it has new
 			// edges added
 			if (partitionId == intervals.get(i).getPartitionId()
-					& intervals.get(i).hasNewEdges()) {
+					&& intervals.get(i).hasNewEdges()) {
 
 				// clear current degrees file
 				PrintWriter partDegOutStrm = new PrintWriter(
@@ -1040,7 +1078,7 @@ public class LoaderM {
 
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
-					deg = vertices[j].getCombinedDeg();
+					deg = vertices[j].getNumOutEdges();
 					// if (srcVId == 4) {
 					// logger.info("Look here: 4's degree is " + deg);
 					// }

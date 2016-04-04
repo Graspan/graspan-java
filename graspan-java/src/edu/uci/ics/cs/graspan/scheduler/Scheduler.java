@@ -220,7 +220,7 @@ public class Scheduler {
 		for (int i = 0; i < numOfPartitions; i++) {
 			for (int j = 0; j < numOfPartitions; j++) {
 				// logger.info("hello world" + edcPercentage[i][j] + " " + max);
-				if (edcPercentage[i][j] > max & i != j) {
+				if (edcPercentage[i][j] > max && i != j) {
 					List<Boolean> terminationInfoForOne = allEdgeInfo.get(i)
 							.getTerminationInfo();
 					if (terminationInfoForOne.get(j) == false) {

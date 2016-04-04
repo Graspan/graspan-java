@@ -66,6 +66,8 @@ public class EngineEL {
 		if (Runtime.getRuntime().availableProcessors() > nThreads) {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
+		// TODO: REMOVE THIS LATER
+		nThreads = 1;
 
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
 		// logger.info("Executing partition loader.");
@@ -75,16 +77,19 @@ public class EngineEL {
 		LoaderEL loader = new LoaderEL();
 
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
-		
-		//TODO: AVOID USING THIS SECOND SCHEDULER CONSTRUCTOR
-//		 Scheduler scheduler = new
-//		 Scheduler(SchedulerInfo.getEdgeDestCount());
+
+		// TODO: AVOID USING THIS SECOND SCHEDULER CONSTRUCTOR
+		// Scheduler scheduler = new
+		// Scheduler(SchedulerInfo.getEdgeDestCount());
 
 		while (!scheduler.shouldTerminate()) {
-//			 partsToLoad =
-//			 scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			// partsToLoad =
+			// scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			// TODO: USE partitionEDC later
+			// partsToLoad = scheduler
+			// .schedulePartitionEDC(AllPartitions.partAllocTable.length);
 			partsToLoad = scheduler
-					.schedulePartitionEDC(AllPartitions.partAllocTable.length);
+					.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			logger.info("Scheduling Partitions : "
 					+ Arrays.toString(partsToLoad));
 			logger.info("Start loading partitions...");
@@ -135,8 +140,8 @@ public class EngineEL {
 			logger.info("Start computation and edge addition...");
 			t = System.currentTimeMillis();
 
-//			MemUsageCheckThread job1 = new MemUsageCheckThread();
-//			job1.start();
+			// MemUsageCheckThread job1 = new MemUsageCheckThread();
+			// job1.start();
 
 			// 2. do computation and add edges
 			EdgeComputerEL.setEdgesLists(edgesLists);
@@ -210,6 +215,7 @@ public class EngineEL {
 		final int indexEndForOne = intervals.get(0).getIndexEnd();
 		final int indexStartForTwo = intervals.get(1).getIndexStart();
 		final int indexEndForTwo = intervals.get(1).getIndexEnd();
+		int iterationNo = 0;
 
 		do {
 			// set readable index, for read and write concurrency
@@ -217,6 +223,7 @@ public class EngineEL {
 			// in the previous iteration
 			// which is readable for the current iteration
 			setReadableIndex(edgesLists);
+			iterationNo++;
 
 			totalNewEdges = 0;
 			totalDupEdges = 0;
@@ -326,14 +333,22 @@ public class EngineEL {
 					}
 
 					// if (countDown.get() > 0)
-//						logger.info("Waiting for execution to finish: countDown:"
-//								+ countDown.get());
+					// logger.info("Waiting for execution to finish: countDown:"
+					// + countDown.get());
 				}
 			}
-			logger.info("========total # new edges for this iteration: "
-					+ totalNewEdges);
-			logger.info("========total # dup edges for this iteration: "
-					+ totalDupEdges);
+
+			// TODO: PRINTING NEW EDGES (COMMENT OUT LATER)
+			for (int i = 0; i < vertices.length; i++) {
+				logger.info("Vertex Id#" + vertices[i].getVertexId() + " "
+						+ Arrays.toString(vertices[i].getOutEdges())
+						+ " New Edges: " + edgesLists[i]);
+			}
+
+			logger.info("========total # new edges for iteration #"
+					+ iterationNo + "is " + totalNewEdges);
+			// logger.info("========total # dup edges for this iteration: "
+			// + totalDupEdges);
 		} while (totalNewEdges > 0);
 
 		// set new edge added flag for scheduler

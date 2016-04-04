@@ -115,7 +115,7 @@ public class EdgeComputerM {
 				newEdgs_empty = true;
 			}
 		}
-		if (oldEdgs_empty & newEdgs_empty)
+		if (oldEdgs_empty && newEdgs_empty)
 			return;
 
 		// 2. get the rows to merge
@@ -139,7 +139,7 @@ public class EdgeComputerM {
 					for (int j = 0; j < intervals.size(); j++) {
 						interval = intervals.get(j);
 						if (newTgt >= interval.getFirstVertex()
-								& newTgt <= interval.getLastVertex()) {
+								&& newTgt <= interval.getLastVertex()) {
 							targetRowId = newTgt - interval.getFirstVertex()
 									+ interval.getIndexStart();
 							assert (targetRowId != -1);
@@ -174,7 +174,7 @@ public class EdgeComputerM {
 					for (int j = 0; j < intervals.size(); j++) {
 						interval = intervals.get(j);
 						if (newTgt >= interval.getFirstVertex()
-								& newTgt <= interval.getLastVertex()) {
+								&& newTgt <= interval.getLastVertex()) {
 							// the target lies on this interval
 
 							targetRowId = newTgt - interval.getFirstVertex()
@@ -211,28 +211,46 @@ public class EdgeComputerM {
 		// 3.1. first store the source row
 		int rows_to_merge_id = 0;
 		// logger.info("The Id of source vertex: " + this.vertex.getVertexId());
-		edgArrstoMerge[0] = this.vertex.getOutEdges();
-		valArrstoMerge[0] = this.vertex.getOutEdgeValues();
+		edgArrstoMerge[0] = this.compSet.getOldUnewEdgs();
+		valArrstoMerge[0] = this.compSet.getOldUnewVals();
 		int srcRowId = 0;
 		rows_to_merge_id++;
+//		logger.info("Vertex Id: " + this.vertex.getVertexId()
+//				+ " Edge Arrays to merge (source row):"
+//				+ Arrays.toString(edgArrstoMerge[0]));
 
 		// 3.2. now store the new component rows
 		for (Integer id : newIdsToMerge) {
-			edgArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdges();
-			valArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdgeValues();
+			edgArrstoMerge[rows_to_merge_id] = compSets[id].getNewEdgs();
+			valArrstoMerge[rows_to_merge_id] = compSets[id].getNewVals();
+//			logger.info("Vertex Id: " + vertices[id].getVertexId()
+//					+ " Edge Arrays to merge (new component rows):"
+//					+ Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
+			// logger.info("Look This! vertex id#" + vertices[id].getVertexId()
+			// + " " + Arrays.toString(vertices[id].getOutEdges()));
 			rows_to_merge_id++;
 		}
 
 		// 3.3. now store the oldUnew component rows of targets
 		for (Integer id : oldUnewIdsToMerge) {
-			edgArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdges();
-			valArrstoMerge[rows_to_merge_id] = vertices[id].getOutEdgeValues();
+			edgArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewEdgs();
+			valArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewVals();
+//			logger.info("Vertex Id: " + vertices[id].getVertexId()
+//					+ " Edge Arrays to merge (oldUnew component rows):"
+//					+ Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
 			rows_to_merge_id++;
 		}
+
+		// logger.info("EdgeArrstoMerge: \n" +
+		// Arrays.deepToString(edgArrstoMerge));
+
+		oldUnewIdsToMerge.clear();
+		newIdsToMerge.clear();
 
 		// 4. call the SortedArrMerger merge function
 		SortedArrMerger sortedArrMerger = new SortedArrMerger();
 
+		logger.info("Vertex ID: " + this.vertex.getVertexId());
 		sortedArrMerger
 				.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
 
@@ -246,15 +264,15 @@ public class EdgeComputerM {
 		this.compSet.setOldUnewUdeltaVals(sortedArrMerger
 				.get_src_oldUnewUdelta_vals());
 
-		logger.info("deltaEdgs: "
-				+ Arrays.toString(this.compSet.getDeltaEdgs())
-				+ ", for vertex #" + this.vertex.getVertexId() + " ThreadNo:"
-				+ Thread.currentThread().getId());
+		// logger.info("deltaEdgs: "
+		// + Arrays.toString(this.compSet.getDeltaEdgs())
+		// + ", for vertex #" + this.vertex.getVertexId() + " ThreadNo:"
+		// + Thread.currentThread().getId());
 
 		nNewEdges = sortedArrMerger.get_num_new_edges();
 		// TODO: DOUBLE CHECK NEWEDGES
-		logger.info("NEW EDGES!! " + nNewEdges + " for vertex no."
-				+ vertex.getVertexId());
+		// logger.info("NEW EDGES!! " + nNewEdges + " for vertex no."
+		// + vertex.getVertexId());
 
 	}
 }

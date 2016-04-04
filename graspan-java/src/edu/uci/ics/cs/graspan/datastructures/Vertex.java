@@ -36,20 +36,31 @@ public class Vertex {
 		this.idx = idx;
 		this.id = id;
 		this.numOutEdges = 0;
-		// TODO:potential spot for a slow-down
-		for (int i = 0; i < outEdges.length; i++) {
-			if (outEdges[0] != -1) {
-				this.numOutEdges++;
-			}
-		}
 		this.outEdges = outEdges;
 		this.outEdgeValues = outEdgeValues;
 	}
 
 	public int getNumOutEdges() {
+		// TODO:potential spot for a slow-down
+		// TODO: USE INDEX FOR EACH ARRAY
+		numOutEdges = 0;
+		for (int i = 0; i < outEdges.length; i++) {
+			if (outEdges[i] == -1) {
+				break;
+			}
+			numOutEdges++;
+		}
 		return numOutEdges;
 	}
 
+	public void setNumOutEdges() {
+
+	}
+
+	/**
+	 * Used by EdgeList Style Computation
+	 * @return
+	 */
 	public int getCombinedDeg() {
 		return combinedDeg;
 	}

@@ -151,10 +151,8 @@ public class ComputedPartProcessorM {
 			logger.info("Updating loadPartOutDegs for loaded partition "
 					+ partId);
 
-			int numOfNodeVertices;
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
-				numOfNodeVertices = 0;
 
 				// get the actual source id
 				// src = i - partStart + part.getFirstVertex();
@@ -164,27 +162,15 @@ public class ComputedPartProcessorM {
 				// System.out.println("Index of Src in DataStructure" + i);
 				// System.out.println("Actual Id of Src" + src);
 
-				// if new edges for this source exist
-				if (compsets[i].getDeltaEdgs() != null) {
-					if (compsets[i].getDeltaEdgs().length > 0) {
-						if (compsets[i].getDeltaEdgs()[0] != -1) {
-							partHasNewEdges = true;
-						}
-
-						for (int j = 0; j < compsets[i].getDeltaEdgs().length; j++) {
-							if (compsets[i].getDeltaEdgs()[j] != -1) {
-								numOfNodeVertices++;
-							}
-						}
-					}
+				// 1.1.1. check whether new edges have been added
+				if (vertices[i].getNumOutEdges() > loadPartOutDegs[a][PartitionQuerier
+						.getPartArrIdxFrmActualId(src, partId)]) {
+					partHasNewEdges = true;
 				}
 
-				// 1.1.1. update degrees data
+				// 1.1.2. update degrees data
 				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(
-						src, partId)] = vertices[i].getNumOutEdges()
-						+ numOfNodeVertices;
-				vertices[i].setCombinedDeg(vertices[i].getNumOutEdges()
-						+ numOfNodeVertices);
+						src, partId)] = vertices[i].getNumOutEdges();
 				// logger.info(
 				// "Set Degree of vertex " + vertices[i].getVertexId() + " to "
 				// + vertices[i].getCombinedDeg());
@@ -210,6 +196,15 @@ public class ComputedPartProcessorM {
 				// get the actual source id
 				src = i - partStart + part.getFirstVertex();
 
+				logger.info("The degree of vertex #"
+						+ src
+						+ " in partition #"
+						+ partId
+						+ " is "
+						+ loadPartOutDegs[a][PartitionQuerier
+								.getPartArrIdxFrmActualId(src, partId)]
+						+ " in loadPartOutDegs datastructure");
+
 				try {
 					partEdgeCount += loadPartOutDegs[a][PartitionQuerier
 							.getPartArrIdxFrmActualId(src, partId)];
@@ -225,6 +220,7 @@ public class ComputedPartProcessorM {
 					// partId));
 					// logger.info("src "+src);
 				} catch (ArrayIndexOutOfBoundsException e) {
+					logger.info("Error!: " + e);
 					// logger.info("partId "+partId);
 					// logger.info("Error for Partition Id: " + partId);
 					// logger.info(loadPartOutDegs[a].length+"");
@@ -244,7 +240,10 @@ public class ComputedPartProcessorM {
 				// larger than the limit, this partition is split, and
 				// thus, we add the id of this source vertex as a split
 				// point
-				if (partEdgeCount > PART_MAX_POST_NEW_EDGES & i != partEnd) {
+
+				logger.info("partEdgeCount: "+partEdgeCount+" i: "+i+" PartEnd: "+partEnd);
+				if ((partEdgeCount > PART_MAX_POST_NEW_EDGES) && (i != partEnd)) {
+					logger.info("it repartitioned");
 					splitVertices.add(src);
 					partEdgeCount = 0;
 				}
@@ -259,6 +258,13 @@ public class ComputedPartProcessorM {
 			// logger.info("" + part.getPartitionId());
 			// logger.info("" + partSizes.length);
 			// partSizes[part.getPartitionId()][1] = edgeCount;
+		}
+
+		// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
+		logger.info("PRINTING DEGREES OF PARTITION");
+		for (int i = 0; i < vertices.length; i++) {
+			logger.info(vertices[i].getVertexId() + " | "
+					+ vertices[i].getNumOutEdges());
 		}
 
 		/*
@@ -322,7 +328,7 @@ public class ComputedPartProcessorM {
 				}
 				oldIntervalLast = partAllocTab[j][1];
 				if (newPartAllocTab[i][1] >= oldIntervalFirst
-						& newPartAllocTab[i][1] <= oldIntervalLast) {
+						&& newPartAllocTab[i][1] <= oldIntervalLast) {
 					newPartAllocTab[i][0] = partAllocTab[j][0];
 					partAllocTab[j][0] = -1;
 				}
@@ -530,7 +536,7 @@ public class ComputedPartProcessorM {
 		long edgeCount = 0;
 		for (LoadedVertexInterval interval : intervals) {
 			for (int i = interval.getIndexStart(); i < interval.getIndexEnd() + 1; i++) {
-				edgeCount += vertices[i].getCombinedDeg();
+				edgeCount += vertices[i].getNumOutEdges();
 			}
 			for (int j = 0; j < newPartSizes.length; j++) {
 				if (newPartSizes[j][0] == interval.getPartitionId()) {
@@ -698,7 +704,7 @@ public class ComputedPartProcessorM {
 				for (int j = intervals.get(i).getIndexStart(); j < intervals
 						.get(i).getIndexEnd() + 1; j++) {
 
-					count = vertices[j].getCombinedDeg();
+					count = vertices[j].getNumOutEdges();
 					if (count == 0) {
 						continue;
 					}
@@ -794,7 +800,7 @@ public class ComputedPartProcessorM {
 
 					// get srcId and deg
 					srcVId = vertices[j].getVertexId();
-					deg = vertices[j].getCombinedDeg();
+					deg = vertices[j].getNumOutEdges();
 					if (deg == 0)
 						continue;
 					partDegOutStrm.println(srcVId + "\t" + deg);

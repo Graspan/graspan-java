@@ -9,10 +9,12 @@ package edu.uci.ics.cs.graspan.datastructures;
  */
 public class ComputationSet {
 
+	// INPUT FOR EACH ITERATION
+
 	// old
 
-	private int oldEdgs[]=new int[0];
-	private byte oldVals[]=new byte[0];
+	private int oldEdgs[] = new int[0];
+	private byte oldVals[] = new byte[0];
 
 	public int[] getOldEdgs() {
 		return oldEdgs;
@@ -32,8 +34,8 @@ public class ComputationSet {
 
 	// new
 
-	private int newEdgs[]=new int[0];
-	private byte newVals[]=new byte[0];
+	private int newEdgs[] = new int[0];
+	private byte newVals[] = new byte[0];
 
 	public int[] getNewEdgs() {
 		return newEdgs;
@@ -51,31 +53,10 @@ public class ComputationSet {
 		this.newVals = newVals;
 	}
 
-	// delta
-
-	private int deltaEdgs[]=new int[0];
-	private byte deltaVals[]=new byte[0];
-
-	public int[] getDeltaEdgs() {
-		return deltaEdgs;
-	}
-
-	public void setDeltaEdges(int[] deltaEdgs) {
-		this.deltaEdgs = deltaEdgs;
-	}
-
-	public byte[] getDeltaVals() {
-		return deltaVals;
-	}
-
-	public void setDeltaVals(byte[] deltaVals) {
-		this.deltaVals = deltaVals;
-	}
-
 	// oldUnew
 
-	private int oldUnewEdgs[]=new int[0];
-	private byte oldUnewVals[]=new byte[0];
+	private int oldUnewEdgs[] = new int[0];
+	private byte oldUnewVals[] = new byte[0];
 
 	public int[] getOldUnewEdgs() {
 		return oldUnewEdgs;
@@ -93,10 +74,33 @@ public class ComputationSet {
 		this.oldUnewVals = oldUnewVals;
 	}
 
+	// OUPUT FOR EACH ITERATION
+
+	// delta
+
+	private int deltaEdgs[] = new int[0];
+	private byte deltaVals[] = new byte[0];
+
+	public int[] getDeltaEdgs() {
+		return deltaEdgs;
+	}
+
+	public void setDeltaEdges(int[] deltaEdgs) {
+		this.deltaEdgs = deltaEdgs;
+	}
+
+	public byte[] getDeltaVals() {
+		return deltaVals;
+	}
+
+	public void setDeltaVals(byte[] deltaVals) {
+		this.deltaVals = deltaVals;
+	}
+
 	// oldUnewUdelta
 
-	private int oldUnewUdeltaEdgs[]=new int[0];
-	private byte oldUnewUdeltaVals[]=new byte[0];
+	private int oldUnewUdeltaEdgs[] = new int[0];
+	private byte oldUnewUdeltaVals[] = new byte[0];
 
 	public int[] getOldUnewUdeltaEdgs() {
 		return oldUnewUdeltaEdgs;

@@ -401,7 +401,7 @@ public class EdgeComputerEL {
 		byte[][] grammarTab = GlobalParams.getGrammarTab();
 		byte edgeVal3 = -1;
 		for (int i = 0; i < grammarTab.length; i++) {
-			if (grammarTab[i][0] == edgeVal1 & grammarTab[i][1] == edgeVal2) {
+			if (grammarTab[i][0] == edgeVal1 && grammarTab[i][1] == edgeVal2) {
 				edgeVal3 = grammarTab[i][2];
 				break;
 			}

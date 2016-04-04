@@ -125,8 +125,8 @@ public class SortedArrMerger {
 	 */
 	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge,
 			int srcRowId) {
-		 logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
-		 + " ThreadNo:" + Thread.currentThread().getId());
+		// logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
+		// + " ThreadNo:" + Thread.currentThread().getId());
 		assert (delta_ptr == -1);
 
 		MinSet minSetFrmTgtRows = new MinSet();
@@ -162,6 +162,8 @@ public class SortedArrMerger {
 			src_oldUnewUdelta_edgs[i] = -1;
 			src_oldUnewUdelta_vals[i] = -1;
 		}
+		logger.info("LENGTH OF OLDUNEWUDELTA FROM SAM"
+				+ src_oldUnewUdelta_edgs.length);
 
 		// generate the minSets for all rows to merge
 		int i = 0;
@@ -191,7 +193,7 @@ public class SortedArrMerger {
 				break;
 			} else {
 				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
-						& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
+						&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
 					break;
 				}
 			}
@@ -210,7 +212,7 @@ public class SortedArrMerger {
 			// logger.info(minSet.toString() + " ThreadNo:"
 			// + Thread.currentThread().getId());
 			// }
-
+			//
 			// String s = "";
 			// s = s + "\n delta edgs:" + Arrays.toString(src_delta_edgs);
 			// s = s + "\n delta vals:" + Arrays.toString(src_delta_vals);
@@ -221,6 +223,33 @@ public class SortedArrMerger {
 			// + Thread.currentThread().getId() + ")";
 			// logger.info(s);
 		}
+
+		// removing the empty values in output components: delta and
+		// oldUnewUdelta
+
+		// removing empty values from src_oldUnewUdelta_edgs
+		int[] tempEdgs = new int[oldUnewUdelta_ptr + 1];
+		byte[] tempVals = new byte[oldUnewUdelta_ptr + 1];
+
+		for (int j = 0; j < oldUnewUdelta_ptr+1; j++) {
+			tempEdgs[j] = src_oldUnewUdelta_edgs[j];
+			tempVals[j] = src_oldUnewUdelta_vals[j];
+		}
+
+		src_oldUnewUdelta_edgs = tempEdgs;
+		src_oldUnewUdelta_vals = tempVals;
+
+		// removing empty values from src_delta_edgs
+		tempEdgs = new int[delta_ptr + 1];
+		tempVals = new byte[delta_ptr + 1];
+
+		for (int j = 0; j < delta_ptr+1; j++) {
+			tempEdgs[j] = src_delta_edgs[j];
+			tempVals[j] = src_delta_vals[j];
+		}
+
+		src_delta_edgs = tempEdgs;
+		src_delta_vals = tempVals;
 
 	}
 
@@ -241,6 +270,10 @@ public class SortedArrMerger {
 		minSet.clearEvalSet();
 		for (int i = minSet.getPtr(); i < edgRow.length; i++) {
 			if (edgRow[i] <= minSet.getCurrentVId()) {
+				if (edgRow[i] == -1 | edgRow[i] == 0) {// takes care of case
+														// when edgRow is -1 & 0
+					break;
+				}
 				minSet.setCurrentVId(edgRow[i]);
 				minSet.addEval(valRow[i]);
 				minSet.incrementPtr();
@@ -255,6 +288,14 @@ public class SortedArrMerger {
 		for (int i = 0; i < minSets.length; i++) {
 			if (i != srcRowId) {
 				if (minSets[i].getCurrentVId() <= min) {
+					if (minSets[i].getCurrentVId() == -1
+							| minSets[i].getCurrentVId() == 0) {// if the minset
+																// has
+						// reached -1,
+						// ignore this
+						// minset
+						continue;
+					}
 					min = minSets[i].getCurrentVId();
 					minset = minSets[i];
 				}
@@ -401,7 +442,7 @@ public class SortedArrMerger {
 
 			// increment the pointers for this minset
 			if (srcEdgRow.length > 0) {
-			createNextMinSet(minSetFrmSrcRow, srcEdgRow, srcValRow);
+				createNextMinSet(minSetFrmSrcRow, srcEdgRow, srcValRow);
 			}
 			return;
 		}

@@ -81,7 +81,7 @@ public class WholeGraphComputer {
 		int candidateEdgeV1, candidateEdgeV2;
 		for (int j = 0; j < gph.length; j++) {
 			for (int k = 0; k < gph.length; k++) {
-				if (gph[j][1] == gph[k][0] & gph[j][1] != -1 & gph[k][0] != -1) {
+				if (gph[j][1] == gph[k][0] && gph[j][1] != -1 && gph[k][0] != -1) {
 					candidateEdgeV1 = gph[j][0];
 					candidateEdgeV2 = gph[k][1];
 					boolean edgeExists = false;
@@ -89,7 +89,7 @@ public class WholeGraphComputer {
 					// check whether this edge already exists in the original
 					// graph
 					for (int m = 0; m < gph.length; m++) {
-						if (candidateEdgeV1 == gph[m][0] & candidateEdgeV2 == gph[m][1]) {
+						if (candidateEdgeV1 == gph[m][0] && candidateEdgeV2 == gph[m][1]) {
 							// logger.info("Edge already exists: " +
 							// candidateEdgeV1 + "---->" + candidateEdgeV2);
 							edgeExists = true;
@@ -100,7 +100,7 @@ public class WholeGraphComputer {
 					// check whether this edge already exists in the newEdges
 					// data structure
 					for (int m = 0; m < newEdges.length; m++) {
-						if (candidateEdgeV1 == newEdges[m][0] & candidateEdgeV2 == newEdges[m][1]) {
+						if (candidateEdgeV1 == newEdges[m][0] && candidateEdgeV2 == newEdges[m][1]) {
 							// logger.info("Edge already exists: " +
 							// candidateEdgeV1 + "---->" + candidateEdgeV2);
 							edgeExists = true;

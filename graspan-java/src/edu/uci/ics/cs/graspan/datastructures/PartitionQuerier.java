@@ -83,7 +83,7 @@ public class PartitionQuerier {
 	 * @return
 	 */
 	public static boolean inPartition(int srcVId, int partId) {
-		if (srcVId >= getFirstSrc(partId) & srcVId <= getLastSrc(partId))
+		if (srcVId >= getFirstSrc(partId) && srcVId <= getLastSrc(partId))
 			return true;
 		else
 			return false;
