@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -133,8 +134,25 @@ public class LoaderM {
 			prevRoundVertices = new Vertex[vertices.length];
 			// prevRoundVertices = vertices;
 			System.arraycopy(vertices, 0, prevRoundVertices, 0, vertices.length);
-			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(
-					intervals);
+			// List<LoadedVertexInterval> oldIntervals = new
+			// ArrayList<LoadedVertexInterval>(
+			// intervals);
+
+			if (intervals.size() != 2) {
+				logger.info("Warning: intervals size is " + intervals.size());
+			}
+			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>();
+			for (int i = 0; i < intervals.size(); i++) {
+				LoadedVertexInterval intv_to_copy = new LoadedVertexInterval(
+						intervals.get(i).getFirstVertex(), intervals.get(i)
+								.getLastVertex(), intervals.get(i)
+								.getPartitionId());
+				intv_to_copy.setIndexStart(intervals.get(i).getIndexStart());
+				intv_to_copy.setIndexEnd(intervals.get(i).getIndexEnd());
+				intv_to_copy.setIsNewEdgeAdded(intervals.get(i).hasNewEdges());
+				oldIntervals.add(intv_to_copy);
+			}
+
 			this.oldIntervals = oldIntervals;
 			logger.info("oldIntervals after creation: " + oldIntervals);
 		}
@@ -155,22 +173,23 @@ public class LoaderM {
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
 
-		logger.info("oldIntervals after  update newPartsToLoad: "
-				+ oldIntervals);
+		// logger.info("oldIntervals after  update newPartsToLoad: "
+		// + oldIntervals);
 
 		// update loadedPartOutDegrees
 		updateDegsOfPartsToLoad();
 
-		logger.info("oldIntervals after update loadedPartOutDegrees: "
-				+ oldIntervals);
+		// logger.info("oldIntervals after update loadedPartOutDegrees: "
+		// + oldIntervals);
 
 		// initialize data structures of the partitions to load
 		initVarsOfPartsToLoad();
 
-		logger.info("oldIntervals after init of data structures of the partitions to load: "
-				+ oldIntervals);
+		// logger.info("oldIntervals after init of data structures of the partitions to load: "
+		// + oldIntervals);
 
 		logger.info("Initialized data structures for partitions to load.");
+
 		// fill the partition data structures
 		fillVarsOfPartsToLoad();
 
@@ -207,6 +226,12 @@ public class LoaderM {
 			loadedIntEndOP = loadedIntEndOP + interval.getPartitionId() + " ";
 		}
 		logger.info(loadedIntEndOP);
+
+		logger.info("vertices after loading is complete");
+		for (int i = 0; i < vertices.length; i++) {
+			logger.info(vertices[i].getVertexId() + ": "
+					+ Arrays.toString(vertices[i].getOutEdges()));
+		}
 	}
 
 	/**
@@ -426,6 +451,8 @@ public class LoaderM {
 				logger.info("Parts to save by Loader: " + partsToSaveByLoader);
 			}
 
+			
+			
 			// 2. Save PartsSet
 
 			// 2.1. save partitions not in the next round
@@ -839,6 +866,8 @@ public class LoaderM {
 			indexSt = indexEd + 1;
 		}
 
+		logger.info("OldIntervals before starting lvi updates: " + oldIntervals);
+
 		boolean alreadyLoaded;
 		int intrvlIndxMarker = 0;
 		for (int i = 0; i < loadedparts.length; i++) {
@@ -881,6 +910,8 @@ public class LoaderM {
 			}
 
 		}
+
+		logger.info("OldIntervals before after lvi updates: " + oldIntervals);
 
 		if (oldIntervals != null) {
 			int oldIntvIdxSt = 0, oldIntvIdxEnd = 0, newIntvIdxSt = 0, newIntvIdxEnd = 0;
@@ -970,6 +1001,12 @@ public class LoaderM {
 
 		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
 				+ partitionId);
+		
+		logger.info("vertices before storing");
+		for (int i = 0; i < vertices.length; i++) {
+			logger.info(vertices[i].getVertexId() + ": "
+					+ Arrays.toString(vertices[i].getOutEdges()));
+		}
 
 		for (int i = 0; i < intervals.size(); i++) {
 

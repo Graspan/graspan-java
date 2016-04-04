@@ -28,7 +28,8 @@ import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 public class EngineEL {
 	private static final Logger logger = GraspanLogger.getLogger("Engine");
 	private ExecutorService computationExecutor;
-	private long totalNewEdges;
+	private long totalNewEdgs;
+	private long totalNewEdgsForIteratn;
 	private long totalDupEdges;
 	private long newEdgesInOne;
 	private long newEdgesInTwo;
@@ -82,7 +83,12 @@ public class EngineEL {
 		// Scheduler scheduler = new
 		// Scheduler(SchedulerInfo.getEdgeDestCount());
 
+		int roundNo = 0;
+
 		while (!scheduler.shouldTerminate()) {
+
+			roundNo++;
+			logger.info("STARTING ROUND NO #" + roundNo);
 			// partsToLoad =
 			// scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
 			// TODO: USE partitionEDC later
@@ -225,7 +231,7 @@ public class EngineEL {
 			setReadableIndex(edgesLists);
 			iterationNo++;
 
-			totalNewEdges = 0;
+			totalNewEdgsForIteratn = 0;
 			totalDupEdges = 0;
 			countDown.set(nWorkers);
 			// Parallel updates
@@ -312,7 +318,7 @@ public class EngineEL {
 						} finally {
 							int pending = countDown.decrementAndGet();
 							synchronized (termationLock) {
-								totalNewEdges += threadUpdates;
+								totalNewEdgsForIteratn += threadUpdates;
 								totalDupEdges += dups;
 								if (pending == 0) {
 									termationLock.notifyAll();
@@ -339,23 +345,35 @@ public class EngineEL {
 			}
 
 			// TODO: PRINTING NEW EDGES (COMMENT OUT LATER)
+			// for (int i = 0; i < vertices.length; i++) {
+			// logger.info("Vertex Id#" + vertices[i].getVertexId() + " "
+			// + Arrays.toString(vertices[i].getOutEdges())
+			// + " New Edges: " + edgesLists[i]);
+			// }
+
+			// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
+			logger.info("PRINTING DEGREES OF PARTITION AT THE END OF ITERATION");
 			for (int i = 0; i < vertices.length; i++) {
-				logger.info("Vertex Id#" + vertices[i].getVertexId() + " "
-						+ Arrays.toString(vertices[i].getOutEdges())
-						+ " New Edges: " + edgesLists[i]);
+				logger.info(vertices[i].getVertexId() + " | "
+						+ vertices[i].getNumOutEdges());
 			}
 
+			this.totalNewEdgs += totalNewEdgsForIteratn;
 			logger.info("========total # new edges for iteration #"
-					+ iterationNo + "is " + totalNewEdges);
+					+ iterationNo + " is " + totalNewEdgsForIteratn);
 			// logger.info("========total # dup edges for this iteration: "
 			// + totalDupEdges);
-		} while (totalNewEdges > 0);
+		} while (totalNewEdgsForIteratn > 0);
 
 		// set new edge added flag for scheduler
 		if (newEdgesInOne > 0)
 			intervals.get(0).setIsNewEdgeAdded(true);
 		if (newEdgesInTwo > 0)
 			intervals.get(1).setIsNewEdgeAdded(true);
+	}
+
+	public long get_totalNewEdgs() {
+		return totalNewEdgs;
 	}
 
 	/**

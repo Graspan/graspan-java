@@ -69,9 +69,13 @@ public class ComputationClient {
 				"LINEAR_SCAN_OF_LLISTS") == 0) {
 			EngineEL engine = new EngineEL();
 			engine.run();
+			logger.info("Total number of new edges created: "
+					+ engine.get_totalNewEdgs());
 		} else if (GlobalParams.getComputationLogic().compareTo("SMART_MERGE") == 0) {
 			EngineM engine = new EngineM();
 			engine.run();
+			logger.info("Total number of new edges created: "
+					+ engine.get_totalNewEdgs());
 		}
 		logger.info("FINISHED.");
 	}

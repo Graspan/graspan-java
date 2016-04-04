@@ -1,4 +1,4 @@
-INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/artificialgraph3/graph
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/artificialgraph4/graph
 TOTAL_NUM_PARTS = 4
 INPUT_GRAPH_TYPE = POINTSTO
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 1

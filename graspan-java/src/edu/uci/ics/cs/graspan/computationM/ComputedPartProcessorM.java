@@ -196,14 +196,14 @@ public class ComputedPartProcessorM {
 				// get the actual source id
 				src = i - partStart + part.getFirstVertex();
 
-				logger.info("The degree of vertex #"
-						+ src
-						+ " in partition #"
-						+ partId
-						+ " is "
-						+ loadPartOutDegs[a][PartitionQuerier
-								.getPartArrIdxFrmActualId(src, partId)]
-						+ " in loadPartOutDegs datastructure");
+				// logger.info("The degree of vertex #"
+				// + src
+				// + " in partition #"
+				// + partId
+				// + " is "
+				// + loadPartOutDegs[a][PartitionQuerier
+				// .getPartArrIdxFrmActualId(src, partId)]
+				// + " in loadPartOutDegs datastructure");
 
 				try {
 					partEdgeCount += loadPartOutDegs[a][PartitionQuerier

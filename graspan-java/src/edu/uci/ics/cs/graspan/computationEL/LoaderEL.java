@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -134,8 +135,26 @@ public class LoaderEL {
 			oldNewEdgeLists = new NewEdgesList[newEdgeLists.length];
 			System.arraycopy(newEdgeLists, 0, oldNewEdgeLists, 0,
 					newEdgeLists.length);
-			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>(
-					intervals);
+
+			// List<LoadedVertexInterval> oldIntervals = new
+			// ArrayList<LoadedVertexInterval>(
+			// intervals);
+
+			if (intervals.size() != 2) {
+				logger.info("Warning: intervals size is " + intervals.size());
+			}
+			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>();
+			for (int i = 0; i < intervals.size(); i++) {
+				LoadedVertexInterval intv_to_copy = new LoadedVertexInterval(
+						intervals.get(i).getFirstVertex(), intervals.get(i)
+								.getLastVertex(), intervals.get(i)
+								.getPartitionId());
+				intv_to_copy.setIndexStart(intervals.get(i).getIndexStart());
+				intv_to_copy.setIndexEnd(intervals.get(i).getIndexEnd());
+				intv_to_copy.setIsNewEdgeAdded(intervals.get(i).hasNewEdges());
+				oldIntervals.add(intv_to_copy);
+			}
+
 			this.oldIntervals = oldIntervals;
 		}
 
@@ -198,6 +217,7 @@ public class LoaderEL {
 			loadedIntEndOP = loadedIntEndOP + interval.getPartitionId() + " ";
 		}
 		logger.info(loadedIntEndOP);
+
 	}
 
 	/**

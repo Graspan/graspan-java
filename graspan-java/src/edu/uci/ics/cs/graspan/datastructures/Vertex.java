@@ -41,15 +41,7 @@ public class Vertex {
 	}
 
 	public int getNumOutEdges() {
-		// TODO:potential spot for a slow-down
-		// TODO: USE INDEX FOR EACH ARRAY
-		numOutEdges = 0;
-		for (int i = 0; i < outEdges.length; i++) {
-			if (outEdges[i] == -1) {
-				break;
-			}
-			numOutEdges++;
-		}
+		numOutEdges = outEdges.length;
 		return numOutEdges;
 	}
 
@@ -59,6 +51,7 @@ public class Vertex {
 
 	/**
 	 * Used by EdgeList Style Computation
+	 * 
 	 * @return
 	 */
 	public int getCombinedDeg() {

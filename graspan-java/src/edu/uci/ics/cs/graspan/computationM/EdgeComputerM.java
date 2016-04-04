@@ -215,9 +215,9 @@ public class EdgeComputerM {
 		valArrstoMerge[0] = this.compSet.getOldUnewVals();
 		int srcRowId = 0;
 		rows_to_merge_id++;
-//		logger.info("Vertex Id: " + this.vertex.getVertexId()
-//				+ " Edge Arrays to merge (source row):"
-//				+ Arrays.toString(edgArrstoMerge[0]));
+		logger.info("Vertex Id: " + this.vertex.getVertexId()
+				+ " Edge Arrays to merge (source row):"
+				+ Arrays.toString(edgArrstoMerge[0]));
 
 		// 3.2. now store the new component rows
 		for (Integer id : newIdsToMerge) {
@@ -250,7 +250,7 @@ public class EdgeComputerM {
 		// 4. call the SortedArrMerger merge function
 		SortedArrMerger sortedArrMerger = new SortedArrMerger();
 
-		logger.info("Vertex ID: " + this.vertex.getVertexId());
+//		logger.info("Vertex ID: " + this.vertex.getVertexId());
 		sortedArrMerger
 				.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
 

@@ -125,9 +125,10 @@ public class SortedArrMerger {
 	 */
 	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge,
 			int srcRowId) {
-		// logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
-		// + " ThreadNo:" + Thread.currentThread().getId());
+		logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge)
+				+ " ThreadNo:" + Thread.currentThread().getId());
 		assert (delta_ptr == -1);
+		assert (srcRowId == 0);
 
 		MinSet minSetFrmTgtRows = new MinSet();
 		MinSet minSetFromSrcRow = new MinSet();
@@ -162,8 +163,8 @@ public class SortedArrMerger {
 			src_oldUnewUdelta_edgs[i] = -1;
 			src_oldUnewUdelta_vals[i] = -1;
 		}
-		logger.info("LENGTH OF OLDUNEWUDELTA FROM SAM"
-				+ src_oldUnewUdelta_edgs.length);
+		// logger.info("LENGTH OF OLDUNEWUDELTA FROM SAM: "
+		// + src_oldUnewUdelta_edgs.length);
 
 		// generate the minSets for all rows to merge
 		int i = 0;
@@ -231,7 +232,7 @@ public class SortedArrMerger {
 		int[] tempEdgs = new int[oldUnewUdelta_ptr + 1];
 		byte[] tempVals = new byte[oldUnewUdelta_ptr + 1];
 
-		for (int j = 0; j < oldUnewUdelta_ptr+1; j++) {
+		for (int j = 0; j < oldUnewUdelta_ptr + 1; j++) {
 			tempEdgs[j] = src_oldUnewUdelta_edgs[j];
 			tempVals[j] = src_oldUnewUdelta_vals[j];
 		}
@@ -243,7 +244,7 @@ public class SortedArrMerger {
 		tempEdgs = new int[delta_ptr + 1];
 		tempVals = new byte[delta_ptr + 1];
 
-		for (int j = 0; j < delta_ptr+1; j++) {
+		for (int j = 0; j < delta_ptr + 1; j++) {
 			tempEdgs[j] = src_delta_edgs[j];
 			tempVals[j] = src_delta_vals[j];
 		}
@@ -310,13 +311,13 @@ public class SortedArrMerger {
 		// logger.info("Processing SrcMinSet # " + minSetFrmSrcRow.getMinSetId()
 		// + " and TgtMinSet # " + minSetFrmTgtRows.getMinSetId()
 		// + " ThreadNo:" + Thread.currentThread().getId());
-
+		//
 		// logger.info("minset from target rows:");
-		// logger.info(minSetFrmTgtRows.getCurrentVId());
-		// logger.info(minSetFrmTgtRows.getEvals());
+		// logger.info(minSetFrmTgtRows.getCurrentVId()+"");
+		// logger.info(minSetFrmTgtRows.getEvals()+"");
 		// logger.info("minset from source row:");
-		// logger.info(minSetFrmSrcRow.getCurrentVId());
-		// logger.info(minSetFrmSrcRow.getEvals());
+		// logger.info(minSetFrmSrcRow.getCurrentVId()+"");
+		// logger.info(minSetFrmSrcRow.getEvals()+"");
 
 		// case 1
 		if (minSetFrmTgtRows.getCurrentVId() < minSetFrmSrcRow.getCurrentVId()) {
