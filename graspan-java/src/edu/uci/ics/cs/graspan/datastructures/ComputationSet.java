@@ -118,4 +118,20 @@ public class ComputationSet {
 		this.oldUnewUdeltaVals = oldUnewUdeltaVals;
 	}
 
+	public ComputationSet(){
+		this.oldEdgs = new int[0];
+		this.oldVals = new byte[0];
+		
+		this.newEdgs = new int[0];
+		this.newVals = new byte[0];
+		
+		this.oldUnewEdgs = new int[0];
+		this.oldUnewVals = new byte[0];
+		
+		this.deltaEdgs = new int[0];
+		this.deltaVals = new byte[0];
+		
+		this.oldUnewUdeltaEdgs = new int[0];
+		this.oldUnewUdeltaVals = new byte[0];
+	}
 }

@@ -17,8 +17,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  */
 public class EdgeComputerM {
 
-	private static final Logger logger = GraspanLogger
-			.getLogger("EdgeComputer");
+	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
 	private static Vertex[] vertices = null;
 	private static ComputationSet[] compSets;
@@ -100,29 +99,29 @@ public class EdgeComputerM {
 		int[] newEdgs = this.compSet.getNewEdgs();
 
 		// 1.2. if there is nothing to merge, return
-//		boolean oldEdgs_empty = false, newEdgs_empty = false;
-//		if (oldEdgs != null) {
-//			if (oldEdgs.length == 0) {
-//				oldEdgs_empty = true;
-//			} else if (oldEdgs[0] == -1) {
-//				oldEdgs_empty = true;
-//			}
-//		}
-//		if (newEdgs != null) {
-//			if (newEdgs.length == 0) {
-//				newEdgs_empty = true;
-//			} else if (newEdgs[0] == -1) {
-//				newEdgs_empty = true;
-//			}
-//		}
+		// boolean oldEdgs_empty = false, newEdgs_empty = false;
+		// if (oldEdgs != null) {
+		// if (oldEdgs.length == 0) {
+		// oldEdgs_empty = true;
+		// } else if (oldEdgs[0] == -1) {
+		// oldEdgs_empty = true;
+		// }
+		// }
+		// if (newEdgs != null) {
+		// if (newEdgs.length == 0) {
+		// newEdgs_empty = true;
+		// } else if (newEdgs[0] == -1) {
+		// newEdgs_empty = true;
+		// }
+		// }
 		boolean oldEdgs_empty = true, newEdgs_empty = true;
-		if(oldEdgs != null && oldEdgs.length != 0 && oldEdgs[0] != -1){
+		if (oldEdgs != null && oldEdgs.length != 0 && oldEdgs[0] != -1) {
 			oldEdgs_empty = false;
 		}
-		if(newEdgs != null && newEdgs.length != 0 && newEdgs[0] != -1){
+		if (newEdgs != null && newEdgs.length != 0 && newEdgs[0] != -1) {
 			newEdgs_empty = false;
 		}
-		
+
 		if (oldEdgs_empty && newEdgs_empty)
 			return;
 
@@ -139,11 +138,10 @@ public class EdgeComputerM {
 		getRowIdsToMerge(newEdgs, newEdgs_empty, oldUnewIdsToMerge);
 
 		// 2.3. if we have found no rows to merge
-//		if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
-//			return;
+		// if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
+		// return;
 
-		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size()
-				+ newIdsToMerge.size();
+		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size() + newIdsToMerge.size();
 
 		// 3. store the refs to rows in edgArrstoMerge & valArrstoMerge
 		int[][] edgArrstoMerge = new int[num_of_rows_to_merge][];
@@ -156,17 +154,16 @@ public class EdgeComputerM {
 		valArrstoMerge[0] = this.compSet.getOldUnewVals();
 		int srcRowId = 0;
 		rows_to_merge_id++;
-		logger.info("Vertex Id: " + this.vertex.getVertexId()
-				+ " Edge Arrays to merge (source row):"
+		logger.info("Vertex Id: " + this.vertex.getVertexId() + " Edge Arrays to merge (source row):"
 				+ Arrays.toString(edgArrstoMerge[0]));
 
 		// 3.2. now store the new component rows
 		for (Integer id : newIdsToMerge) {
 			edgArrstoMerge[rows_to_merge_id] = compSets[id].getNewEdgs();
 			valArrstoMerge[rows_to_merge_id] = compSets[id].getNewVals();
-//			logger.info("Vertex Id: " + vertices[id].getVertexId()
-//					+ " Edge Arrays to merge (new component rows):"
-//					+ Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
+			// logger.info("Vertex Id: " + vertices[id].getVertexId()
+			// + " Edge Arrays to merge (new component rows):"
+			// + Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
 			// logger.info("Look This! vertex id#" + vertices[id].getVertexId()
 			// + " " + Arrays.toString(vertices[id].getOutEdges()));
 			rows_to_merge_id++;
@@ -176,9 +173,9 @@ public class EdgeComputerM {
 		for (Integer id : oldUnewIdsToMerge) {
 			edgArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewEdgs();
 			valArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewVals();
-//			logger.info("Vertex Id: " + vertices[id].getVertexId()
-//					+ " Edge Arrays to merge (oldUnew component rows):"
-//					+ Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
+			// logger.info("Vertex Id: " + vertices[id].getVertexId()
+			// + " Edge Arrays to merge (oldUnew component rows):"
+			// + Arrays.toString(edgArrstoMerge[rows_to_merge_id]));
 			rows_to_merge_id++;
 		}
 
@@ -191,19 +188,16 @@ public class EdgeComputerM {
 		// 4. call the SortedArrMerger merge function
 		SortedArrMerger sortedArrMerger = new SortedArrMerger();
 
-//		logger.info("Vertex ID: " + this.vertex.getVertexId());
-		sortedArrMerger
-				.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
+		// logger.info("Vertex ID: " + this.vertex.getVertexId());
+		sortedArrMerger.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
 
 		this.compSet.setDeltaEdges(sortedArrMerger.get_src_delta_edgs());
 		// logger.info(" WILL THIS WORK "
 		// + Arrays.toString(this.compSet.getDeltaEdgs()) + " for vertex "
 		// + this.vertex.getVertexId());
 		this.compSet.setDeltaVals(sortedArrMerger.get_src_delta_vals());
-		this.compSet.setOldUnewUdeltaEdgs(sortedArrMerger
-				.get_src_oldUnewUdelta_edgs());
-		this.compSet.setOldUnewUdeltaVals(sortedArrMerger
-				.get_src_oldUnewUdelta_vals());
+		this.compSet.setOldUnewUdeltaEdgs(sortedArrMerger.get_src_oldUnewUdelta_edgs());
+		this.compSet.setOldUnewUdeltaVals(sortedArrMerger.get_src_oldUnewUdelta_vals());
 
 		// logger.info("deltaEdgs: "
 		// + Arrays.toString(this.compSet.getDeltaEdgs())
@@ -232,20 +226,19 @@ public class EdgeComputerM {
 					newTgt = edgs[i];
 					for (int j = 0; j < intervals.size(); j++) {
 						interval = intervals.get(j);
-						if (newTgt >= interval.getFirstVertex()
-								&& newTgt <= interval.getLastVertex()) {
-							targetRowId = newTgt - interval.getFirstVertex()
-									+ interval.getIndexStart();
+						if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
+							targetRowId = newTgt - interval.getFirstVertex() + interval.getIndexStart();
 							assert (targetRowId != -1);
 						}
 					}
 					if (targetRowId == -1)
 						continue;
 
-					if (compSets[targetRowId].getOldUnewEdgs() != null && compSets[targetRowId].getOldUnewEdgs().length > 0) {
+					if (compSets[targetRowId].getOldUnewEdgs() != null
+							&& compSets[targetRowId].getOldUnewEdgs().length > 0) {
 						// ignore rows that have no outgoing edges
 
-//						oldUnewIdsToMerge.add(targetRowId);
+						// oldUnewIdsToMerge.add(targetRowId);
 						idsToMerge.add(targetRowId);
 
 					}
