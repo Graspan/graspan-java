@@ -120,82 +120,15 @@ public class EdgeComputerM {
 
 		// 2. get the rows to merge
 
-		LoadedVertexInterval interval;
 		HashSet<Integer> newIdsToMerge = new HashSet<Integer>();
 		HashSet<Integer> oldUnewIdsToMerge = new HashSet<Integer>();
 
 		// 2.1. get the ids of the new_components to merge
-		int targetRowId = -1;
-		int newTgt = -1;
-		if (!oldEdgs_empty) {
-			for (int i = 0; i < oldEdgs.length; i++) {
-
-				if (oldEdgs[i] == -1)
-					break;
-
-				// if the target is not a source vertex
-				if (oldEdgs[i] != this.vertex.getVertexId()) {
-					newTgt = oldEdgs[i];
-					for (int j = 0; j < intervals.size(); j++) {
-						interval = intervals.get(j);
-						if (newTgt >= interval.getFirstVertex()
-								&& newTgt <= interval.getLastVertex()) {
-							targetRowId = newTgt - interval.getFirstVertex()
-									+ interval.getIndexStart();
-							assert (targetRowId != -1);
-						}
-					}
-					if (targetRowId == -1)
-						continue;
-
-					if (vertices[targetRowId].getOutEdges().length > 0) {
-						// ignore rows that have no outgoing edges
-
-						oldUnewIdsToMerge.add(targetRowId);
-
-					}
-				}
-
-			}
-		}
+		getRowIdsToMerge(oldEdgs, oldEdgs_empty, newIdsToMerge);
 
 		// 2.2. get the ids of the oldUnew_components to merge by scanning new
 		// edges
-		targetRowId = -1;
-		newTgt = -1;
-		if (!newEdgs_empty) {
-			for (int i = 0; i < newEdgs.length; i++) {
-				if (newEdgs[i] == -1)
-					break;
-
-				// if the target is not a source vertex
-				if (newEdgs[i] != this.vertex.getVertexId()) {
-					newTgt = newEdgs[i];
-					for (int j = 0; j < intervals.size(); j++) {
-						interval = intervals.get(j);
-						if (newTgt >= interval.getFirstVertex()
-								&& newTgt <= interval.getLastVertex()) {
-							// the target lies on this interval
-
-							targetRowId = newTgt - interval.getFirstVertex()
-									+ interval.getIndexStart();
-							assert (targetRowId != -1);
-						}
-					}
-
-					if (targetRowId == -1)
-						continue;
-
-					if (vertices[targetRowId].getOutEdges().length > 0) {
-						// ignore rows that have no outgoing edges
-
-						newIdsToMerge.add(targetRowId);
-
-					}
-				}
-
-			}
-		}
+		getRowIdsToMerge(newEdgs, newEdgs_empty, oldUnewIdsToMerge);
 
 		// 2.3. if we have found no rows to merge
 		if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
@@ -274,5 +207,43 @@ public class EdgeComputerM {
 		// logger.info("NEW EDGES!! " + nNewEdges + " for vertex no."
 		// + vertex.getVertexId());
 
+	}
+
+	private void getRowIdsToMerge(int[] edgs, boolean edgs_empty, HashSet<Integer> idsToMerge) {
+		int targetRowId = -1;
+		LoadedVertexInterval interval;
+		int newTgt = -1;
+		if (!edgs_empty) {
+			for (int i = 0; i < edgs.length; i++) {
+
+				if (edgs[i] == -1)
+					break;
+
+				// if the target is not a source vertex
+				if (edgs[i] != this.vertex.getVertexId()) {
+					newTgt = edgs[i];
+					for (int j = 0; j < intervals.size(); j++) {
+						interval = intervals.get(j);
+						if (newTgt >= interval.getFirstVertex()
+								&& newTgt <= interval.getLastVertex()) {
+							targetRowId = newTgt - interval.getFirstVertex()
+									+ interval.getIndexStart();
+							assert (targetRowId != -1);
+						}
+					}
+					if (targetRowId == -1)
+						continue;
+
+					if (vertices[targetRowId].getOutEdges().length > 0) {
+						// ignore rows that have no outgoing edges
+
+//						oldUnewIdsToMerge.add(targetRowId);
+						idsToMerge.add(targetRowId);
+
+					}
+				}
+
+			}
+		}
 	}
 }

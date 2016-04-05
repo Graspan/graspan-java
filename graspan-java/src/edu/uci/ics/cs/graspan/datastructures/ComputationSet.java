@@ -13,8 +13,8 @@ public class ComputationSet {
 
 	// old
 
-	private int oldEdgs[] = new int[0];
-	private byte oldVals[] = new byte[0];
+	private int oldEdgs[];
+	private byte oldVals[];
 
 	public int[] getOldEdgs() {
 		return oldEdgs;
@@ -34,8 +34,8 @@ public class ComputationSet {
 
 	// new
 
-	private int newEdgs[] = new int[0];
-	private byte newVals[] = new byte[0];
+	private int newEdgs[];
+	private byte newVals[];
 
 	public int[] getNewEdgs() {
 		return newEdgs;
@@ -55,8 +55,8 @@ public class ComputationSet {
 
 	// oldUnew
 
-	private int oldUnewEdgs[] = new int[0];
-	private byte oldUnewVals[] = new byte[0];
+	private int oldUnewEdgs[];
+	private byte oldUnewVals[];
 
 	public int[] getOldUnewEdgs() {
 		return oldUnewEdgs;
@@ -78,8 +78,8 @@ public class ComputationSet {
 
 	// delta
 
-	private int deltaEdgs[] = new int[0];
-	private byte deltaVals[] = new byte[0];
+	private int deltaEdgs[];
+	private byte deltaVals[];
 
 	public int[] getDeltaEdgs() {
 		return deltaEdgs;
@@ -99,8 +99,8 @@ public class ComputationSet {
 
 	// oldUnewUdelta
 
-	private int oldUnewUdeltaEdgs[] = new int[0];
-	private byte oldUnewUdeltaVals[] = new byte[0];
+	private int oldUnewUdeltaEdgs[];
+	private byte oldUnewUdeltaVals[];
 
 	public int[] getOldUnewUdeltaEdgs() {
 		return oldUnewUdeltaEdgs;

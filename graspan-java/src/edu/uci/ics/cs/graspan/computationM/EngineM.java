@@ -106,25 +106,24 @@ public class EngineM {
 			// INITIAL SETUP OF THE COMPUTATION SET (FOR THE FIRST ITERATION OF
 			// A LOADED SET OF PARTITIONS)
 			ComputationSet[] compSets = new ComputationSet[vertices.length];
-			int[] nullEdgs = new int[0];
-			byte[] nullVals = new byte[0];
+//			int[] nullEdgs = new int[0];
+//			byte[] nullVals = new byte[0];
 			for (int i = 0; i < compSets.length; i++) {
 				compSets[i] = new ComputationSet();
-				compSets[i].setOldEdgs(nullEdgs);
-				compSets[i].setOldVals(nullVals);
+//				compSets[i].setOldEdgs(nullEdgs);
+//				compSets[i].setOldVals(nullVals);
 				compSets[i].setNewEdgs(vertices[i].getOutEdges());
 				compSets[i].setNewVals(vertices[i].getOutEdgeValues());
 				compSets[i].setOldUnewEdgs(vertices[i].getOutEdges());
 				compSets[i].setOldUnewVals(vertices[i].getOutEdgeValues());
 			}
 
-			List<LoadedVertexInterval> intervals = null;
+			List<LoadedVertexInterval> intervals;
 			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
 			intervals = loader.getIntervals();
 
 			// this only does a shallow copy
-			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(
-					intervals);
+			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList<LoadedVertexInterval>(intervals);
 			scheduler.setLoadedIntervals(intervalsForScheduler);
 			logger.info("\nLVI after loading : " + intervals);
 			assert (vertices != null && vertices.length > 0);
@@ -236,10 +235,10 @@ public class EngineM {
 							.getOldUnewUdeltaEdgs());
 					compSets[i].setOldUnewVals(compSets_prevIt[i]
 							.getOldUnewUdeltaVals());
-					nullDeltaEdgs = new int[0];
-					nullOldUnewUdeltaEdgs = new int[0];
-					nullDeltaVals = new byte[0];
-					nullOldUnewUdeltaVals = new byte[0];
+					nullDeltaEdgs = null;
+					nullOldUnewUdeltaEdgs = null;
+					nullDeltaVals = null;
+					nullOldUnewUdeltaVals = null;
 					compSets[i].setDeltaEdges(nullDeltaEdgs);
 					compSets[i].setDeltaVals(nullDeltaVals);
 					compSets[i].setOldUnewUdeltaEdgs(nullOldUnewUdeltaEdgs);
@@ -402,8 +401,7 @@ public class EngineM {
 			// TODO: NEED TO TEST THIS
 			for (int i = 0; i < vertices.length; i++) {
 				vertices[i].setOutEdges(compSets[i].getOldUnewUdeltaEdgs());
-				vertices[i]
-						.setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
+				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
 			}
 
 			// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
