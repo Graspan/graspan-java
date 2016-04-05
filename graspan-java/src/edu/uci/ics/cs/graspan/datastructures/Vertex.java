@@ -14,8 +14,9 @@ public class Vertex {
 
 	private int id;
 	private int numOutEdges;
-	private int[] outEdges = null;
-	private byte[] outEdgeValues = null;
+	
+	private int[] outEdges;
+	private byte[] outEdgeValues;
 
 	// the degree of the vertex counting original out edges and newly computed
 	// out edges
@@ -38,10 +39,18 @@ public class Vertex {
 		this.numOutEdges = 0;
 		this.outEdges = outEdges;
 		this.outEdgeValues = outEdgeValues;
+		if(outEdges != null){
+			this.numOutEdges = outEdges.length;
+//			assert(this.outEdges.length == this.outEdgeValues.length);
+		}
 	}
 
 	public int getNumOutEdges() {
-		numOutEdges = outEdges.length;
+		this.numOutEdges = 0;
+		
+		if(this.outEdges != null){
+			numOutEdges = outEdges.length;
+		}
 		return numOutEdges;
 	}
 

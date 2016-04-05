@@ -111,8 +111,7 @@ public class EngineEL {
 			intervals = loader.getIntervals();
 
 			// this only does a shallow copy
-			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList(
-					intervals);
+			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList<LoadedVertexInterval>(intervals);
 			scheduler.setLoadedIntervals(intervalsForScheduler);
 			logger.info("\nLVI after loading : " + intervals);
 			assert (vertices != null && vertices.length > 0);
@@ -153,7 +152,9 @@ public class EngineEL {
 			EdgeComputerEL.setEdgesLists(edgesLists);
 			EdgeComputerEL.setVertices(vertices);
 			EdgeComputerEL.setIntervals(intervals);
+			
 			doComputation(vertices, edgesLists, edgeComputers, intervals);
+			
 			logger.info("Finish computation...");
 			logger.info("Computation and edge addition took: "
 					+ (System.currentTimeMillis() - t) + " ms");
@@ -168,8 +169,7 @@ public class EngineEL {
 			int numPartsStart = AllPartitions.getPartAllocTab().length;
 			RepartitioningData.initRepartioningVars();
 			ComputedPartProcessorEL.initRepartitionConstraints();
-			ComputedPartProcessorEL.processParts(vertices, edgesLists,
-					intervals);
+			ComputedPartProcessorEL.processParts(vertices, edgesLists, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
 			// logger.info("termination map before: " + scheduler.toString());
 			// for (int i = 0; i < vertices.length; i++) {

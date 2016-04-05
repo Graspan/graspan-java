@@ -106,12 +106,8 @@ public class EngineM {
 			// INITIAL SETUP OF THE COMPUTATION SET (FOR THE FIRST ITERATION OF
 			// A LOADED SET OF PARTITIONS)
 			ComputationSet[] compSets = new ComputationSet[vertices.length];
-//			int[] nullEdgs = new int[0];
-//			byte[] nullVals = new byte[0];
 			for (int i = 0; i < compSets.length; i++) {
 				compSets[i] = new ComputationSet();
-//				compSets[i].setOldEdgs(nullEdgs);
-//				compSets[i].setOldVals(nullVals);
 				compSets[i].setNewEdgs(vertices[i].getOutEdges());
 				compSets[i].setNewVals(vertices[i].getOutEdgeValues());
 				compSets[i].setOldUnewEdgs(vertices[i].getOutEdges());
@@ -139,7 +135,9 @@ public class EngineM {
 			EdgeComputerM.setComputationSets(compSets);
 			EdgeComputerM.setVertices(vertices);
 			EdgeComputerM.setIntervals(intervals);
+			
 			doComputation(vertices, compSets, edgeComputers, intervals);
+			
 			logger.info("Finish computation...");
 			logger.info("Computation and edge addition took: "
 					+ (System.currentTimeMillis() - t) + " ms");

@@ -191,13 +191,18 @@ public class SortedArrMerger {
 			minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
 
 			if (minSetFrmTgtRows == null) {
-				break;
+				minSetFrmTgtRows = new MinSet();
+				minSetFrmTgtRows.setMinSetId(Integer.MAX_VALUE);
+//				break;
 			} else {
 				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
 						&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
 					break;
 				}
 			}
+			
+			
+			
 			// logger.info("minSetFrmTgtRows: " + minSetFrmTgtRows +
 			// " ThreadNo:"
 			// + Thread.currentThread().getId());

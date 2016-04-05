@@ -1,4 +1,4 @@
-INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/artificialgraph4/graph
+INPUT_GRAPH_FILEPATH = /home/icuzzq/Workspace/git/graspan/graspan-java/graph
 TOTAL_NUM_PARTS = 4
 RELOAD_PLAN = RELOAD_PLAN_2 #(OPTIONS: RELOAD_PLAN_2)
 EDC_SIZE = 50 

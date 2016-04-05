@@ -100,21 +100,29 @@ public class EdgeComputerM {
 		int[] newEdgs = this.compSet.getNewEdgs();
 
 		// 1.2. if there is nothing to merge, return
-		boolean oldEdgs_empty = false, newEdgs_empty = false;
-		if (oldEdgs != null) {
-			if (oldEdgs.length == 0) {
-				oldEdgs_empty = true;
-			} else if (oldEdgs[0] == -1) {
-				oldEdgs_empty = true;
-			}
+//		boolean oldEdgs_empty = false, newEdgs_empty = false;
+//		if (oldEdgs != null) {
+//			if (oldEdgs.length == 0) {
+//				oldEdgs_empty = true;
+//			} else if (oldEdgs[0] == -1) {
+//				oldEdgs_empty = true;
+//			}
+//		}
+//		if (newEdgs != null) {
+//			if (newEdgs.length == 0) {
+//				newEdgs_empty = true;
+//			} else if (newEdgs[0] == -1) {
+//				newEdgs_empty = true;
+//			}
+//		}
+		boolean oldEdgs_empty = true, newEdgs_empty = true;
+		if(oldEdgs != null && oldEdgs.length != 0 && oldEdgs[0] != -1){
+			oldEdgs_empty = false;
 		}
-		if (newEdgs != null) {
-			if (newEdgs.length == 0) {
-				newEdgs_empty = true;
-			} else if (newEdgs[0] == -1) {
-				newEdgs_empty = true;
-			}
+		if(newEdgs != null && newEdgs.length != 0 && newEdgs[0] != -1){
+			newEdgs_empty = false;
 		}
+		
 		if (oldEdgs_empty && newEdgs_empty)
 			return;
 
@@ -131,8 +139,8 @@ public class EdgeComputerM {
 		getRowIdsToMerge(newEdgs, newEdgs_empty, oldUnewIdsToMerge);
 
 		// 2.3. if we have found no rows to merge
-		if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
-			return;
+//		if (oldUnewIdsToMerge.size() + newIdsToMerge.size() == 0)
+//			return;
 
 		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size()
 				+ newIdsToMerge.size();
@@ -234,7 +242,7 @@ public class EdgeComputerM {
 					if (targetRowId == -1)
 						continue;
 
-					if (vertices[targetRowId].getOutEdges().length > 0) {
+					if (compSets[targetRowId].getOldUnewEdgs() != null && compSets[targetRowId].getOldUnewEdgs().length > 0) {
 						// ignore rows that have no outgoing edges
 
 //						oldUnewIdsToMerge.add(targetRowId);
