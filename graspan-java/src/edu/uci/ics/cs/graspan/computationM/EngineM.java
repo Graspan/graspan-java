@@ -64,7 +64,7 @@ public class EngineM {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 		// TODO: REMOVE THIS LATER
-		nThreads = 8;
+		nThreads = 1;
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
 
 		// -------------------------------------------------------------------------------

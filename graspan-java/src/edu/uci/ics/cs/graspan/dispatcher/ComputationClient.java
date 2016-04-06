@@ -53,6 +53,9 @@ public class ComputationClient {
 			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) {
 				GlobalParams.setComputationLogic(tok[2]);
 			}
+			if (tok[0].compareTo("<END>") == 0) {
+				break;
+			}
 		}
 
 		computationConfigStream.close();
