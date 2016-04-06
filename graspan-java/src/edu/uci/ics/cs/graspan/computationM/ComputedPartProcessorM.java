@@ -241,7 +241,7 @@ public class ComputedPartProcessorM {
 				// thus, we add the id of this source vertex as a split
 				// point
 
-				logger.info("partEdgeCount: "+partEdgeCount+" i: "+i+" PartEnd: "+partEnd);
+//				logger.info("partEdgeCount: "+partEdgeCount+" i: "+i+" PartEnd: "+partEnd);
 				if ((partEdgeCount > PART_MAX_POST_NEW_EDGES) && (i != partEnd)) {
 					logger.info("it repartitioned");
 					splitVertices.add(src);
@@ -261,11 +261,11 @@ public class ComputedPartProcessorM {
 		}
 
 		// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
-		logger.info("PRINTING DEGREES OF PARTITION");
-		for (int i = 0; i < vertices.length; i++) {
-			logger.info(vertices[i].getVertexId() + " | "
-					+ vertices[i].getNumOutEdges());
-		}
+//		logger.info("PRINTING DEGREES OF PARTITION");
+//		for (int i = 0; i < vertices.length; i++) {
+//			logger.info(vertices[i].getVertexId() + " | "
+//					+ vertices[i].getNumOutEdges());
+//		}
 
 		/*
 		 * 2. Creating new partitions based on split vertices, and updating all

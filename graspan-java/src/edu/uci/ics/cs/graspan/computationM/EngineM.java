@@ -255,7 +255,7 @@ public class EngineM {
 	 */
 	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
 			final Vertex[] vertices, final ComputationSet[] compSets, 
-			List<LoadedVertexInterval> intervals, final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
+			final List<LoadedVertexInterval> intervals, final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
 			final int indexEndForTwo) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
