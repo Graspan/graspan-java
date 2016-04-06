@@ -13,8 +13,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class ComputationClient {
 
-	private static final Logger logger = GraspanLogger
-			.getLogger("ComputationClient");
+	private static final Logger logger = GraspanLogger.getLogger("ComputationClient");
 
 	public static void main(String args[]) throws IOException {
 
@@ -24,8 +23,7 @@ public class ComputationClient {
 		 * Scan the Computer-client config file
 		 */
 		BufferedReader computationConfigStream = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(
-						computationConfigFilename))));
+				new InputStreamReader(new FileInputStream(new File(computationConfigFilename))));
 		String ln;
 
 		String[] tok;
@@ -61,21 +59,17 @@ public class ComputationClient {
 
 		logger.info("Starting computation.");
 		logger.info("Total number of partitions: " + GlobalParams.getNumParts());
-		logger.info("Number of parts per computation: "
-				+ GlobalParams.getNumPartsPerComputation());
+		logger.info("Number of parts per computation: " + GlobalParams.getNumPartsPerComputation());
 		logger.info("Reload plan: " + GlobalParams.getReloadPlan());
 
-		if (GlobalParams.getComputationLogic().compareTo(
-				"LINEAR_SCAN_OF_LLISTS") == 0) {
+		if (GlobalParams.getComputationLogic().compareTo("LINEAR_SCAN_OF_LLISTS") == 0) {
 			EngineEL engine = new EngineEL();
 			engine.run();
-			logger.info("Total number of new edges created: "
-					+ engine.get_totalNewEdgs());
+			logger.info("Total number of new edges created: " + engine.get_totalNewEdgs());
 		} else if (GlobalParams.getComputationLogic().compareTo("SMART_MERGE") == 0) {
 			EngineM engine = new EngineM();
 			engine.run();
-			logger.info("Total number of new edges created: "
-					+ engine.get_totalNewEdgs());
+			logger.info("Total number of new edges created: " + engine.get_totalNewEdgs());
 		}
 		logger.info("FINISHED.");
 	}

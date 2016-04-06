@@ -7,20 +7,20 @@ public class MinSet {
 	// always points to the minimum element
 	private int ptr;
 
-	private int minSetId;
+	private final int minSetId;
+	
 	private int currentVId;
+	
 	private HashSet<Byte> evals;
 
 	public int getMinSetId() {
 		return minSetId;
 	}
 
-	public void setMinSetId(int id) {
-		minSetId = id;
-	}
 
-	public MinSet() {
-		ptr = -1;
+	public MinSet(int minSetId) {
+		ptr = 0;
+		this.minSetId = minSetId;
 		evals = new HashSet<Byte>();
 	}
 

@@ -18,8 +18,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  */
 public class PreprocessorClient {
 
-	private static final Logger logger = GraspanLogger
-			.getLogger("PreprocessorClient");
+	private static final Logger logger = GraspanLogger.getLogger("PreprocessorClient");
 
 	public static void main(String[] args) throws IOException {
 
@@ -29,8 +28,7 @@ public class PreprocessorClient {
 		 * Scan the Computer-client config file
 		 */
 		BufferedReader preprocessorConfigStream = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(
-						preprocessorConfigFilename))));
+				new InputStreamReader(new FileInputStream(new File(preprocessorConfigFilename))));
 		String ln;
 
 		String[] tok;
@@ -53,37 +51,31 @@ public class PreprocessorClient {
 		preprocessorConfigStream.close();
 
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
-		logger.info("Requested # partitions to generate: "
-				+ GlobalParams.getNumParts());
+		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
 
 		// initialize Partition Generator Program
 		logger.info("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
-		Preprocessor partgenerator = initPartGenerator(
-				GlobalParams.getBasefilename(), GlobalParams.getNumParts());
+		
+		Preprocessor partgenerator = initPartGenerator(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
 
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
-		partgenerator.generateGraphDegs(new FileInputStream(new File(
-				GlobalParams.getBasefilename())));
+		partgenerator.generateGraphDegs(new FileInputStream(new File(GlobalParams.getBasefilename())));
 		long degGenDuration = System.nanoTime() - degGenStartTime;
-		logger.info("Total time to create degrees file (nanoseconds): "
-				+ degGenDuration);
+		logger.info("Total time to create degrees file (nanoseconds): " + degGenDuration);
 
 		// creating the partitions
 		long creatingPartsStartTime = System.nanoTime();
 		partgenerator.createPartVIntervals();
-		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(
-				GlobalParams.getBasefilename())));
+		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(GlobalParams.getBasefilename())));
 		partgenerator.generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
-		logger.info("Total time to create partitions (nanoseconds):"
-				+ creatingPartsDuration);
+		logger.info("Total time to create partitions (nanoseconds):" + creatingPartsDuration);
 
 		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
-		logger.info("Total preprocessing time (nanoseconds): "
-				+ preprocDuration);
+		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);
 
 	}
 
@@ -93,8 +85,7 @@ public class PreprocessorClient {
 	 * @param inputGraphPath
 	 * @param numParts
 	 */
-	protected static Preprocessor initPartGenerator(String inputGraphPath,
-			int numParts) throws IOException {
+	protected static Preprocessor initPartGenerator(String inputGraphPath, int numParts) throws IOException {
 		return new Preprocessor(inputGraphPath, numParts);
 	}
 }
