@@ -1,6 +1,16 @@
-INPUT_GRAPH_FILEPATH = /home/icuzzq/Workspace/git/graspan/graspan-java/graph
+INPUT_GRAPH_FILEPATH = graph
 TOTAL_NUM_PARTS = 4
-INPUT_GRAPH_TYPE = POINTSTO
+INPUT_GRAPH_TYPE = DATAFLOW
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 1
+-----------------------------------------------------------------------------------
+#kernel graph parameters:
+#INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
+#TOTAL_NUM_PARTS = 100
+#INPUT_GRAPH_TYPE = DATAFLOW
+#INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
 
-
+#graph with no duplicate edges parameters:
+#INPUT_GRAPH_FILEPATH = graph
+#TOTAL_NUM_PARTS = 4
+#INPUT_GRAPH_TYPE = DATAFLOW
+#INPUT_GRAPH_NUMBERING_STARTS_FROM = 1
