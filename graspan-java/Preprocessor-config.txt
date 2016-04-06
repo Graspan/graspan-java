@@ -1,11 +1,11 @@
-<BEGIN CONFIGFILE>
+<BEGIN_CONFIGFILE>
 
 INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
 TOTAL_NUM_PARTS = 100
 INPUT_GRAPH_TYPE = DATAFLOW
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
 
-<END CONFIGFILE>
+<END_CONFIGFILE>
 
 ========REPLACE CONFIG BODY WITH THE FOLLOWING TO USE "kernel graph"==========
 INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
