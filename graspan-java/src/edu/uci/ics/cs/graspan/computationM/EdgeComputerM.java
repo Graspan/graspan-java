@@ -19,26 +19,10 @@ public class EdgeComputerM {
 
 	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
-	// static fields
-	private static ComputationSet[] compSets;
 
-	private static List<LoadedVertexInterval> intervals;
-
-//	// object field
-//	private ComputationSet compSet;
-//
-//	private int nNewEdges, nDupEdges;
-//
-//	private boolean terminateStatus;
-
-	
-//	public EdgeComputerM(ComputationSet compSet) {
-//		this.compSet = compSet;
-//		nNewEdges = 0;
-//	}
-
-
-	public static long execUpdate(ComputationSet compSet) {
+	public static long execUpdate(int i, ComputationSet[] compSets, List<LoadedVertexInterval> intervals) {
+		ComputationSet compSet = compSets[i];
+		
 		// 1. get the compSet components
 		// 1.1. we shall scan these to get the targets
 		int[] oldEdgs = compSet.getOldEdgs();
@@ -63,10 +47,10 @@ public class EdgeComputerM {
 		HashSet<Integer> oldUnewIdsToMerge = new HashSet<Integer>();
 
 		// 2.1. get the ids of the new_components to merge
-		getRowIdsToMerge(oldEdgs, oldEdgs_empty, newIdsToMerge, "old");
+		getRowIdsToMerge(compSets, intervals, oldEdgs, oldEdgs_empty, newIdsToMerge, "old");
 
 		// 2.2. get the ids of the oldUnew_components to merge by scanning new edges
-		getRowIdsToMerge(newEdgs, newEdgs_empty, oldUnewIdsToMerge, "new");
+		getRowIdsToMerge(compSets, intervals, newEdgs, newEdgs_empty, oldUnewIdsToMerge, "new");
 
 		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size() + newIdsToMerge.size();
 
@@ -122,7 +106,7 @@ public class EdgeComputerM {
 
 	}
 
-	private static void getRowIdsToMerge(int[] edgs, boolean edgs_empty, HashSet<Integer> idsToMerge, String flag) {
+	private static void getRowIdsToMerge(ComputationSet[] compSets, List<LoadedVertexInterval> intervals, int[] edgs, boolean edgs_empty, HashSet<Integer> idsToMerge, String flag) {
 		int targetRowId = -1;
 		LoadedVertexInterval interval;
 		int newTgt = -1;
@@ -155,44 +139,5 @@ public class EdgeComputerM {
 	}
 	
 
-	public static void setComputationSets(ComputationSet[] csets) {
-		compSets = csets;
-	}
-
-	public ComputationSet[] getComputationSets() {
-		return compSets;
-	}
-
-//	public ComputationSet getSrcComputationSet() {
-//		return compSet;
-//	}
-//
-//	public int getNumNewEdges() {
-//		return nNewEdges;
-//	}
-//
-//	public void setNumNewEdges(int nNewEdges) {
-//		this.nNewEdges = nNewEdges;
-//	}
-//
-//	public int getNumDupEdges() {
-//		return nDupEdges;
-//	}
-//
-//	public void setNumDupEdges(int nDupEdges) {
-//		this.nDupEdges = nDupEdges;
-//	}
-//
-//	public boolean getTerminateStatus() {
-//		return terminateStatus;
-//	}
-//
-//	public void setTerminateStatus(boolean terminateStatus) {
-//		this.terminateStatus = terminateStatus;
-//	}
-
-	public static void setIntervals(List<LoadedVertexInterval> vertexIntervals) {
-		intervals = vertexIntervals;
-	}
 	
 }

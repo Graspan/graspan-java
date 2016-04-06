@@ -97,21 +97,17 @@ public class EngineM {
 
 			// for debugging
 			// printSrcVerticesForDebugging(vertices);
+			
 
 			// *************************************************************************************************
 			// computation
 			ComputationSet[] compSets = new ComputationSet[vertices.length];
-//			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
-			EdgeComputerM.setComputationSets(compSets);
-			EdgeComputerM.setIntervals(intervals);
 			for (int i = 0; i < compSets.length; i++) {
 				compSets[i] = new ComputationSet();
 				compSets[i].setNewEdgs(vertices[i].getOutEdges());
 				compSets[i].setNewVals(vertices[i].getOutEdgeValues());
 				compSets[i].setOldUnewEdgs(vertices[i].getOutEdges());
 				compSets[i].setOldUnewVals(vertices[i].getOutEdgeValues());
-				
-//				edgeComputers[i] = new EdgeComputerM(compSets[i]);
 			}
 
 			logger.info("Finished initialization of CompSets and EdgeComputers");
@@ -125,8 +121,9 @@ public class EngineM {
 			// do computation and add edges
 			computeForOneRound(vertices, compSets, intervals);
 
-			logger.info("Finish computation...");
+			logger.info("Finish computation for one round");
 			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
+			
 
 			// *************************************************************************************************
 			// post-processing: repartitioning
@@ -200,11 +197,12 @@ public class EngineM {
 		int iterationNo = 0;
 		do {
 			iterationNo++;
-
 			totalNewEdgsForIteratn = 0;
 
+			logger.info("Entered iteration no. " + iterationNo);
+
 			// parallel computation for one iteration
-			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, 
+			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, intervals, 
 					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo);
 
 			// for debugging: print compsets information at the end of each iteration
@@ -215,9 +213,8 @@ public class EngineM {
 
 			logger.info("========total # new edges for iteration #" + iterationNo + " is " + totalNewEdgsForIteratn);
 			// logger.info("========total # dup edges for this iteration: " + totalDupEdges);
-
 			
-			logger.info("Entered iteration no. " + iterationNo);
+			
 			assert(compSets.length == vertices.length);
 			for (int i = 0; i < compSets.length; i++) {
 				//resulting edges after one iteration
@@ -250,6 +247,7 @@ public class EngineM {
 	 * @param nWorkers
 	 * @param vertices
 	 * @param compSets
+	 * @param intervals 
 	 * @param indexStartForOne
 	 * @param indexEndForOne
 	 * @param indexStartForTwo
@@ -257,7 +255,7 @@ public class EngineM {
 	 */
 	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
 			final Vertex[] vertices, final ComputationSet[] compSets, 
-			final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
+			List<LoadedVertexInterval> intervals, final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
 			final int indexEndForTwo) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
@@ -286,10 +284,8 @@ public class EngineM {
 							Vertex vertex = vertices[i];
 
 							if (vertex != null && vertex.getNumOutEdges() != 0) {
-//								assert (edgeComputer != null);
-
 								// update edges for one src vertex
-								threadUpdates = EdgeComputerM.execUpdate(compSets[i]);
+								threadUpdates = EdgeComputerM.execUpdate(i, compSets, intervals);
 								
 								// check if there are new edges added in partition one and two
 								if (i >= indexStartForOne && i <= indexEndForOne)
