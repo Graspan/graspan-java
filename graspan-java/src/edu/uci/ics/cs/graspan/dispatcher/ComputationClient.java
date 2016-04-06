@@ -53,7 +53,7 @@ public class ComputationClient {
 			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) {
 				GlobalParams.setComputationLogic(tok[2]);
 			}
-			if (tok[0].compareTo("<END CONFIGFILE>") == 0) {
+			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
 			}
 		}

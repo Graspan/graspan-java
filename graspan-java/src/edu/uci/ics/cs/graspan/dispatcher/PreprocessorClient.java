@@ -46,7 +46,7 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("INPUT_GRAPH_NUMBERING_STARTS_FROM") == 0) {
 				GlobalParams.setFirstVertexID(Integer.parseInt(tok[2]));
 			}
-			if (tok[0].compareTo("<END CONFIGFILE>") == 0) {
+			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
 			}
 		}
