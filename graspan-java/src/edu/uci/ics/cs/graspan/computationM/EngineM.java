@@ -28,23 +28,26 @@ import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
  */
 public class EngineM {
 	private static final Logger logger = GraspanLogger.getLogger("EngineM");
+
 	private ExecutorService computationExecutor;
+
 	private long totalNewEdgs;
 	private long totalNewEdgsForIteratn;
-	private long totalDupEdges;
+//	private long totalDupEdges;
+
 	private long newEdgesInOne;
 	private long newEdgesInTwo;
 
-	// private String baseFileName;
 	private int[] partsToLoad;
+
 	public static boolean memFull;
 
 	public static boolean premature_Terminate;
 
-	public static Vertex[] vertices_prevIt = null;
-	public static NewEdgesList[] newEdgeLists_prevIt = null;
-	public List<LoadedVertexInterval> intervals_prevIt = null;
-	public static ComputationSet[] compSets_prevIt = null;
+	public static Vertex[] vertices_prevIt;
+	public static NewEdgesList[] newEdgeLists_prevIt;
+	public List<LoadedVertexInterval> intervals_prevIt;
+	public static ComputationSet[] compSets_prevIt;
 
 	/**
 	 * Description:
@@ -54,7 +57,6 @@ public class EngineM {
 	 * @throws IOException
 	 */
 	public void run() throws IOException {
-
 		// -------------------------------------------------------------------------------
 		// get the num of processors
 		int nThreads = 1;
@@ -62,7 +64,7 @@ public class EngineM {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 		// TODO: REMOVE THIS LATER
-		 nThreads = 8;
+		nThreads = 8;
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
 
 		// -------------------------------------------------------------------------------
@@ -77,12 +79,9 @@ public class EngineM {
 			roundNo++;
 			logger.info("STARTING ROUND NO #" + roundNo);
 
-			partsToLoad = scheduler
-					.schedulePartitionSimple(AllPartitions.partAllocTable.length);
-			// partsToLoad =
-			// scheduler.schedulePartitionEDC(AllPartitions.partAllocTable.length);
-			logger.info("Scheduling Partitions : "
-					+ Arrays.toString(partsToLoad));
+			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			// partsToLoad = scheduler.schedulePartitionEDC(AllPartitions.partAllocTable.length);
+			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
 			logger.info("Start loading partitions...");
 
 			loader.loadParts(partsToLoad);
@@ -90,8 +89,7 @@ public class EngineM {
 			Vertex[] vertices = loader.getVertices();
 
 			// send interval info to scheduler
-			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList<LoadedVertexInterval>(
-					intervals);
+			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList<LoadedVertexInterval>(intervals);
 			scheduler.setLoadedIntervals(intervalsForScheduler);
 			logger.info("\nLVI after loading : " + intervals);
 			assert (vertices != null && vertices.length > 0);
@@ -115,7 +113,7 @@ public class EngineM {
 
 			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
 			EdgeComputerM.setComputationSets(compSets);
-			EdgeComputerM.setVertices(vertices);
+//			EdgeComputerM.setVertices(vertices);
 			EdgeComputerM.setIntervals(intervals);
 			for (int i = 0; i < edgeComputers.length; i++) {
 				edgeComputers[i] = new EdgeComputerM(vertices[i], compSets[i]);
@@ -131,8 +129,7 @@ public class EngineM {
 			computeForOneRound(vertices, compSets, edgeComputers, intervals);
 
 			logger.info("Finish computation...");
-			logger.info("Computation and edge addition took: "
-					+ (System.currentTimeMillis() - t) + " ms");
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
 
 			// *************************************************************************************************
 			// post-processing: repartitioning
@@ -146,10 +143,8 @@ public class EngineM {
 
 			vertices_prevIt = vertices;
 			intervals_prevIt = intervals;
-			logger.info("\nLVI after computedPartProcessor saves partitions : "
-					+ intervals);
-			logger.info("\nLVI (scheduler) after computedPartProcessor saves partitions : "
-					+ intervalsForScheduler);
+			logger.info("\nLVI after computedPartProcessor saves partitions : " + intervals);
+			logger.info("\nLVI (scheduler) after computedPartProcessor saves partitions : " + intervalsForScheduler);
 
 			scheduler.setTerminationStatus();
 			scheduler.updateSchedInfoPostRepart(numPartsFinal - numPartsStart, numPartsFinal);
@@ -183,10 +178,8 @@ public class EngineM {
 	 * @param edgeComputers
 	 * @param intervals
 	 */
-	private void computeForOneRound(final Vertex[] vertices,
-			final ComputationSet[] compSets,
-			final EdgeComputerM[] edgeComputers,
-			List<LoadedVertexInterval> intervals) {
+	private void computeForOneRound(final Vertex[] vertices, final ComputationSet[] compSets,
+			final EdgeComputerM[] edgeComputers, List<LoadedVertexInterval> intervals) {
 		if (vertices == null || vertices.length == 0)
 			return;
 
@@ -213,39 +206,26 @@ public class EngineM {
 			iterationNo++;
 
 			totalNewEdgsForIteratn = 0;
-			totalDupEdges = 0;
 
 			// parallel computation for one iteration
-			parallelComputationForOneIteration(termationLock, chunkSize,
-					nWorkers, vertices, compSets, edgeComputers,
-					indexStartForOne, indexEndForOne, indexStartForTwo,
-					indexEndForTwo);
+			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, edgeComputers,
+					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo);
 
-			// for debugging: print compsets information at the end of each
-			// iteration
-//			printCompSetsInfo(vertices, compSets);
+			// for debugging: print compsets information at the end of each iteration
+			// printCompSetsInfo(vertices, compSets);
 
 			// resulting edges after one iteration
 			for (int i = 0; i < vertices.length; i++) {
 				vertices[i].setOutEdges(compSets[i].getOldUnewUdeltaEdgs());
-				vertices[i]
-						.setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
+				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
 			}
 
-			// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
-//			logger.info("PRINTING DEGREES OF PARTITION AT THE END OF ITERATION");
-//			for (int i = 0; i < vertices.length; i++) {
-//				logger.info(vertices[i].getVertexId() + " | "
-//						+ vertices[i].getNumOutEdges());
-//			}
 
 			// update the number of total new edges
 			this.totalNewEdgs += totalNewEdgsForIteratn;
 
-			logger.info("========total # new edges for iteration #"
-					+ iterationNo + " is " + totalNewEdgsForIteratn);
-			// logger.info("========total # dup edges for this iteration: " +
-			// totalDupEdges);
+			logger.info("========total # new edges for iteration #" + iterationNo + " is " + totalNewEdgsForIteratn);
+			// logger.info("========total # dup edges for this iteration: " + totalDupEdges);
 
 			// update compsets before next iteration
 			ComputationSet[] compSets_prevIt = compSets;
@@ -255,13 +235,12 @@ public class EngineM {
 				compSets[i].setOldVals(compSets_prevIt[i].getOldUnewVals());
 				compSets[i].setNewEdgs(compSets_prevIt[i].getDeltaEdgs());
 				compSets[i].setNewVals(compSets_prevIt[i].getDeltaVals());
-				compSets[i].setOldUnewEdgs(compSets_prevIt[i]
-						.getOldUnewUdeltaEdgs());
-				compSets[i].setOldUnewVals(compSets_prevIt[i]
-						.getOldUnewUdeltaVals());
+				compSets[i].setOldUnewEdgs(compSets_prevIt[i].getOldUnewUdeltaEdgs());
+				compSets[i].setOldUnewVals(compSets_prevIt[i].getOldUnewUdeltaVals());
 			}
 
-		} while (totalNewEdgsForIteratn > 0);
+		} 
+		while (totalNewEdgsForIteratn > 0);
 
 		// set new edge added flag for scheduler
 		if (newEdgesInOne > 0)
@@ -283,11 +262,9 @@ public class EngineM {
 	 * @param indexStartForTwo
 	 * @param indexEndForTwo
 	 */
-	private void parallelComputationForOneIteration(final Object termationLock,
-			final int chunkSize, final int nWorkers, final Vertex[] vertices,
-			final ComputationSet[] compSets,
-			final EdgeComputerM[] edgeComputers, final int indexStartForOne,
-			final int indexEndForOne, final int indexStartForTwo,
+	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
+			final Vertex[] vertices, final ComputationSet[] compSets, final EdgeComputerM[] edgeComputers,
+			final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
 			final int indexEndForTwo) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
@@ -302,8 +279,7 @@ public class EngineM {
 				public void run() {
 					int threadUpdates = 0;
 
-					logger.info("in multithreaded portion - chunk start: "
-							+ chunkStart + " ThreadNo:"
+					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"
 							+ Thread.currentThread().getId());
 
 					try {
@@ -323,21 +299,12 @@ public class EngineM {
 								// update edges for one src vertex
 								edgeComputer.execUpdate();
 
-								// logger.info("LOOK HERE NOW:" +
-								// "Number of new edges for vertex "
-								// + vertices[i].getVertexId() + " is " +
-								// threadUpdates
-								// + " Total Degree (excluding new edges):" +
-								// vertices[i].getNumOutEdges());
-
 								threadUpdates = edgeComputer.getNumNewEdges();
 								// check if there are new edges added in
 								// partition one and two
-								if (i >= indexStartForOne
-										&& i <= indexEndForOne)
+								if (i >= indexStartForOne && i <= indexEndForOne)
 									newEdgesInOne += threadUpdates;
-								else if (i >= indexStartForTwo
-										&& i <= indexEndForTwo)
+								else if (i >= indexStartForTwo && i <= indexEndForTwo)
 									newEdgesInTwo += threadUpdates;
 
 								edgeComputer.setNumNewEdges(0);
@@ -377,31 +344,25 @@ public class EngineM {
 	 * @param vertices
 	 * @param compSets
 	 */
-	private void printCompSetsInfo(final Vertex[] vertices,
-			final ComputationSet[] compSets) {
+	private void printCompSetsInfo(final Vertex[] vertices, final ComputationSet[] compSets) {
 		for (int i = 0; i < compSets.length; i++) {
-			logger.info("Old Edges of compSet[" + i + "] for vid "
-					+ vertices[i].getVertexId() + " "
+			logger.info("Old Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
 					+ Arrays.toString(compSets[i].getOldEdgs()));
 		}
 		for (int i = 0; i < compSets.length; i++) {
-			logger.info("New Edges of compSet[" + i + "] for vid "
-					+ vertices[i].getVertexId() + " "
+			logger.info("New Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
 					+ Arrays.toString(compSets[i].getNewEdgs()));
 		}
 		for (int i = 0; i < compSets.length; i++) {
-			logger.info("OldUNew Edges of compSet[" + i + "] for vid "
-					+ vertices[i].getVertexId() + " "
+			logger.info("OldUNew Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
 					+ Arrays.toString(compSets[i].getOldUnewEdgs()));
 		}
 		for (int i = 0; i < compSets.length; i++) {
-			logger.info("Delta Edges of compSet[" + i + "] for vid "
-					+ vertices[i].getVertexId() + " "
+			logger.info("Delta Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
 					+ Arrays.toString(compSets[i].getDeltaEdgs()));
 		}
 		for (int i = 0; i < compSets.length; i++) {
-			logger.info("OldUnewUdelta Edges of compSet[" + i + "] for vid "
-					+ vertices[i].getVertexId() + " "
+			logger.info("OldUnewUdelta Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
 					+ Arrays.toString(compSets[i].getOldUnewUdeltaEdgs()));
 		}
 	}
