@@ -111,13 +111,14 @@ public class SortedArrMerger {
 		int[] tempEdgs = new int[oldUnewUdelta_ptr + 1];
 		byte[] tempVals = new byte[oldUnewUdelta_ptr + 1];
 
-//		for (int j = 0; j < oldUnewUdelta_ptr + 1; j++) {
-//			tempEdgs[j] = src_oldUnewUdelta_edgs[j];
-//			tempVals[j] = src_oldUnewUdelta_vals[j];
-//		}
+		for (int j = 0; j < oldUnewUdelta_ptr + 1; j++) {
+			tempEdgs[j] = src_oldUnewUdelta_edgs[j];
+			tempVals[j] = src_oldUnewUdelta_vals[j];
+		}
 		
-		System.arraycopy(src_oldUnewUdelta_edgs, 0, tempEdgs, 0,oldUnewUdelta_ptr);
-		System.arraycopy(src_oldUnewUdelta_vals, 0, tempVals, 0,oldUnewUdelta_ptr);
+		//TODO: FIRST TACKLE CASE FOR FOR OLDuNEWuDELTA_PTR =-1
+//		System.arraycopy(src_oldUnewUdelta_edgs, 0, tempEdgs, 0,oldUnewUdelta_ptr);
+//		System.arraycopy(src_oldUnewUdelta_vals, 0, tempVals, 0,oldUnewUdelta_ptr);
 		
 		src_oldUnewUdelta_edgs = tempEdgs;
 		src_oldUnewUdelta_vals = tempVals;
@@ -126,13 +127,14 @@ public class SortedArrMerger {
 		tempEdgs = new int[delta_ptr + 1];
 		tempVals = new byte[delta_ptr + 1];
 
-//		for (int j = 0; j < delta_ptr + 1; j++) {
-//			tempEdgs[j] = src_delta_edgs[j];
-//			tempVals[j] = src_delta_vals[j];
-//		}
+		for (int j = 0; j < delta_ptr + 1; j++) {
+			tempEdgs[j] = src_delta_edgs[j];
+			tempVals[j] = src_delta_vals[j];
+		}
 		
-		System.arraycopy(src_delta_edgs, 0, tempEdgs, 0,delta_ptr);
-		System.arraycopy(src_delta_vals, 0, tempVals, 0,delta_ptr);
+		//TODO: FIRST TACKLE CASE FOR FOR DELTA_PTR =-1
+//		System.arraycopy(src_delta_edgs, 0, tempEdgs, 0,delta_ptr);
+//		System.arraycopy(src_delta_vals, 0, tempVals, 0,delta_ptr);
 
 		src_delta_edgs = tempEdgs;
 		src_delta_vals = tempVals;
