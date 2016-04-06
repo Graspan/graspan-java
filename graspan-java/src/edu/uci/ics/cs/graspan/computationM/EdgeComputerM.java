@@ -20,77 +20,29 @@ public class EdgeComputerM {
 	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
 	// static fields
-//	private static Vertex[] vertices;
-
 	private static ComputationSet[] compSets;
 
 	private static List<LoadedVertexInterval> intervals;
 
-	// object field
-	private Vertex vertex;
+//	// object field
+//	private ComputationSet compSet;
+//
+//	private int nNewEdges, nDupEdges;
+//
+//	private boolean terminateStatus;
 
-	private ComputationSet compSet;
-
-	private int nNewEdges, nDupEdges;
-
-	private boolean terminateStatus;
-
-	public EdgeComputerM(Vertex vertex, ComputationSet compSet) {
-		this.vertex = vertex;
-		this.compSet = compSet;
-		nNewEdges = 0;
-	}
-
-	public static void setComputationSets(ComputationSet[] csets) {
-		compSets = csets;
-	}
-
-	public ComputationSet[] getComputationSets() {
-		return compSets;
-	}
-
-	public ComputationSet getSrcComputationSet() {
-		return compSet;
-	}
-
-	public int getNumNewEdges() {
-		return nNewEdges;
-	}
-
-	public void setNumNewEdges(int nNewEdges) {
-		this.nNewEdges = nNewEdges;
-	}
-
-	public int getNumDupEdges() {
-		return nDupEdges;
-	}
-
-	public void setNumDupEdges(int nDupEdges) {
-		this.nDupEdges = nDupEdges;
-	}
-
-	public boolean getTerminateStatus() {
-		return terminateStatus;
-	}
-
-	public void setTerminateStatus(boolean terminateStatus) {
-		this.terminateStatus = terminateStatus;
-	}
-
-//	public static void setVertices(Vertex[] v) {
-//		vertices = v;
+	
+//	public EdgeComputerM(ComputationSet compSet) {
+//		this.compSet = compSet;
+//		nNewEdges = 0;
 //	}
 
-	public static void setIntervals(List<LoadedVertexInterval> vertexIntervals) {
-		intervals = vertexIntervals;
-	}
 
-	public void execUpdate() {
-
+	public static long execUpdate(ComputationSet compSet) {
 		// 1. get the compSet components
 		// 1.1. we shall scan these to get the targets
-		int[] oldEdgs = this.compSet.getOldEdgs();
-		int[] newEdgs = this.compSet.getNewEdgs();
+		int[] oldEdgs = compSet.getOldEdgs();
+		int[] newEdgs = compSet.getNewEdgs();
 
 		// 1.2. if there is nothing to merge, return
 		boolean oldEdgs_empty = true, newEdgs_empty = true;
@@ -101,7 +53,7 @@ public class EdgeComputerM {
 			newEdgs_empty = false;
 		}
 		if (oldEdgs_empty && newEdgs_empty)
-			return;
+			return 0;
 
 		int[][] edgArrstoMerge = null;
 		byte[][] valArrstoMerge = null;
@@ -125,8 +77,8 @@ public class EdgeComputerM {
 		// 3.1. first store the source row
 		int rows_to_merge_id = 0;
 		// logger.info("The Id of source vertex: " + this.vertex.getVertexId());
-		edgArrstoMerge[0] = this.compSet.getOldUnewEdgs();
-		valArrstoMerge[0] = this.compSet.getOldUnewVals();
+		edgArrstoMerge[0] = compSet.getOldUnewEdgs();
+		valArrstoMerge[0] = compSet.getOldUnewVals();
 
 		rows_to_merge_id++;
 		// logger.info("Vertex Id: " + this.vertex.getVertexId() + " Edge Arrays to merge (source row):" + Arrays.toString(edgArrstoMerge[0]));
@@ -160,17 +112,17 @@ public class EdgeComputerM {
 		sortedArrMerger.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
 
 		// -------------------------------------------------------------------------------
-		this.compSet.setDeltaEdges(sortedArrMerger.get_src_delta_edgs());
-		this.compSet.setDeltaVals(sortedArrMerger.get_src_delta_vals());
-		this.compSet.setOldUnewUdeltaEdgs(sortedArrMerger.get_src_oldUnewUdelta_edgs());
-		this.compSet.setOldUnewUdeltaVals(sortedArrMerger.get_src_oldUnewUdelta_vals());
+		compSet.setDeltaEdges(sortedArrMerger.get_src_delta_edgs());
+		compSet.setDeltaVals(sortedArrMerger.get_src_delta_vals());
+		compSet.setOldUnewUdeltaEdgs(sortedArrMerger.get_src_oldUnewUdelta_edgs());
+		compSet.setOldUnewUdeltaVals(sortedArrMerger.get_src_oldUnewUdelta_vals());
 
 		// get number of new edges
-		nNewEdges = sortedArrMerger.get_num_new_edges();
+		return sortedArrMerger.get_num_new_edges();
 
 	}
 
-	private void getRowIdsToMerge(int[] edgs, boolean edgs_empty, HashSet<Integer> idsToMerge, String flag) {
+	private static void getRowIdsToMerge(int[] edgs, boolean edgs_empty, HashSet<Integer> idsToMerge, String flag) {
 		int targetRowId = -1;
 		LoadedVertexInterval interval;
 		int newTgt = -1;
@@ -180,28 +132,67 @@ public class EdgeComputerM {
 					break;
 
 				// if the target is not a source vertex
-				if (edgs[i] != this.vertex.getVertexId()) {
-					newTgt = edgs[i];
-					for (int j = 0; j < intervals.size(); j++) {
-						interval = intervals.get(j);
-						if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
-							targetRowId = newTgt - interval.getFirstVertex() + interval.getIndexStart();
-							assert (targetRowId != -1);
-						}
-					}
-					if (targetRowId == -1)
-						continue;
-
-					if((flag.equals("old") && compSets[targetRowId].getNewEdgs().length > 0) 
-							|| (flag.equals("new") && compSets[targetRowId].getOldUnewEdgs().length > 0)){
-						idsToMerge.add(targetRowId);
+				newTgt = edgs[i];
+				for (int j = 0; j < intervals.size(); j++) {
+					interval = intervals.get(j);
+					if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
+						targetRowId = newTgt - interval.getFirstVertex() + interval.getIndexStart();
+						assert (targetRowId != -1);
 					}
 				}
+				if (targetRowId == -1)
+					continue;
+				
+				if((flag.equals("old") && compSets[targetRowId].getNewEdgs().length > 0) 
+						|| (flag.equals("new") && compSets[targetRowId].getOldUnewEdgs().length > 0)){
+					idsToMerge.add(targetRowId);
+				}
+//				if (edgs[i] != this.vertex.getVertexId()) {
+//				}
 
 			}
 		}
 	}
 	
-	
+
+	public static void setComputationSets(ComputationSet[] csets) {
+		compSets = csets;
+	}
+
+	public ComputationSet[] getComputationSets() {
+		return compSets;
+	}
+
+//	public ComputationSet getSrcComputationSet() {
+//		return compSet;
+//	}
+//
+//	public int getNumNewEdges() {
+//		return nNewEdges;
+//	}
+//
+//	public void setNumNewEdges(int nNewEdges) {
+//		this.nNewEdges = nNewEdges;
+//	}
+//
+//	public int getNumDupEdges() {
+//		return nDupEdges;
+//	}
+//
+//	public void setNumDupEdges(int nDupEdges) {
+//		this.nDupEdges = nDupEdges;
+//	}
+//
+//	public boolean getTerminateStatus() {
+//		return terminateStatus;
+//	}
+//
+//	public void setTerminateStatus(boolean terminateStatus) {
+//		this.terminateStatus = terminateStatus;
+//	}
+
+	public static void setIntervals(List<LoadedVertexInterval> vertexIntervals) {
+		intervals = vertexIntervals;
+	}
 	
 }

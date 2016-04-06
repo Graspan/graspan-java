@@ -101,23 +101,20 @@ public class EngineM {
 			// *************************************************************************************************
 			// computation
 			ComputationSet[] compSets = new ComputationSet[vertices.length];
+//			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
+			EdgeComputerM.setComputationSets(compSets);
+			EdgeComputerM.setIntervals(intervals);
 			for (int i = 0; i < compSets.length; i++) {
 				compSets[i] = new ComputationSet();
 				compSets[i].setNewEdgs(vertices[i].getOutEdges());
 				compSets[i].setNewVals(vertices[i].getOutEdgeValues());
 				compSets[i].setOldUnewEdgs(vertices[i].getOutEdges());
 				compSets[i].setOldUnewVals(vertices[i].getOutEdgeValues());
+				
+//				edgeComputers[i] = new EdgeComputerM(compSets[i]);
 			}
 
-			logger.info("Finished initialization of CompSets");
-
-			EdgeComputerM[] edgeComputers = new EdgeComputerM[vertices.length];
-			EdgeComputerM.setComputationSets(compSets);
-//			EdgeComputerM.setVertices(vertices);
-			EdgeComputerM.setIntervals(intervals);
-			for (int i = 0; i < edgeComputers.length; i++) {
-				edgeComputers[i] = new EdgeComputerM(vertices[i], compSets[i]);
-			}
+			logger.info("Finished initialization of CompSets and EdgeComputers");
 
 			logger.info("Start computation and edge addition...");
 			long t = System.currentTimeMillis();
@@ -126,7 +123,7 @@ public class EngineM {
 			// job1.start();
 
 			// do computation and add edges
-			computeForOneRound(vertices, compSets, edgeComputers, intervals);
+			computeForOneRound(vertices, compSets, intervals);
 
 			logger.info("Finish computation...");
 			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
@@ -178,8 +175,7 @@ public class EngineM {
 	 * @param edgeComputers
 	 * @param intervals
 	 */
-	private void computeForOneRound(final Vertex[] vertices, final ComputationSet[] compSets,
-			final EdgeComputerM[] edgeComputers, List<LoadedVertexInterval> intervals) {
+	private void computeForOneRound(final Vertex[] vertices, final ComputationSet[] compSets, List<LoadedVertexInterval> intervals) {
 		if (vertices == null || vertices.length == 0)
 			return;
 
@@ -208,18 +204,11 @@ public class EngineM {
 			totalNewEdgsForIteratn = 0;
 
 			// parallel computation for one iteration
-			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, edgeComputers,
+			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, 
 					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo);
 
 			// for debugging: print compsets information at the end of each iteration
 			// printCompSetsInfo(vertices, compSets);
-
-			// resulting edges after one iteration
-			for (int i = 0; i < vertices.length; i++) {
-				vertices[i].setOutEdges(compSets[i].getOldUnewUdeltaEdgs());
-				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
-			}
-
 
 			// update the number of total new edges
 			this.totalNewEdgs += totalNewEdgsForIteratn;
@@ -227,16 +216,21 @@ public class EngineM {
 			logger.info("========total # new edges for iteration #" + iterationNo + " is " + totalNewEdgsForIteratn);
 			// logger.info("========total # dup edges for this iteration: " + totalDupEdges);
 
-			// update compsets before next iteration
-			ComputationSet[] compSets_prevIt = compSets;
+			
 			logger.info("Entered iteration no. " + iterationNo);
+			assert(compSets.length == vertices.length);
 			for (int i = 0; i < compSets.length; i++) {
-				compSets[i].setOldEdgs(compSets_prevIt[i].getOldUnewEdgs());
-				compSets[i].setOldVals(compSets_prevIt[i].getOldUnewVals());
-				compSets[i].setNewEdgs(compSets_prevIt[i].getDeltaEdgs());
-				compSets[i].setNewVals(compSets_prevIt[i].getDeltaVals());
-				compSets[i].setOldUnewEdgs(compSets_prevIt[i].getOldUnewUdeltaEdgs());
-				compSets[i].setOldUnewVals(compSets_prevIt[i].getOldUnewUdeltaVals());
+				//resulting edges after one iteration
+				vertices[i].setOutEdges(compSets[i].getOldUnewUdeltaEdgs());
+				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
+				
+				// update compsets before next iteration
+				compSets[i].setOldEdgs(compSets[i].getOldUnewEdgs());
+				compSets[i].setOldVals(compSets[i].getOldUnewVals());
+				compSets[i].setNewEdgs(compSets[i].getDeltaEdgs());
+				compSets[i].setNewVals(compSets[i].getDeltaVals());
+				compSets[i].setOldUnewEdgs(compSets[i].getOldUnewUdeltaEdgs());
+				compSets[i].setOldUnewVals(compSets[i].getOldUnewUdeltaVals());
 			}
 
 		} 
@@ -256,14 +250,13 @@ public class EngineM {
 	 * @param nWorkers
 	 * @param vertices
 	 * @param compSets
-	 * @param edgeComputers
 	 * @param indexStartForOne
 	 * @param indexEndForOne
 	 * @param indexStartForTwo
 	 * @param indexEndForTwo
 	 */
 	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
-			final Vertex[] vertices, final ComputationSet[] compSets, final EdgeComputerM[] edgeComputers,
+			final Vertex[] vertices, final ComputationSet[] compSets, 
 			final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
 			final int indexEndForTwo) {
 
@@ -277,7 +270,7 @@ public class EngineM {
 
 			computationExecutor.submit(new Runnable() {
 				public void run() {
-					int threadUpdates = 0;
+					long threadUpdates = 0;
 
 					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"
 							+ Thread.currentThread().getId());
@@ -291,29 +284,25 @@ public class EngineM {
 						for (int i = chunkStart; i < end; i++) {
 							// each vertex is associated with a computation set
 							Vertex vertex = vertices[i];
-							EdgeComputerM edgeComputer = edgeComputers[i];
 
 							if (vertex != null && vertex.getNumOutEdges() != 0) {
-								assert (edgeComputer != null);
+//								assert (edgeComputer != null);
 
 								// update edges for one src vertex
-								edgeComputer.execUpdate();
-
-								threadUpdates = edgeComputer.getNumNewEdges();
-								// check if there are new edges added in
-								// partition one and two
+								threadUpdates = EdgeComputerM.execUpdate(compSets[i]);
+								
+								// check if there are new edges added in partition one and two
 								if (i >= indexStartForOne && i <= indexEndForOne)
 									newEdgesInOne += threadUpdates;
 								else if (i >= indexStartForTwo && i <= indexEndForTwo)
 									newEdgesInTwo += threadUpdates;
-
-								edgeComputer.setNumNewEdges(0);
 							}
 						}
-
-					} catch (Exception e) {
+					} 
+					catch (Exception e) {
 						e.printStackTrace();
-					} finally {
+					} 
+					finally {
 						int pending = countDown.decrementAndGet();
 						synchronized (termationLock) {
 							totalNewEdgsForIteratn += threadUpdates;
