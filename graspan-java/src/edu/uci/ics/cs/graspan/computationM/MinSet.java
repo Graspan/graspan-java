@@ -17,7 +17,6 @@ public class MinSet {
 		return minSetId;
 	}
 
-
 	public MinSet(int minSetId) {
 		ptr = 0;
 		this.minSetId = minSetId;

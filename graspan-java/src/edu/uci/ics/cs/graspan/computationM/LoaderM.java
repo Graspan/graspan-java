@@ -227,11 +227,11 @@ public class LoaderM {
 		}
 		logger.info(loadedIntEndOP);
 
-		logger.info("vertices after loading is complete");
-		for (int i = 0; i < vertices.length; i++) {
-			logger.info(vertices[i].getVertexId() + ": "
-					+ Arrays.toString(vertices[i].getOutEdges()));
-		}
+//		logger.info("vertices after loading is complete");
+//		for (int i = 0; i < vertices.length; i++) {
+//			logger.info(vertices[i].getVertexId() + ": "
+//					+ Arrays.toString(vertices[i].getOutEdges()));
+//		}
 	}
 
 	/**
@@ -934,8 +934,8 @@ public class LoaderM {
 							s2 = s2 + " " + prevRoundVertices[u].getVertexId();
 						}
 
-						logger.info("All prevRoundvertices in memory during loading: \n"
-								+ s2);
+//						logger.info("All prevRoundvertices in memory during loading: \n"
+//								+ s2);
 						logger.info("oldIntvIdxSt: " + oldIntvIdxSt
 								+ " oldIntvIdxEnd: " + oldIntvIdxEnd
 								+ " oldIntervals partId: "
@@ -1002,11 +1002,11 @@ public class LoaderM {
 		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
 				+ partitionId);
 		
-		logger.info("vertices before storing");
-		for (int i = 0; i < vertices.length; i++) {
-			logger.info(vertices[i].getVertexId() + ": "
-					+ Arrays.toString(vertices[i].getOutEdges()));
-		}
+//		logger.info("vertices before storing");
+//		for (int i = 0; i < vertices.length; i++) {
+//			logger.info(vertices[i].getVertexId() + ": "
+//					+ Arrays.toString(vertices[i].getOutEdges()));
+//		}
 
 		for (int i = 0; i < intervals.size(); i++) {
 

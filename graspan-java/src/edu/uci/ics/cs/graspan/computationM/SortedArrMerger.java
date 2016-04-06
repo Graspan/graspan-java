@@ -123,8 +123,8 @@ public class SortedArrMerger {
 	 * @param oldUnewUdelta_vals
 	 */
 	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge, int srcRowId) {
-		logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge) + " ThreadNo:"
-				+ Thread.currentThread().getId());
+//		logger.info("Request to Merge" + Arrays.deepToString(edgArrstoMerge) + " ThreadNo:"
+//				+ Thread.currentThread().getId());
 		assert (delta_ptr == -1);
 		assert (srcRowId == 0);
 
@@ -148,17 +148,17 @@ public class SortedArrMerger {
 		// declare & initialize src_delta and src_oldUnewUdelta
 		src_delta_edgs = new int[cumTgtRowsSize];
 		src_delta_vals = new byte[cumTgtRowsSize];
-		for (int i = 0; i < cumTgtRowsSize; i++) {
-			src_delta_edgs[i] = -1;
-			src_delta_vals[i] = -1;
-		}
+//		for (int i = 0; i < cumTgtRowsSize; i++) {
+//			src_delta_edgs[i] = -1;
+//			src_delta_vals[i] = -1;
+//		}
 
 		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
 		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
-		for (int i = 0; i < edgArrstoMerge[srcRowId].length + cumTgtRowsSize; i++) {
-			src_oldUnewUdelta_edgs[i] = -1;
-			src_oldUnewUdelta_vals[i] = -1;
-		}
+//		for (int i = 0; i < edgArrstoMerge[srcRowId].length + cumTgtRowsSize; i++) {
+//			src_oldUnewUdelta_edgs[i] = -1;
+//			src_oldUnewUdelta_vals[i] = -1;
+//		}
 		// logger.info("LENGTH OF OLDUNEWUDELTA FROM SAM: "
 		// + src_oldUnewUdelta_edgs.length);
 
@@ -169,7 +169,7 @@ public class SortedArrMerger {
 		// logger.info(minSet.toString());
 		// }
 
-		logger.info("Starting to iteratively get minsets and process them...");
+//		logger.info("Starting to iteratively get minsets and process them...");
 		
 		MinSet minSetFrmTgtRows = null;
 		MinSet minSetFromSrcRow = null;

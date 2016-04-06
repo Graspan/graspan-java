@@ -37,7 +37,7 @@ public class EdgeComputerM {
 	private boolean terminateStatus;
 
 	// vertex id - oldtgt/newtgt - position in row
-	private int[][] minPtrs;
+//	private int[][] minPtrs;
 
 	
 	
@@ -47,11 +47,11 @@ public class EdgeComputerM {
 		nNewEdges = 0;
 
 		// initialize mergeProgressMarkers
-		this.minPtrs = new int[vertices.length][2];
-		for (int i = 0; i < vertices.length; i++) {
-			this.minPtrs[i][0] = -1;
-			this.minPtrs[i][1] = -1;
-		}
+//		this.minPtrs = new int[vertices.length][2];
+//		for (int i = 0; i < vertices.length; i++) {
+//			this.minPtrs[i][0] = -1;
+//			this.minPtrs[i][1] = -1;
+//		}
 	}
 
 	public static void setComputationSets(ComputationSet[] csets) {
@@ -145,8 +145,9 @@ public class EdgeComputerM {
 		
 		
 		rows_to_merge_id++;
-		logger.info("Vertex Id: " + this.vertex.getVertexId() + " Edge Arrays to merge (source row):"
-				+ Arrays.toString(edgArrstoMerge[0]));
+		// logger.info("Vertex Id: " + this.vertex.getVertexId() +
+		// " Edge Arrays to merge (source row):"
+		// + Arrays.toString(edgArrstoMerge[0]));
 
 		// 3.2. now store the new component rows
 		for (Integer id : newIdsToMerge) {

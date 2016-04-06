@@ -32,7 +32,8 @@ public class WholeGraphComputer {
 		}
 		logger.info("Completed initialization of graph data structures.");
 
-		BufferedReader ins = new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseFilename))));
+		BufferedReader ins = new BufferedReader(new InputStreamReader(
+				new FileInputStream(new File(baseFilename))));
 		String ln;
 
 		// read in the original graph
@@ -81,7 +82,8 @@ public class WholeGraphComputer {
 		int candidateEdgeV1, candidateEdgeV2;
 		for (int j = 0; j < gph.length; j++) {
 			for (int k = 0; k < gph.length; k++) {
-				if (gph[j][1] == gph[k][0] && gph[j][1] != -1 && gph[k][0] != -1) {
+				if (gph[j][1] == gph[k][0] && gph[j][1] != -1
+						&& gph[k][0] != -1) {
 					candidateEdgeV1 = gph[j][0];
 					candidateEdgeV2 = gph[k][1];
 					boolean edgeExists = false;
@@ -89,7 +91,8 @@ public class WholeGraphComputer {
 					// check whether this edge already exists in the original
 					// graph
 					for (int m = 0; m < gph.length; m++) {
-						if (candidateEdgeV1 == gph[m][0] && candidateEdgeV2 == gph[m][1]) {
+						if (candidateEdgeV1 == gph[m][0]
+								&& candidateEdgeV2 == gph[m][1]) {
 							// logger.info("Edge already exists: " +
 							// candidateEdgeV1 + "---->" + candidateEdgeV2);
 							edgeExists = true;
@@ -100,7 +103,8 @@ public class WholeGraphComputer {
 					// check whether this edge already exists in the newEdges
 					// data structure
 					for (int m = 0; m < newEdges.length; m++) {
-						if (candidateEdgeV1 == newEdges[m][0] && candidateEdgeV2 == newEdges[m][1]) {
+						if (candidateEdgeV1 == newEdges[m][0]
+								&& candidateEdgeV2 == newEdges[m][1]) {
 							// logger.info("Edge already exists: " +
 							// candidateEdgeV1 + "---->" + candidateEdgeV2);
 							edgeExists = true;
@@ -130,15 +134,20 @@ public class WholeGraphComputer {
 	}
 
 	public static void printGraph() {
+		// input vertex
+		int v = 8;
+
 		String s = "";
 		int numOfEdges = 0;
 		for (int i = 0; i < gph.length; i++) {
 			if (gph[i][0] == -1)
 				break;
-			s = s + gph[i][0] + "\t" + gph[i][1] + "\n";
+			if (gph[i][0]==v){//only prints the graph for the input vertex
+			s = s + gph[i][0] + "\t" + gph[i][1] + "\n";}
 			numOfEdges++;
 		}
-		logger.info("The complete graph (" + numOfEdges + " edges): " + "\n" + s);
+		logger.info("The complete graph showing only edges for vertex " + v
+				+ " is (" + numOfEdges + " edges): " + "\n" + s);
 	}
 
 	public static void printNewEdges() {
