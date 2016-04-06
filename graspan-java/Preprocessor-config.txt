@@ -1,12 +1,13 @@
-INPUT_GRAPH_FILEPATH = graph
-TOTAL_NUM_PARTS = 4
-INPUT_GRAPH_TYPE = DATAFLOW
-INPUT_GRAPH_NUMBERING_STARTS_FROM = 1
+<BEGIN CONFIGFILE>
 
-<END>
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
+TOTAL_NUM_PARTS = 100
+INPUT_GRAPH_TYPE = DATAFLOW
+INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
+
+<END CONFIGFILE>
 
 ========REPLACE CONFIG BODY WITH THE FOLLOWING TO USE "kernel graph"==========
-kernel graph parameters:
 INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
 TOTAL_NUM_PARTS = 100
 INPUT_GRAPH_TYPE = DATAFLOW
@@ -15,7 +16,6 @@ INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
 
 
 ========REPLACE CONFIG BODY WITH THE FOLLOWING TO USE "small graph with no duplicate edges"==========
-graph with no duplicate edges parameters:
 INPUT_GRAPH_FILEPATH = graph
 TOTAL_NUM_PARTS = 4
 INPUT_GRAPH_TYPE = DATAFLOW

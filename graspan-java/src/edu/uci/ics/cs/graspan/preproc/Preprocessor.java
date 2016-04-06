@@ -343,8 +343,7 @@ public class Preprocessor {
 			if (lineCount % OUTPUT_EDGE_TRACKER_INTERVAL == 0) {
 				percentComplete = ((double) lineCount / numEdges) * 100;
 				logger.info("Reading edges to buffer from disk. Reading line #"
-						+ NumberFormat.getNumberInstance(Locale.US).format(
-								lineCount) + "("
+						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "("
 						+ (double) Math.round(percentComplete * 100) / 100
 						+ "%)...");
 			}
@@ -432,8 +431,6 @@ public class Preprocessor {
 	 */
 	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue)
 			throws IOException {
-		if (srcVId == 0)
-			logger.info("BOOOO");
 
 		int partitionId = PartitionQuerier.findPartition(srcVId);
 
