@@ -122,12 +122,12 @@ public class EdgeComputerM {
 
 	private static int genEdgesToMerge(ComputationSet[] compSets, HashSet<IdValuePair> idsToMerge,
 			int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id, String flag) {
-		List<IdValuePair> list = new ArrayList<IdValuePair>();
 		
 		for(IdValuePair pair: idsToMerge){
 			int index = pair.id;
 			byte srcVal = pair.value;
-			
+
+			//
 			int[] edges = null;
 			byte[] vals = null;
 			
@@ -140,6 +140,8 @@ public class EdgeComputerM {
 				vals = compSets[index].getOldUnewVals();
 			}
 			
+			//get the resulting edge and value array
+			List<IdValuePair> list = new ArrayList<IdValuePair>();
 			for(int i = 0; i < edges.length; i++){
 				int dstId = edges[i];
 				byte dstVal = vals[i];
@@ -149,7 +151,6 @@ public class EdgeComputerM {
 					list.add(new IdValuePair(dstId, newVal));
 				}
 			}
-			
 			
 			int[] newEdgeArray = new int[list.size()];
 			byte[] newValArray = new byte[list.size()];
@@ -184,7 +185,7 @@ public class EdgeComputerM {
 		int targetRowId = -1;
 		LoadedVertexInterval interval;
 		
-		int newTgt = -1;
+		int newTgt = 0;
 		byte val = 0;
 		
 		if (!edgs_empty) {
