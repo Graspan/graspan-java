@@ -41,10 +41,10 @@ public class GrammarChecker {
 				continue;
 			}
 			if (tok.length == 3) { // production with 3 symbols
-			// consider production form : BC ----- > A
-				HashMap<Byte, Byte> lhs_symbols=new HashMap<Byte, Byte>();
-				lhs_symbols.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
-				dRules.put((byte) Integer.parseInt(tok[2]), lhs_symbols);
+			// consider production form : BC ----- > A (Map will store them as (B,(C,A)))
+				HashMap<Byte, Byte> destValOPValPair=new HashMap<Byte, Byte>();
+				destValOPValPair.put((byte) Integer.parseInt(tok[1]), (byte) Integer.parseInt(tok[2]));
+				dRules.put((byte) Integer.parseInt(tok[0]), destValOPValPair);
 			}
 		}
 
@@ -53,11 +53,13 @@ public class GrammarChecker {
 	}
 	
 	
-	public static byte checkGrammar(byte src1Eval, byte src2Eval){
-		byte dstEval = -1;
-		
-		
-		return dstEval;
+	public static byte checkGrammar(byte srcEval, byte destEval){
+		// BC ----- > A : <B,<C,A>> : <srcEval,<destEval,OPEval>>
+		byte OPEval = -1;
+		HashMap<Byte, Byte> destValOPValPair = dRules.get(srcEval);
+		if (destValOPValPair.get(destEval) != null)
+			OPEval = destValOPValPair.get(destEval);
+		return OPEval;
 	}
 	
 
