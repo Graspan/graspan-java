@@ -80,7 +80,7 @@ public class LoaderM {
 		this.readSchedulingInfo();
 
 		// get the grammar info
-		// this.readGrammarTab();
+		this.readGrammarTab();
 
 		// initialize variables for partition loading based on number of
 		// partitions to load.
@@ -349,8 +349,7 @@ public class LoaderM {
 		 * Scan the edge destination counts file
 		 */
 		BufferedReader inGrammarStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename
-						+ ".grammar"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
 		String ln;
 
 		String[] tok;
@@ -811,12 +810,12 @@ public class LoaderM {
 								// // System.exit(0);
 								// }
 
-								// edgeVal
+//								// edgeVal
 								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
 										.readByte();
 
 								// TODO: remove this!!
-								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.BYTES;
+//								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.BYTES;
 
 								// increment the last added position for this
 								// row
