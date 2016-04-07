@@ -84,8 +84,10 @@ public class EdgeComputerM {
 		// logger.info("EdgeArrstoMerge: \n" +
 		// Arrays.deepToString(edgArrstoMerge));
 
-		oldUnewIdsToMerge.clear();
-		newIdsToMerge.clear();
+////		oldUnewIdsToMerge.clear();
+////		newIdsToMerge.clear();
+//		oldUnewIdsToMerge = new HashSet<Integer>();
+//		newIdsToMerge = new HashSet<Integer>();
 
 		// -------------------------------------------------------------------------------
 		// 4. call the SortedArrMerger merge function

@@ -6,8 +6,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class SortedArrMerger {
-	private static final Logger logger = GraspanLogger
-			.getLogger("SortedArrMerger");
+	private static final Logger logger = GraspanLogger.getLogger("SortedArrMerger");
 
 	private int delta_ptr = -1;
 
@@ -37,8 +36,7 @@ public class SortedArrMerger {
 	 * @param oldUnewUdelta_edgs
 	 * @param oldUnewUdelta_vals
 	 */
-	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge,
-			int srcRowId) {
+	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge, int srcRowId) {
 		assert (delta_ptr == -1);
 		assert (srcRowId == 0);
 
@@ -66,44 +64,40 @@ public class SortedArrMerger {
 		// src_delta_vals[i] = -1;
 		// }
 
-		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length
-				+ cumTgtRowsSize];
-		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length
-				+ cumTgtRowsSize];
+		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
+		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
 		// for (int i = 0; i < edgArrstoMerge[srcRowId].length + cumTgtRowsSize;
 		// i++) {
 		// src_oldUnewUdelta_edgs[i] = -1;
 		// src_oldUnewUdelta_vals[i] = -1;
 		// }
 
-		MinSet minSetFrmTgtRows = null;
-		MinSet minSetFromSrcRow = null;
+		// MinSet minSetFrmTgtRows = null;
+		// MinSet minSetFromSrcRow = null;
 
-		while (true) {
-			// pick the min set from source row and min set from target rows
-			minSetFromSrcRow = minSets[srcRowId];
-			minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
+		if (edgArrstoMerge.length == 1) {
+			processMinSetsForNull(edgArrstoMerge[srcRowId], valArrstoMerge[srcRowId]);
+		} else {
+			while (true) {
+				// pick the min set from source row and min set from target rows
+				MinSet minSetFromSrcRow = minSets[srcRowId];
+				MinSet minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
 
-			if (minSetFrmTgtRows == null) {
-				processMinSetsForNull(edgArrstoMerge[srcRowId],
-						valArrstoMerge[srcRowId]);
-				break;
-			} else if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
-					&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
-				break;
+				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
+						&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
+					break;
+				}
+
+				int rowIdOfTgtMinSet = minSetFrmTgtRows.getMinSetId();
+
+				processMinSets(minSetFromSrcRow, minSetFrmTgtRows, edgArrstoMerge[srcRowId], valArrstoMerge[srcRowId],
+						edgArrstoMerge[rowIdOfTgtMinSet], valArrstoMerge[rowIdOfTgtMinSet]);
+
 			}
-
-			int rowIdOfTgtMinSet = minSetFrmTgtRows.getMinSetId();
-
-			processMinSets(minSetFromSrcRow, minSetFrmTgtRows,
-					edgArrstoMerge[srcRowId], valArrstoMerge[srcRowId],
-					edgArrstoMerge[rowIdOfTgtMinSet],
-					valArrstoMerge[rowIdOfTgtMinSet]);
 
 		}
 
-		// removing the empty values in output components: delta and
-		// oldUnewUdelta
+		// removing the empty values in output components: delta and oldUnewUdelta
 		removeRedundantArraySpace();
 
 	}
@@ -120,15 +114,8 @@ public class SortedArrMerger {
 		// tempEdgs[j] = src_oldUnewUdelta_edgs[j];
 		// tempVals[j] = src_oldUnewUdelta_vals[j];
 		// }
-		//
-		// TODO: FIRST TACKLE CASE FOR FOR OLDuNEWuDELTA_PTR =-1
-		try {
-			System.arraycopy(src_oldUnewUdelta_edgs, 0, tempEdgs, 0, oldUnewUdelta_ptr+1);
-			System.arraycopy(src_oldUnewUdelta_vals, 0, tempVals, 0, oldUnewUdelta_ptr+1);
-		} catch (Exception e) {
-			//logger.info(e + " " + oldUnewUdelta_ptr);
-			return;
-		}
+		System.arraycopy(src_oldUnewUdelta_edgs, 0, tempEdgs, 0, oldUnewUdelta_ptr + 1);
+		System.arraycopy(src_oldUnewUdelta_vals, 0, tempVals, 0, oldUnewUdelta_ptr + 1);
 
 		src_oldUnewUdelta_edgs = tempEdgs;
 		src_oldUnewUdelta_vals = tempVals;
@@ -141,15 +128,8 @@ public class SortedArrMerger {
 		// tempEdgs[j] = src_delta_edgs[j];
 		// tempVals[j] = src_delta_vals[j];
 		// }
-
-		// TODO: FIRST TACKLE CASE FOR FOR DELTA_PTR =-1
-		try {
-			System.arraycopy(src_delta_edgs, 0, tempEdgs, 0, delta_ptr+1);
-			System.arraycopy(src_delta_vals, 0, tempVals, 0, delta_ptr+1);
-		} catch (Exception e) {
-			//logger.info(e + " " + delta_ptr);
-			return;
-		}
+		System.arraycopy(src_delta_edgs, 0, tempEdgs, 0, delta_ptr + 1);
+		System.arraycopy(src_delta_vals, 0, tempVals, 0, delta_ptr + 1);
 
 		src_delta_edgs = tempEdgs;
 		src_delta_vals = tempVals;
@@ -165,8 +145,8 @@ public class SortedArrMerger {
 				src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = srcEdgRow[i];
 				src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = srcValRow[i];
 			} else {
-				logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!"
-						+ " ThreadNo:" + Thread.currentThread().getId());
+				logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
+						+ Thread.currentThread().getId());
 			}
 		}
 
@@ -187,17 +167,11 @@ public class SortedArrMerger {
 		// " ThreadNo:" + Thread.currentThread().getId());
 		minSet.setCurrentVId(Integer.MAX_VALUE);
 		minSet.clearEvalSet();
-		for (int i = minSet.getPtr(); i < edgRow.length; i++) {
-			if (edgRow[i] <= minSet.getCurrentVId()) {
-				if (edgRow[i] == 0) {// takes care of case when edgRow is -1 & 0
-										// //TODO: FIND OUT CAN IT BE 0?
-					break;
-				}
-				minSet.setCurrentVId(edgRow[i]);
-				minSet.addEval(valRow[i]);
-				minSet.incrementPtr();
-			} else
-				break;
+
+		for (int i = minSet.getPtr(); i < edgRow.length && edgRow[i] <= minSet.getCurrentVId(); i++) {
+			minSet.setCurrentVId(edgRow[i]);
+			minSet.addEval(valRow[i]);
+			minSet.incrementPtr();
 		}
 	}
 
@@ -213,10 +187,10 @@ public class SortedArrMerger {
 		MinSet minset = null;
 		for (int i = 1; i < minSets.length; i++) {
 			if (minSets[i].getCurrentVId() <= min) {
-				if (minSets[i].getCurrentVId() == -1) {
-					// if the minset has reached -1, ignore this minset
-					continue;
-				}
+				// if (minSets[i].getCurrentVId() == -1) {
+				// // if the minset has reached -1, ignore this minset
+				// continue;
+				// }
 				min = minSets[i].getCurrentVId();
 				minset = minSets[i];
 			}
@@ -224,8 +198,8 @@ public class SortedArrMerger {
 		return minset;
 	}
 
-	public void processMinSets(MinSet minSetFrmSrcRow, MinSet minSetFrmTgtRows,
-			int[] srcEdgRow, byte[] srcValRow, int[] tgtEdgRow, byte[] tgtValRow) {
+	public void processMinSets(MinSet minSetFrmSrcRow, MinSet minSetFrmTgtRows, int[] srcEdgRow, byte[] srcValRow,
+			int[] tgtEdgRow, byte[] tgtValRow) {
 
 		// case 1
 		if (minSetFrmTgtRows.getCurrentVId() < minSetFrmSrcRow.getCurrentVId()) {
@@ -234,32 +208,29 @@ public class SortedArrMerger {
 				currentEvals.clear();
 			}
 
-			HashSet<Byte> evals_tgt;
-			evals_tgt = minSetFrmTgtRows.getEvals();
+			HashSet<Byte> evals_tgt = minSetFrmTgtRows.getEvals();
 			for (Byte tgt_eval : evals_tgt) {
 				if (!currentEvals.contains(tgt_eval)) {
 
 					// add the target row minSet to src_oldUnewUdelta
 					oldUnewUdelta_ptr++;
 					if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
-						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmTgtRows
-								.getCurrentVId();
+						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmTgtRows.getCurrentVId();
 						src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = tgt_eval;
 					} else {
-						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!"
-								+ " ThreadNo:" + Thread.currentThread().getId());
+						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
+								+ Thread.currentThread().getId());
 					}
 
 					// add the target row minSet to delta
 					delta_ptr++;
 					if (delta_ptr < src_delta_edgs.length) {
-						src_delta_edgs[delta_ptr] = minSetFrmTgtRows
-								.getCurrentVId();
+						src_delta_edgs[delta_ptr] = minSetFrmTgtRows.getCurrentVId();
 						src_delta_vals[delta_ptr] = tgt_eval;
 						currentEvals.add(tgt_eval);
 					} else {
-						logger.info("Error, delta_ptr has gone past the size the array!"
-								+ " ThreadNo:" + Thread.currentThread().getId());
+						logger.info("Error, delta_ptr has gone past the size the array!" + " ThreadNo:"
+								+ Thread.currentThread().getId());
 					}
 				}
 			}
@@ -290,25 +261,21 @@ public class SortedArrMerger {
 						// add the target row minSet to src_oldUnewUdelta
 						oldUnewUdelta_ptr++;
 						if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
-							src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmTgtRows
-									.getCurrentVId();
+							src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmTgtRows.getCurrentVId();
 							src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = tgt_eval;
 						} else {
-							logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!"
-									+ " ThreadNo:"
+							logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
 									+ Thread.currentThread().getId());
 						}
 
 						// add the target row minSet to delta
 						delta_ptr++;
 						if (delta_ptr < src_delta_edgs.length) {
-							src_delta_edgs[delta_ptr] = minSetFrmTgtRows
-									.getCurrentVId();
+							src_delta_edgs[delta_ptr] = minSetFrmTgtRows.getCurrentVId();
 							src_delta_vals[delta_ptr] = tgt_eval;
 							currentEvals.add(tgt_eval);
 						} else {
-							logger.info("Error, delta_ptr has gone past the size the array!"
-									+ " ThreadNo:"
+							logger.info("Error, delta_ptr has gone past the size the array!" + " ThreadNo:"
 									+ Thread.currentThread().getId());
 						}
 					}
@@ -338,13 +305,12 @@ public class SortedArrMerger {
 
 					oldUnewUdelta_ptr++;
 					if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
-						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmSrcRow
-								.getCurrentVId();
+						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmSrcRow.getCurrentVId();
 						src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = src_eval;
 						currentEvals.add(src_eval);
 					} else {
-						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!"
-								+ " ThreadNo:" + Thread.currentThread().getId());
+						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
+								+ Thread.currentThread().getId());
 					}
 				}
 			}
