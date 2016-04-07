@@ -33,7 +33,6 @@ public class EngineM {
 
 	private long totalNewEdgs;
 	private long totalNewEdgsForIteratn;
-//	private long totalDupEdges;
 
 	private long newEdgesInOne;
 	private long newEdgesInTwo;

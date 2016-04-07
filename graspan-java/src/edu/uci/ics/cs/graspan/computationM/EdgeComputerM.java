@@ -33,63 +33,40 @@ public class EdgeComputerM {
 
 		// 1.2. if there is nothing to merge, return
 		boolean oldEdgs_empty = true, newEdgs_empty = true;
-		if (oldEdgs != null && oldEdgs.length != 0 && oldEdgs[0] != -1) {
+		if (oldEdgs.length != 0) {
 			oldEdgs_empty = false;
 		}
-		if (newEdgs != null && newEdgs.length != 0 && newEdgs[0] != -1) {
+		if (newEdgs.length != 0) {
 			newEdgs_empty = false;
 		}
 		if (oldEdgs_empty && newEdgs_empty)
 			return 0;
 
-		int[][] edgArrstoMerge = null;
-		byte[][] valArrstoMerge = null;
-
 		// 2. get the rows to merge
-		HashSet<IdValuePair> newIdsToMerge = new HashSet<IdValuePair>();
-		HashSet<IdValuePair> oldUnewIdsToMerge = new HashSet<IdValuePair>();
+		HashSet<IdValuePair> newRowIndicesToMerge = new HashSet<IdValuePair>();
+		HashSet<IdValuePair> oldUnewRowIndicesToMerge = new HashSet<IdValuePair>();
 
-		// 2.1. get the ids of the new_components to merge
-		getRowIdsToMerge(compSets, intervals, oldEdgs, oldVals, oldEdgs_empty, newIdsToMerge, "old");
+		// 2.1. get the indices of the new_components to merge
+		getRowIndicesToMerge(compSets, intervals, oldEdgs, oldVals, oldEdgs_empty, newRowIndicesToMerge, "old");
+		// 2.2. get the indices of the oldUnew_components to merge 
+		getRowIndicesToMerge(compSets, intervals, newEdgs, newVals, newEdgs_empty, oldUnewRowIndicesToMerge, "new");
 
-		// 2.2. get the ids of the oldUnew_components to merge by scanning new edges
-		getRowIdsToMerge(compSets, intervals, newEdgs, newVals, newEdgs_empty, oldUnewIdsToMerge, "new");
-
-		int num_of_rows_to_merge = 1 + oldUnewIdsToMerge.size() + newIdsToMerge.size();
-
+		
+		int num_of_rows_to_merge = 1 + oldUnewRowIndicesToMerge.size() + newRowIndicesToMerge.size();
 		// 3. store the refs to rows in edgArrstoMerge & valArrstoMerge
-		edgArrstoMerge = new int[num_of_rows_to_merge][];
-		valArrstoMerge = new byte[num_of_rows_to_merge][];
+		int[][] edgArrstoMerge = new int[num_of_rows_to_merge][];
+		byte[][] valArrstoMerge = new byte[num_of_rows_to_merge][];
 
 		// 3.1. first store the source row
 		int rows_to_merge_id = 0;
-		// logger.info("The Id of source vertex: " + this.vertex.getVertexId());
 		edgArrstoMerge[0] = compSet.getOldUnewEdgs();
 		valArrstoMerge[0] = compSet.getOldUnewVals();
 
 		rows_to_merge_id++;
-		// logger.info("Vertex Id: " + this.vertex.getVertexId() + " Edge Arrays to merge (source row):" + Arrays.toString(edgArrstoMerge[0]));
-
-		rows_to_merge_id = genEdgesToMerge(compSets, newIdsToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "old");
-		rows_to_merge_id = genEdgesToMerge(compSets, oldUnewIdsToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "new");
 		
-//		// 3.2. now store the new component rows
-//		for (Integer id : newIdsToMerge) {
-//			edgArrstoMerge[rows_to_merge_id] = compSets[id].getNewEdgs();
-//			valArrstoMerge[rows_to_merge_id] = compSets[id].getNewVals();
-//			rows_to_merge_id++;
-//		}
-//
-//		// 3.3. now store the oldUnew component rows of targets
-//		for (Integer id : oldUnewIdsToMerge) {
-//			edgArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewEdgs();
-//			valArrstoMerge[rows_to_merge_id] = compSets[id].getOldUnewVals();
-//			rows_to_merge_id++;
-//		}
-
-		// logger.info("EdgeArrstoMerge: \n" +
-		// Arrays.deepToString(edgArrstoMerge));
-
+//		rows_to_merge_id = genEdgesToMerge();
+		rows_to_merge_id = genEdgesToMerge(compSets, newRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "old");
+		rows_to_merge_id = genEdgesToMerge(compSets, oldUnewRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "new");
 		
 
 		// -------------------------------------------------------------------------------
@@ -111,14 +88,6 @@ public class EdgeComputerM {
 
 	}
 
-//	private static void generateEdgesToMerge(int[][] edgArrstoMerge, byte[][] valArrstoMerge,
-//			HashSet<IdValuePair> newIdsToMerge, HashSet<IdValuePair> oldUnewIdsToMerge, int rows_to_merge_id, ComputationSet[] compSets) {
-//		// TODO Auto-generated method stub
-//		genEdgesToMerge(compSets, newIdsToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id);
-//		
-//		
-//		
-//	}
 
 	private static int genEdgesToMerge(ComputationSet[] compSets, HashSet<IdValuePair> idsToMerge,
 			int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id, String flag) {
@@ -146,43 +115,45 @@ public class EdgeComputerM {
 				int dstId = edges[i];
 				byte dstVal = vals[i];
 				
-				byte newVal = checkGrammarAndGetNewEdgeVal(srcVal, dstVal);
+				byte newVal = GrammarChecker.checkGrammar(srcVal, dstVal);
 				if(newVal != -1){
 					list.add(new IdValuePair(dstId, newVal));
 				}
 			}
 			
-			int[] newEdgeArray = new int[list.size()];
-			byte[] newValArray = new byte[list.size()];
-			for(int i = 0; i < list.size(); i++){
-				IdValuePair ele = list.get(i);
-				newEdgeArray[i] = ele.id;
-				newValArray[i] = ele.value;
-			}
+			if(!list.isEmpty()){
+				int[] newEdgeArray = new int[list.size()];
+				byte[] newValArray = new byte[list.size()];
+				for(int i = 0; i < list.size(); i++){
+					IdValuePair ele = list.get(i);
+					newEdgeArray[i] = ele.id;
+					newValArray[i] = ele.value;
+				}
 				
-			edgArrstoMerge[rows_to_merge_id] = newEdgeArray;
-			valArrstoMerge[rows_to_merge_id] = newValArray;
-			rows_to_merge_id++;
+				edgArrstoMerge[rows_to_merge_id] = newEdgeArray;
+				valArrstoMerge[rows_to_merge_id] = newValArray;
+				rows_to_merge_id++;
+			}
 		}
 		
 		return rows_to_merge_id;
 	}
 	
-	private static byte checkGrammarAndGetNewEdgeVal(byte edgeVal1, byte edgeVal2) {
+//	private static byte checkGrammarAndGetNewEdgeVal(byte edgeVal1, byte edgeVal2) {
+//
+//		byte[][] grammarTab = GlobalParams.getGrammarTab();
+//		byte edgeVal3 = -1;
+//		for (int i = 0; i < grammarTab.length; i++) {
+//			if (grammarTab[i][0] == edgeVal1 && grammarTab[i][1] == edgeVal2) {
+//				edgeVal3 = grammarTab[i][2];
+//				break;
+//			}
+//		}
+//		return edgeVal3;
+//	}
 
-		byte[][] grammarTab = GlobalParams.getGrammarTab();
-		byte edgeVal3 = -1;
-		for (int i = 0; i < grammarTab.length; i++) {
-			if (grammarTab[i][0] == edgeVal1 && grammarTab[i][1] == edgeVal2) {
-				edgeVal3 = grammarTab[i][2];
-				break;
-			}
-		}
-		return edgeVal3;
-	}
-
-	private static void getRowIdsToMerge(ComputationSet[] compSets, List<LoadedVertexInterval> intervals, int[] edgs, byte[] vals, boolean edgs_empty, HashSet<IdValuePair> newIdsToMerge, String flag) {
-		int targetRowId = -1;
+	private static void getRowIndicesToMerge(ComputationSet[] compSets, List<LoadedVertexInterval> intervals, int[] edgs, byte[] vals, boolean edgs_empty, HashSet<IdValuePair> newIdsToMerge, String flag) {
+		int targetRowIndex = -1;
 		LoadedVertexInterval interval;
 		
 		int newTgt = 0;
@@ -190,25 +161,22 @@ public class EdgeComputerM {
 		
 		if (!edgs_empty) {
 			for (int i = 0; i < edgs.length; i++) {
-//				if (edgs[i] == -1)
-//					break;
-
 				newTgt = edgs[i];
 				val = vals[i];
 				
 				for (int j = 0; j < intervals.size(); j++) {
 					interval = intervals.get(j);
 					if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
-						targetRowId = newTgt - interval.getFirstVertex() + interval.getIndexStart();
-						assert (targetRowId != -1);
+						targetRowIndex = newTgt - interval.getFirstVertex() + interval.getIndexStart();
+						assert (targetRowIndex != -1);
 					}
 				}
-				if (targetRowId == -1)
+				if (targetRowIndex == -1)
 					continue;
 				
-				if((flag.equals("old") && compSets[targetRowId].getNewEdgs().length > 0) 
-						|| (flag.equals("new") && compSets[targetRowId].getOldUnewEdgs().length > 0)){
-					newIdsToMerge.add(new IdValuePair(targetRowId, val));
+				if((flag.equals("old") && compSets[targetRowIndex].getNewEdgs().length > 0) 
+						|| (flag.equals("new") && compSets[targetRowIndex].getOldUnewEdgs().length > 0)){
+					newIdsToMerge.add(new IdValuePair(targetRowIndex, val));
 				}
 //				if (edgs[i] != this.vertex.getVertexId()) {
 //				}

@@ -18,8 +18,7 @@ public class Vertex {
 	private int[] outEdges;
 	private byte[] outEdgeValues;
 
-	// the degree of the vertex counting original out edges and newly computed
-	// out edges
+	// the degree of the vertex counting original out edges and newly computed out edges
 	private int combinedDeg;
 
 	// Unused
@@ -110,8 +109,8 @@ public class Vertex {
 
 		result.append(NEW_LINE + "vertex id : " + id + NEW_LINE);
 		result.append("out edges: " + Arrays.toString(outEdges) + NEW_LINE);
-		// result.append("edge value: " + Arrays.toString(outEdgeValues) +
-		// NEW_LINE);//TODO UNCOMMENT THIS LATER
+		// result.append("edge value: " + Arrays.toString(outEdgeValues) + NEW_LINE);
+		//TODO UNCOMMENT THIS LATER
 		result.append("degree: " + combinedDeg + NEW_LINE);
 
 		return result.toString();

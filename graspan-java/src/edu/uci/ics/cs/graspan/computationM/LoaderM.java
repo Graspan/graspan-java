@@ -80,7 +80,8 @@ public class LoaderM {
 		this.readSchedulingInfo();
 
 		// get the grammar info
-		this.readGrammarTab();
+//		this.readGrammarTab();
+		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 
 		// initialize variables for partition loading based on number of
 		// partitions to load.
