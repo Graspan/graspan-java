@@ -61,10 +61,12 @@ public class EdgeComputerM {
 		int rows_to_merge_id = 0;
 		edgArrstoMerge[0] = compSet.getOldUnewEdgs();
 		valArrstoMerge[0] = compSet.getOldUnewVals();
-
 		rows_to_merge_id++;
 		
-//		rows_to_merge_id = genEdgesToMerge();
+		//for singleton rule
+		rows_to_merge_id = genEdgesToMergeForSRule(newEdgs, newVals, edgArrstoMerge, valArrstoMerge, rows_to_merge_id);
+		
+		//for length 2 rule
 		rows_to_merge_id = genEdgesToMerge(compSets, newRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "old");
 		rows_to_merge_id = genEdgesToMerge(compSets, oldUnewRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "new");
 		
@@ -89,9 +91,42 @@ public class EdgeComputerM {
 	}
 
 
+	private static int genEdgesToMergeForSRule(int[] newEdgs, byte[] newVals, int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id) {
+		//get the resulting edge and value array
+		List<IdValuePair> list = new ArrayList<IdValuePair>();
+		for(int i = 0; i < newEdgs.length; i++){
+			int dstId = newEdgs[i];
+			byte dstVal = newVals[i];
+			
+			byte newVal = -1;
+			if(GrammarChecker.sRules.containsKey(dstVal)){
+				newVal = GrammarChecker.sRules.get(dstVal);
+			}
+			if(newVal != -1){
+				list.add(new IdValuePair(dstId, newVal));
+			}
+		}
+		
+		if(!list.isEmpty()){
+			int[] newEdgeArray = new int[list.size()];
+			byte[] newValArray = new byte[list.size()];
+			for(int i = 0; i < list.size(); i++){
+				IdValuePair ele = list.get(i);
+				newEdgeArray[i] = ele.id;
+				newValArray[i] = ele.value;
+			}
+			
+			edgArrstoMerge[rows_to_merge_id] = newEdgeArray;
+			valArrstoMerge[rows_to_merge_id] = newValArray;
+			rows_to_merge_id++;
+		}
+		
+		return rows_to_merge_id;
+	}
+
+
 	private static int genEdgesToMerge(ComputationSet[] compSets, HashSet<IdValuePair> idsToMerge,
 			int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id, String flag) {
-		
 		for(IdValuePair pair: idsToMerge){
 			int index = pair.id;
 			byte srcVal = pair.value;
@@ -169,6 +204,7 @@ public class EdgeComputerM {
 					if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
 						targetRowIndex = newTgt - interval.getFirstVertex() + interval.getIndexStart();
 						assert (targetRowIndex != -1);
+						break;
 					}
 				}
 				if (targetRowIndex == -1)
