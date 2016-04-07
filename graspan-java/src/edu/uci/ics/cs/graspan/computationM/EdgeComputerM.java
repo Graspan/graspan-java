@@ -98,10 +98,7 @@ public class EdgeComputerM {
 			int dstId = newEdgs[i];
 			byte dstVal = newVals[i];
 			
-			byte newVal = -1;
-			if(GrammarChecker.sRules.containsKey(dstVal)){
-				newVal = GrammarChecker.sRules.get(dstVal);
-			}
+			byte newVal = GrammarChecker.checkL1Rules(dstVal);
 			if(newVal != -1){
 				list.add(new IdValuePair(dstId, newVal));
 			}
@@ -150,7 +147,7 @@ public class EdgeComputerM {
 				int dstId = edges[i];
 				byte dstVal = vals[i];
 				
-				byte newVal = GrammarChecker.checkGrammar(srcVal, dstVal);
+				byte newVal = GrammarChecker.checkL2Rules(srcVal, dstVal);
 				if(newVal != -1){
 					list.add(new IdValuePair(dstId, newVal));
 				}

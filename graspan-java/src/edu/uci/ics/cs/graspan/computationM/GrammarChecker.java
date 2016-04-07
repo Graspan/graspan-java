@@ -25,26 +25,44 @@ public class GrammarChecker {
 		/*
 		 * Scan the grammar file
 		 */
-		BufferedReader inGrammarStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(grammar_input)));
+		BufferedReader inGrammarStrm = new BufferedReader(new InputStreamReader(new FileInputStream(grammar_input)));
 		String ln;
 
 		String[] tok;
 		while ((ln = inGrammarStrm.readLine()) != null) {
 			tok = ln.split("\t");
 			if (tok.length == 1) { // production with 1 symbol (self)
-				eRules.add((byte) Integer.parseInt(tok[0]));
-				continue;
+//				eRules.add((byte) Integer.parseInt(tok[0]));
+				eRules.add(Byte.parseByte(tok[0]));
 			}
-			if (tok.length == 2) { // production with 2 symbols
-				sRules.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
-				continue;
+			else if (tok.length == 2) { // production with 2 symbols
+//				sRules.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
+				sRules.put(Byte.parseByte(tok[0]), Byte.parseByte(tok[1]));
 			}
-			if (tok.length == 3) { // production with 3 symbols
+			else if (tok.length == 3) { // production with 3 symbols
 			// consider production form : BC ----- > A (Map will store them as (B,(C,A)))
-				HashMap<Byte, Byte> destValOPValPair=new HashMap<Byte, Byte>();
-				destValOPValPair.put((byte) Integer.parseInt(tok[1]), (byte) Integer.parseInt(tok[2]));
-				dRules.put((byte) Integer.parseInt(tok[0]), destValOPValPair);
+//				HashMap<Byte, Byte> destValOPValPair=new HashMap<Byte, Byte>();
+//				destValOPValPair.put((byte) Integer.parseInt(tok[1]), (byte) Integer.parseInt(tok[2]));
+//				dRules.put((byte) Integer.parseInt(tok[0]), destValOPValPair);
+				
+				byte src1 = Byte.parseByte(tok[0]);
+				byte src2 = Byte.parseByte(tok[1]);
+				byte dst = Byte.parseByte(tok[2]);
+				
+				if(dRules.containsKey(src1)){
+					HashMap<Byte, Byte> map = dRules.get(src1);
+					assert(!map.containsKey(src2));
+					
+					map.put(src2, dst);
+				}
+				else{
+					HashMap<Byte, Byte> map = new HashMap<Byte, Byte>();
+					map.put(src2, dst);
+					dRules.put(src1, map);
+				}
+			}
+			else{
+				throw new RuntimeException("Wrong length in the grammar file!!!");
 			}
 		}
 
@@ -53,14 +71,30 @@ public class GrammarChecker {
 	}
 	
 	
-	public static byte checkGrammar(byte srcEval, byte destEval){
+	public static byte checkL2Rules(byte srcEval, byte destEval){
 		// BC ----- > A : <B,<C,A>> : <srcEval,<destEval,OPEval>>
 		byte OPEval = -1;
-		HashMap<Byte, Byte> destValOPValPair = dRules.get(srcEval);
-		if (destValOPValPair.get(destEval) != null)
-			OPEval = destValOPValPair.get(destEval);
+		
+//		HashMap<Byte, Byte> destValOPValPair = dRules.get(srcEval);
+//		if (destValOPValPair.get(destEval) != null)
+//			OPEval = destValOPValPair.get(destEval);
+		
+		if(dRules.containsKey(srcEval)){
+			HashMap<Byte, Byte> map = dRules.get(srcEval);
+			if(map.containsKey(destEval)){
+				OPEval = map.get(destEval);
+			}
+		}
+		
 		return OPEval;
 	}
 	
 
+	public static byte checkL1Rules(byte src){
+		byte OPEval = -1;
+		if(GrammarChecker.sRules.containsKey(src)){
+			OPEval = GrammarChecker.sRules.get(src);
+		}
+		return OPEval;
+	}
 }
