@@ -41,10 +41,10 @@ public class GrammarChecker {
 				continue;
 			}
 			if (tok.length == 3) { // production with 3 symbols
-			// consider production form : A ---> BC
-				HashMap<Byte, Byte> rhs_symbols=new HashMap<Byte, Byte>();
-				rhs_symbols.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
-				dRules.put((byte) Integer.parseInt(tok[2]), rhs_symbols);
+			// consider production form : BC ----- > A
+				HashMap<Byte, Byte> lhs_symbols=new HashMap<Byte, Byte>();
+				lhs_symbols.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
+				dRules.put((byte) Integer.parseInt(tok[2]), lhs_symbols);
 			}
 		}
 
