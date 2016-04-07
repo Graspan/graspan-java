@@ -347,7 +347,7 @@ public class LoaderM {
 		int i = 0;
 
 		/*
-		 * Scan the edge destination counts file
+		 * Scan the grammar file
 		 */
 		BufferedReader inGrammarStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
