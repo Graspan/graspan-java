@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
-import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
@@ -43,9 +41,11 @@ public class PartitionPreprocessor {
 
 		// get the partition allocation table
 		this.readPartAllocTable();
+		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 		// get the grammar info
 		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
+		logger.info("Loaded " + baseFilename + ".grammar");
 
 		preliminaryInit();
 	}
@@ -63,37 +63,47 @@ public class PartitionPreprocessor {
 
 	}
 
+	/**
+	 * description: 
+	 * 
+	 * @param partId
+	 * @throws IOException
+	 */
 	public void loadAndProcessParts(int partId) throws IOException {
 
 		logger.info("PREPROCESSING PARTITION : " + partId + "...");
+		
 		readDegrees(partId);
+		logger.info("Loaded " + baseFilename + ".partition." + partId + ".degrees");
+		
 		initVarsOfPartsToLoad(partId);
-
-		logger.info("Initialized data structures for partitions to load.");
+		logger.info("Initialized data structures for partition to load.");
 
 		// fill the partition data structures
 		loadPartData(partId);
-
-		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
+		
+		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs(); // this is not updated because unnecessary later
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
+		logger.info("Loaded " + baseFilename + ".partition." + partId);
+		
 		sortPart(partId, loadedPartOutDegs, partEdges, partEdgeVals);
+		logger.info("Sorted " + baseFilename + ".partition." + partId);
 		
 		addEdgesforERules();
+		logger.info("Added new edges for ERules for " + baseFilename + ".partition." + partId);
 
 		savePartAndDegs(partId);
+		logger.info("Saved data (adjacency lists & degrees) for " + baseFilename + ".partition." + partId);
 
 	}
 
 	private void addEdgesforERules() {
-		int[] tempEdgs;
-		byte[] tempVals;
 		// add edges corresponding to epsilon rules.
 		Set<Byte> eRules = GrammarChecker.eRules;
 		
 		int srcId=0;
-		int destId=0;
 		
 		//for each loaded source vertex row
 		for (int i = 0; i < vertices.length; i++) {
@@ -188,8 +198,6 @@ public class PartitionPreprocessor {
 		}
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
-
-		logger.info("Loaded " + baseFilename + ".partAllocTable");
 	}
 
 	public Vertex[] getVertices() {
@@ -233,12 +241,10 @@ public class PartitionPreprocessor {
 			}
 		}
 		outDegInStrm.close();
-
-		logger.info("Loaded " + baseFilename + ".partition." + partId + ".degrees");
 	}
 
 	/**
-	 * Initializes data structures of the partitions to load
+	 * Initializes data structures of the partitions to load (In this implementation, only one partition is loaded at a time)
 	 */
 	private void initVarsOfPartsToLoad(int partId) {
 
@@ -274,7 +280,7 @@ public class PartitionPreprocessor {
 		}
 	}
 
-	private void loadPartData(int partId) throws IOException {
+	public void loadPartData(int partId) throws IOException {
 
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
@@ -323,8 +329,6 @@ public class PartitionPreprocessor {
 		}
 
 		partInStrm.close();
-
-		logger.info("Loaded " + baseFilename + ".partition." + partId);
 
 	}
 
