@@ -42,7 +42,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
 public class LoaderM {
 
 	private static final int EDC_SIZE = GlobalParams.getEdcSize();
-	private static final Logger logger = GraspanLogger.getLogger("Loader");
+	private static final Logger logger = GraspanLogger.getLogger("LoaderM");
 
 	public static Vertex[] vertices = null;
 	public List<LoadedVertexInterval> intervals = new ArrayList<LoadedVertexInterval>();

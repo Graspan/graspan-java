@@ -28,7 +28,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
 
 public class PartitionPreprocessor {
 
-	private static final Logger logger = GraspanLogger.getLogger("Loader");
+	private static final Logger logger = GraspanLogger.getLogger("PartitionPreprocessor");
 
 	public static Vertex[] vertices;
 	private String baseFilename;
