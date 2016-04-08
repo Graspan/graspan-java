@@ -104,31 +104,43 @@ public class PartitionPreprocessor {
 			HashSet<Byte> newValsforSrc = new HashSet<Byte>(eRules);
 			
 			//find values already existing for this source row, and remove those values from newValsforSrc 
-			for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
-				destId = vertices[i].getOutEdge(j);
-				if (destId > srcId)
-					break;
-				newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
-			}
+			removeExistingERuleVals(srcId, i, newValsforSrc);
 			
-			//add the new edges to tempEdgs first
-			tempEdgs = new int[vertices[i].getOutEdges().length + newValsforSrc.size()];
-			tempVals = new byte[vertices[i].getOutEdges().length + newValsforSrc.size()];
-			
-			assert(srcId!=0);
-			
-			int tempArrMarker = 0;
-			for (Byte eval : newValsforSrc) {
-				tempEdgs[tempArrMarker] = srcId;
-				tempVals[tempArrMarker] = eval;
-				tempArrMarker++;
-			}
+			addNewEdges(srcId, i, newValsforSrc);
+		}
+	}
 
-			System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
-			System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
+	private void addNewEdges(int srcId, int i, HashSet<Byte> newValsforSrc) {
+		int[] tempEdgs;
+		byte[] tempVals;
+		//add the new edges to tempEdgs 
+		tempEdgs = new int[vertices[i].getOutEdges().length + newValsforSrc.size()];
+		tempVals = new byte[vertices[i].getOutEdges().length + newValsforSrc.size()];
 		
-			vertices[i].setOutEdges(tempEdgs);
-			vertices[i].setOutEdgeValues(tempVals);
+		assert(srcId!=0);
+		
+		int tempArrMarker = 0;
+		for (Byte eval : newValsforSrc) {
+			tempEdgs[tempArrMarker] = srcId;
+			tempVals[tempArrMarker] = eval;
+			tempArrMarker++;
+		}
+
+		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
+		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
+
+		//reset the outEdges/outVals
+		vertices[i].setOutEdges(tempEdgs);
+		vertices[i].setOutEdgeValues(tempVals);
+	}
+
+	private void removeExistingERuleVals(int srcId, int i, HashSet<Byte> newValsforSrc) {
+		int destId;
+		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+			destId = vertices[i].getOutEdge(j);
+			if (destId > srcId)
+				break;
+			newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
 		}
 	}
 
