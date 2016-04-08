@@ -35,8 +35,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  */
 public class Preprocessor {
 
-	private static final Logger logger = GraspanLogger
-			.getLogger("Preprocessor");
+	private static final Logger logger = GraspanLogger.getLogger("Preprocessor");
 
 	// number of input partitions
 	private static int numParts;
@@ -97,17 +96,15 @@ public class Preprocessor {
 		partOutStrms = new DataOutputStream[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partOutStrms[i] = new DataOutputStream(
-					new BufferedOutputStream(new FileOutputStream(baseFilename
-							+ ".partition." + i, true)));
+					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
 		}
 
 		// initialize streams for partition degree files (these streams will
 		// be later filled in by generatePartDegs())
 		partDegOutStrms = new PrintWriter[numParts];
 		for (int i = 0; i < numParts; i++) {
-			partDegOutStrms[i] = new PrintWriter(new BufferedWriter(
-					new FileWriter(baseFilename + ".partition." + i
-							+ ".degrees", true)));
+			partDegOutStrms[i] = new PrintWriter(
+					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i + ".degrees", true)));
 		}
 		logger.info("Done");
 	}
@@ -123,8 +120,7 @@ public class Preprocessor {
 	 */
 	public void generateGraphDegs(InputStream inputStream) throws IOException {
 		logger.info("Generating degrees file...");
-		BufferedReader ins = new BufferedReader(new InputStreamReader(
-				inputStream));
+		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long numEdges = 0;
 		TreeMap<Integer, Integer> outDegs = new TreeMap<Integer, Integer>();
@@ -138,11 +134,8 @@ public class Preprocessor {
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
 			if (lineCount % OUTPUT_EDGE_TRACKER_INTERVAL == 0) {
-				logger.info("Reading edge #"
-						+ NumberFormat.getNumberInstance(Locale.US).format(
-								lineCount) + ".");
-				readSpeed = OUTPUT_EDGE_TRACKER_INTERVAL * 1000000000
-						/ ((System.nanoTime() - readStartTime));
+				logger.info("Reading edge #" + NumberFormat.getNumberInstance(Locale.US).format(lineCount) + ".");
+				readSpeed = OUTPUT_EDGE_TRACKER_INTERVAL * 1000000000 / ((System.nanoTime() - readStartTime));
 				logger.info("Read speed: " + readSpeed + " edges/sec");
 				readStartTime = System.nanoTime();
 			}
@@ -153,8 +146,7 @@ public class Preprocessor {
 					// use + 1 if graph vertex no. starts from 0
 					if (GlobalParams.getFirstVertexID() == 0) {
 						src = Integer.parseInt(tok[0]) + 1;
-					}
-					else if  (GlobalParams.getFirstVertexID() == 1) {
+					} else if (GlobalParams.getFirstVertexID() == 1) {
 						src = Integer.parseInt(tok[0]);
 					}
 					if (!outDegs.containsKey(src)) {
@@ -164,8 +156,7 @@ public class Preprocessor {
 					}
 					numEdges++;
 				} catch (Exception e) {
-					logger.info("ERROR: " + e + "at line # " + lineCount
-							+ " : " + ln);
+					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 				}
 			}
 		}
@@ -178,8 +169,7 @@ public class Preprocessor {
 		logger.info("Saving degrees file " + baseFilename + ".degrees... ");
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
-		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees",
-				"UTF-8");
+		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees", "UTF-8");
 		while (it.hasNext()) {
 			Entry<Integer, Integer> pair = it.next();
 			outDegOutStrm.println(pair.getKey() + "\t" + pair.getValue());
@@ -196,8 +186,7 @@ public class Preprocessor {
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
-	public void createPartVIntervals() throws FileNotFoundException,
-			UnsupportedEncodingException {
+	public void createPartVIntervals() throws FileNotFoundException, UnsupportedEncodingException {
 
 		logger.info("Allocating vertices to partitions (creating partition allocation table)...");
 
@@ -206,8 +195,7 @@ public class Preprocessor {
 
 		// the heuristic for interval max
 		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
-		logger.info("Calculated partition size threshold: " + intervalMaxSize
-				+ " edges");
+		logger.info("Calculated partition size threshold: " + intervalMaxSize + " edges");
 
 		// marker of the max vertex (based on Id) of the interval
 		int intervalMaxVId = 0;
@@ -233,8 +221,7 @@ public class Preprocessor {
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
-			if (intervalEdgeCount > intervalMaxSize
-					&& !isLastPartition(partTabIdx)) {
+			if (intervalEdgeCount > intervalMaxSize && !isLastPartition(partTabIdx)) {
 				partAllocTable[partTabIdx][0] = partTabIdx;
 				partAllocTable[partTabIdx][1] = intervalMaxVId;
 				partSizes[partTabIdx][1] = intervalEdgeCount;
@@ -254,13 +241,10 @@ public class Preprocessor {
 			}
 		}
 
-		logger.info("Saving partition allocation table file " + baseFilename
-				+ ".partAllocTable... ");
-		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename
-				+ ".partAllocTable", "UTF-8");
+		logger.info("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
+		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
 		for (int i = 0; i < partAllocTable.length; i++) {
-			partAllocTableOutStrm.println(partAllocTable[i][0] + "\t"
-					+ partAllocTable[i][1]);
+			partAllocTableOutStrm.println(partAllocTable[i][0] + "\t" + partAllocTable[i][1]);
 		}
 		logger.info("Done");
 
@@ -284,8 +268,7 @@ public class Preprocessor {
 		while (it.hasNext()) {
 			Map.Entry<Integer, Integer> pair = it.next();
 			partId = PartitionQuerier.findPartition(pair.getKey());
-			partDegOutStrms[partId].println(pair.getKey() + "\t"
-					+ pair.getValue());
+			partDegOutStrms[partId].println(pair.getKey() + "\t" + pair.getValue());
 		}
 
 		// close all streams
@@ -307,15 +290,13 @@ public class Preprocessor {
 	 * @param inputStream
 	 * @throws IOException
 	 */
-	public void writePartitionEdgestoFiles(InputStream inputStream)
-			throws IOException {
+	public void writePartitionEdgestoFiles(InputStream inputStream) throws IOException {
 		logger.info("Generating partition files...");
 
 		// initialize partition buffers
 		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
 
-		logger.info("Initializing partition buffers (Total buffer size = "
-				+ BUFFER_FOR_PARTS + " edges for " + numParts
+		logger.info("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for " + numParts
 				+ " partitions)... ");
 		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
 		long partitionBufferFreespace[] = new long[numParts];
@@ -330,8 +311,7 @@ public class Preprocessor {
 
 		// read the input graph edge-wise and process each edge
 		logger.info("Performing second scan on input graph...");
-		BufferedReader ins = new BufferedReader(new InputStreamReader(
-				inputStream));
+		BufferedReader ins = new BufferedReader(new InputStreamReader(inputStream));
 		String ln;
 		long lineCount = 0;
 		double percentComplete = 0;
@@ -344,8 +324,7 @@ public class Preprocessor {
 				percentComplete = ((double) lineCount / numEdges) * 100;
 				logger.info("Reading edges to buffer from disk. Reading line #"
 						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "("
-						+ (double) Math.round(percentComplete * 100) / 100
-						+ "%)...");
+						+ (double) Math.round(percentComplete * 100) / 100 + "%)...");
 			}
 			if (!ln.startsWith("#")) {
 				try {
@@ -367,7 +346,13 @@ public class Preprocessor {
 						eval = 0;
 					}
 					if (GlobalParams.getInputGraphType().compareTo("POINTSTO") == 0) {
-						eval = Integer.parseInt(tok[2]);
+						if (tok[2].compareTo("D") == 0) {
+							eval = 9;
+						}
+						if (tok[2].compareTo("A") == 0) {
+							eval = 11;
+						}
+//						eval = Integer.parseInt(tok[2]);
 					}
 
 					assert (src != -1 && dst != -1 && eval != -1);
@@ -375,8 +360,7 @@ public class Preprocessor {
 					addEdgetoBuffer(src, dst, eval);
 
 				} catch (Exception e) {
-					logger.info("ERROR: " + e + "at line # " + lineCount
-							+ " : " + ln);
+					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 				}
 			}
 		}
@@ -413,8 +397,7 @@ public class Preprocessor {
 		}
 
 		logger.info("Partition files created.");
-		logger.info("Total # writes to disk for creating partition files: "
-				+ partitionDiskWriteCount);
+		logger.info("Total # writes to disk for creating partition files: " + partitionDiskWriteCount);
 
 	}
 
@@ -429,8 +412,7 @@ public class Preprocessor {
 	 * @param edgeValue
 	 * @throws IOException
 	 */
-	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue)
-			throws IOException {
+	private void addEdgetoBuffer(int srcVId, int destVId, int edgeValue) throws IOException {
 
 		int partitionId = PartitionQuerier.findPartition(srcVId);
 
@@ -460,9 +442,9 @@ public class Preprocessor {
 
 		// if partition buffer is full transfer the partition buffer to file
 		if (isPartitionBufferFull(partitionId)) {
-//			logger.info("Partition buffer is full for partition id "
-//					+ partitionId
-//					+ ", writing the edges for this buffer to disk.");
+			// logger.info("Partition buffer is full for partition id "
+			// + partitionId
+			// + ", writing the edges for this buffer to disk.");
 			// System.out.print("Partition buffer for partition # " +
 			// partitionId + " full, writing to disk... ");
 			sendBufferEdgestoDisk_ByteFmt(partitionId);
@@ -479,8 +461,7 @@ public class Preprocessor {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private void sendBufferEdgestoDisk_ByteFmt(int partitionId)
-			throws IOException {
+	private void sendBufferEdgestoDisk_ByteFmt(int partitionId) throws IOException {
 		partitionDiskWriteCount++;
 
 		DataOutputStream adjListOutputStream = partOutStrms[partitionId];
@@ -490,8 +471,7 @@ public class Preprocessor {
 
 		// get the adjacencyList from the relevant partition buffer
 		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partBuffers[partitionId];
-		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList
-				.entrySet().iterator();
+		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList.entrySet().iterator();
 
 		/*
 		 * write the vertex adjacency lists in the file (srcVId:4 bytes,count:4
@@ -538,19 +518,16 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unused")
-	private void sendBufferEdgestoDisk_NmlFmt(int partitionId)
-			throws IOException {
+	private void sendBufferEdgestoDisk_NmlFmt(int partitionId) throws IOException {
 		int srcVId, destVId, count;
 		byte edgeValue;
 
 		PrintWriter adjListOutputStream = new PrintWriter(
-				new BufferedWriter(new FileWriter(baseFilename + ".partition."
-						+ partitionId, true)));
+				new BufferedWriter(new FileWriter(baseFilename + ".partition." + partitionId, true)));
 
 		// get the adjacencyList from the relevant partition buffer
 		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partBuffers[partitionId];
-		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList
-				.entrySet().iterator();
+		Iterator<Map.Entry<Integer, ArrayList<Integer[]>>> it = vertexAdjList.entrySet().iterator();
 
 		/*
 		 * Write the adjacencyList in the disk in the following format:
@@ -605,8 +582,7 @@ public class Preprocessor {
 		// }
 
 		if (PartitionQuerier.findPartition(dest) != -1) {
-			edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier
-					.findPartition(dest)]++;
+			edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier.findPartition(dest)]++;
 		}
 	}
 
@@ -617,12 +593,11 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	private void writeEdgeDestCountstoFile() throws IOException {
-		PrintWriter edgeDestCountsOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(baseFilename + ".edgeDestCounts", true)));
+		PrintWriter edgeDestCountsOutStrm = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".edgeDestCounts", true)));
 		for (int i = 0; i < numParts; i++) {
 			for (int j = 0; j < numParts; j++) {
-				edgeDestCountsOutStrm.println(i + "\t" + j + "\t"
-						+ edgeDestCount[i][j]);
+				edgeDestCountsOutStrm.println(i + "\t" + j + "\t" + edgeDestCount[i][j]);
 			}
 		}
 		edgeDestCountsOutStrm.close();
@@ -635,8 +610,8 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	private void writeTotalPartEdgestoFile() throws IOException {
-		PrintWriter partSizesOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(baseFilename + ".partSizes", true)));
+		PrintWriter partSizesOutStrm = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".partSizes", true)));
 		long[][] partSizes = SchedulerInfo.getPartSizes();
 		for (int i = 0; i < numParts; i++) {
 			partSizesOutStrm.println(partSizes[i][1]);
