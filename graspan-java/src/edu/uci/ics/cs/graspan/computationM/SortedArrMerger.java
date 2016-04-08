@@ -58,7 +58,6 @@ public class SortedArrMerger {
 		int cumTgtRowsSize = 0;
 		for (int i = 0; i < edgArrstoMerge.length; i++) {
 			MinSet minSet = new MinSet(i);
-			
 			createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			minSets[i] = minSet;
 			
@@ -182,7 +181,6 @@ public class SortedArrMerger {
 		// " ThreadNo:" + Thread.currentThread().getId());
 		minSet.setCurrentVId(Integer.MAX_VALUE);
 		minSet.clearEvalSet();
-
 		for (int i = minSet.getPtr(); i < edgRow.length && edgRow[i] <= minSet.getCurrentVId(); i++) {
 			minSet.setCurrentVId(edgRow[i]);
 			minSet.addEval(valRow[i]);

@@ -1,6 +1,7 @@
 package edu.uci.ics.cs.graspan.computationM;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
@@ -52,11 +53,10 @@ public class EdgeComputerM {
 		getRowIndicesToMerge(compSets, intervals, newEdgs, newVals, newEdgs_empty, oldUnewRowIndicesToMerge, "new");
 
 		
-		int num_of_rows_to_merge = 1 + oldUnewRowIndicesToMerge.size() + newRowIndicesToMerge.size();
+		int num_of_rows_to_merge = 2 + oldUnewRowIndicesToMerge.size() + newRowIndicesToMerge.size();
 		// 3. store the refs to rows in edgArrstoMerge & valArrstoMerge
 		int[][] edgArrstoMerge = new int[num_of_rows_to_merge][];
 		byte[][] valArrstoMerge = new byte[num_of_rows_to_merge][];
-
 		// 3.1. first store the source row
 		int rows_to_merge_id = 0;
 		edgArrstoMerge[0] = compSet.getOldUnewEdgs();
@@ -74,7 +74,6 @@ public class EdgeComputerM {
 		// -------------------------------------------------------------------------------
 		// 4. call the SortedArrMerger merge function
 		SortedArrMerger sortedArrMerger = new SortedArrMerger();
-
 		// logger.info("Vertex ID: " + this.vertex.getVertexId());
 		int srcRowId = 0;
 		sortedArrMerger.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
@@ -104,7 +103,7 @@ public class EdgeComputerM {
 			}
 		}
 		
-		if(!list.isEmpty()){
+//		if(!list.isEmpty()){
 			int[] newEdgeArray = new int[list.size()];
 			byte[] newValArray = new byte[list.size()];
 			for(int i = 0; i < list.size(); i++){
@@ -116,7 +115,7 @@ public class EdgeComputerM {
 			edgArrstoMerge[rows_to_merge_id] = newEdgeArray;
 			valArrstoMerge[rows_to_merge_id] = newValArray;
 			rows_to_merge_id++;
-		}
+//		}
 		
 		return rows_to_merge_id;
 	}
@@ -153,7 +152,7 @@ public class EdgeComputerM {
 				}
 			}
 			
-			if(!list.isEmpty()){
+//			if(!list.isEmpty()){
 				int[] newEdgeArray = new int[list.size()];
 				byte[] newValArray = new byte[list.size()];
 				for(int i = 0; i < list.size(); i++){
@@ -165,7 +164,7 @@ public class EdgeComputerM {
 				edgArrstoMerge[rows_to_merge_id] = newEdgeArray;
 				valArrstoMerge[rows_to_merge_id] = newValArray;
 				rows_to_merge_id++;
-			}
+//			}
 		}
 		
 		return rows_to_merge_id;

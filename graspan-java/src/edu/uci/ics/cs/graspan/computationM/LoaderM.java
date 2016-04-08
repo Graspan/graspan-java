@@ -155,7 +155,7 @@ public class LoaderM {
 			}
 
 			this.oldIntervals = oldIntervals;
-			logger.info("oldIntervals after creation: " + oldIntervals);
+//			logger.info("oldIntervals after creation: " + oldIntervals);
 		}
 
 		loadedIntStartOP = "Loaded intervals at start of loading: ";
@@ -163,13 +163,13 @@ public class LoaderM {
 			loadedIntStartOP = loadedIntStartOP + interval.getPartitionId()
 					+ " ";
 		}
-		logger.info(loadedIntStartOP);
+//		logger.info(loadedIntStartOP);
 
 		String str = "";
 		for (int i = 0; i < partsToLoad.length; i++) {
 			str = str + partsToLoad[i] + " ";
 		}
-		logger.info("NEW COMPUTATION SET: Loading partitions : " + str + "...");
+//		logger.info("NEW COMPUTATION SET: Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
@@ -189,7 +189,7 @@ public class LoaderM {
 		// logger.info("oldIntervals after init of data structures of the partitions to load: "
 		// + oldIntervals);
 
-		logger.info("Initialized data structures for partitions to load.");
+//		logger.info("Initialized data structures for partitions to load.");
 
 		// fill the partition data structures
 		fillVarsOfPartsToLoad();
@@ -208,7 +208,7 @@ public class LoaderM {
 						high);
 			}
 		}
-		logger.info("Sorted loaded partitions.");
+//		logger.info("Sorted loaded partitions.");
 
 		// reset newParts
 		for (int i = 0; i < newParts.length; i++) {
@@ -226,7 +226,7 @@ public class LoaderM {
 		for (LoadedVertexInterval interval : intervals) {
 			loadedIntEndOP = loadedIntEndOP + interval.getPartitionId() + " ";
 		}
-		logger.info(loadedIntEndOP);
+//		logger.info(loadedIntEndOP);
 
 //		logger.info("vertices after loading is complete");
 //		for (int i = 0; i < vertices.length; i++) {
@@ -266,7 +266,7 @@ public class LoaderM {
 		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".partAllocTable");
+//		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 	}
 
@@ -311,7 +311,7 @@ public class LoaderM {
 
 		inEdgeDestCountStrm.close();
 
-		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
+//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 
 		/*
 		 * Scan the partSizes file
@@ -330,7 +330,7 @@ public class LoaderM {
 		SchedulerInfo.setPartSizes(partSizes);
 
 		inPartSizesStrm.close();
-		logger.info("Loaded " + baseFilename + ".partSizes");
+//		logger.info("Loaded " + baseFilename + ".partSizes");
 
 	}
 
@@ -363,7 +363,7 @@ public class LoaderM {
 		}
 
 		inGrammarStrm.close();
-		logger.info("Loaded " + baseFilename + ".grammar");
+//		logger.info("Loaded " + baseFilename + ".grammar");
 	}
 
 	public Vertex[] getVertices() {
@@ -446,9 +446,9 @@ public class LoaderM {
 
 			// test partsToSave
 			if (partsToSaveByLoader.size() == 0) {
-				logger.info("No Parts to save by Loader");
+//				logger.info("No Parts to save by Loader");
 			} else {
-				logger.info("Parts to save by Loader: " + partsToSaveByLoader);
+//				logger.info("Parts to save by Loader: " + partsToSaveByLoader);
 			}
 
 			// 2. Save PartsSet
@@ -483,7 +483,7 @@ public class LoaderM {
 			String loadedPartsOP = "Loaded Parts at load start (loadedParts): ";
 			for (int i = 0; i < loadedParts.length; i++)
 				loadedPartsOP = loadedPartsOP + loadedParts[i] + " ";
-			logger.info(loadedPartsOP);
+//			logger.info(loadedPartsOP);
 
 			// 3.2. Get ids of partitions not loaded and store them in the
 			// positions of partitions that are to be saved
@@ -530,12 +530,12 @@ public class LoaderM {
 			String newPartsOP = "New partitions: ";
 			for (int i = 0; i < newParts.length; i++)
 				newPartsOP = newPartsOP + "" + newParts[i] + " ";
-			logger.info(newPartsOP);
+//			logger.info(newPartsOP);
 
 			String partsNxtCompOP = "Parts for next computatn (loadedParts): ";
 			for (int i = 0; i < loadedParts.length; i++)
 				partsNxtCompOP = partsNxtCompOP + "" + loadedParts[i] + " ";
-			logger.info(partsNxtCompOP);
+//			logger.info(partsNxtCompOP);
 			// System.out.println();
 			// System.out.println("partsToLoad");
 			// for (int i = 0; i < partsToLoad.length; i++)
@@ -609,8 +609,8 @@ public class LoaderM {
 				}
 				outDegInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition."
-						+ newParts[i] + ".degrees");
+//				logger.info("Loaded " + baseFilename + ".partition."
+//						+ newParts[i] + ".degrees");
 			}
 		}
 	}
@@ -829,8 +829,8 @@ public class LoaderM {
 
 				partInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition."
-						+ newParts[i]);
+//				logger.info("Loaded " + baseFilename + ".partition."
+//						+ newParts[i]);
 			}
 		}
 
@@ -864,7 +864,7 @@ public class LoaderM {
 			indexSt = indexEd + 1;
 		}
 
-		logger.info("OldIntervals before starting lvi updates: " + oldIntervals);
+//		logger.info("OldIntervals before starting lvi updates: " + oldIntervals);
 
 		boolean alreadyLoaded;
 		int intrvlIndxMarker = 0;
@@ -884,8 +884,8 @@ public class LoaderM {
 					interval.setIndexEnd(intervalIndices.get(intrvlIndxMarker));
 					intrvlIndxMarker++;
 
-					logger.info("Updated interval parameters for partition: "
-							+ partId);
+//					logger.info("Updated interval parameters for partition: "
+//							+ partId);
 					break;
 				}
 			}
@@ -904,12 +904,12 @@ public class LoaderM {
 
 				intervals.add(interval);
 
-				logger.info("Added new interval for part " + partId);
+//				logger.info("Added new interval for part " + partId);
 			}
 
 		}
 
-		logger.info("OldIntervals before after lvi updates: " + oldIntervals);
+//		logger.info("OldIntervals before after lvi updates: " + oldIntervals);
 
 		if (oldIntervals != null) {
 			int oldIntvIdxSt = 0, oldIntvIdxEnd = 0, newIntvIdxSt = 0, newIntvIdxEnd = 0;
@@ -934,12 +934,12 @@ public class LoaderM {
 
 //						logger.info("All prevRoundvertices in memory during loading: \n"
 //								+ s2);
-						logger.info("oldIntvIdxSt: " + oldIntvIdxSt
-								+ " oldIntvIdxEnd: " + oldIntvIdxEnd
-								+ " oldIntervals partId: "
-								+ oldIntervals.get(j).getPartitionId());
-						logger.info("OldIntervals: " + oldIntervals);
-						logger.info("Current Intervals:" + intervals);
+//						logger.info("oldIntvIdxSt: " + oldIntvIdxSt
+//								+ " oldIntvIdxEnd: " + oldIntvIdxEnd
+//								+ " oldIntervals partId: "
+//								+ oldIntervals.get(j).getPartitionId());
+//						logger.info("OldIntervals: " + oldIntervals);
+//						logger.info("Current Intervals:" + intervals);
 
 						// this preservation strategy assumes that when an
 						// interval
@@ -997,8 +997,8 @@ public class LoaderM {
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
-				+ partitionId);
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
+//				+ partitionId);
 		
 //		logger.info("vertices before storing");
 //		for (int i = 0; i < vertices.length; i++) {
@@ -1083,8 +1083,8 @@ public class LoaderM {
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
-				+ partitionId + ".degrees");
+//		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
+//				+ partitionId + ".degrees");
 
 		for (int i = 0; i < intervals.size(); i++) {
 
