@@ -1,6 +1,6 @@
 <START_CONFIG_FILE_BODY>
 
-INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel2/kernel_out.txt
+INPUT_GRAPH_FILEPATH = /home/kai/BigGraph/kernelGraph/kernel_out.txt
 TOTAL_NUM_PARTS = 1000
 INPUT_GRAPH_TYPE = DATAFLOW
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 0

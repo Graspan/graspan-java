@@ -197,7 +197,7 @@ public class EngineM {
 		do {
 			iterationNo++;
 			totalNewEdgsForIteratn = 0;
-
+			long t = System.currentTimeMillis();
 			logger.info("Entered iteration no. " + iterationNo);
 
 			// parallel computation for one iteration
@@ -228,7 +228,8 @@ public class EngineM {
 				compSets[i].setOldUnewEdgs(compSets[i].getOldUnewUdeltaEdgs());
 				compSets[i].setOldUnewVals(compSets[i].getOldUnewUdeltaVals());
 			}
-
+			
+			logger.info("Finshed iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - t) / 1000 + " s");
 		} 
 		while (totalNewEdgsForIteratn > 0);
 
@@ -269,8 +270,8 @@ public class EngineM {
 				public void run() {
 					long threadUpdates = 0;
 
-					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"
-							+ Thread.currentThread().getId());
+//					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"
+//							+ Thread.currentThread().getId());
 
 					try {
 						int end = chunkEnd;
@@ -285,7 +286,6 @@ public class EngineM {
 							if (vertex != null && vertex.getNumOutEdges() != 0) {
 								// update edges for one src vertex
 								threadUpdates = EdgeComputerM.execUpdate(i, compSets, intervals);
-								
 								// check if there are new edges added in partition one and two
 								if (i >= indexStartForOne && i <= indexEndForOne)
 									newEdgesInOne += threadUpdates;

@@ -1,6 +1,8 @@
 package edu.uci.ics.cs.graspan.computationM;
 
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
@@ -21,6 +23,7 @@ public class SortedArrMerger {
 
 	private int[] src_oldUnewUdelta_edgs;
 	private byte[] src_oldUnewUdelta_vals;
+	private PriorityQueue<MinSet> targetRowsMinHeap;
 
 	public SortedArrMerger() {
 		// delta_ptr = -1;
@@ -42,14 +45,26 @@ public class SortedArrMerger {
 
 		// MIN_SETS ARRAY
 		MinSet[] minSets = new MinSet[edgArrstoMerge.length];
+		
+		targetRowsMinHeap = new PriorityQueue<MinSet>(edgArrstoMerge.length, new Comparator<MinSet>() {
+			@Override
+			public int compare(MinSet o1, MinSet o2) {
+				return (o1.getCurrentVId() - o2.getCurrentVId());
+			}
+		});
 
 		// INITIALIZE MIN SET FOR ROW i & track sizes to declare src_delta and
 		// src_oldUnewUdelta
 		int cumTgtRowsSize = 0;
 		for (int i = 0; i < edgArrstoMerge.length; i++) {
 			MinSet minSet = new MinSet(i);
+			
 			createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			minSets[i] = minSet;
+			
+			// add each target row minSet to minHeap
+			if(i != srcRowId)
+				targetRowsMinHeap.offer(minSet);
 
 			if (i != srcRowId)
 				cumTgtRowsSize += edgArrstoMerge[i].length;
@@ -81,8 +96,8 @@ public class SortedArrMerger {
 			while (true) {
 				// pick the min set from source row and min set from target rows
 				MinSet minSetFromSrcRow = minSets[srcRowId];
-				MinSet minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
-
+//				MinSet minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
+				MinSet minSetFrmTgtRows = targetRowsMinHeap.peek();
 				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
 						&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
 					break;
@@ -197,7 +212,7 @@ public class SortedArrMerger {
 		}
 		return minset;
 	}
-
+	
 	public void processMinSets(MinSet minSetFrmSrcRow, MinSet minSetFrmTgtRows, int[] srcEdgRow, byte[] srcValRow,
 			int[] tgtEdgRow, byte[] tgtValRow) {
 
@@ -234,9 +249,14 @@ public class SortedArrMerger {
 					}
 				}
 			}
+			// remove min from minheap
+			targetRowsMinHeap.remove(minSetFrmTgtRows);
+			
 			// increment the pointers for this minset
 			if (tgtEdgRow.length > 0) {
 				createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
+				// add current minset to minheap
+				targetRowsMinHeap.offer(minSetFrmTgtRows);
 			}
 			return;
 
@@ -281,9 +301,15 @@ public class SortedArrMerger {
 					}
 				}
 			}
-
+			// remove min from minheap
+			targetRowsMinHeap.remove(minSetFrmTgtRows);
+			
 			// increment the pointers for this minset
-			createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
+			if(tgtEdgRow.length > 0) {
+				createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
+				// add current minset to minheap
+				targetRowsMinHeap.offer(minSetFrmTgtRows);
+			}
 			return;
 		}
 

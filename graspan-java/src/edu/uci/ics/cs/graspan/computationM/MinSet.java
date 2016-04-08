@@ -34,7 +34,7 @@ public class MinSet {
 	public int getPtr() {
 		return ptr;
 	}
-
+	
 	public void incrementPtr() {
 		ptr++;
 	}

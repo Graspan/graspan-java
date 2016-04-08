@@ -230,7 +230,8 @@ public class EngineEL {
 			// which is readable for the current iteration
 			setReadableIndex(edgesLists);
 			iterationNo++;
-
+			long t = System.currentTimeMillis();
+			logger.info("Entered iteration no. " + iterationNo);
 			totalNewEdgsForIteratn = 0;
 			totalDupEdges = 0;
 			countDown.set(nWorkers);
@@ -352,17 +353,18 @@ public class EngineEL {
 			// }
 
 			// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
-			logger.info("PRINTING DEGREES OF PARTITION AT THE END OF ITERATION");
-			for (int i = 0; i < vertices.length; i++) {
-				logger.info(vertices[i].getVertexId() + " | "
-						+ vertices[i].getNumOutEdges());
-			}
+//			logger.info("PRINTING DEGREES OF PARTITION AT THE END OF ITERATION");
+//			for (int i = 0; i < vertices.length; i++) {
+//				logger.info(vertices[i].getVertexId() + " | "
+//						+ vertices[i].getNumOutEdges());
+//			}
 
 			this.totalNewEdgs += totalNewEdgsForIteratn;
 			logger.info("========total # new edges for iteration #"
 					+ iterationNo + " is " + totalNewEdgsForIteratn);
 			// logger.info("========total # dup edges for this iteration: "
 			// + totalDupEdges);
+			logger.info("Finshed iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - t) / 1000 + " s");
 		} while (totalNewEdgsForIteratn > 0);
 
 		// set new edge added flag for scheduler
