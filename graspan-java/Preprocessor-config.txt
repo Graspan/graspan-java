@@ -14,6 +14,13 @@ INPUT_GRAPH_TYPE = DATAFLOW
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
 ===============================================================================
 
+========REPLACE CONFIG_FILE_BODY WITH THE FOLLOWING TO USE "kernel graph (points to)"==========
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel_pointsto/kernel_output.txt
+TOTAL_NUM_PARTS = 100
+INPUT_GRAPH_TYPE = POINTSTO
+INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
+===============================================================================
+
 
 ========REPLACE CONFIG BODY WITH THE FOLLOWING TO USE "small graph with no duplicate edges"==========
 INPUT_GRAPH_FILEPATH = graph

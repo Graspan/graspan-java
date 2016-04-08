@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
+import edu.uci.ics.cs.graspan.preproc.PartitionPreprocessor;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
@@ -79,7 +80,12 @@ public class PreprocessorClient {
 		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
 		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);
-
+		
+		//Do further preprocessing of each partition
+		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
+//
+//		partPreprocessor.loadParts(partsToLoad);
+		
 	}
 
 	/**

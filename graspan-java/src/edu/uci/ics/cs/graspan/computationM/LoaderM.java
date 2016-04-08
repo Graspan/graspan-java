@@ -451,8 +451,6 @@ public class LoaderM {
 				logger.info("Parts to save by Loader: " + partsToSaveByLoader);
 			}
 
-			
-			
 			// 2. Save PartsSet
 
 			// 2.1. save partitions not in the next round
