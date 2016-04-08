@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
@@ -27,7 +29,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
 public class PartitionPreprocessor {
-	
+
 	private static final Logger logger = GraspanLogger.getLogger("Loader");
 
 	public static Vertex[] vertices;
@@ -77,10 +79,58 @@ public class PartitionPreprocessor {
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		sortPart(partId, loadedPartOutDegs, partEdges, partEdgeVals);
+		
+		addEdgesforERules();
 
 		savePartAndDegs(partId);
+
+	}
+
+	private void addEdgesforERules() {
+		int[] tempEdgs;
+		byte[] tempVals;
+		// add edges corresponding to epsilon rules.
+		Set<Byte> eRules = GrammarChecker.eRules;
 		
+		int srcId=0;
+		int destId=0;
+		
+		//for each loaded source vertex row
+		for (int i = 0; i < vertices.length; i++) {
+			
+			srcId = vertices[i].getVertexId();
+			
+			//first assume all eRules values need to be added
+			HashSet<Byte> newValsforSrc = new HashSet<Byte>(eRules);
+			
+			//find values already existing for this source row, and remove those values from newValsforSrc 
+			for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+				destId = vertices[i].getOutEdge(j);
+				if (destId > srcId)
+					break;
+				newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
+			}
+			
+			//add the new edges to tempEdgs first
+			tempEdgs = new int[vertices[i].getOutEdges().length + newValsforSrc.size()];
+			tempVals = new byte[vertices[i].getOutEdges().length + newValsforSrc.size()];
+			
+			assert(srcId!=0);
+			
+			int tempArrMarker = 0;
+			for (Byte eval : newValsforSrc) {
+				tempEdgs[tempArrMarker] = srcId;
+				tempVals[tempArrMarker] = eval;
+				tempArrMarker++;
+			}
+
+			System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
+			System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
+		
+			vertices[i].setOutEdges(tempEdgs);
+			vertices[i].setOutEdgeValues(tempVals);
 		}
+	}
 
 	/**
 	 * 
@@ -99,7 +149,7 @@ public class PartitionPreprocessor {
 	}
 
 	/**
-	 * Gets the partition allocation table. 
+	 * Gets the partition allocation table.
 	 * 
 	 * @throws NumberFormatException
 	 * @throws IOException
@@ -112,7 +162,8 @@ public class PartitionPreprocessor {
 		/*
 		 * Scan the partition allocation table file
 		 */
-		BufferedReader inPartAllocTabStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseFilename+ ".partAllocTable"))));
+		BufferedReader inPartAllocTabStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
 		String ln, tok[];
 
 		int i = 0;
@@ -133,7 +184,6 @@ public class PartitionPreprocessor {
 		return vertices;
 	}
 
-	
 	/**
 	 * 
 	 * @param partitionId
@@ -144,7 +194,6 @@ public class PartitionPreprocessor {
 		storePartDegs(getVertices(), partitionId);
 	}
 
-	
 	private void readDegrees(int partId) throws IOException {
 
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
@@ -184,7 +233,7 @@ public class PartitionPreprocessor {
 		int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 
 		// initializing new data structures
-		int totalNumVertices =  PartitionQuerier.getNumUniqueSrcs(partId);
+		int totalNumVertices = PartitionQuerier.getNumUniqueSrcs(partId);
 		vertices = new Vertex[totalNumVertices];
 
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
@@ -206,11 +255,11 @@ public class PartitionPreprocessor {
 
 		// set vertices data structure
 		int vertexIdx = 0;
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partId); j++) {
-				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j, partId);
-				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId, partEdges[0][j], partEdgeVals[0][j]);
-				vertexIdx++;
-			}
+		for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partId); j++) {
+			int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j, partId);
+			vertices[vertexIdx] = new Vertex(vertexIdx, vertexId, partEdges[0][j], partEdgeVals[0][j]);
+			vertexIdx++;
+		}
 	}
 
 	private void loadPartData(int partId) throws IOException {
@@ -218,62 +267,63 @@ public class PartitionPreprocessor {
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
 
-				DataInputStream partInStrm = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partId)));
+		DataInputStream partInStrm = new DataInputStream(
+				new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partId)));
 
-				// stores the position of last filled edge (destV) and the edge
-				// val in partEdges and partEdgeVals for a source vertex for a partition
-				int[] lastAddedEdgePos = new int[PartitionQuerier.getNumUniqueSrcs(partId)];
-				for (int j = 0; j < lastAddedEdgePos.length; j++) {
-					lastAddedEdgePos[j] = -1;
-				}
+		// stores the position of last filled edge (destV) and the edge
+		// val in partEdges and partEdgeVals for a source vertex for a partition
+		int[] lastAddedEdgePos = new int[PartitionQuerier.getNumUniqueSrcs(partId)];
+		for (int j = 0; j < lastAddedEdgePos.length; j++) {
+			lastAddedEdgePos[j] = -1;
+		}
 
-				while (partInStrm.available() != 0) {
-					{
-						try {
-							// get srcVId
-							int src = partInStrm.readInt();
+		while (partInStrm.available() != 0) {
+			{
+				try {
+					// get srcVId
+					int src = partInStrm.readInt();
 
-							// get corresponding arraySrcVId of srcVId
-							int arraySrcVId = src - PartitionQuerier.getFirstSrc(partId);
+					// get corresponding arraySrcVId of srcVId
+					int arraySrcVId = src - PartitionQuerier.getFirstSrc(partId);
 
-							// get count (number of destVs from srcV in the
-							// current list of the partition file)
-							int count = partInStrm.readInt();
+					// get count (number of destVs from srcV in the
+					// current list of the partition file)
+					int count = partInStrm.readInt();
 
-							// get dstVId & edgeVal and store them in the corresponding arrays
-							for (int j = 0; j < count; j++) {
+					// get dstVId & edgeVal and store them in the corresponding
+					// arrays
+					for (int j = 0; j < count; j++) {
 
-								// dstVId
-								partEdges[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
+						// dstVId
+						partEdges[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
 
- 								// edgeVal
-								partEdgeVals[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
+						// edgeVal
+						partEdgeVals[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
 
-								// increment the last added position for this row
-								lastAddedEdgePos[arraySrcVId]++;
-							}
-
-						} catch (Exception exception) {
-							break;
-						}
+						// increment the last added position for this row
+						lastAddedEdgePos[arraySrcVId]++;
 					}
+
+				} catch (Exception exception) {
+					break;
 				}
+			}
+		}
 
-				partInStrm.close();
+		partInStrm.close();
 
-				logger.info("Loaded " + baseFilename + ".partition."+ partId);
-
+		logger.info("Loaded " + baseFilename + ".partition." + partId);
 
 	}
 
 	/**
 	 * Stores a partition to disk.
+	 * 
 	 * @param vertices
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, Integer partitionId)
-			throws IOException {
+	private static void storePart(Vertex[] vertices, Integer partitionId) throws IOException {
 
 		logger.info("Updating " + GlobalParams.baseFilename + ".partition." + partitionId);
 
@@ -322,6 +372,7 @@ public class PartitionPreprocessor {
 
 	/**
 	 * Stores degrees of a partition.
+	 * 
 	 * @param vertices
 	 * @param partitionId
 	 * @throws IOException
