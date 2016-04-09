@@ -1,64 +1,62 @@
 package edu.uci.ics.cs.graspan.computationM;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class GrammarChecker {
+	//sort the mapping info of inputed grammar with used grammar
+	private static Map<String, Byte> map = new LinkedHashMap<String, Byte>();
 	
-	public static Map<Byte, HashMap<Byte, Byte>> dRules = new HashMap<Byte, HashMap<Byte, Byte>>();
+	//
+	private static Map<Byte, HashMap<Byte, Byte>> dRules = new LinkedHashMap<Byte, HashMap<Byte, Byte>>();
 	
-	public static Map<Byte, Byte> sRules = new HashMap<Byte, Byte>();
+	private static Map<Byte, Byte> sRules = new LinkedHashMap<Byte, Byte>();
 	
-	public static Set<Byte> eRules = new HashSet<Byte>();
+	public static Set<Byte> eRules = new LinkedHashSet<Byte>();
 	
 	
 	public static void loadGrammars(File grammar_input) throws IOException {
 		// initialize edgeDestCount and partSizes variables
-
-		/*
-		 * Scan the grammar file
-		 */
-		BufferedReader inGrammarStrm = new BufferedReader(new InputStreamReader(new FileInputStream(grammar_input)));
+		//Scan the grammar file
+		BufferedReader inGrammarStrm = new BufferedReader(new FileReader(grammar_input));
 		String ln;
 
 		String[] tok;
 		while ((ln = inGrammarStrm.readLine()) != null) {
 			tok = ln.split("\t");
 			if (tok.length == 1) { // production with 1 symbol (self)
-//				eRules.add((byte) Integer.parseInt(tok[0]));
-				eRules.add(Byte.parseByte(tok[0]));
+				eRules.add(getValue(tok[0]));
 			}
 			else if (tok.length == 2) { // production with 2 symbols
-//				sRules.put((byte) Integer.parseInt(tok[0]), (byte) Integer.parseInt(tok[1]));
-				sRules.put(Byte.parseByte(tok[0]), Byte.parseByte(tok[1]));
+				sRules.put(getValue(tok[1]), getValue(tok[0]));
 			}
 			else if (tok.length == 3) { // production with 3 symbols
-			// consider production form : BC ----- > A (Map will store them as (B,(C,A)))
-//				HashMap<Byte, Byte> destValOPValPair=new HashMap<Byte, Byte>();
-//				destValOPValPair.put((byte) Integer.parseInt(tok[1]), (byte) Integer.parseInt(tok[2]));
-//				dRules.put((byte) Integer.parseInt(tok[0]), destValOPValPair);
-				
-				byte src1 = Byte.parseByte(tok[0]);
-				byte src2 = Byte.parseByte(tok[1]);
-				byte dst = Byte.parseByte(tok[2]);
+			// consider production form : A->BC (Map will store them as (B,(C,A)))
+				byte src1 = getValue(tok[1]);
+				byte src2 = getValue(tok[2]);
+				byte dst = getValue(tok[0]);
 				
 				if(dRules.containsKey(src1)){
-					HashMap<Byte, Byte> map = dRules.get(src1);
-					assert(!map.containsKey(src2));
-					
-					map.put(src2, dst);
+					HashMap<Byte, Byte> mapR = dRules.get(src1);
+					assert(!mapR.containsKey(src2));
+					mapR.put(src2, dst);
 				}
 				else{
-					HashMap<Byte, Byte> map = new HashMap<Byte, Byte>();
-					map.put(src2, dst);
-					dRules.put(src1, map);
+					HashMap<Byte, Byte> mapR = new HashMap<Byte, Byte>();
+					mapR.put(src2, dst);
+					dRules.put(src1, mapR);
 				}
 			}
 			else{
@@ -67,17 +65,29 @@ public class GrammarChecker {
 		}
 
 		inGrammarStrm.close();
+		
+		writeCollection(new ArrayList<Map.Entry<String, Byte>>(map.entrySet()), new File(grammar_input.getParentFile(), "grammar"));
 		// logger.info("Loaded " + ".grammar");
 	}
 	
 	
+	public static Byte getValue(String string) {
+		// TODO Auto-generated method stub
+		string = string.trim();
+		if(map.containsKey(string)){
+			return map.get(string);
+		}
+		else{
+			byte e = (byte) map.size();
+			map.put(string, e);
+			return e;
+		}
+	}
+
+
 	public static byte checkL2Rules(byte srcEval, byte destEval){
 		// BC ----- > A : <B,<C,A>> : <srcEval,<destEval,OPEval>>
 		byte OPEval = -1;
-		
-//		HashMap<Byte, Byte> destValOPValPair = dRules.get(srcEval);
-//		if (destValOPValPair.get(destEval) != null)
-//			OPEval = destValOPValPair.get(destEval);
 		
 		if(dRules.containsKey(srcEval)){
 			HashMap<Byte, Byte> map = dRules.get(srcEval);
@@ -96,5 +106,34 @@ public class GrammarChecker {
 			OPEval = GrammarChecker.sRules.get(src);
 		}
 		return OPEval;
+	}
+	
+	public static <T> void writeCollection(Collection<T> collection, File file){
+		PrintWriter out = null;
+		try{
+//			if (!file.getParentFile().exists()) {
+//				file.getParentFile().mkdirs();
+//			}
+			//write the passing inputs
+			out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			for(T element: collection){
+				out.println(element);
+			}
+			out.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		finally{
+			if(out != null)
+				out.close();
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		GrammarChecker.loadGrammars(new File("graph.grammar"));
+		System.out.println(dRules);
+		System.out.println(sRules);
+		System.out.println(eRules);
 	}
 }

@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -22,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 import java.util.TreeMap;
 
+import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
@@ -83,6 +85,9 @@ public class Preprocessor {
 	 * @throws IOException
 	 */
 	public Preprocessor(String baseFilename, int numParts) throws IOException {
+		// get the grammar info
+		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
+				
 		logger.info("Initializing partition generator program... ");
 
 		this.numParts = numParts;
@@ -346,13 +351,14 @@ public class Preprocessor {
 						eval = 0;
 					}
 					if (GlobalParams.getInputGraphType().compareTo("POINTSTO") == 0) {
-						if (tok[2].compareTo("D") == 0) {
-							eval = 9;
-						}
-						if (tok[2].compareTo("A") == 0) {
-							eval = 11;
-						}
+//						if (tok[2].compareTo("D") == 0) {
+//							eval = 9;
+//						}
+//						if (tok[2].compareTo("A") == 0) {
+//							eval = 11;
+//						}
 //						eval = Integer.parseInt(tok[2]);
+						eval = GrammarChecker.getValue(tok[2]);
 					}
 
 					assert (src != -1 && dst != -1 && eval != -1);
