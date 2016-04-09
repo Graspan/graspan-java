@@ -63,20 +63,7 @@ public class PreprocessorClient {
 		logger.info("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
 		Preprocessor partgenerator = new Preprocessor(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
-
-		// generate degrees file
-		long degGenStartTime = System.nanoTime();
-		partgenerator.generateGraphDegs(new FileInputStream(new File(GlobalParams.getBasefilename())));
-		long degGenDuration = System.nanoTime() - degGenStartTime;
-		logger.info("Total time to create degrees file (nanoseconds): " + degGenDuration);
-
-		// creating the partitions
-		long creatingPartsStartTime = System.nanoTime();
-		partgenerator.createPartVIntervals();
-		partgenerator.writePartitionEdgestoFiles(new FileInputStream(new File(GlobalParams.getBasefilename())));
-		partgenerator.generatePartDegs();
-		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
-		logger.info("Total time to create partitions (nanoseconds):" + creatingPartsDuration);
+		partgenerator.run();
 
 		//---------------------------------------------------------------------------------------------------------
 		//Do further preprocessing of each partition
