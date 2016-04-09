@@ -93,6 +93,10 @@ public class Preprocessor {
 		logger.info("Initializing partition generator program... ");
 
 		this.baseFilename = baseFilename;
+		
+		//this is the request numParts;
+		this.numParts=GlobalParams.getNumParts();
+		
 //		this.numParts = numParts;
 
 //		// long[][] edgeDestCount = new long[numParts][numParts];
