@@ -935,10 +935,10 @@ public class LoaderM {
 						oldIntvIdxSt = oldIntervals.get(j).getIndexStart();
 						oldIntvIdxEnd = oldIntervals.get(j).getIndexEnd();
 
-						String s2 = "";
-						for (int u = 0; u < prevRoundVertices.length; u++) {
-							s2 = s2 + " " + prevRoundVertices[u].getVertexId();
-						}
+//						String s2 = "";
+//						for (int u = 0; u < prevRoundVertices.length; u++) {
+//							s2 = s2 + " " + prevRoundVertices[u].getVertexId();
+//						}
 
 //						logger.info("All prevRoundvertices in memory during loading: \n"
 //								+ s2);
