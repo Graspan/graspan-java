@@ -58,11 +58,11 @@ public class PreprocessorClient {
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
 
+		//--------------------------------------------------------------------------------------------------------
 		// initialize Partition Generator Program
 		logger.info("Starting preprocessing...");
 		long preprocStartTime = System.nanoTime();
-		
-		Preprocessor partgenerator = initPartGenerator(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
+		Preprocessor partgenerator = new Preprocessor(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
 
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
@@ -78,7 +78,7 @@ public class PreprocessorClient {
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
 		logger.info("Total time to create partitions (nanoseconds):" + creatingPartsDuration);
 
-		
+		//---------------------------------------------------------------------------------------------------------
 		//Do further preprocessing of each partition
 		logger.info("Preprocessing each partition...");
 		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
@@ -98,7 +98,7 @@ public class PreprocessorClient {
 	 * @param inputGraphPath
 	 * @param numParts
 	 */
-	protected static Preprocessor initPartGenerator(String inputGraphPath, int numParts) throws IOException {
-		return new Preprocessor(inputGraphPath, numParts);
-	}
+//	protected static Preprocessor initPartGenerator(String inputGraphPath, int numParts) throws IOException {
+//		return new Preprocessor(inputGraphPath, numParts);
+//	}
 }

@@ -17,11 +17,12 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
@@ -40,7 +41,7 @@ public class Preprocessor {
 	private static final Logger logger = GraspanLogger.getLogger("Preprocessor");
 
 	// number of input partitions
-	private static int numParts;
+	private int numParts;
 
 	// total number of input edges
 	private long numEdges;
@@ -75,7 +76,7 @@ public class Preprocessor {
 	// Each partition buffer consists of an adjacency list.
 	// HashMap<srcVertexID, <[destVertexID1,edgeValue1],
 	// [destVertexID2,edgeValue2]..........>[]
-	private HashMap<Integer, ArrayList<Integer[]>>[] partBuffers;
+	private HashMap<Integer, ArrayList<int[]>>[] partBuffers;
 
 	/**
 	 * Constructor
@@ -87,14 +88,14 @@ public class Preprocessor {
 	public Preprocessor(String baseFilename, int numParts) throws IOException {
 		// get the grammar info
 		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
-				
+
 		logger.info("Initializing partition generator program... ");
 
-		this.numParts = numParts;
 		this.baseFilename = baseFilename;
+		this.numParts = numParts;
 
-		long[][] edgeDestCount = new long[numParts][numParts];
-		this.edgeDestCount = edgeDestCount;
+		// long[][] edgeDestCount = new long[numParts][numParts];
+		this.edgeDestCount = new long[numParts][numParts];
 
 		// initialize streams for partition files (these streams will
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
@@ -129,6 +130,7 @@ public class Preprocessor {
 		String ln;
 		long numEdges = 0;
 		TreeMap<Integer, Integer> outDegs = new TreeMap<Integer, Integer>();
+
 		// read inputgraph line-by-line and keep incrementing degree
 		logger.info("Performing first scan on input graph... ");
 		long lineCount = 0;
@@ -136,6 +138,7 @@ public class Preprocessor {
 		int src = 0;
 		double readSpeed = 0;
 		String[] tok;
+		
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
 			if (lineCount % OUTPUT_EDGE_TRACKER_INTERVAL == 0) {
@@ -144,16 +147,17 @@ public class Preprocessor {
 				logger.info("Read speed: " + readSpeed + " edges/sec");
 				readStartTime = System.nanoTime();
 			}
-			if (!ln.startsWith("#")) {
+//			if (!ln.startsWith("#")) {
 				tok = ln.split("\t");
 				try {
-
 					// use + 1 if graph vertex no. starts from 0
 					if (GlobalParams.getFirstVertexID() == 0) {
 						src = Integer.parseInt(tok[0]) + 1;
-					} else if (GlobalParams.getFirstVertexID() == 1) {
+					} 
+					else if (GlobalParams.getFirstVertexID() == 1) {
 						src = Integer.parseInt(tok[0]);
 					}
+					
 					if (!outDegs.containsKey(src)) {
 						outDegs.put(src, 1);
 					} else {
@@ -163,7 +167,7 @@ public class Preprocessor {
 				} catch (Exception e) {
 					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 				}
-			}
+//			}
 		}
 		logger.info("Completed first scan of input graph and got full degree information in the memory.");
 
@@ -172,9 +176,9 @@ public class Preprocessor {
 
 		// Save the degrees on disk
 		logger.info("Saving degrees file " + baseFilename + ".degrees... ");
-		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 
 		PrintWriter outDegOutStrm = new PrintWriter(baseFilename + ".degrees", "UTF-8");
+		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Integer, Integer> pair = it.next();
 			outDegOutStrm.println(pair.getKey() + "\t" + pair.getValue());
@@ -196,7 +200,7 @@ public class Preprocessor {
 		logger.info("Allocating vertices to partitions (creating partition allocation table)...");
 
 		// average of edges by no. of partitions
-		long avgEdgesPerPartition = Math.floorDiv(numEdges, numParts);
+		long avgEdgesPerPartition = numEdges / numParts;
 
 		// the heuristic for interval max
 		long intervalMaxSize = (long) (avgEdgesPerPartition * 0.9);
@@ -208,17 +212,16 @@ public class Preprocessor {
 		// counter of the number of edges in the interval
 		int intervalEdgeCount = 0;
 
+		
+		List<Integer> intervalIDs = new ArrayList<Integer>();
+		List<Integer> intervalECounts = new ArrayList<Integer>();
+		
 		// marker of the current partition table
-		int partTabIdx = 0;
+//		int partTabIdx = 0;
 
+
+//		long totalEdgeCount = 0;
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
-
-		// creating the Partition Allocation Table
-		int[][] partAllocTable = new int[numParts][2];
-
-		long partSizes[][] = new long[numParts][2];
-		long totalEdgeCount = 0;
-
 		while (it.hasNext()) {
 			Map.Entry<Integer, Integer> pair = it.next();
 			intervalMaxVId = pair.getKey();
@@ -226,37 +229,62 @@ public class Preprocessor {
 
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
-			if (intervalEdgeCount > intervalMaxSize && !isLastPartition(partTabIdx)) {
-				partAllocTable[partTabIdx][0] = partTabIdx;
-				partAllocTable[partTabIdx][1] = intervalMaxVId;
-				partSizes[partTabIdx][1] = intervalEdgeCount;
-				totalEdgeCount = totalEdgeCount + intervalEdgeCount;
+			if (intervalEdgeCount > intervalMaxSize) {
+//				partAllocTable[partTabIdx][0] = partTabIdx;
+//				partAllocTable[partTabIdx][1] = intervalMaxVId;
+//				partSizes[partTabIdx][1] = intervalEdgeCount;
+				intervalIDs.add(intervalMaxVId);
+				intervalECounts.add(intervalEdgeCount);
+				
 				intervalEdgeCount = 0;
-				partTabIdx++;
 			}
-
-			// when last partition is reached, assign partition_interval_head to
-			// last_Vertex
-			else if (isLastPartition(partTabIdx)) {
-				intervalMaxVId = outDegs.lastKey();
-				partAllocTable[partTabIdx][0] = partTabIdx;
-				partAllocTable[partTabIdx][1] = intervalMaxVId;
-				partSizes[partTabIdx][1] = numEdges - totalEdgeCount;
+			else if(intervalMaxVId == outDegs.lastKey()){
+				intervalIDs.add(intervalMaxVId);
+				intervalECounts.add(intervalEdgeCount);
+				
+				intervalEdgeCount = 0;
+				
 				break;
 			}
+
+//			// when last partition is reached, assign partition_interval_head to
+//			// last_Vertex
+//			else if (isLastPartition(partTabIdx)) {
+//				intervalMaxVId = outDegs.lastKey();
+//				partAllocTable[partTabIdx][0] = partTabIdx;
+//				partAllocTable[partTabIdx][1] = intervalMaxVId;
+//				partSizes[partTabIdx][1] = numEdges - totalEdgeCount;
+//				break;
+//			}
 		}
 
 		logger.info("Saving partition allocation table file " + baseFilename + ".partAllocTable... ");
 		PrintWriter partAllocTableOutStrm = new PrintWriter(baseFilename + ".partAllocTable", "UTF-8");
+		
+		// creating the Partition Allocation Table
+		int[][] partAllocTable = new int[intervalIDs.size()][2];
+		long partSizes[][] = new long[intervalECounts.size()][2];
+		
+		this.numParts = intervalIDs.size();
+		assert(partAllocTable.length == partSizes.length);
+		
+		for(int i = 0; i < intervalIDs.size(); i++){
+			partAllocTable[i][0] = i;
+			partAllocTable[i][1] = intervalIDs.get(i);
+			
+			partSizes[i][0] = i;
+			partSizes[i][1] = intervalECounts.get(i);
+		}
 		for (int i = 0; i < partAllocTable.length; i++) {
 			partAllocTableOutStrm.println(partAllocTable[i][0] + "\t" + partAllocTable[i][1]);
 		}
 		logger.info("Done");
-
-		SchedulerInfo.setPartSizes(partSizes);
-		AllPartitions.setPartAllocTab(partAllocTable);
 		partAllocTableOutStrm.close();
 
+//		SchedulerInfo.setPartSizes(partSizes);
+		
+		AllPartitions.setPartAllocTab(partAllocTable);
+		
 	}
 
 	/**
@@ -299,15 +327,15 @@ public class Preprocessor {
 		logger.info("Generating partition files...");
 
 		// initialize partition buffers
-		HashMap<Integer, ArrayList<Integer[]>>[] partitionBuffers = new HashMap[numParts];
+		HashMap<Integer, ArrayList<int[]>>[] partitionBuffers = new HashMap[numParts];
 
 		logger.info("Initializing partition buffers (Total buffer size = " + BUFFER_FOR_PARTS + " edges for " + numParts
 				+ " partitions)... ");
-		long partitionBufferSize = Math.floorDiv(BUFFER_FOR_PARTS, numParts);
+		long partitionBufferSize = BUFFER_FOR_PARTS / numParts;
 		long partitionBufferFreespace[] = new long[numParts];
 		for (int i = 0; i < numParts; i++) {
 			partitionBufferFreespace[i] = partitionBufferSize;
-			partitionBuffers[i] = new HashMap<Integer, ArrayList<Integer[]>>();
+			partitionBuffers[i] = new HashMap<Integer, ArrayList<int[]>>();
 		}
 		this.partBuffers = partitionBuffers;
 		this.partBufferSize = partitionBufferSize;
@@ -321,7 +349,8 @@ public class Preprocessor {
 		long lineCount = 0;
 		double percentComplete = 0;
 		String[] tok;
-		int src = -1, dst = -1, eval = -1;
+		int src = -1, dst = -1;
+		byte eval = -1;
 		logger.info("The total number of edges in graph: " + numEdges);
 		while ((ln = ins.readLine()) != null) {
 			lineCount++;
@@ -331,7 +360,7 @@ public class Preprocessor {
 						+ NumberFormat.getNumberInstance(Locale.US).format(lineCount) + "("
 						+ (double) Math.round(percentComplete * 100) / 100 + "%)...");
 			}
-			if (!ln.startsWith("#")) {
+//			if (!ln.startsWith("#")) {
 				try {
 					tok = ln.split("\t");
 					// Edge list: <src> <dst> <value>
@@ -351,24 +380,26 @@ public class Preprocessor {
 						eval = 0;
 					}
 					if (GlobalParams.getInputGraphType().compareTo("POINTSTO") == 0) {
-//						if (tok[2].compareTo("D") == 0) {
-//							eval = 9;
-//						}
-//						if (tok[2].compareTo("A") == 0) {
-//							eval = 11;
-//						}
-//						eval = Integer.parseInt(tok[2]);
+						// if (tok[2].compareTo("D") == 0) {
+						// eval = 9;
+						// }
+						// if (tok[2].compareTo("A") == 0) {
+						// eval = 11;
+						// }
+						// eval = Integer.parseInt(tok[2]);
 						eval = GrammarChecker.getValue(tok[2]);
 					}
 
 					assert (src != -1 && dst != -1 && eval != -1);
+					
 					incrementEdgeDestCount(src, dst);
+					
 					addEdgetoBuffer(src, dst, eval);
 
 				} catch (Exception e) {
 					logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 				}
-			}
+//			}
 		}
 
 		// TEST PRINT edgedestcounts
@@ -423,7 +454,7 @@ public class Preprocessor {
 		int partitionId = PartitionQuerier.findPartition(srcVId);
 
 		// get the adjacencyList from the relevant partition buffer
-		HashMap<Integer, ArrayList<Integer[]>> vertexAdjList = partBuffers[partitionId];
+		HashMap<Integer, ArrayList<int[]>> vertexAdjList = partBuffers[partitionId];
 
 		// store the (destVId, edgeValue) pair in an array
 		Integer[] destEdgeValPair = new Integer[2];
@@ -579,8 +610,6 @@ public class Preprocessor {
 	 * @param dest
 	 */
 	private void incrementEdgeDestCount(int src, int dest) {
-		long[][] edgeDestCount = this.edgeDestCount;
-
 		// test edges for a partition pair
 		// if (PartitionQuerier.findPartition(src) == 0 &
 		// PartitionQuerier.findPartition(dest) == 0) {
@@ -588,7 +617,7 @@ public class Preprocessor {
 		// }
 
 		if (PartitionQuerier.findPartition(dest) != -1) {
-			edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier.findPartition(dest)]++;
+			this.edgeDestCount[PartitionQuerier.findPartition(src)][PartitionQuerier.findPartition(dest)]++;
 		}
 	}
 
@@ -631,7 +660,7 @@ public class Preprocessor {
 	 * @param partTabIdx
 	 * @return
 	 */
-	private static boolean isLastPartition(int partTabIdx) {
+	private boolean isLastPartition(int partTabIdx) {
 		return (partTabIdx == (numParts - 1) ? true : false);
 	}
 
