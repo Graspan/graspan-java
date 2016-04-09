@@ -70,18 +70,17 @@ public class LoaderM {
 	public LoaderM() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParams.getBasefilename();
-		this.numParts = GlobalParams.getNumParts();
+//		this.numParts = GlobalParams.getNumParts();
 		this.reloadPlan = GlobalParams.getReloadPlan();
 
 		// get the partition allocation table
-		this.readPartAllocTable();
+		this.numParts = this.readPartAllocTable();
 
 		// get the scheduling info
 		this.readSchedulingInfo();
 
 		// get the grammar info
 //		this.readGrammarTab();
-		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 
 		// initialize variables for partition loading based on number of
 		// partitions to load.
@@ -242,10 +241,8 @@ public class LoaderM {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	private void readPartAllocTable() throws NumberFormatException, IOException {
-
-		// initialize partAllocTable variable
-		int partAllocTable[][] = new int[numParts][2];
+	private int readPartAllocTable() throws NumberFormatException, IOException {
+		List<int[]> list = new ArrayList<int[]>();
 
 		/*
 		 * Scan the partition allocation table file
@@ -255,17 +252,28 @@ public class LoaderM {
 						+ ".partAllocTable"))));
 		String ln, tok[];
 
-		int i = 0;
+//		int i = 0;
 		while ((ln = inPartAllocTabStrm.readLine()) != null) {
 			tok = ln.split("\t");
 			// store partition allocation table in memory
-			partAllocTable[i][0] = Integer.parseInt(tok[0]);
-			partAllocTable[i][1] = Integer.parseInt(tok[1]);
-			i++;
+			int[] part = new int[2];
+			part[0] = Integer.parseInt(tok[0]);
+			part[1] = Integer.parseInt(tok[1]);
+			list.add(part);
+//			i++;
 		}
-		AllPartitions.setPartAllocTab(partAllocTable);
 		inPartAllocTabStrm.close();
+		
+		// initialize partAllocTable variable
+		int partAllocTable[][] = new int[list.size()][2];
 
+		for(int i = 0; i < list.size(); i++){
+			partAllocTable[i] = list.get(i);
+		}
+		
+		AllPartitions.setPartAllocTab(partAllocTable);
+		
+		return partAllocTable.length;
 //		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 	}
@@ -334,37 +342,37 @@ public class LoaderM {
 
 	}
 
-	/**
-	 * Gets the Scheduling Info. (Should be called only once during first load)
-	 * 
-	 * @throws NumberFormatException
-	 * @throws IOException
-	 */
-	private void readGrammarTab() throws NumberFormatException, IOException {
-
-		// initialize edgeDestCount and partSizes variables
-		byte[][] grammarTab = GlobalParams.getGrammarTab();
-		int i = 0;
-
-		/*
-		 * Scan the grammar file
-		 */
-		BufferedReader inGrammarStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
-		String ln;
-
-		String[] tok;
-		while ((ln = inGrammarStrm.readLine()) != null) {
-			tok = ln.split("\t");
-			grammarTab[i][0] = (byte) Integer.parseInt(tok[0]);
-			grammarTab[i][1] = (byte) Integer.parseInt(tok[1]);
-			grammarTab[i][2] = (byte) Integer.parseInt(tok[2]);
-			i++;
-		}
-
-		inGrammarStrm.close();
-//		logger.info("Loaded " + baseFilename + ".grammar");
-	}
+//	/**
+//	 * Gets the Scheduling Info. (Should be called only once during first load)
+//	 * 
+//	 * @throws NumberFormatException
+//	 * @throws IOException
+//	 */
+//	private void readGrammarTab() throws NumberFormatException, IOException {
+//
+//		// initialize edgeDestCount and partSizes variables
+//		byte[][] grammarTab = GlobalParams.getGrammarTab();
+//		int i = 0;
+//
+//		/*
+//		 * Scan the grammar file
+//		 */
+//		BufferedReader inGrammarStrm = new BufferedReader(
+//				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
+//		String ln;
+//
+//		String[] tok;
+//		while ((ln = inGrammarStrm.readLine()) != null) {
+//			tok = ln.split("\t");
+//			grammarTab[i][0] = (byte) Integer.parseInt(tok[0]);
+//			grammarTab[i][1] = (byte) Integer.parseInt(tok[1]);
+//			grammarTab[i][2] = (byte) Integer.parseInt(tok[2]);
+//			i++;
+//		}
+//
+//		inGrammarStrm.close();
+////		logger.info("Loaded " + baseFilename + ".grammar");
+//	}
 
 	public Vertex[] getVertices() {
 		return vertices;
