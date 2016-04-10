@@ -150,7 +150,7 @@ public class EngineM {
 			// //for debugging
 			// printSrcVerticesForDebugging(vertices);
 		}
-
+		logger.info("Total Num of New Edges: " + totalNewEdgs);
 		computationExecutor.shutdown();
 	}
 
@@ -264,6 +264,7 @@ public class EngineM {
 			final int indexEndForTwo) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
+		final Object counterLock = new Object();
 
 		// Parallel updates to finish all the workers' tasks as one iteration
 		for (int id = 0; id < nWorkers; id++) {
@@ -291,11 +292,14 @@ public class EngineM {
 							if (vertex != null && vertex.getNumOutEdges() != 0) {
 								// update edges for one src vertex
 								threadUpdates = EdgeComputerM.execUpdate(i, compSets, intervals);
-								// check if there are new edges added in partition one and two
-								if (i >= indexStartForOne && i <= indexEndForOne)
-									newEdgesInOne += threadUpdates;
-								else if (i >= indexStartForTwo && i <= indexEndForTwo)
-									newEdgesInTwo += threadUpdates;
+								synchronized(counterLock) {
+									totalNewEdgsForIteratn += threadUpdates;
+									// check if there are new edges added in partition one and two
+									if (i >= indexStartForOne && i <= indexEndForOne)
+										newEdgesInOne += threadUpdates;
+									else if (i >= indexStartForTwo && i <= indexEndForTwo)
+										newEdgesInTwo += threadUpdates;
+								}
 							}
 						}
 					} 
@@ -305,7 +309,7 @@ public class EngineM {
 					finally {
 						int pending = countDown.decrementAndGet();
 						synchronized (termationLock) {
-							totalNewEdgsForIteratn += threadUpdates;
+//							totalNewEdgsForIteratn += threadUpdates;
 							if (pending == 0) {
 								termationLock.notifyAll();
 							}

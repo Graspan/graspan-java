@@ -68,7 +68,7 @@ public class EngineEL {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 		// TODO: REMOVE THIS LATER
-		nThreads = 1;
+		nThreads = 8;
 
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
 		// logger.info("Executing partition loader.");
@@ -208,6 +208,7 @@ public class EngineEL {
 			return;
 
 		final Object termationLock = new Object();
+		final Object countLock = new Object();
 		final int chunkSize = 1 + vertices.length / 64;
 		// final int chunkSize = 1 + vertices.length / 4;
 
@@ -298,12 +299,13 @@ public class EngineEL {
 
 									// check if there are new edges added in
 									// partition one and two
-									if (i >= indexStartForOne
-											&& i <= indexEndForOne)
-										newEdgesInOne += threadUpdates;
-									else if (i >= indexStartForTwo
-											&& i <= indexEndForTwo)
-										newEdgesInTwo += threadUpdates;
+									synchronized(countLock) {
+										totalNewEdgsForIteratn += threadUpdates;
+										if (i >= indexStartForOne && i <= indexEndForOne)
+											newEdgesInOne += threadUpdates;
+										else if (i >= indexStartForTwo && i <= indexEndForTwo)
+											newEdgesInTwo += threadUpdates;
+									}
 
 									// set termination status if nNewEdges == 0
 									// for each vertex
@@ -319,8 +321,8 @@ public class EngineEL {
 						} finally {
 							int pending = countDown.decrementAndGet();
 							synchronized (termationLock) {
-								totalNewEdgsForIteratn += threadUpdates;
-								totalDupEdges += dups;
+//								totalNewEdgsForIteratn += threadUpdates;
+//								totalDupEdges += dups;
 								if (pending == 0) {
 									termationLock.notifyAll();
 								}
