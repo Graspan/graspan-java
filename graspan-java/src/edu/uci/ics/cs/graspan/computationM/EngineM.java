@@ -1,5 +1,6 @@
 package edu.uci.ics.cs.graspan.computationM;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
@@ -56,6 +58,9 @@ public class EngineM {
 	 * @throws IOException
 	 */
 	public void run() throws IOException {
+		
+		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
+		
 		// -------------------------------------------------------------------------------
 		// get the num of processors
 		int nThreads = 1;
