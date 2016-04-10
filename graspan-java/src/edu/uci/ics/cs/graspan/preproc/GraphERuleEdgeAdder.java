@@ -111,15 +111,15 @@ public class GraphERuleEdgeAdder {
 //			logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
 //			}
 
-		sort();
-		logger.info("Sorted " + baseFilename);
 
 		addEdgesforERules();
 		logger.info("Added new edges for ERules for " + baseFilename);
 
+		sort();
+		logger.info("Sorted " + baseFilename);
+
 		save();
 		logger.info("Saved data (adjacency lists & degrees) for " + baseFilename);
-
 	}
 
 	private void addEdgesforERules() {
@@ -161,8 +161,7 @@ public class GraphERuleEdgeAdder {
 		}
 
 		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
-		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker,
-				vertices[i].getOutEdgeValues().length);
+		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
 
 		// reset the outEdges/outVals
 		vertices[i].setOutEdges(tempEdgs);
@@ -186,10 +185,12 @@ public class GraphERuleEdgeAdder {
 	 * @param partEdgeVals
 	 */
 	private void sort() {
-		for (int j = 0; j < partEdges.length; j++) {
+//		for (int j = 0; j < partEdges.length; j++) {
+		for (int j = 0 ; j < vertices.length ; j++) {
 			int low = 0;
-			int high = partOutDegs[0][j] - 1;
-			Utilities.quickSort(partEdges[0][j], partEdgeVals[0][j], low, high);
+//			int high = partOutDegs[0][j] - 1;
+			int high = vertices[j].getOutEdges().length;
+			Utilities.quickSort(vertices[j].getOutEdges(), vertices[j].getOutEdgeValues(), low, high);
 		}
 		logger.info("Sorted loaded partition.");
 	}
