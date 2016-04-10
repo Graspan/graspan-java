@@ -18,42 +18,34 @@ public class WholeGraphComputer {
 	public static int newEdgesMain[][] = new int[EDGE_BUFFER_SIZE][2];
 
 	public static void main(String args[]) throws IOException {
-		String baseFilename = args[0];
-		logger.info("Input graph: " + args[0]);
+		
+		String baseFilename = init(args);
 
-		// initialize the graph data structures with -1
-		for (int i = 0; i < gph.length; i++) {
-			gph[i][0] = -1;
-			gph[i][1] = -1;
-		}
-		for (int i = 0; i < newEdgesMain.length; i++) {
-			newEdgesMain[i][0] = -1;
-			newEdgesMain[i][1] = -1;
-		}
-		logger.info("Completed initialization of graph data structures.");
-
-		BufferedReader ins = new BufferedReader(new InputStreamReader(
-				new FileInputStream(new File(baseFilename))));
+		BufferedReader ins = new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseFilename))));
 		String ln;
 
 		// read in the original graph
 		int i = 0;
 		while ((ln = ins.readLine()) != null) {
-			String[] tok = ln.split("\t");
-			gph[i][0] = Integer.parseInt(tok[0]);
-			gph[i][1] = Integer.parseInt(tok[1]);
-			i++;
+			if (!ln.isEmpty()) {
+				String[] tok = ln.split("\t");
+				gph[i][0] = Integer.parseInt(tok[0]);
+				gph[i][1] = Integer.parseInt(tok[1]);
+				i++;
+			}
 		}
 		logger.info("Finished reading original graph into memory.");
 
 		int nextGphPos = i;
 		logger.info("# edges in original graph: " + nextGphPos);
 
+		
+		// perform computation
 		int iterationNo = 1;
 		int[][] graphToCompute = gph;
 		boolean isNewEdgeAdded = false;
 		do {
-			printGraph();
+		//	printGraph();
 			logger.info("Computation iteration #: " + iterationNo);
 			isNewEdgeAdded = performDTCComputation(graphToCompute);
 			logger.info("New edges added in this iteration?: " + isNewEdgeAdded);
@@ -67,6 +59,23 @@ public class WholeGraphComputer {
 			iterationNo++;
 		} while (isNewEdgeAdded);
 
+	}
+
+	private static String init(String[] args) {
+		String baseFilename = args[0];
+		logger.info("Input graph: " + args[0]);
+
+		// initialize the graph data structures with -1
+		for (int i = 0; i < gph.length; i++) {
+			gph[i][0] = -1;
+			gph[i][1] = -1;
+		}
+		for (int i = 0; i < newEdgesMain.length; i++) {
+			newEdgesMain[i][0] = -1;
+			newEdgesMain[i][1] = -1;
+		}
+		logger.info("Completed initialization of graph data structures.");
+		return baseFilename;
 	}
 
 	public static boolean performDTCComputation(int[][] gph) {
@@ -88,29 +97,11 @@ public class WholeGraphComputer {
 					candidateEdgeV2 = gph[k][1];
 					boolean edgeExists = false;
 
-					// check whether this edge already exists in the original
-					// graph
-					for (int m = 0; m < gph.length; m++) {
-						if (candidateEdgeV1 == gph[m][0]
-								&& candidateEdgeV2 == gph[m][1]) {
-							// logger.info("Edge already exists: " +
-							// candidateEdgeV1 + "---->" + candidateEdgeV2);
-							edgeExists = true;
-							break;
-						}
-					}
+					// check whether this edge already exists in the original graph
+					edgeExists = isInGraph(gph, candidateEdgeV1, candidateEdgeV2, edgeExists);
 
-					// check whether this edge already exists in the newEdges
-					// data structure
-					for (int m = 0; m < newEdges.length; m++) {
-						if (candidateEdgeV1 == newEdges[m][0]
-								&& candidateEdgeV2 == newEdges[m][1]) {
-							// logger.info("Edge already exists: " +
-							// candidateEdgeV1 + "---->" + candidateEdgeV2);
-							edgeExists = true;
-							break;
-						}
-					}
+					// check whether edge exists in the new edges
+					edgeExists = isInGraph(newEdges, candidateEdgeV1, candidateEdgeV2, edgeExists);
 
 					if (!edgeExists) {
 						// logger.info("New edge found: " + candidateEdgeV1 +
@@ -128,9 +119,22 @@ public class WholeGraphComputer {
 		newEdgesMain = newEdges;
 		if (newEdgesMarker != 0) // if new edges have been added
 		{
-			printNewEdges();
+//			printNewEdges();
 		}
 		return isNewEdgeAdded;
+	}
+
+	private static boolean isInGraph(int[][] gph, int candidateEdgeV1, int candidateEdgeV2, boolean edgeExists) {
+		for (int m = 0; m < gph.length; m++) {
+			if (candidateEdgeV1 == gph[m][0]
+					&& candidateEdgeV2 == gph[m][1]) {
+				// logger.info("Edge already exists: " +
+				// candidateEdgeV1 + "---->" + candidateEdgeV2);
+				edgeExists = true;
+				break;
+			}
+		}
+		return edgeExists;
 	}
 
 	public static void printGraph() {
