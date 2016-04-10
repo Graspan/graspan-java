@@ -106,10 +106,10 @@ public class GrammarChecker {
 	}
 	
 
-	public static byte checkL1Rules(byte src){
+	public static byte checkL1Rules(byte srcVal){
 		byte OPEval = -1;
-		if(GrammarChecker.sRules.containsKey(src)){
-			OPEval = GrammarChecker.sRules.get(src);
+		if(GrammarChecker.sRules.containsKey(srcVal)){
+			OPEval = GrammarChecker.sRules.get(srcVal);
 		}
 		return OPEval;
 	}
