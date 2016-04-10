@@ -57,7 +57,7 @@ public class GraphERuleEdgeAdder {
 		// logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 		// get the grammar info
-		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
+//		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 		logger.info("Loaded " + baseFilename + ".grammar");
 
 		preliminaryInit();
@@ -107,9 +107,9 @@ public class GraphERuleEdgeAdder {
 		logger.info("Loaded " + baseFilename);
 		
 		
-		for (int i=0;i<vertices.length;i++){
-			logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
-			}
+//		for (int i=0;i<vertices.length;i++){
+//			logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
+//			}
 
 		sort();
 		logger.info("Sorted " + baseFilename);
@@ -325,8 +325,10 @@ public class GraphERuleEdgeAdder {
 		}
 		String ln;
 		while ((ln = partInStrm.readLine()) != null) {
+			if (!ln.isEmpty()){
 			
 			String[] tok = ln.split("\t");
+			
 			
 			int src = Integer.parseInt(tok[0]);
 //			logger.info("Input Line " + Arrays.toString(tok));
@@ -341,24 +343,24 @@ public class GraphERuleEdgeAdder {
 				arraySrcVId = src - 1;
 			}
 			
-			logger.info(" arraySrcVId "+arraySrcVId+" lastAddedEdgePos "+lastAddedEdgePos.length);
+//			logger.info(" arraySrcVId "+arraySrcVId+" lastAddedEdgePos "+lastAddedEdgePos.length);
 			
 			// dstVId
-			logger.info(
-					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId]  " + lastAddedEdgePos[arraySrcVId]);
+//			logger.info(
+//					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId]  " + lastAddedEdgePos[arraySrcVId]);
 			partEdges[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.parseInt(tok[1]);
 
 			// edgeVal
-			logger.info(
-					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId] " + lastAddedEdgePos[arraySrcVId]);
+//			logger.info(
+//					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId] " + lastAddedEdgePos[arraySrcVId]);
 			partEdgeVals[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = GrammarChecker.getValue(tok[2]);;
 
 			// increment the last added position for this row
 			lastAddedEdgePos[arraySrcVId]++;
-			
+		}
 		}
 
-		logger.info("partEdges: "+Arrays.deepToString(partEdges));
+//		logger.info("partEdges: "+Arrays.deepToString(partEdges));
 
 		partInStrm.close();
 
@@ -424,9 +426,9 @@ public class GraphERuleEdgeAdder {
 		
 		logger.info("Updating " + GlobalParams.baseFilename);
 		
-		for (int i=0;i<vertices.length;i++){
-		logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
-		}
+//		for (int i=0;i<vertices.length;i++){
+//		logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
+//		}
 		
 		
 		// clear current graph file
@@ -514,7 +516,7 @@ public class GraphERuleEdgeAdder {
 					outDegs.put(src, outDegs.get(src) + 1);
 				}
 				numEdges++;
-				logger.info(numEdges+" Num edges");
+//				logger.info(numEdges+" Num edges");
 			} catch (Exception e) {
 				logger.info("ERROR: " + e + "at line # " + lineCount + " : " + ln);
 			}

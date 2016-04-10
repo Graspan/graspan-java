@@ -59,14 +59,13 @@ public class PreprocessorClient {
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
 		
-		
+		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
 		//--------------------------------------------------------------------------------------------------------
 		// adding edges to the graph based on eRules
 		
-		GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
-		edgeAdder.run();
+//		GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
+//		edgeAdder.run();
 		
-
 		//--------------------------------------------------------------------------------------------------------
 		// initialize Partition Generator Program
 		logger.info("Starting preprocessing...");
