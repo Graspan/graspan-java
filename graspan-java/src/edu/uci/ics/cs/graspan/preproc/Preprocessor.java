@@ -88,7 +88,7 @@ public class Preprocessor {
 	 */
 	public Preprocessor(String baseFilename, int numParts) throws IOException {
 		// get the grammar info
-		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
+//		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 
 		logger.info("Initializing partition generator program... ");
 
@@ -121,6 +121,7 @@ public class Preprocessor {
 	}
 	
 	public void run() throws FileNotFoundException, IOException{
+		
 		// generate degrees file
 		long degGenStartTime = System.nanoTime();
 		generateGraphDegs(new FileInputStream(new File(GlobalParams.getBasefilename())));
@@ -137,8 +138,7 @@ public class Preprocessor {
 		// be later filled in by sendBufferEdgestoDisk_ByteFmt())
 		partOutStrms = new DataOutputStream[numParts];
 		for (int i = 0; i < numParts; i++) {
-			partOutStrms[i] = new DataOutputStream(
-					new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
+			partOutStrms[i] = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(baseFilename + ".partition." + i, true)));
 		}
 
 		// initialize streams for partition degree files (these streams will
@@ -155,6 +155,8 @@ public class Preprocessor {
 		generatePartDegs();
 		long creatingPartsDuration = System.nanoTime() - creatingPartsStartTime;
 		logger.info("Total time to create partitions (nanoseconds):" + creatingPartsDuration);
+		
+		GlobalParams.setNumParts(this.numParts);
 		
 	}
 
@@ -230,6 +232,7 @@ public class Preprocessor {
 		this.outDegs = outDegs;
 
 		logger.info("Completed saving all degrees files.");
+//		logger.info(outDegs+"");
 	}
 
 	/**

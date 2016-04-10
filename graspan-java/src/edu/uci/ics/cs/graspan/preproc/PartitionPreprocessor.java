@@ -44,7 +44,7 @@ public class PartitionPreprocessor {
 		logger.info("Loaded " + baseFilename + ".partAllocTable");
 
 		// get the grammar info
-		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
+//		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 		logger.info("Loaded " + baseFilename + ".grammar");
 
 		preliminaryInit();

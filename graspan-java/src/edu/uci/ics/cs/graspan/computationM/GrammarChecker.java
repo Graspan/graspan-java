@@ -19,7 +19,8 @@ public class GrammarChecker {
 	//sort the mapping info of inputed grammar with used grammar
 	private static Map<String, Byte> map = new LinkedHashMap<String, Byte>();
 	
-	//
+	private static Map<Byte, String> reverse_map =new LinkedHashMap<Byte, String>();
+	
 	private static Map<Byte, HashMap<Byte, Byte>> dRules = new LinkedHashMap<Byte, HashMap<Byte, Byte>>();
 	
 	private static Map<Byte, Byte> sRules = new LinkedHashMap<Byte, Byte>();
@@ -80,8 +81,13 @@ public class GrammarChecker {
 		else{
 			byte e = (byte) map.size();
 			map.put(string, e);
+			reverse_map.put(e, string);
 			return e;
 		}
+	}
+	
+	public static String getValue(Byte e){
+		return reverse_map.get(e);
 	}
 
 

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
+import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdder;
 import edu.uci.ics.cs.graspan.preproc.PartitionPreprocessor;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
@@ -57,6 +58,14 @@ public class PreprocessorClient {
 
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
+		
+		
+		//--------------------------------------------------------------------------------------------------------
+		// adding edges to the graph based on eRules
+		
+		GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
+		edgeAdder.run();
+		
 
 		//--------------------------------------------------------------------------------------------------------
 		// initialize Partition Generator Program
@@ -66,13 +75,13 @@ public class PreprocessorClient {
 		partgenerator.run();
 
 		//---------------------------------------------------------------------------------------------------------
-		//Do further preprocessing of each partition
-		logger.info("Preprocessing each partition...");
-		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
-		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {
-			partPreprocessor.loadAndProcessParts(partId);
-		}
-		
+//		//Do further preprocessing of each partition
+//		logger.info("Preprocessing each partition...");
+//		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
+//		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {
+//			partPreprocessor.loadAndProcessParts(partId);
+//		}
+//		
 		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
 		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);

@@ -165,10 +165,10 @@ public class LoaderM {
 		}
 //		logger.info(loadedIntStartOP);
 
-		String str = "";
-		for (int i = 0; i < partsToLoad.length; i++) {
-			str = str + partsToLoad[i] + " ";
-		}
+//		String str = "";
+//		for (int i = 0; i < partsToLoad.length; i++) {
+//			str = str + partsToLoad[i] + " ";
+//		}
 //		logger.info("NEW COMPUTATION SET: Loading partitions : " + str + "...");
 
 		// update newPartsToLoad
