@@ -433,7 +433,7 @@ public class Preprocessor {
 						// eval = 11;
 						// }
 						// eval = Integer.parseInt(tok[2]);
-						eval = GrammarChecker.getValue(tok[2]);
+						eval = GrammarChecker.getValue(tok[2].trim());
 					}
 
 					assert (src != -1 && dst != -1 && eval != -1);
