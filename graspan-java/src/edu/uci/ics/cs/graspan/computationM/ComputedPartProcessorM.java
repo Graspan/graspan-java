@@ -97,6 +97,8 @@ public class ComputedPartProcessorM {
 		long[][] partSizes = SchedulerInfo.getPartSizes();
 
 		// get repartitioning variables
+		
+		// split vertices for all partitions
 		ArrayList<Integer> splitVertices = RepartitioningData
 				.getSplitVertices();
 		TreeSet<Integer> newPartLimits = RepartitioningData.getNewPartLimits();
@@ -112,15 +114,19 @@ public class ComputedPartProcessorM {
 		HashSet<Integer> partsToSaveByCPP = RepartitioningData.getPartsToSave();
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
-
+		
+		// split vertices for one partition
+		ArrayList<Integer> splitVerticesTemp = new ArrayList<Integer>();
 		/*
 		 * 1. Scanning each loaded partition, updating degrees data &
 		 * modified/unmodified parts, adding repartitioning split points
 		 */
-
+		
+		long totalEdgesPerPartition;
 		// for each loaded partition
 		for (int a = 0; a < loadedParts.length; a++) {
-
+			totalEdgesPerPartition = 0;
+			
 			LoadedVertexInterval part = null;
 			// get this partition interval in LVI
 			for (int b = 0; b < intervals.size(); b++) {
@@ -149,7 +155,7 @@ public class ComputedPartProcessorM {
 
 			// 1.1. Scan the new edges and update loadPartOutDegs,
 //			logger.info("Updating loadPartOutDegs for loaded partition " + partId);
-
+			
 			// for each src vertex
 			for (int i = partStart; i < partEnd + 1; i++) {
 
@@ -182,6 +188,13 @@ public class ComputedPartProcessorM {
 				modifiedParts.add(partId);
 			}
 
+			// get total num of edges per partition
+			for(int i = partStart; i < partEnd + 1; i++) {
+				src = vertices[i].getVertexId();
+				totalEdgesPerPartition += vertices[i].getNumOutEdges();
+			}
+//			logger.info("******Total num of edges: " + totalEdgesPerPartition + " in partition : " + a);
+			
 			// 1.3. Add repartitioning split vertices
 //			logger.info("Adding repartitioning split points for loaded partition " + partId);
 
@@ -240,13 +253,28 @@ public class ComputedPartProcessorM {
 				// point
 
 //				logger.info("partEdgeCount: "+partEdgeCount+" i: "+i+" PartEnd: "+partEnd);
-				if ((partEdgeCount > get_newPartMaxPostNewEdges()) && (i != partEnd)) {
-//					logger.info("it repartitioned");
-					splitVertices.add(src);
-					partEdgeCount = 0;
+//				if ((partEdgeCount > getRepartitionThreshold(totalEdgesPerPartition)) && (i != partEnd)) {
+////					logger.info("it repartitioned");
+//					splitVertices.add(src);
+//					partEdgeCount = 0;
+//				}
+				if(partEdgeCount > getRepartitionThreshold(totalEdgesPerPartition)) {
+					int numOfPartitions = getNumOfPartitions(totalEdgesPerPartition);
+					assert(numOfPartitions >= 1);
+					// n partitions has n-1 splitVertices
+					if(splitVerticesTemp.size() < numOfPartitions - 1) {
+						// add split vertices to current partition
+						splitVerticesTemp.add(src);
+						partEdgeCount = 0;
+					}
 				}
 			}
-
+			
+			// add split vertices to all parittions
+			for(Integer i : splitVerticesTemp)
+				splitVertices.add(i);
+			splitVerticesTemp.clear();
+			
 			// long edgeCount = 0;
 			// for (int i = part.getIndexStart(); i < part.getIndexEnd() + 1;
 			// i++) {
@@ -810,9 +838,13 @@ public class ComputedPartProcessorM {
 
 	}
 	
-	private static long get_newPartMaxPostNewEdges(){
-		
-		return PART_MAX_POST_NEW_EDGES;
+	private static long getRepartitionThreshold(long totalEdges) {
+		int numOfPartitions = getNumOfPartitions(totalEdges);
+		return (totalEdges / numOfPartitions);
+	}
+	
+	private static int getNumOfPartitions(long totalEdges) {
+		return (int) (Math.round((double) totalEdges / PART_MAX_POST_NEW_EDGES) + 1);
 	}
 
 }
