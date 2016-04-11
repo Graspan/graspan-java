@@ -24,6 +24,9 @@ public class WholeGraphComputer {
 	public static void main(String args[]) throws IOException {
 		
 		String baseFilename = init(args);
+		
+		//load grammar
+		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
 
 		// read in the original graph
 		BufferedReader ins = new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseFilename))));
@@ -35,7 +38,7 @@ public class WholeGraphComputer {
 				String[] tok = ln.split("\t");
 				gph[i][0] = Integer.parseInt(tok[0]);
 				gph[i][1] = Integer.parseInt(tok[1]);
-				vals[i] = GrammarChecker.getValue(tok[2]);
+				vals[i] = GrammarChecker.getValue(tok[2].trim());
 				i++;
 			}
 		}
@@ -48,8 +51,6 @@ public class WholeGraphComputer {
 		//---------------------------------------------------------------------------------------------------------------
 		//BEGINNING COMPUTATION
 		
-		//load grammar
-		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
 		
 		int l2IterationNo = 1;
 		
@@ -155,7 +156,9 @@ public class WholeGraphComputer {
 			}
 			
 		}
-	};
+		newEdgesMain = newEdges;
+		newValsMain = newVals;
+	}
 
 	public static boolean performComputationL2Rule(int[][] gph, byte[] vals) {
 		int newEdges[][] = new int[EDGE_BUFFER_SIZE][2];
@@ -207,8 +210,10 @@ public class WholeGraphComputer {
 				}
 			}
 		}
+		
 		logger.info("# new edges added in this iteration: " + newEdgesMarker);
 		newEdgesMain = newEdges;
+		newValsMain = newVals;
 		if (newEdgesMarker != 0) // if new edges have been added
 		{
 //			printNewEdges();
@@ -227,6 +232,9 @@ public class WholeGraphComputer {
 	 * @return
 	 */
 	private static boolean isInGraph(int[][] gph, byte[] vals, int candidateEdgeV1, int candidateEdgeV2, byte OPEval,boolean edgeExists) {
+		if (edgeExists) {
+			return true;
+		}
 		for (int m = 0; m < gph.length; m++) {
 			if (candidateEdgeV1 == gph[m][0] && candidateEdgeV2 == gph[m][1] && OPEval==vals[m]) {
 				// logger.info("Edge already exists: " +
