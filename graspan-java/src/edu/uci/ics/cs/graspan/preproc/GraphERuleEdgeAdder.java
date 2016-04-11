@@ -110,8 +110,7 @@ public class GraphERuleEdgeAdder {
 //		for (int i=0;i<vertices.length;i++){
 //			logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
 //			}
-
-
+		
 		addEdgesforERules();
 		logger.info("Added new edges for ERules for " + baseFilename);
 
@@ -166,15 +165,17 @@ public class GraphERuleEdgeAdder {
 		// reset the outEdges/outVals
 		vertices[i].setOutEdges(tempEdgs);
 		vertices[i].setOutEdgeValues(tempVals);
+		
+		
+		
 	}
 
 	private void removeExistingERuleVals(int srcId, int i, HashSet<Byte> newValsforSrc) {
 		int destId;
 		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
 			destId = vertices[i].getOutEdge(j);
-			if (destId > srcId)
-				break;
-			newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
+			if (destId == srcId) //remove the loop edge value if it already exists
+				newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
 		}
 	}
 
@@ -193,40 +194,6 @@ public class GraphERuleEdgeAdder {
 			Utilities.quickSort(vertices[j].getOutEdges(), vertices[j].getOutEdgeValues(), low, high);
 		}
 		logger.info("Sorted loaded partition.");
-	}
-
-	/**
-	 * Gets the partition allocation table.
-	 * 
-	 * @throws NumberFormatException
-	 * @throws IOException
-	 */
-	private void readPartAllocTable() throws NumberFormatException, IOException {
-
-		// initialize partAllocTable variable
-		int partAllocTable[][] = new int[1][2];
-
-		/*
-		 * Scan the partition allocation table file
-		 */
-		BufferedReader inPartAllocTabStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
-		String ln, tok[];
-
-		int i = 0;
-		while ((ln = inPartAllocTabStrm.readLine()) != null) {
-			tok = ln.split("\t");
-			// store partition allocation table in memory
-			partAllocTable[i][0] = Integer.parseInt(tok[0]);
-			partAllocTable[i][1] = Integer.parseInt(tok[1]);
-			i++;
-		}
-		AllPartitions.setPartAllocTab(partAllocTable);
-		inPartAllocTabStrm.close();
-	}
-
-	public Vertex[] getVertices() {
-		return vertices;
 	}
 
 	/**
@@ -425,7 +392,7 @@ public class GraphERuleEdgeAdder {
 	
 	private void storePart_ActualEdges() throws IOException {
 		
-		logger.info("Updating " + GlobalParams.baseFilename);
+		logger.info("Creating " + GlobalParams.baseFilename+".eRulesAdded");
 		
 //		for (int i=0;i<vertices.length;i++){
 //		logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
@@ -433,12 +400,12 @@ public class GraphERuleEdgeAdder {
 		
 		
 		// clear current graph file
-		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(GlobalParams.baseFilename , false)));
-		partOutStrm.close();
+//		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(
+//				new FileWriter(GlobalParams.baseFilename , false)));
+//		partOutStrm.close();
 
-		partOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(GlobalParams.baseFilename , true)));
+		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(
+				new FileWriter(GlobalParams.baseFilename+".eRulesAdded" , true)));
 
 		int srcVId, destVId, count;
 		int edgeValue;

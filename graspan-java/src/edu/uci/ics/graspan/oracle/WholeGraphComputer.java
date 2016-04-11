@@ -16,12 +16,15 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 public class WholeGraphComputer {
 
 	private static final Logger logger = GraspanLogger.getLogger("DTC-Oracle");
-	private static final int EDGE_BUFFER_SIZE = 500;
+	private static final int EDGE_BUFFER_SIZE = 5000000;
 
 	public static int gph[][] = new int[EDGE_BUFFER_SIZE][2];
 	public static byte vals[]=new byte[EDGE_BUFFER_SIZE];
 	public static int newEdgesMain[][] = new int[EDGE_BUFFER_SIZE][2];
 	public static byte newValsMain[] = new byte[EDGE_BUFFER_SIZE];
+	
+//	static int iterationNewEdges[][] = new int[EDGE_BUFFER_SIZE][2];
+//	static byte iterationNewVals[] = new byte[EDGE_BUFFER_SIZE];
 
 	public static void main(String args[]) throws IOException {
 		
@@ -36,7 +39,7 @@ public class WholeGraphComputer {
 		int i = 0;
 		while ((ln = ins.readLine()) != null) {
 			if (!ln.isEmpty()) {
-				String[] tok = ln.split("\t");
+				String[] tok = ln.split("\t");//NOTE: MAKE SURE INPUT FILE IS TAB DELIMITED
 				gph[i][0] = Integer.parseInt(tok[0]);
 				gph[i][1] = Integer.parseInt(tok[1]);
 				vals[i] = GrammarChecker.getValue(tok[2].trim());
@@ -55,21 +58,21 @@ public class WholeGraphComputer {
 		
 		int iterationNo = 1;
 		
-			int[][] graphToCompute = gph;
-			byte[] valsToCompute = vals;
+		int[][] graphToCompute = gph;
+		byte[] valsToCompute = vals;
 
-			boolean isNewEdgeAdded = false;
-			do {
-				// printGraph();
-				logger.info("Computation iteration #: " + iterationNo);
-				isNewEdgeAdded = performComputation(graphToCompute, valsToCompute);
-				logger.info("New edges added in this iteration?: " + isNewEdgeAdded);
-				nextGphPos = transferNewEdgestoOriginal(nextGphPos);
-				iterationNo++;
-			} while (isNewEdgeAdded);
-			
-//			printGraph();
-			storePart_ActualEdges(baseFilename);
+		boolean isNewEdgeAdded = false;
+		do {
+			// printGraph();
+			logger.info("Computation iteration #: " + iterationNo);
+			isNewEdgeAdded = performComputation(graphToCompute, valsToCompute);
+			logger.info("New edges added in this iteration?: " + isNewEdgeAdded);
+			nextGphPos = transferNewEdgestoOriginal(nextGphPos);
+			iterationNo++;
+		} while (isNewEdgeAdded);
+
+		// printGraph();
+		storeActualEdges(baseFilename);
 
 	}
 
@@ -154,15 +157,15 @@ public class WholeGraphComputer {
 //	}
 
 	public static boolean performComputation(int[][] gph, byte[] vals) {
-		int newEdges[][] = new int[EDGE_BUFFER_SIZE][2];
-		byte newVals[] = new byte[EDGE_BUFFER_SIZE];
+//		int iterationNewEdges[][] = new int[EDGE_BUFFER_SIZE][2];
+//		byte iterationNewVals[] = new byte[EDGE_BUFFER_SIZE];
 		int newEdgesMarker = 0;
 
-		// initializing newEdges
-		for (int i = 0; i < newEdges.length; i++) {
-			newEdges[i][0] = -1;
-			newEdges[i][1] = -1;
-			newVals[i] = -1;
+		// resetting iterationNewEdges
+		for (int i = 0; i < newEdgesMain.length; i++) {
+			newEdgesMain[i][0] = -1;
+			newEdgesMain[i][1] = -1;
+			newValsMain[i] = -1;
 		}
 		
 		boolean isNewEdgeAdded = false;
@@ -187,16 +190,16 @@ public class WholeGraphComputer {
 				edgeExists = isInGraph(gph, vals, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
 
 				// check whether edge exists in the new edges
-				edgeExists = isInGraph(newEdges, newVals, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
+				edgeExists = isInGraph(newEdgesMain, newValsMain, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
 				
 				if (!edgeExists) {
 					
 					// logger.info("New edge found: " + candidateEdgeV1 +  "---->" + candidateEdgeV2 + "("+ OPEval+")");
 					
 					// add the edge
-					newEdges[newEdgesMarker][0] = candidateEdgeV1;
-					newEdges[newEdgesMarker][1] = candidateEdgeV2;
-					newVals[newEdgesMarker]=OPEval;
+					newEdgesMain[newEdgesMarker][0] = candidateEdgeV1;
+					newEdgesMain[newEdgesMarker][1] = candidateEdgeV2;
+					newValsMain[newEdgesMarker]=OPEval;
 					newEdgesMarker++;
 					isNewEdgeAdded = true;
 				}
@@ -229,16 +232,16 @@ public class WholeGraphComputer {
 					edgeExists = isInGraph(gph, vals, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
 
 					// check whether edge exists in the new edges
-					edgeExists = isInGraph(newEdges, newVals, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
+					edgeExists = isInGraph(newEdgesMain, newValsMain, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
 
 					if (!edgeExists) {
 						
 						// logger.info("New edge found: " + candidateEdgeV1 +  "---->" + candidateEdgeV2 + "("+ OPEval+")");
 						
 						// add the edge
-						newEdges[newEdgesMarker][0] = candidateEdgeV1;
-						newEdges[newEdgesMarker][1] = candidateEdgeV2;
-						newVals[newEdgesMarker]=OPEval;
+						newEdgesMain[newEdgesMarker][0] = candidateEdgeV1;
+						newEdgesMain[newEdgesMarker][1] = candidateEdgeV2;
+						newValsMain[newEdgesMarker]=OPEval;
 						newEdgesMarker++;
 						isNewEdgeAdded = true;
 					}
@@ -247,8 +250,8 @@ public class WholeGraphComputer {
 		}
 		
 		logger.info("# new edges added in this iteration: " + newEdgesMarker);
-		newEdgesMain = newEdges;
-		newValsMain = newVals;
+//		newEdgesMain = iterationNewEdges;
+//		newValsMain = iterationNewVals;
 //		if (newEdgesMarker != 0) // if new edges have been added
 //		{
 //			printNewEdges();
@@ -256,12 +259,12 @@ public class WholeGraphComputer {
 		return isNewEdgeAdded;
 	}
 	
-private static void storePart_ActualEdges(String basefilename) throws IOException {
+private static void storeActualEdges(String basefilename) throws IOException {
 		// clear current graph file
-		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter( new FileWriter(basefilename , false)));
-		partOutStrm.close();
+//		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter( new FileWriter(basefilename+".finaloutput" , false)));
+//		partOutStrm.close();
 
-		partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename , true)));
+		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename+".finaloutput" , true)));
 
 		for (int i = 0; i < gph.length; i++) {
 			if (gph[i][0] == -1)
