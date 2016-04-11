@@ -189,7 +189,7 @@ public class GraphERuleEdgeAdder {
 		for (int j = 0 ; j < vertices.length ; j++) {
 			int low = 0;
 //			int high = partOutDegs[0][j] - 1;
-			int high = vertices[j].getOutEdges().length;
+			int high = vertices[j].getOutEdges().length-1;
 			Utilities.quickSort(vertices[j].getOutEdges(), vertices[j].getOutEdgeValues(), low, high);
 		}
 		logger.info("Sorted loaded partition.");

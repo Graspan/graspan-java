@@ -11,13 +11,12 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
-import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 public class WholeGraphComputer {
 
 	private static final Logger logger = GraspanLogger.getLogger("DTC-Oracle");
-	private static final int EDGE_BUFFER_SIZE = 1000;
+	private static final int EDGE_BUFFER_SIZE = 500;
 
 	public static int gph[][] = new int[EDGE_BUFFER_SIZE][2];
 	public static byte vals[]=new byte[EDGE_BUFFER_SIZE];
@@ -170,6 +169,10 @@ public class WholeGraphComputer {
 		int candidateEdgeV1, candidateEdgeV2;
 		byte srcEval, destEval, OPEval;
 		for (int j = 0; j < gph.length; j++) {
+			
+			if (gph[j][0] == -1)
+				break;
+			
 			candidateEdgeV1 = gph[j][0];
 			candidateEdgeV2 = gph[j][1];
 			srcEval = vals[j];
@@ -201,6 +204,10 @@ public class WholeGraphComputer {
 			}
 			
 			for (int k = 0; k < gph.length; k++) {
+				
+				if (gph[k][0] == -1)
+					break;			
+				
 				if (gph[j][1] == gph[k][0] && gph[j][1] != -1 && gph[k][0] != -1) {
 					candidateEdgeV1 = gph[j][0];
 					candidateEdgeV2 = gph[k][1];
@@ -212,7 +219,7 @@ public class WholeGraphComputer {
 					// check whether pair-wise grammar rule (d-rule) is satisfied
 					OPEval = GrammarChecker.checkL2Rules(srcEval, destEval);
 					
-					logger.info("L2 Rule Check "+ OPEval+" "+srcEval+" "+destEval);
+//					logger.info("L2 Rule Check "+ OPEval+" "+srcEval+" "+destEval);
 					
 					if (OPEval==-1) continue;
 					

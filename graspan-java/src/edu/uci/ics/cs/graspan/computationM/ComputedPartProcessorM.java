@@ -240,7 +240,7 @@ public class ComputedPartProcessorM {
 				// point
 
 //				logger.info("partEdgeCount: "+partEdgeCount+" i: "+i+" PartEnd: "+partEnd);
-				if ((partEdgeCount > PART_MAX_POST_NEW_EDGES) && (i != partEnd)) {
+				if ((partEdgeCount > get_newPartMaxPostNewEdges()) && (i != partEnd)) {
 //					logger.info("it repartitioned");
 					splitVertices.add(src);
 					partEdgeCount = 0;
@@ -808,6 +808,11 @@ public class ComputedPartProcessorM {
 
 		partDegOutStrm.close();
 
+	}
+	
+	private static long get_newPartMaxPostNewEdges(){
+		
+		return PART_MAX_POST_NEW_EDGES;
 	}
 
 }
