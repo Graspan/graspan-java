@@ -12,11 +12,13 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 public class WholeGraphComputer {
 
 	private static final Logger logger = GraspanLogger.getLogger("DTC-Oracle");
-	private static final int EDGE_BUFFER_SIZE = 5000000;
+	private static final int EDGE_BUFFER_SIZE = 5000;
+	private static int FIRST_VERTEX_ID = 0;
 
 	public static int gph[][] = new int[EDGE_BUFFER_SIZE][2];
 	public static byte vals[]=new byte[EDGE_BUFFER_SIZE];
@@ -40,10 +42,19 @@ public class WholeGraphComputer {
 		while ((ln = ins.readLine()) != null) {
 			if (!ln.isEmpty()) {
 				String[] tok = ln.split("\t");//NOTE: MAKE SURE INPUT FILE IS TAB DELIMITED
-				gph[i][0] = Integer.parseInt(tok[0]);
-				gph[i][1] = Integer.parseInt(tok[1]);
-				vals[i] = GrammarChecker.getValue(tok[2].trim());
-				i++;
+				
+				if (FIRST_VERTEX_ID == 1) {
+					gph[i][0] = Integer.parseInt(tok[0]);
+					gph[i][1] = Integer.parseInt(tok[1]);
+					vals[i] = GrammarChecker.getValue(tok[2].trim());
+					i++;
+				} else if (FIRST_VERTEX_ID == 0) {
+					gph[i][0] = Integer.parseInt(tok[0])+1;
+					gph[i][1] = Integer.parseInt(tok[1])+1;
+					vals[i] = GrammarChecker.getValue(tok[2].trim());
+					i++;
+				}
+				
 			}
 		}
 
@@ -78,11 +89,16 @@ public class WholeGraphComputer {
 
 	private static int transferNewEdgestoOriginal(int nextGphPos) {
 		for (int j = 0; j < newEdgesMain.length; j++) {
-			if (newEdgesMain[j][0] == -1 | newEdgesMain[j][1] == -1)
+			if (newEdgesMain[j][0] == 0 | newEdgesMain[j][1] == 0)
 				break;
 			gph[nextGphPos][0] = newEdgesMain[j][0];
 			gph[nextGphPos][1] = newEdgesMain[j][1];
 			vals[nextGphPos]=newValsMain[j];
+			
+			newEdgesMain[j][0] = 0;
+			newEdgesMain[j][1] = 0;
+			newValsMain[j] = 0;
+			
 			nextGphPos++;
 		}
 		return nextGphPos;
@@ -93,16 +109,16 @@ public class WholeGraphComputer {
 		logger.info("Input graph: " + args[0]);
 
 		// initialize the graph data structures with -1
-		for (int i = 0; i < gph.length; i++) {
-			gph[i][0] = -1;
-			gph[i][1] = -1;
-			vals[i]=-1;
-		}
-		for (int i = 0; i < newEdgesMain.length; i++) {
-			newEdgesMain[i][0] = -1;
-			newEdgesMain[i][1] = -1;
-			newValsMain[i]=-1;
-		}
+//		for (int i = 0; i < gph.length; i++) {
+//			gph[i][0] = -1;
+//			gph[i][1] = -1;
+//			vals[i]=-1;
+//		}
+//		for (int i = 0; i < newEdgesMain.length; i++) {
+//			newEdgesMain[i][0] = -1;
+//			newEdgesMain[i][1] = -1;
+//			newValsMain[i]=-1;
+//		}
 		logger.info("Completed initialization of graph data structures.");
 		return baseFilename;
 	}
@@ -162,25 +178,29 @@ public class WholeGraphComputer {
 		int newEdgesMarker = 0;
 
 		// resetting iterationNewEdges
-		for (int i = 0; i < newEdgesMain.length; i++) {
-			newEdgesMain[i][0] = -1;
-			newEdgesMain[i][1] = -1;
-			newValsMain[i] = -1;
-		}
+//		for (int i = 0; i < newEdgesMain.length; i++) {
+//			newEdgesMain[i][0] = -1;
+//			newEdgesMain[i][1] = -1;
+//			newValsMain[i] = -1;
+//		}
+		
+		
 		
 		boolean isNewEdgeAdded = false;
 		int candidateEdgeV1, candidateEdgeV2;
 		byte srcEval, destEval, OPEval;
 		for (int j = 0; j < gph.length; j++) {
 			
-			if (gph[j][0] == -1)
+			if (gph[j][0] == 0)
 				break;
 			
 			candidateEdgeV1 = gph[j][0];
 			candidateEdgeV2 = gph[j][1];
 			srcEval = vals[j];
 			
+			
 			OPEval = GrammarChecker.checkL1Rules(srcEval);
+			logger.info("checked L1 Rules for edge " + candidateEdgeV1+" ----> "+candidateEdgeV2+" : "+srcEval);
 			
 			if (OPEval!=-1) {
 				
@@ -208,10 +228,10 @@ public class WholeGraphComputer {
 			
 			for (int k = 0; k < gph.length; k++) {
 				
-				if (gph[k][0] == -1)
+				if (gph[k][0] == 0)
 					break;			
 				
-				if (gph[j][1] == gph[k][0] && gph[j][1] != -1 && gph[k][0] != -1) {
+				if (gph[j][1] == gph[k][0] && gph[j][1] != 0 && gph[k][0] != 0) {
 					candidateEdgeV1 = gph[j][0];
 					candidateEdgeV2 = gph[k][1];
 					
@@ -235,7 +255,6 @@ public class WholeGraphComputer {
 					edgeExists = isInGraph(newEdgesMain, newValsMain, candidateEdgeV1, candidateEdgeV2, OPEval, edgeExists);
 
 					if (!edgeExists) {
-						
 						// logger.info("New edge found: " + candidateEdgeV1 +  "---->" + candidateEdgeV2 + "("+ OPEval+")");
 						
 						// add the edge
@@ -264,10 +283,10 @@ private static void storeActualEdges(String basefilename) throws IOException {
 //		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter( new FileWriter(basefilename+".finaloutput" , false)));
 //		partOutStrm.close();
 
-		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename+".finaloutput" , true)));
+		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename+".finalOracleOutput" , true)));
 
 		for (int i = 0; i < gph.length; i++) {
-			if (gph[i][0] == -1)
+			if (gph[i][0] == 0)
 				break;
 			partOutStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + GrammarChecker.getValue((byte)vals[i]));
 		}
@@ -290,6 +309,9 @@ private static void storeActualEdges(String basefilename) throws IOException {
 			return true;
 		}
 		for (int m = 0; m < gph.length; m++) {
+			if (gph[m][0] == 0) {
+				break;
+			}
 			if (candidateEdgeV1 == gph[m][0] && candidateEdgeV2 == gph[m][1] && OPEval==vals[m]) {
 				// logger.info("Edge already exists: " +
 				// candidateEdgeV1 + "---->" + candidateEdgeV2);
@@ -310,7 +332,7 @@ private static void storeActualEdges(String basefilename) throws IOException {
 		String s = "";
 		int numOfEdges = 0;
 		for (int i = 0; i < gph.length; i++) {
-			if (gph[i][0] == -1)
+			if (gph[i][0] == 0)
 				break;
 //			if (gph[i][0]==v){//only prints the graph for the input vertex
 			s = s + gph[i][0] + "\t" + gph[i][1] + "\n";
@@ -327,10 +349,11 @@ private static void storeActualEdges(String basefilename) throws IOException {
 	public static void printNewEdges() {
 		String s = "";
 		for (int i = 0; i < newEdgesMain.length; i++) {
-			if (newEdgesMain[i][0] == -1)
+			if (newEdgesMain[i][0] == 0)
 				break;
 			s = s + newEdgesMain[i][0] + "\t" + newEdgesMain[i][1] + "\n";
 		}
 		logger.info("New edges added:" + "\n" + s);
 	}
+	
 }
