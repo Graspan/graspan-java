@@ -16,7 +16,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 /**
  * This program performs preprocessing of the input graph to generate partitions
  * 
- * @author Aftab
+ * @author Aftabdisp
  * 
  */
 public class PreprocessorClient {
@@ -46,6 +46,7 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("INPUT_GRAPH_TYPE") == 0) {
 				GlobalParams.setInputGraphType(tok[2]);
 			}
+			// NEED TO ENSURE INPUT GRAPH NUMBERING STARTS FROM 1 OR 0
 			if (tok[0].compareTo("INPUT_GRAPH_NUMBERING_STARTS_FROM") == 0) {
 				GlobalParams.setFirstVertexID(Integer.parseInt(tok[2]));
 			}
@@ -74,7 +75,7 @@ public class PreprocessorClient {
 		partgenerator.run();
 
 		//---------------------------------------------------------------------------------------------------------
-//		//Do further preprocessing of each partition
+//		//Do further preprocessing of each partition //NOT REQUIRED
 //		logger.info("Preprocessing each partition...");
 //		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
 //		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {

@@ -68,7 +68,7 @@ public class EngineM {
 			nThreads = Runtime.getRuntime().availableProcessors();
 		}
 		// TODO: REMOVE THIS LATER
-		nThreads = 8;
+		nThreads = GlobalParams.getNumThreads();
 		computationExecutor = Executors.newFixedThreadPool(nThreads);
 
 		// -------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ public class EngineM {
 
 		// instantiate scheduler
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
-
+		Vertex[] vertices=null;
 		int roundNo = 0;
 		while (!scheduler.shouldTerminate()) {
 			roundNo++;
@@ -90,7 +90,7 @@ public class EngineM {
 
 			loader.loadParts(partsToLoad);
 			List<LoadedVertexInterval> intervals = loader.getIntervals();
-			Vertex[] vertices = loader.getVertices();
+			vertices = loader.getVertices();
 
 			// send interval info to scheduler
 			List<LoadedVertexInterval> intervalsForScheduler = new ArrayList<LoadedVertexInterval>(intervals);
@@ -151,6 +151,7 @@ public class EngineM {
 			// printSrcVerticesForDebugging(vertices);
 		}
 		logger.info("Total Num of New Edges: " + totalNewEdgs);
+//		printSrcVerticesForDebugging(vertices);
 		computationExecutor.shutdown();
 	}
 
@@ -160,11 +161,15 @@ public class EngineM {
 	 * @param vertices
 	 */
 	private void printSrcVerticesForDebugging(Vertex[] vertices) {
-		String s = "";
+//		String s = "";
+		int size=0;
 		for (int i = 0; i < vertices.length; i++) {
-			s = s + " " + vertices[i].getVertexId();
+			logger.info(vertices[i].getVertexId() + ": (dest ids) :" + Arrays.toString(vertices[i].getOutEdges()));
+			logger.info(vertices[i].getVertexId() + ": (edge vals) :" + Arrays.toString(vertices[i].getOutEdgeValues()));
+			size=size+vertices[i].getOutEdges().length;
 		}
-		logger.info("All vertices in memory just after loading: \n" + s);
+		logger.info("Total number of edges in vertices ds "+size);
+//		logger.info("All vertices in memory just after loading: \n" + s);
 	}
 
 	/**
@@ -205,6 +210,8 @@ public class EngineM {
 			long t = System.currentTimeMillis();
 			logger.info("Entered iteration no. " + iterationNo);
 
+//			printCompSetsInfo(vertices,compSets);
+			
 			// parallel computation for one iteration
 			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, intervals, 
 					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo);
@@ -214,6 +221,7 @@ public class EngineM {
 
 			// update the number of total new edges
 			this.totalNewEdgs += totalNewEdgsForIteratn;
+			
 
 			logger.info("========total # new edges for iteration #" + iterationNo + " is " + totalNewEdgsForIteratn);
 			// logger.info("========total # dup edges for this iteration: " + totalDupEdges);
@@ -338,26 +346,36 @@ public class EngineM {
 	 * @param compSets
 	 */
 	private void printCompSetsInfo(final Vertex[] vertices, final ComputationSet[] compSets) {
-		for (int i = 0; i < compSets.length; i++) {
-			logger.info("Old Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
-					+ Arrays.toString(compSets[i].getOldEdgs()));
-		}
-		for (int i = 0; i < compSets.length; i++) {
-			logger.info("New Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
-					+ Arrays.toString(compSets[i].getNewEdgs()));
-		}
-		for (int i = 0; i < compSets.length; i++) {
-			logger.info("OldUNew Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
-					+ Arrays.toString(compSets[i].getOldUnewEdgs()));
-		}
-		for (int i = 0; i < compSets.length; i++) {
-			logger.info("Delta Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
-					+ Arrays.toString(compSets[i].getDeltaEdgs()));
-		}
-		for (int i = 0; i < compSets.length; i++) {
-			logger.info("OldUnewUdelta Edges of compSet[" + i + "] for vid " + vertices[i].getVertexId() + " "
-					+ Arrays.toString(compSets[i].getOldUnewUdeltaEdgs()));
-		}
+//		for (int i = 0; i < compSets.length; i++) {
+			logger.info("Old Edges of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldEdgs()));
+			logger.info("Old Values of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldVals()));
+//		}
+//		for (int i = 0; i < compSets.length; i++) {
+			logger.info("New Edges of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getNewEdgs()));
+			logger.info("New Values of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getNewVals()));
+//		}
+//		for (int i = 0; i < compSets.length; i++) {
+			logger.info("OldUNew Edges of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldUnewEdgs()));
+			logger.info("OldUNew Values of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldUnewVals()));
+//		}
+//		for (int i = 0; i < compSets.length; i++) {
+			logger.info("Delta Edges of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getDeltaEdgs()));
+			logger.info("Delta Values of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getDeltaVals()));
+//		}
+//		for (int i = 0; i < compSets.length; i++) {
+			logger.info("OldUnewUdelta Edges of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldUnewUdeltaEdgs()));
+			logger.info("OldUnewUdelta Values of compSet[" + 13 + "] for vid " + vertices[13].getVertexId() + " "
+					+ Arrays.toString(compSets[13].getOldUnewUdeltaVals()));
+//		}
 	}
 
 	public long get_totalNewEdgs() {

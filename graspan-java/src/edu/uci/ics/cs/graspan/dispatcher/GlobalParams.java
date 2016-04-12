@@ -52,6 +52,9 @@ public class GlobalParams {
 
 	// The id of the first vertex of the graph
 	private static int firstVId;
+	
+	// The number of threads
+	private static int num_Threads;
 
 	public static void setEdcSize(int num) {
 		EdcSize = num;
@@ -180,6 +183,14 @@ public class GlobalParams {
 
 	public static String getComputationLogic() {
 		return computation_logic;
+	}
+
+	public static void setNumThreads(int numThreads) {
+		num_Threads=numThreads;
+	}
+	
+	public static int getNumThreads() {
+		return num_Threads;
 	}
 
 }

@@ -61,7 +61,8 @@ public class ComputedPartProcessorM {
 		}
 
 		// average of edges by no. of partitions
-		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
+//		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
+		long avgEdgesPerPart = numEdges/numParts;
 
 		// the heuristic for interval max
 		long partMax = (long) (avgEdgesPerPart * 0.9);
@@ -844,7 +845,8 @@ public class ComputedPartProcessorM {
 	}
 	
 	private static int getNumOfPartitions(long totalEdges) {
-		return (int) (Math.round((double) totalEdges / PART_MAX_POST_NEW_EDGES) + 1);
+		return (int) (totalEdges / PART_MAX_POST_NEW_EDGES) + 1;
+//		return (int) (Math.round((double) totalEdges / PART_MAX_POST_NEW_EDGES) + 1);
 	}
 
 }
