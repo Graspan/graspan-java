@@ -60,7 +60,8 @@ public class ComputedPartProcessorEL {
 		}
 
 		// average of edges by no. of partitions
-		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
+//		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
+		long avgEdgesPerPart = numEdges/ numParts;
 
 		// the heuristic for interval max
 		long partMax = (long) (avgEdgesPerPart * 0.9);
