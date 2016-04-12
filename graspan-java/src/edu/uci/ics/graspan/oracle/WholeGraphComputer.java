@@ -288,7 +288,12 @@ private static void storeActualEdges(String basefilename) throws IOException {
 		for (int i = 0; i < gph.length; i++) {
 			if (gph[i][0] == 0)
 				break;
-			partOutStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + GrammarChecker.getValue((byte)vals[i]));
+			
+			//use for storing edge string vals
+//			partOutStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + GrammarChecker.getValue((byte)vals[i]));
+			
+			//use for storing edge byte vals
+			partOutStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + vals[i]);
 		}
 		partOutStrm.close();
 	}
