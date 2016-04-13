@@ -29,8 +29,6 @@ public class GraphExtractorForVertex {
 	
 	private long totalEdgesLoaded;
 	
-	private long totalNewEdgesAdded;
-	
 	private int req_srcVId;
 	
 	
@@ -56,7 +54,6 @@ public class GraphExtractorForVertex {
 		export_requestedVertex();
 		
 		System.out.println("Total number of edges loaded:\t" + this.totalEdgesLoaded);
-		System.out.println("Total number of edges added:\t" + this.totalNewEdgesAdded);
 	}
 	
 	
@@ -66,7 +63,7 @@ public class GraphExtractorForVertex {
 	private void export_requestedVertex() {
 		PrintWriter out = null;
 		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter(new File(this.fileName + ".final"+".vertex."+req_srcVId))));
+			out = new PrintWriter(new BufferedWriter(new FileWriter(new File(this.fileName + ".vertex."+req_srcVId))));
 			for(int srcId: this.graph.keySet()){
 				if (srcId == req_srcVId){
 				for(Pair p: this.graph.get(srcId)){
@@ -90,7 +87,7 @@ public class GraphExtractorForVertex {
 		// TODO Auto-generated method stub
 		BufferedReader reader;
 		String line;
-		try {
+		try { 
 			reader = new BufferedReader(new FileReader(new File(this.fileName)));
 			while((line = reader.readLine()) != null){
 				if (!line.isEmpty()) {

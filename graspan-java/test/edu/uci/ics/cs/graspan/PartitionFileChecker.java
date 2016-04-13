@@ -5,6 +5,9 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
+
+import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
  * 
@@ -13,12 +16,15 @@ import java.io.IOException;
  */
 public class PartitionFileChecker {
 	
+	private static final Logger logger = GraspanLogger.getLogger("PartitionFileChecker");
 	String baseFilename;
 	int reqVertexId;
+	int numParts;
 	
-	public PartitionFileChecker(String basefilename, int reqVertexId){
+	public PartitionFileChecker(String basefilename, int reqVertexId, int numParts){
 		this.baseFilename=basefilename;
 		this.reqVertexId=reqVertexId;
+		this.numParts=numParts;
 	}
 
 	/**
@@ -27,7 +33,7 @@ public class PartitionFileChecker {
 	 * @throws IOException
 	 */
 	public static void main(String args[]) throws IOException {
-		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]));
+		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
 		pfchecker.run();
 	}
 	
@@ -36,8 +42,9 @@ public class PartitionFileChecker {
 		// readPartitionFile(baseFilename);
 	
 		//read all partition files
-		for (int i = 0; i < 10; i++) {
-			System.out.println("partition " + i);
+		for (int i = 0; i < numParts; i++) {
+		logger.info("partition " + i);
+//			System.out.println("partition " +partId);
 			readAndPrint(i);
 		}
 
