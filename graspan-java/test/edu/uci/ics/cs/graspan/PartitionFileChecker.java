@@ -38,7 +38,7 @@ public class PartitionFileChecker {
 		//read all partition files
 		for (int i = 0; i < 10; i++) {
 			System.out.println("partition " + i);
-			readPartitionFile();
+			readAndPrint(i);
 		}
 
 	}
@@ -49,8 +49,8 @@ public class PartitionFileChecker {
 	 * @param baseFilename
 	 * @throws IOException
 	 */
-	private void readPartitionFile() throws IOException {
-		DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename)));
+	private void readAndPrint(int partId) throws IOException {
+		DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partId)));
 		int srcVId;
 		while (true) {
 			try {
