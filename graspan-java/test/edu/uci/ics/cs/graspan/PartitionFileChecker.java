@@ -12,6 +12,14 @@ import java.io.IOException;
  *
  */
 public class PartitionFileChecker {
+	
+	String baseFilename;
+	int reqVertexId;
+	
+	public PartitionFileChecker(String basefilename, int reqVertexId){
+		this.baseFilename=basefilename;
+		this.reqVertexId=reqVertexId;
+	}
 
 	/**
 	 * 
@@ -19,14 +27,20 @@ public class PartitionFileChecker {
 	 * @throws IOException
 	 */
 	public static void main(String args[]) throws IOException {
-		String baseFilename = args[0];
-		int reqVertexId = Integer.parseInt(args[1]);
-
+		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]));
+		pfchecker.run();
+	}
+	
+	
+	public void run() throws IOException {
+		// readPartitionFile(baseFilename);
+	
+		//read all partition files
 		for (int i = 0; i < 10; i++) {
-			// readPartitionFile(baseFilename);
 			System.out.println("partition " + i);
-			readPartitionFile(baseFilename,reqVertexId);
+			readPartitionFile();
 		}
+
 	}
 
 	/**
@@ -35,7 +49,7 @@ public class PartitionFileChecker {
 	 * @param baseFilename
 	 * @throws IOException
 	 */
-	private static void readPartitionFile(String baseFilename, int reqVId) throws IOException {
+	private void readPartitionFile() throws IOException {
 		DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename)));
 		int srcVId;
 		while (true) {
@@ -43,7 +57,7 @@ public class PartitionFileChecker {
 				
 				srcVId = dataIn.readInt();
 			
-				if (srcVId==reqVId)
+				if (srcVId==reqVertexId)
 				{
 					// srcVId
 					System.out.println("src " + srcVId);
