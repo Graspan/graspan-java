@@ -16,7 +16,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 /**
  * This program performs preprocessing of the input graph to generate partitions
  * 
- * @author Aftabdisp
+ * @author Aftab
  * 
  */
 public class PreprocessorClient {
