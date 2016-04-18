@@ -199,14 +199,14 @@ public class LoaderM {
 		int newParts[] = LoadedPartitions.getNewParts();
 
 		// sorting the partitions
-		for (int i = 0; i < newParts.length; i++) {
-			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
-				int low = 0;
-				int high = loadedPartOutDegs[i][j] - 1;
-				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low,
-						high);
-			}
-		}
+//		for (int i = 0; i < newParts.length; i++) {
+//			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
+//				int low = 0;
+//				int high = loadedPartOutDegs[i][j] - 1;
+//				Utilities.quickSort(partEdges[i][j], partEdgeVals[i][j], low,
+//						high);
+//			}
+//		}
 //		logger.info("Sorted loaded partitions.");
 
 		// reset newParts
