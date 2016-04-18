@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
-import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
+import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
@@ -20,8 +20,17 @@ public class EdgeComputerM {
 
 	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
-
+	
+	/**
+	 * 
+	 * @param i
+	 * @param compSets
+	 * @param intervals
+	 * @return
+	 */
 	public static long execUpdate(int i, ComputationSet[] compSets, List<LoadedVertexInterval> intervals) {
+		
+		
 		ComputationSet compSet = compSets[i];
 		
 		// 1. get the compSet components
@@ -32,7 +41,6 @@ public class EdgeComputerM {
 		int[] newEdgs = compSet.getNewEdgs();
 		byte[] newVals = compSet.getNewVals();
 
-		// 1.2. if there is nothing to merge, return
 		boolean oldEdgs_empty = true, newEdgs_empty = true;
 		if (oldEdgs.length != 0) {
 			oldEdgs_empty = false;
@@ -40,8 +48,17 @@ public class EdgeComputerM {
 		if (newEdgs.length != 0) {
 			newEdgs_empty = false;
 		}
+		
+		// 1.2. if there is nothing to merge, return
 		if (oldEdgs_empty && newEdgs_empty)
 			return 0;
+		
+//		if (vertices[i].getVertexId() == 4017) {
+//			logger.info("oldEdgs" + Arrays.toString(oldEdgs));
+//			logger.info("oldVals" + Arrays.toString(oldVals));
+//			logger.info("newEdgs" + Arrays.toString(newEdgs));
+//			logger.info("newVals" + Arrays.toString(newVals));
+//		}
 
 		// 2. get the rows to merge
 		HashSet<IdValuePair> newRowIndicesToMerge = new HashSet<IdValuePair>();
@@ -49,8 +66,18 @@ public class EdgeComputerM {
 
 		// 2.1. get the indices of the new_components to merge
 		getRowIndicesToMerge(compSets, intervals, oldEdgs, oldVals, oldEdgs_empty, newRowIndicesToMerge, "old");
+		
 		// 2.2. get the indices of the oldUnew_components to merge 
 		getRowIndicesToMerge(compSets, intervals, newEdgs, newVals, newEdgs_empty, oldUnewRowIndicesToMerge, "new");
+		
+//		if (vertices[i].getVertexId() == 4017) {
+//			for (IdValuePair ivp : newRowIndicesToMerge) {
+//				logger.info("newRowIndicesToMerge - " + ivp.id + " " + ivp.value);//+ " The vertex"+vertices[ivp.id]);
+//			}
+//			for (IdValuePair ivp : oldUnewRowIndicesToMerge) {
+//				logger.info("oldUnewRowIndicesToMerge - " + ivp.id + " " + ivp.value);//+" The vertex"+vertices[ivp.id]);
+//			}
+//		}
 
 		
 		int num_of_rows_to_merge = 2 + oldUnewRowIndicesToMerge.size() + newRowIndicesToMerge.size();
@@ -90,6 +117,15 @@ public class EdgeComputerM {
 	}
 
 
+	/**
+	 * 
+	 * @param newEdgs
+	 * @param newVals
+	 * @param edgArrstoMerge
+	 * @param valArrstoMerge
+	 * @param rows_to_merge_id
+	 * @return
+	 */
 	private static int genEdgesToMergeForSRule(int[] newEdgs, byte[] newVals, int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id) {
 		//get the resulting edge and value array
 		List<IdValuePair> list = new ArrayList<IdValuePair>();
@@ -121,6 +157,16 @@ public class EdgeComputerM {
 	}
 
 
+	/**
+	 * 
+	 * @param compSets
+	 * @param idsToMerge
+	 * @param edgArrstoMerge
+	 * @param valArrstoMerge
+	 * @param rows_to_merge_id
+	 * @param flag
+	 * @return
+	 */
 	private static int genEdgesToMerge(ComputationSet[] compSets, HashSet<IdValuePair> idsToMerge,
 			int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id, String flag) {
 		for(IdValuePair pair: idsToMerge){
@@ -183,6 +229,16 @@ public class EdgeComputerM {
 //		return edgeVal3;
 //	}
 
+	/**
+	 * 
+	 * @param compSets
+	 * @param intervals
+	 * @param edgs
+	 * @param vals
+	 * @param edgs_empty
+	 * @param newIdsToMerge
+	 * @param flag
+	 */
 	private static void getRowIndicesToMerge(ComputationSet[] compSets, List<LoadedVertexInterval> intervals, int[] edgs, byte[] vals, boolean edgs_empty, HashSet<IdValuePair> newIdsToMerge, String flag) {
 		int targetRowIndex = -1;
 		LoadedVertexInterval interval;
@@ -196,8 +252,9 @@ public class EdgeComputerM {
 				val = vals[i];
 				
 				for (int j = 0; j < intervals.size(); j++) {
+					targetRowIndex = -1;
 					interval = intervals.get(j);
-					if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) {
+					if (newTgt >= interval.getFirstVertex() && newTgt <= interval.getLastVertex()) { // chk if newTgt is among loaded src vertices
 						targetRowIndex = newTgt - interval.getFirstVertex() + interval.getIndexStart();
 						assert (targetRowIndex != -1);
 						break;
@@ -219,28 +276,25 @@ public class EdgeComputerM {
 	
 
 
-	static class IdValuePair{
+	static class IdValuePair {
 		private final int id;
 		private final byte value;
-		
-		IdValuePair(int id, byte value){
+
+		IdValuePair(int id, byte value) {
 			this.id = id;
 			this.value = value;
 		}
-		
-		public int hashCode(){
+
+		public int hashCode() {
 			int r = 1;
 			r = r * 31 + this.id;
 			r = r * 31 + this.value;
 			return r;
 		}
-		
-		public boolean equals(Object o){
+
+		public boolean equals(Object o) {
 			return (o instanceof IdValuePair) && (((IdValuePair) o).id == id) && (((IdValuePair) o).value == value);
 		}
-		
-		
-		
 	}
 	
 }
