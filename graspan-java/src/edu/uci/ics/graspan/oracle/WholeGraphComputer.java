@@ -14,6 +14,10 @@ import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
+
+/*
+ * Naive Computer Class using arrays
+ */
 public class WholeGraphComputer {
 
 	private static final Logger logger = GraspanLogger.getLogger("DTC-Oracle");

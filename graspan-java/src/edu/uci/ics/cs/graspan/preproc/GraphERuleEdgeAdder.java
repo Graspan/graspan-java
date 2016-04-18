@@ -165,9 +165,6 @@ public class GraphERuleEdgeAdder {
 		// reset the outEdges/outVals
 		vertices[i].setOutEdges(tempEdgs);
 		vertices[i].setOutEdgeValues(tempVals);
-		
-		
-		
 	}
 
 	private void removeExistingERuleVals(int srcId, int i, HashSet<Byte> newValsforSrc) {

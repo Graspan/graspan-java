@@ -75,13 +75,16 @@ public class PreprocessorClient {
 		partgenerator.run();
 
 		//---------------------------------------------------------------------------------------------------------
-//		//Do further preprocessing of each partition //NOT REQUIRED
+//		//NOT REQUIRED
+		//Do further preprocessing of each partition 
 //		logger.info("Preprocessing each partition...");
 //		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
 //		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {
 //			partPreprocessor.loadAndProcessParts(partId);
 //		}
-//		
+		//NOT REQUIRED
+		//---------------------------------------------------------------------------------------------------------
+		
 		logger.info("Preprocessing complete.");
 		long preprocDuration = System.nanoTime() - preprocStartTime;
 		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);

@@ -14,7 +14,9 @@ import java.util.Set;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 
-
+/*
+ * Naive Computer class using map
+ */
 public class NaiveComputer {
 	
 	private String fileName;
@@ -32,7 +34,7 @@ public class NaiveComputer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		NaiveComputer c = new NaiveComputer("graph.extracted.2000");
+		NaiveComputer c = new NaiveComputer(args[0]);
 		c.run();
 	}
 	
@@ -74,7 +76,7 @@ public class NaiveComputer {
 		}
 			
 	}
-
+	
 	/**
 	 * 
 	 */
