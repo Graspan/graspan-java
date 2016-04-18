@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
@@ -24,8 +25,8 @@ public class GraphExtractor {
 	private static final Logger logger = GraspanLogger.getLogger("GraphExtractor");
 	
 	//NOTE: MAKE SURE RANGE IS BETWEEN THE LIMITS OF THE GRAPH
-	private static final int RANGE_START =45000;
-	private static final int RANGE_END =55000;
+	private static final int RANGE_START =15000;
+	private static final int RANGE_END =15050;
 	private static final int EDGE_BUFFER_SIZE = RANGE_END - RANGE_START + 1;
 	
 	private static String basefilename;
@@ -36,6 +37,7 @@ public class GraphExtractor {
 	public static void main(String args[]) throws NumberFormatException, IOException {
 
 		init(args);
+		GrammarChecker.loadGrammars(new File(basefilename + ".extracted.grammar"));
 		
 		// read in the original graph
 		readGraph();
@@ -68,30 +70,38 @@ public class GraphExtractor {
 			if (!ln.isEmpty()) {
 				linePtr++;
 				if (linePtr >= RANGE_START & linePtr <= RANGE_END) {
-					logger.info(linePtr+"");
-					String[] tok = ln.split("\t");// NOTE: MAKE SURE INPUT FILEIS TAB DELIMITED
+//					logger.info(linePtr+"");
+					String[] tok = ln.split("\t");// NOTE: MAKE SURE INPUT FILE IS TAB DELIMITED
 					gph[gphPtr][0] = Integer.parseInt(tok[0]);
 					gph[gphPtr][1] = Integer.parseInt(tok[1]);
 					vals[gphPtr] = GrammarChecker.getValue(tok[2].trim());
+					System.out.println("grammarcheckergetval: "+GrammarChecker.getValue(tok[2].trim()));
 					gphPtr++;
 				}
 			}
 		}
+		ins.close();
 	}
 	
 	private static void storeGraph() throws IOException {
-		// clear current graph file
-//		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter( new FileWriter(basefilename , false)));
-//		partOutStrm.close();
 
-		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename+".extracted" , true)));
+		PrintWriter outStrm = new PrintWriter(new BufferedWriter(new FileWriter(basefilename + ".extracted", true)));
 
 		for (int i = 0; i < gph.length; i++) {
 			if (gph[i][0] == -1)
 				break;
-			partOutStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + GrammarChecker.getValue((byte)vals[i]));
+			outStrm.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + GrammarChecker.getValue((byte)vals[i]));
 		}
-		partOutStrm.close();
+		outStrm.close();
+		
+		PrintWriter outStrm2 = new PrintWriter(new BufferedWriter(new FileWriter(basefilename + ".extracted_numericaVals", true)));
+
+		for (int i = 0; i < gph.length; i++) {
+			if (gph[i][0] == -1)
+				break;
+			outStrm2.println(gph[i][0] + "\t" + gph[i][1]+ "\t" + (byte)vals[i]);
+		}
+		outStrm2.close();
 	}
 	
 	
