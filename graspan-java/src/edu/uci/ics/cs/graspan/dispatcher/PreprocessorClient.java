@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdder;
-import edu.uci.ics.cs.graspan.preproc.PartitionPreprocessor;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.GraspanTimer;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
@@ -38,17 +38,20 @@ public class PreprocessorClient {
 		while ((ln = preprocessorConfigStream.readLine()) != null) {
 			tok = ln.split(" ");
 			if (tok[0].compareTo("INPUT_GRAPH_FILEPATH") == 0) {
-				GlobalParams.setBasefilename(tok[2]);
+				GlobalParams.setBasefilename(tok[2].trim());
 			}
 			if (tok[0].compareTo("TOTAL_NUM_PARTS") == 0) {
 				GlobalParams.setNumParts(Integer.parseInt(tok[2]));
 			}
 			if (tok[0].compareTo("INPUT_GRAPH_TYPE") == 0) {
-				GlobalParams.setInputGraphType(tok[2]);
+				GlobalParams.setInputGraphType(tok[2].trim());
 			}
 			// NEED TO ENSURE INPUT GRAPH NUMBERING STARTS FROM 1 OR 0
 			if (tok[0].compareTo("INPUT_GRAPH_NUMBERING_STARTS_FROM") == 0) {
 				GlobalParams.setFirstVertexID(Integer.parseInt(tok[2]));
+			}
+			if (tok[0].compareTo("PREPROCESSING_OPERATION")==0){
+				GlobalParams.setPPOperation(tok[2].trim());
 			}
 			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
@@ -61,43 +64,34 @@ public class PreprocessorClient {
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
 		
 		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
-		//--------------------------------------------------------------------------------------------------------
+		
+		if (GlobalParams.getPPOperation().compareTo("+eRULE") == 0)
 		// adding edges to the graph based on eRules
-		
-//		GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
-//		edgeAdder.run();
-		
-		//--------------------------------------------------------------------------------------------------------
-		// initialize Partition Generator Program
-		logger.info("Starting preprocessing...");
-		long preprocStartTime = System.nanoTime();
-		Preprocessor partgenerator = new Preprocessor(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
-		partgenerator.run();
+		{
+			logger.info("PREPROCESSING: Start computing and adding edges from eRules...");
+			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
+			
+			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
+			edgeAdder.run();
+			
+			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
+			logger.info("Edge Adding from Erules took: "+ ppERedgeAdding.getDuration(System.currentTimeMillis()));
+		}
 
-		//---------------------------------------------------------------------------------------------------------
-//		//NOT REQUIRED
-		//Do further preprocessing of each partition 
-//		logger.info("Preprocessing each partition...");
-//		PartitionPreprocessor partPreprocessor = new PartitionPreprocessor();
-//		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {
-//			partPreprocessor.loadAndProcessParts(partId);
-//		}
-		//NOT REQUIRED
-		//---------------------------------------------------------------------------------------------------------
-		
-		logger.info("Preprocessing complete.");
-		long preprocDuration = System.nanoTime() - preprocStartTime;
-		logger.info("Total preprocessing time (nanoseconds): " + preprocDuration);
+		else if (GlobalParams.getPPOperation().compareTo("GenParts") == 0) 
+		// generate pp parts
+		{
+			logger.info("PREPROCESSING: Start generating partitions...");
+			GraspanTimer ppPartGen = new GraspanTimer(System.currentTimeMillis());
+			
+			// initialize Partition Generator Program
+			Preprocessor partgenerator = new Preprocessor(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
+			partgenerator.run();
+
+			logger.info("PREPROCESSING: Finished generating partitions.");
+			logger.info("Generating partitions took: "+ ppPartGen.getDuration(System.currentTimeMillis()));
+		}
 	
 	}
 
-	/**
-	 * Initialize the Preprocessor-program
-	 * 
-	 * @param inputGraphPath
-	 * @param numParts
-	 */
-//	protected static Preprocessor initPartGenerator(String inputGraphPath, int numParts) throws IOException {
-//		return new Preprocessor(inputGraphPath, numParts);
-//	}
 }

@@ -209,7 +209,7 @@ public class EngineM {
 			long t = System.currentTimeMillis();
 			logger.info("Entered iteration no. " + iterationNo);
 
-			printCompSetsInfo(vertices,compSets);
+//			printCompSetsInfo(vertices,compSets);
 			
 			// parallel computation for one iteration
 			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, intervals, 

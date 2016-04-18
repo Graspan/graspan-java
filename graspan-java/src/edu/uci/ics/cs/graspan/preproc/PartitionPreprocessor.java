@@ -26,6 +26,11 @@ import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
+/**
+ * This Class is not used. Not needed.
+ * @author aftab
+ *
+ */
 public class PartitionPreprocessor {
 
 	private static final Logger logger = GraspanLogger.getLogger("PartitionPreprocessor");

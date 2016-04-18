@@ -55,6 +55,9 @@ public class GlobalParams {
 	
 	// The number of threads
 	private static int num_Threads;
+	
+	// The type of preprocessing operation: +eRULE or GenParts 
+	private static String ppOperation;
 
 	public static void setEdcSize(int num) {
 		EdcSize = num;
@@ -191,6 +194,14 @@ public class GlobalParams {
 	
 	public static int getNumThreads() {
 		return num_Threads;
+	}
+
+	public static void setPPOperation(String ppOP) {
+		ppOperation = ppOP;
+	}
+	
+	public static String getPPOperation(){
+		return ppOperation;
 	}
 
 }
