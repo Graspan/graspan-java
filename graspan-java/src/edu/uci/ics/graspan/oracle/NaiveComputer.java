@@ -65,7 +65,7 @@ public class NaiveComputer {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(new File(this.fileName + ".final"))));
 			for(int srcId: this.graph.keySet()){
 				for(Pair p: this.graph.get(srcId)){
-					out.println(srcId + "\t" + p.target + "\t" + p.evalue);
+					out.println(srcId + "\t" + p.target + "\t" + GrammarChecker.getValue(p.evalue));
 				}
 			}
 			
