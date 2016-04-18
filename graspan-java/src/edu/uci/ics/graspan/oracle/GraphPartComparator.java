@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
-
 public class GraphPartComparator {
 
 	int numParts;
