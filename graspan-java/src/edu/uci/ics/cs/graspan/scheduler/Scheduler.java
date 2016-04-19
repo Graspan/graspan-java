@@ -236,10 +236,8 @@ public class Scheduler {
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
 		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
 
-		logger.info("partitionId 1: " + loadedPartitionOne + " new edges : "
-				+ isNewEdgeAddedForOne);
-		logger.info("partitionId 2: " + loadedPartitionTwo + " new edges : "
-				+ isNewEdgeAddedForTwo);
+		logger.info("partitionId 1: " + loadedPartitionOne + ". New edges : "+ isNewEdgeAddedForOne);
+		logger.info("partitionId 2: " + loadedPartitionTwo + ". New edges : "+ isNewEdgeAddedForTwo);
 
 		List<Boolean> terminationInfoForOne = allEdgeInfo.get(
 				loadedPartitionOne).getTerminationInfo();
