@@ -755,31 +755,6 @@ public class ComputedPartProcessorM {
 
 					}
 
-					// scan each newEdge in list of each vertex in
-					// this interval
-
-					// TODO: NEED TO DO THE WRITES USING COMPUTATION SET
-					// if (newEdgesLL[j] != null) {
-					//
-					// // for each new edge list node
-					// for (int k = 0; k < newEdgesLL[j].getSize(); k++) {
-					//
-					// // for each edge in the new edge list node
-					// for (int l = 0; l < newEdgesLL[j].getNode(k)
-					// .getIndex(); l++) {
-					//
-					// // write the new destId-edgeValue pair
-					// destVId = newEdgesLL[j].getNode(k)
-					// .getNewOutEdge(l);
-					// edgeValue = newEdgesLL[j].getNode(k)
-					// .getNewOutEdgeValue(l);
-					// partOutStrm.writeInt(destVId);
-					// partOutStrm.writeByte(edgeValue);
-					//
-					// }
-					// }
-					//
-					// }
 				}
 			}
 		}

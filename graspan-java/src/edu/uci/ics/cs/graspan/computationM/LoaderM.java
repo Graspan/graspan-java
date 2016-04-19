@@ -79,9 +79,6 @@ public class LoaderM {
 		// get the scheduling info
 		this.readSchedulingInfo();
 
-		// get the grammar info
-//		this.readGrammarTab();
-
 		// initialize variables for partition loading based on number of
 		// partitions to load.
 		preliminaryInit();
@@ -105,12 +102,9 @@ public class LoaderM {
 			loadedParts[i] = Integer.MIN_VALUE;
 		}
 
-		int loadedPartOutDegs[][] = new int[GlobalParams
-				.getNumPartsPerComputation()][];
-		int loadedPartEdges[][][] = new int[GlobalParams
-				.getNumPartsPerComputation()][][];
-		byte loadedPartEdgeVals[][][] = new byte[GlobalParams
-				.getNumPartsPerComputation()][][];
+		int loadedPartOutDegs[][] = new int[GlobalParams.getNumPartsPerComputation()][];
+		int loadedPartEdges[][][] = new int[GlobalParams.getNumPartsPerComputation()][][];
+		byte loadedPartEdgeVals[][][] = new byte[GlobalParams.getNumPartsPerComputation()][][];
 
 		LoadedPartitions.setPartsToSave(partsToSave);
 		LoadedPartitions.setNewParts(newPartsToLoad);
@@ -143,10 +137,8 @@ public class LoaderM {
 			}
 			List<LoadedVertexInterval> oldIntervals = new ArrayList<LoadedVertexInterval>();
 			for (int i = 0; i < intervals.size(); i++) {
-				LoadedVertexInterval intv_to_copy = new LoadedVertexInterval(
-						intervals.get(i).getFirstVertex(), intervals.get(i)
-								.getLastVertex(), intervals.get(i)
-								.getPartitionId());
+				LoadedVertexInterval intv_to_copy = new LoadedVertexInterval(intervals.get(i).getFirstVertex(), intervals.get(i).getLastVertex(), intervals.get(i)
+						.getPartitionId());
 				intv_to_copy.setIndexStart(intervals.get(i).getIndexStart());
 				intv_to_copy.setIndexEnd(intervals.get(i).getIndexEnd());
 				intv_to_copy.setIsNewEdgeAdded(intervals.get(i).hasNewEdges());
@@ -193,9 +185,9 @@ public class LoaderM {
 		// fill the partition data structures
 		fillVarsOfPartsToLoad();
 
-		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
-		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
-		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
+//		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs();
+//		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
+//		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 		int newParts[] = LoadedPartitions.getNewParts();
 
 		// sorting the partitions
@@ -405,8 +397,7 @@ public class LoaderM {
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_2") == 0) {
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
 			int[] newParts = LoadedPartitions.getNewParts();
-			HashSet<Integer> partsToSaveByLoader = LoadedPartitions
-					.getPartsToSave();
+			HashSet<Integer> partsToSaveByLoader = LoadedPartitions.getPartsToSave();
 			HashSet<Integer> tempSet = new HashSet<Integer>();
 
 			/*
@@ -818,11 +809,7 @@ public class LoaderM {
 								// }
 
 //								// edgeVal
-								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
-										.readByte();
-
-								// TODO: remove this!!
-//								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.BYTES;
+								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
 
 								// increment the last added position for this
 								// row

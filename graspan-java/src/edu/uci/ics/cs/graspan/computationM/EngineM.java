@@ -241,7 +241,7 @@ public class EngineM {
 				compSets[i].setOldUnewVals(compSets[i].getOldUnewUdeltaVals());
 			}
 			
-			logger.info("Finshed iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - t) / 1000 + " s");
+			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - t) / 1000 + " s");
 		} 
 		while (totalNewEdgsForIteratn > 0);
 

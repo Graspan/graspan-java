@@ -54,20 +54,20 @@ public class Scheduler {
 	 * @param partSizes
 	 * @param edgeDstCount
 	 */
-	public Scheduler(long[][] edgeDstCount) {
-		if (SchedulerInfo.getPartSizes() == null || edgeDstCount == null)
-			throw new IllegalArgumentException("Null parameter in scheduler!");
-
-		for (int i = 0; i < SchedulerInfo.getPartSizes().length; i++) {
-			partitionNumEdges.add(i, SchedulerInfo.getPartSizes()[i][1]);
-		}
-
-		for (int i = 0; i < edgeDstCount.length; i++) {
-			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i,
-					edgeDstCount[i]);
-			allEdgeInfo.add(edgeInfo);
-		}
-	}
+//	public Scheduler(long[][] edgeDstCount) {
+//		if (SchedulerInfo.getPartSizes() == null || edgeDstCount == null)
+//			throw new IllegalArgumentException("Null parameter in scheduler!");
+//
+//		for (int i = 0; i < SchedulerInfo.getPartSizes().length; i++) {
+//			partitionNumEdges.add(i, SchedulerInfo.getPartSizes()[i][1]);
+//		}
+//
+//		for (int i = 0; i < edgeDstCount.length; i++) {
+//			PartitionEdgeInfo edgeInfo = new PartitionEdgeInfo(i,
+//					edgeDstCount[i]);
+//			allEdgeInfo.add(edgeInfo);
+//		}
+//	}
 
 	public void setLoadedIntervals(List<LoadedVertexInterval> intervals) {
 		this.intervals = intervals;

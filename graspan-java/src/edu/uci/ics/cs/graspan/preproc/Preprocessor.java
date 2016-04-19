@@ -459,12 +459,12 @@ public class Preprocessor {
 
 		// write edge dest counts to file
 		logger.info("Saving edge destination counts to file... ");
-		writeEdgeDestCountstoFile();
+		saveEDC();
 		logger.info("Done");
 
 		// write part edge sizes to file
 		logger.info("Saving partition sizes to file... ");
-		writeTotalPartEdgestoFile();
+		savePartSizes();
 		logger.info("Done");
 
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
@@ -673,7 +673,7 @@ public class Preprocessor {
 	 * 
 	 * @throws IOException
 	 */
-	private void writeEdgeDestCountstoFile() throws IOException {
+	private void saveEDC() throws IOException {
 		PrintWriter edgeDestCountsOutStrm = new PrintWriter(
 				new BufferedWriter(new FileWriter(baseFilename + ".edgeDestCounts", true)));
 		for (int i = 0; i < numParts; i++) {
@@ -690,7 +690,7 @@ public class Preprocessor {
 	 * 
 	 * @throws IOException
 	 */
-	private void writeTotalPartEdgestoFile() throws IOException {
+	private void savePartSizes() throws IOException {
 		PrintWriter partSizesOutStrm = new PrintWriter(
 				new BufferedWriter(new FileWriter(baseFilename + ".partSizes", true)));
 		long[][] partSizes = SchedulerInfo.getPartSizes();
