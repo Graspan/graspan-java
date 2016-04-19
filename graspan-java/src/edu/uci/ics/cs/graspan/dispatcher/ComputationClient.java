@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computationEL.EngineEL;
 import edu.uci.ics.cs.graspan.computationM.EngineM;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.GraspanTimer;
 
 public class ComputationClient {
 
@@ -59,7 +60,6 @@ public class ComputationClient {
 			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
 			}
-			
 		}
 
 		computationConfigStream.close();
@@ -74,10 +74,16 @@ public class ComputationClient {
 			engine.run();
 			logger.info("Total number of new edges created: " + engine.get_totalNewEdgs());
 		} else if (GlobalParams.getComputationLogic().compareTo("SMART_MERGE") == 0) {
+			
+			logger.info("Starting Smart Merge Computation");
+			GraspanTimer sm_comp = new GraspanTimer(System.currentTimeMillis());			
+			
 			EngineM engine = new EngineM();
 			engine.run();
 			logger.info("Total number of new edges created: " + engine.get_totalNewEdgs());
+			
+			logger.info("Finished Smart Merge Computation");
+			logger.info("Smart Merge Computation took" + sm_comp.getDuration(System.currentTimeMillis()));
 		}
-		logger.info("FINISHED.");
 	}
 }
