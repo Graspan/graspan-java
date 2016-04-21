@@ -7,11 +7,9 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -19,7 +17,6 @@ import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
-import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
@@ -51,7 +48,7 @@ public class ComputedPartProcessorM {
 	 * of new edges
 	 */
 	public static void initRepartitionConstraints() {
-		int numParts = AllPartitions.getPartAllocTab().length;
+//		int numParts = AllPartitions.getPartAllocTab().length;
 
 		// get the total number of edges
 		long numEdges = 0;
@@ -62,14 +59,14 @@ public class ComputedPartProcessorM {
 
 		// average of edges by no. of partitions
 //		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
-		long avgEdgesPerPart = numEdges/numParts;
+//		long avgEdgesPerPart = numEdges/numParts;
 
 		// the heuristic for interval max
-		long partMax = (long) (avgEdgesPerPart * 0.9);
+//		long partMax = (long) (avgEdgesPerPart * 0.9);
 
 		// the heuristic for interval max after new edge addition
 		// if this threshold is exceeded, the partition is repartitioned
-		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
+//		long heuristic_newPartMax = (long) (partMax + partMax * 0.3);
 		// PART_MAX_POST_NEW_EDGES = heuristic_newPartMax;
 	}
 
@@ -640,7 +637,7 @@ public class ComputedPartProcessorM {
 
 		partsToSaveOP = "Parts to save by Computed-part-processor: ";
 		for (Integer partitionId : partsToSaveByCPP)
-			partsToSaveOP = partsToSaveOP + partitionId + " ";
+		partsToSaveOP = partsToSaveOP + partitionId + " ";
 //		logger.info(partsToSaveOP);
 
 		// Post processing - Parts to save test
@@ -710,14 +707,11 @@ public class ComputedPartProcessorM {
 
 		// clear current file
 		DataOutputStream partOutStrm = new DataOutputStream(
-				new BufferedOutputStream(
-						new FileOutputStream(GlobalParams.baseFilename
-								+ ".partition." + partitionId, false)));
+				new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
 		partOutStrm.close();
 
-		partOutStrm = new DataOutputStream(new BufferedOutputStream(
-				new FileOutputStream(GlobalParams.baseFilename + ".partition."
-						+ partitionId, true)));
+		partOutStrm = new DataOutputStream(
+				new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition."	+ partitionId, true)));
 
 		int srcVId, destVId, count;
 		int edgeValue;
@@ -727,8 +721,7 @@ public class ComputedPartProcessorM {
 			if (partitionId == intervals.get(i).getPartitionId()) {
 
 				// scan each vertex in this interval in "vertices" datastructure
-				for (int j = intervals.get(i).getIndexStart(); j < intervals
-						.get(i).getIndexEnd() + 1; j++) {
+				for (int j = intervals.get(i).getIndexStart(); j < intervals.get(i).getIndexEnd() + 1; j++) {
 
 					count = vertices[j].getNumOutEdges();
 					if (count == 0) {
@@ -775,17 +768,12 @@ public class ComputedPartProcessorM {
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-//		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
-//				+ partitionId + ".degrees");
-
 		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(GlobalParams.baseFilename + ".partition."
-						+ partitionId + ".degrees", false)));
+				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
 		partDegOutStrm.close();
 
 		partDegOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(
-				GlobalParams.baseFilename + ".partition." + partitionId
-						+ ".degrees", true)));
+				GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
 
 		int srcVId, deg;
 

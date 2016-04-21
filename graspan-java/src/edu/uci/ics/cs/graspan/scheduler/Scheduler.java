@@ -239,10 +239,8 @@ public class Scheduler {
 		logger.info("partitionId 1: " + loadedPartitionOne + ". New edges : "+ isNewEdgeAddedForOne);
 		logger.info("partitionId 2: " + loadedPartitionTwo + ". New edges : "+ isNewEdgeAddedForTwo);
 
-		List<Boolean> terminationInfoForOne = allEdgeInfo.get(
-				loadedPartitionOne).getTerminationInfo();
-		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(
-				loadedPartitionTwo).getTerminationInfo();
+		List<Boolean> terminationInfoForOne = allEdgeInfo.get(loadedPartitionOne).getTerminationInfo();
+		List<Boolean> terminationInfoForTwo = allEdgeInfo.get(loadedPartitionTwo).getTerminationInfo();
 
 		if (isNewEdgeAddedForOne) {
 			// set the row to false
@@ -251,8 +249,7 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo()
-						.set(loadedPartitionTwo, false);
+				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionTwo, false);
 		}
 
 		if (isNewEdgeAddedForTwo) {
@@ -262,8 +259,7 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo()
-						.set(loadedPartitionOne, false);
+				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionOne, false);
 		}
 
 		terminationInfoForOne.set(loadedPartitionTwo, true);
@@ -289,8 +285,7 @@ public class Scheduler {
 		// create records for each new partition created
 		int numOfOldPartitions = totalPartitions - numOfNewPartitions;
 		for (int i = 0; i < numOfNewPartitions; i++) {
-			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(
-					numOfOldPartitions + i, totalPartitions);
+			PartitionEdgeInfo newInfo = new PartitionEdgeInfo(numOfOldPartitions + i, totalPartitions);
 			allEdgeInfo.add(newInfo);
 		}
 	}

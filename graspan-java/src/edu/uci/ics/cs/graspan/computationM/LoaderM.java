@@ -766,11 +766,8 @@ public class LoaderM {
 								baseFilename + ".partition." + newParts[i])));
 
 				// stores the position of last filled edge (destV) and the edge
-				// val
-				// in partEdges and partEdgeVals for a source vertex
-				// for a partition
-				int[] lastAddedEdgePos = new int[PartitionQuerier
-						.getNumUniqueSrcs(newParts[i])];
+				// val in partEdges and partEdgeVals for a source vertex for a partition
+				int[] lastAddedEdgePos = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
 				for (int j = 0; j < lastAddedEdgePos.length; j++) {
 					lastAddedEdgePos[j] = -1;
 				}
@@ -782,8 +779,7 @@ public class LoaderM {
 							int src = partInStrm.readInt();
 
 							// get corresponding arraySrcVId of srcVId
-							int arraySrcVId = src
-									- PartitionQuerier.getFirstSrc(newParts[i]);
+							int arraySrcVId = src - PartitionQuerier.getFirstSrc(newParts[i]);
 
 							// get count (number of destVs from srcV in the current list of the partition file)
 							int count = partInStrm.readInt();
@@ -792,8 +788,7 @@ public class LoaderM {
 							for (int j = 0; j < count; j++) {
 
 								// dstVId
-								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm
-										.readInt();
+								partEdges[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readInt();
 
 //								// edgeVal
 								partEdgeVals[i][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = partInStrm.readByte();
@@ -891,13 +886,9 @@ public class LoaderM {
 			int oldIntvIdxSt = 0, oldIntvIdxEnd = 0, newIntvIdxSt = 0, newIntvIdxEnd = 0;
 			for (int i = 0; i < intervals.size(); i++) {
 				for (int j = 0; j < oldIntervals.size(); j++) {
-					if (intervals.get(i).getPartitionId() == oldIntervals
-							.get(j).getPartitionId()) {
+					if (intervals.get(i).getPartitionId() == oldIntervals.get(j).getPartitionId()) {
 
-						// preserve the edges generated in previous iteration
-						// using
-						// info
-						// from old Intervals
+						// preserve the edges generated in previous iteration using info from old Intervals
 						newIntvIdxSt = intervals.get(i).getIndexStart();
 						newIntvIdxEnd = intervals.get(i).getIndexEnd();
 						oldIntvIdxSt = oldIntervals.get(j).getIndexStart();

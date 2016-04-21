@@ -1,7 +1,7 @@
 <START_CONFIG_FILE_BODY>
 
-INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel_pointsto_v2/graph_backed/sorted_eruleedges_final/kernel_output.txt.eRulesAdded
-TOTAL_NUM_PARTS = 4
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel_pointsto_v3/kernel_afterInline.txt.eRulesAdded
+TOTAL_NUM_PARTS = 10
 INPUT_GRAPH_TYPE = POINTSTO
 INPUT_GRAPH_NUMBERING_STARTS_FROM = 0
 PREPROCESSING_OPERATION = GenParts # options: +eRULE or GenParts
