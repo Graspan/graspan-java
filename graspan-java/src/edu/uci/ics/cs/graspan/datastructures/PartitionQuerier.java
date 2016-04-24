@@ -134,7 +134,7 @@ public class PartitionQuerier {
 	public static int findPartition(int src) {
 		int[][] partAllocTable = AllPartitions.getPartAllocTab();
 		for (int i = 0; i < partAllocTable.length; i++) {
-			if (src <= partAllocTable[i][1]) {
+			if (src <= partAllocTable[i][1]) {//this is because pat is is sorted in asc. order by vertex id, not part id
 				return partAllocTable[i][0];
 			}
 		}
