@@ -51,11 +51,11 @@ public class ComputedPartProcessorM {
 //		int numParts = AllPartitions.getPartAllocTab().length;
 
 		// get the total number of edges
-		long numEdges = 0;
-		long[][] partSizes = SchedulerInfo.getPartSizes();
-		for (int i = 0; i < partSizes.length; i++) {
-			numEdges = numEdges + partSizes[i][1];
-		}
+//		long numEdges = 0;
+//		long[][] partSizes = SchedulerInfo.getPartSizes();
+//		for (int i = 0; i < partSizes.length; i++) {
+//			numEdges = numEdges + partSizes[i][1];
+//		}
 
 		// average of edges by no. of partitions
 //		long avgEdgesPerPart = Math.floorDiv(numEdges, numParts);
@@ -97,18 +97,13 @@ public class ComputedPartProcessorM {
 		// get repartitioning variables
 		
 		// split vertices for all partitions
-		ArrayList<Integer> splitVertices = RepartitioningData
-				.getSplitVertices();
+		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
 		TreeSet<Integer> newPartLimits = RepartitioningData.getNewPartLimits();
-		HashSet<Integer> repartitionedParts = RepartitioningData
-				.getRepartitionedParts();
-		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData
-				.getNewPartsFrmRepartitioning();
+		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
+		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();
 		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts();
-		HashSet<Integer> unModifiedParts = RepartitioningData
-				.getUnModifiedParts();
-		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData
-				.getLoadedPartsPostProcessing();
+		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();
+		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
 		HashSet<Integer> partsToSaveByCPP = RepartitioningData.getPartsToSave();
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
@@ -572,8 +567,7 @@ public class ComputedPartProcessorM {
 		// 2.4.4. update edge-dest-count
 		int srcV, destV, partA, partB;
 		int[] nodeDestVs;
-		boolean[][] EDC_alterationMap = new boolean[GlobalParams.getEdcSize()][GlobalParams
-				.getEdcSize()];
+		boolean[][] EDC_alterationMap = new boolean[GlobalParams.getEdcSize()][GlobalParams.getEdcSize()];
 		for (int i = 0; i < 50; i++) {
 			for (int j = 0; j < 50; j++) {
 				EDC_alterationMap[i][j] = false;
