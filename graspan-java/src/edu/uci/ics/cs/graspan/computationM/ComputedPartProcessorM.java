@@ -34,12 +34,12 @@ public class ComputedPartProcessorM {
 	private static final Logger logger = GraspanLogger
 			.getLogger("ComputedPartProcessor");
 
-	private static String repartPartsOP = "";
-	private static String newPartsfrmRepartOP = "";
+//	private static String repartPartsOP = "";
+//	private static String newPartsfrmRepartOP = "";
 	private static String partsToSaveOP = "";
-	private static String patOP = "";
+//	private static String patOP = "";
 
-	private static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
+//	private static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
 	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams
 			.getPartMaxPostNewEdges();
 
@@ -468,7 +468,7 @@ public class ComputedPartProcessorM {
 		int src = 0, indexSt = 0, indexEd = 0, minSrcTest = 0;
 		boolean intervalFound;
 //		logger.info("Total number of source vertices in memory: " + vertices.length);
-		double percentComplete = 0;
+//		double percentComplete = 0;
 		for (int i = 0; i < vertices.length; i++) {
 			if (vertices[i] != null) {
 				minSrcTest = 0;
@@ -564,6 +564,17 @@ public class ComputedPartProcessorM {
 			// logger.info(interval.getPartitionId() + "");
 		}
 
+		SchedulerInfo.setPartSizes(newPartSizes);
+		
+		// String partSizesOP;
+		// partSizesOP = "Part sizes after processing: ";
+		// for (int i = 0; i < newPartSizes.length; i++) {
+		// partSizesOP = partSizesOP + "[" + newPartSizes[i][0] + ","
+		// + newPartSizes[i][1] + "] ";
+		// }
+		// logger.info(partSizesOP);
+		
+		
 		// 2.4.4. update edge-dest-count
 		int srcV, destV, partA, partB;
 		int[] nodeDestVs;
@@ -607,15 +618,6 @@ public class ComputedPartProcessorM {
 		//
 		// }
 
-		SchedulerInfo.setPartSizes(newPartSizes);
-
-		// String partSizesOP;
-		// partSizesOP = "Part sizes after processing: ";
-		// for (int i = 0; i < newPartSizes.length; i++) {
-		// partSizesOP = partSizesOP + "[" + newPartSizes[i][0] + ","
-		// + newPartSizes[i][1] + "] ";
-		// }
-		// logger.info(partSizesOP);
 
 		// 2.5. Create partsToSave set.
 
