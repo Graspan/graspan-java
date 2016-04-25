@@ -573,11 +573,6 @@ public class ComputedPartProcessorM {
 		// }
 		// logger.info(partSizesOP);
 		
-		
-
-
-		//TODO update edc percentages based on part sizes
-
 		// 2.5. Create partsToSave set.
 
 		// Add repartitionedParts and newPartsFrmRepartitioning to
