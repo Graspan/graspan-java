@@ -279,14 +279,31 @@ public class LoaderM {
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
 
 		// initialize edgeDestCount and partSizes variables
-		//TODO: Switch to array lists data structure for these
 		long edgeDestCount[][] = new long[EDC_SIZE][EDC_SIZE];
 		long partSizes[][] = new long[numParts][2];
 		double edcPercentages[][] = new double[EDC_SIZE][EDC_SIZE];
+		String ln;
 
+		/*
+		 * Scan the partSizes file
+		 */
+		BufferedReader inPartSizesStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".partSizes"))));
+		int j = 0;
+		while ((ln = inPartSizesStrm.readLine()) != null) {
+			// store partSizes in memory
+			partSizes[j][0] = j;
+			partSizes[j][1] = Long.parseLong(ln);
+			j++;
+		}
+		SchedulerInfo.setPartSizes(partSizes);
+		
+		inPartSizesStrm.close();
+//		logger.info("Loaded " + baseFilename + ".partSizes");
+	
 		for (int i = 0; i < EDC_SIZE; i++) {
-			for (int j = 0; j < EDC_SIZE; j++) {
-				edcPercentages[i][j] = -1;
+			for (int k = 0;k < EDC_SIZE; k++) {
+				edcPercentages[i][k] = -1;
 			}
 		}
 
@@ -295,7 +312,6 @@ public class LoaderM {
 		 */
 		BufferedReader inEdgeDestCountStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".edgeDestCounts"))));
-		String ln;
 
 		int partA, partB;
 		String[] tok;
@@ -313,33 +329,9 @@ public class LoaderM {
 
 //		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 
-		/*
-		 * Scan the partSizes file
-		 */
-		BufferedReader inPartSizesStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename
-						+ ".partSizes"))));
-
-		int j = 0;
-		while ((ln = inPartSizesStrm.readLine()) != null) {
-			// store partSizes in memory
-			partSizes[j][0] = j;
-			partSizes[j][1] = Long.parseLong(ln);
-			j++;
-		}
-		SchedulerInfo.setPartSizes(partSizes);
-
-		inPartSizesStrm.close();
-//		logger.info("Loaded " + baseFilename + ".partSizes");
 
 	}
 
-//	/**
-//	 * Gets the Scheduling Info. (Should be called only once during first load)
-//	 * 
-//	 * @throws NumberFormatException
-//	 * @throws IOException
-//	 */
 //	private void readGrammarTab() throws NumberFormatException, IOException {
 //
 //		// initialize edgeDestCount and partSizes variables
