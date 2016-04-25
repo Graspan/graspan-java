@@ -109,34 +109,33 @@ public class Scheduler {
 	 * @return
 	 */
 	public int[] schedulePartitionEDC(int numOfPartitions) {
-		int[] scheduled = new int[2];
-		int partA = 0, partB = 0;
-		long partA_Size = 0;
-		long partB_Size = 0;
-		double[][] edcPercentage = SchedulerInfo.getEdcPercentage();
+//		int partA = 0, partB = 0;
+//		long partA_Size = 0;
+//		long partB_Size = 0;
+//		double[][] edcPercentage = SchedulerInfo.getEdcPercentage();
 
-		for (int i = 0; i < numOfPartitions; i++) {
-			partA = i;
+//		for (int i = 0; i < numOfPartitions; i++) {
+//			partA = i;
 
 			// find size of partA
-			for (int j = 0; j < SchedulerInfo.getPartSizes().length; j++) {
-				if (SchedulerInfo.getPartSizes()[j][0] == partA) {
-					partA_Size = SchedulerInfo.getPartSizes()[j][1];
-					break;
-				}
-			}
+//			for (int j = 0; j < SchedulerInfo.getPartSizes().length; j++) {
+//				if (SchedulerInfo.getPartSizes()[j][0] == partA) {
+//					partA_Size = SchedulerInfo.getPartSizes()[j][1];
+//					break;
+//				}
+//			}
 
-			for (int j = 0; j < numOfPartitions; j++) {
+//			for (int j = 0; j < numOfPartitions; j++) {
 
 				// OPTION 1-----
-				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
+//				edcPercentage[i][j] = (double) SchedulerInfo.getEdgeDestCount()[i][j] / partA_Size;
 				// the remaining implementation needs to be changed if you want
 				// to
 				// implement this one
 				// -------------
 
 				// OPTION 2-----
-				//TODO: don't use this for now, double check first
+				//<<don't use this >>
 				// find size of partB
 				// partB = j;
 				// for (int k = 0; k < SchedulerInfo.getPartSizes().length; k++)
@@ -153,20 +152,22 @@ public class Scheduler {
 				// + (double) SchedulerInfo.getEdgeDestCount()[j][i]
 				// / partB_Size;
 				// -------------
-			}
-		}
+//			}
+//		}
 
-		// find max value
+		// find max value in edctwoWay
 		double max = -1;
 		int maxPartA = -1, maxPartB = -1;
+		long[][] edcTwoWay = SchedulerInfo.getEdcTwoWay();
 		for (int i = 0; i < numOfPartitions; i++) {
 			for (int j = 0; j < numOfPartitions; j++) {
 				// logger.info("hello world" + edcPercentage[i][j] + " " + max);
-				if (edcPercentage[i][j] > max && i != j) {
-					List<Boolean> terminationInfoForOne = allEdgeInfo.get(i)
-							.getTerminationInfo();
+//				if (edcPercentage[i][j] > max && i != j) {
+				if (edcTwoWay[i][j]>max && i!=j) {	
+				List<Boolean> terminationInfoForOne = allEdgeInfo.get(i).getTerminationInfo();
 					if (terminationInfoForOne.get(j) == false) {
-						max = edcPercentage[i][j];
+//						max = edcPercentage[i][j];
+						max = edcTwoWay[i][j];
 						maxPartA = i;
 						maxPartB = j;
 					}
@@ -175,6 +176,7 @@ public class Scheduler {
 		}
 
 		// schedule two partitions every time
+		int[] scheduled = new int[2];
 		scheduled[0] = maxPartA;
 		scheduled[1] = maxPartB;
 
