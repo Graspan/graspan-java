@@ -81,8 +81,8 @@ public class EngineM {
 			roundNo++;
 			logger.info("STARTING ROUND NO #" + roundNo);
 
-			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
-			// partsToLoad = scheduler.schedulePartitionEDC(AllPartitions.partAllocTable.length);
+//			partsToLoad = scheduler.schedulePartitionSimple(AllPartitions.partAllocTable.length);
+			partsToLoad = scheduler.schedulePartitionEDC(AllPartitions.partAllocTable.length);
 			logger.info("Scheduling Partitions : " + Arrays.toString(partsToLoad));
 			logger.info("Start loading partitions...");
 
