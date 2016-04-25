@@ -14,14 +14,13 @@ import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.NewEdgesList;
+import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.RepartitioningData;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
-import edu.uci.ics.cs.graspan.scheduler.IScheduler;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
-import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
 /**
  * @author Kai Wang
@@ -228,9 +227,31 @@ public class EngineM {
 			
 			assert(compSets.length == vertices.length);
 			for (int i = 0; i < compSets.length; i++) {
-				//resulting edges after one iteration
+				// resulting edges after one iteration
 				vertices[i].setOutEdges(compSets[i].getOldUnewUdeltaEdgs());
 				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
+				
+				/*
+				 * Update edge-dest-count
+				 */
+				int srcV, destV, partA, partB;
+				long[][] edc = SchedulerInfo.getEdgeDestCount();
+		
+				// 1. get source vertex partition Id
+				 srcV = vertices[i].getVertexId();
+				 partA = PartitionQuerier.findPartition(srcV);
+				 
+				 //2. scan each destination vertex id
+				 for (int k = 0; k < compSets[i].getDeltaEdgs().length; k++)
+				 {
+					 //3.  get dest vertex partition Id
+					 destV =compSets[i].getDeltaEdgs()[k];
+					 partB = PartitionQuerier.findPartition(destV);
+					 if (partB == -1)  // destination v does not lie in any partition
+						 continue;
+					 //4. increment entry in edc table
+					 edc[partA][partB]++;
+				 }
 				
 				// update compsets before next iteration
 				compSets[i].setOldEdgs(compSets[i].getOldUnewEdgs());
