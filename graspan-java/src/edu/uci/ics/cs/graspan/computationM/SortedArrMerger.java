@@ -69,7 +69,6 @@ public class SortedArrMerger {
 				cumTgtRowsSize += edgArrstoMerge[i].length;
 		}
 
-		// TODO: need to optimize the sizes of these arrays
 		// declare & initialize src_delta and src_oldUnewUdelta
 		src_delta_edgs = new int[cumTgtRowsSize];
 		src_delta_vals = new byte[cumTgtRowsSize];

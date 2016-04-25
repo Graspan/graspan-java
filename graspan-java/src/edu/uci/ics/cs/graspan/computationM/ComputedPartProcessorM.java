@@ -549,8 +549,7 @@ public class ComputedPartProcessorM {
 			}
 		}
 
-		// 2.4.3. get the sizes of the loaded partition from calling
-		// getCombinedDeg from each loaded interval
+		// 2.4.3. get the sizes of the loaded partitions
 		long edgeCount = 0;
 		for (LoadedVertexInterval interval : intervals) {
 			for (int i = interval.getIndexStart(); i < interval.getIndexEnd() + 1; i++) {
@@ -575,49 +574,9 @@ public class ComputedPartProcessorM {
 		// logger.info(partSizesOP);
 		
 		
-		// 2.4.4. update edge-dest-count
-		int srcV, destV, partA, partB;
-		int[] nodeDestVs;
-		boolean[][] EDC_alterationMap = new boolean[GlobalParams.getEdcSize()][GlobalParams.getEdcSize()];
-		for (int i = 0; i < 50; i++) {
-			for (int j = 0; j < 50; j++) {
-				EDC_alterationMap[i][j] = false;
-			}
-		}
-		long[][] edc = SchedulerInfo.getEdgeDestCount();
-		// TODO: we don't have cumulative delta, so need to figure out another
-		// way to do the scheduling
-		// TODO: BELOW ALL NEW EDGES ARE CONSIDERED, NEED TO CONSIDER NEW EDGES
-		// ONLY ADDED DURING THE CURRENT ITERATION
-		// TODO: NEED TO DO THE FOLLOWING (SCHEDULER UPDATE) BUT USING COMPSET
-		// for (int i = 0; i < vertices.length; i++) {
-		// srcV = vertices[i].getVertexId();
-		// partA = PartitionQuerier.findPartition(srcV);
-		// // if a new edge for this source exits
-		// if (newEdgesLL[i] != null) {
-		// // for each new edge list node
-		// for (int j = 0; j < newEdgesLL[i].getSize(); j++) {
-		// nodeDestVs = newEdgesLL[i].getNode(j).getDstVertices();
-		// // for each dest vertex of new edge list node
-		// for (int k = 0; k < newEdgesLL[i].NODE_SIZE; k++) {
-		// destV = nodeDestVs[k];
-		// partB = PartitionQuerier.findPartition(destV);
-		// if (partB == -1) {
-		// // destination v does not lie in any partition
-		// continue;
-		// }
-		// if (!EDC_alterationMap[partA][partB]) {
-		// edc[partA][partB] = 1;
-		// EDC_alterationMap[partA][partB] = true;
-		// } else {
-		// edc[partA][partB]++;
-		// }
-		// }
-		// }
-		// }
-		//
-		// }
 
+
+		//TODO update edc percentages based on part sizes
 
 		// 2.5. Create partsToSave set.
 
