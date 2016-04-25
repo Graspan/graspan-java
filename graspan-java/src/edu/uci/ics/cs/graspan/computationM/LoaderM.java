@@ -301,11 +301,11 @@ public class LoaderM {
 		inPartSizesStrm.close();
 //		logger.info("Loaded " + baseFilename + ".partSizes");
 	
-		for (int i = 0; i < EDC_SIZE; i++) {
-			for (int k = 0;k < EDC_SIZE; k++) {
-				edcPercentages[i][k] = -1;
-			}
-		}
+//		for (int i = 0; i < EDC_SIZE; i++) {
+//			for (int k = 0;k < EDC_SIZE; k++) {
+//				edcPercentages[i][k] = -1;
+//			}
+//		}
 
 		/*
 		 * Scan the edge destination counts file
@@ -321,8 +321,26 @@ public class LoaderM {
 			partB = Integer.parseInt(tok[1]);
 			// store edge destination counts in memory
 			edgeDestCount[partA][partB] = Long.parseLong(tok[2]);
+			
+			// the following will store only percentages in a one way direction - we can't
+			//store a 2 way direction percentage here because, edc[b][a] may not yet have been
+			//updated
+			//edcPercentages[partA][partB]=(double)edgeDestCount[partA][partB] / partSizes[partA][1];
+			// a better option is to update edcPercentages after edc has been fully initialized, done below
 		}
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
+		
+		/*
+		 * Update edcPercentages based on partSizes and edc
+		 */
+		
+		for (partA = 0; partA < numParts; partA++) {
+			for (partB = 0; partB < numParts; partB++) {
+				edcPercentages[partA][partB]=  (double) edgeDestCount[partA][partB] / partSizes[partA][1] 
+						                                          + (double) edgeDestCount[partB][partA] / partSizes[partB][1];
+			}
+		}
+		
 		SchedulerInfo.setEdcPercentage(edcPercentages);
 
 		inEdgeDestCountStrm.close();
