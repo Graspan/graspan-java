@@ -9,17 +9,28 @@ import java.util.concurrent.TimeUnit;
  */
 public class GraspanTimer {
 	long start;
+	long duration;
 	
 	public GraspanTimer(long start){
 		this.start = start;
 	}
 	
-	public String getDuration(long stop){
-		long duration = stop - this.start;
-	    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
-	            								     TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-	            								     TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
-		return hms;
+	public long findDuration(long stop){
+		this.duration = stop - this.start;
+//	    String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
+//	            								     TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+//	            								     TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+//		return hms;
+		return duration;
 	}
+	
+	public static String getDurationInHMS(long duration){
+	String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
+			     TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+			     TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+	return hms;
+	}
+	
+	
 
 }

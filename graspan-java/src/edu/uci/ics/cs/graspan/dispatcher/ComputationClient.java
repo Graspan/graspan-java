@@ -83,7 +83,7 @@ public class ComputationClient {
 			logger.info("Total number of new edges created: " + engine.get_totalNewEdgs());
 			
 			logger.info("Finished Smart Merge Computation");
-			logger.info("Smart Merge Computation took " + sm_comp.getDuration(System.currentTimeMillis()));
+			logger.info("Smart Merge Computation took " + GraspanTimer.getDurationInHMS(sm_comp.findDuration(System.currentTimeMillis())));
 		}
 	}
 }

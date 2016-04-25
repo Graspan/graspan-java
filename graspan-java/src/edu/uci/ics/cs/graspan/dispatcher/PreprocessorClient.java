@@ -75,7 +75,7 @@ public class PreprocessorClient {
 			edgeAdder.run();
 			
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
-			logger.info("Edge Adding from Erules took: "+ ppERedgeAdding.getDuration(System.currentTimeMillis()));
+			logger.info("Edge Adding from Erules took: "+ GraspanTimer.getDurationInHMS(ppERedgeAdding.findDuration(System.currentTimeMillis())));
 		}
 
 		else if (GlobalParams.getPPOperation().compareTo("GenParts") == 0) 
@@ -89,7 +89,7 @@ public class PreprocessorClient {
 			partgenerator.run();
 
 			logger.info("PREPROCESSING: Finished generating partitions.");
-			logger.info("Generating partitions took: "+ ppPartGen.getDuration(System.currentTimeMillis()));
+			logger.info("Generating partitions took: "+ ppPartGen.findDuration(System.currentTimeMillis()));
 		}
 	
 	}
