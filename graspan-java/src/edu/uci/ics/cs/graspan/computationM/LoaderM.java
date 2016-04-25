@@ -294,7 +294,6 @@ public class LoaderM {
 			j++;
 		}
 		SchedulerInfo.setPartSizes(partSizes);
-		
 		inPartSizesStrm.close();
 //		logger.info("Loaded " + baseFilename + ".partSizes");
 	
@@ -327,6 +326,8 @@ public class LoaderM {
 			// a better option is to update edcPercentages after edc has been fully initialized, done below
 		}
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
+		inEdgeDestCountStrm.close();
+//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 		
 //		/*
 //		 * Update edcPercentages based on partSizes and edc ---- edc percentages will not be used
@@ -345,6 +346,12 @@ public class LoaderM {
 		/*
 		 * Update edcTwoWay 
 		 */
+		createTwoWayEdc(edgeDestCount);
+	}
+
+	private void createTwoWayEdc(long[][] edgeDestCount) {
+		int partA;
+		int partB;
 		long edcTwoWay[][] = new long[EDC_SIZE][EDC_SIZE];
 		for (partA = 0; partA < numParts; partA++) {
 			for (partB = 0; partB < numParts; partB++) {
@@ -354,14 +361,7 @@ public class LoaderM {
 					edcTwoWay[partA][partB] = edgeDestCount[partA][partB] + edgeDestCount[partB][partA];
 			}
 		}
-		
 		SchedulerInfo.setEdcTwoWay(edcTwoWay);
-
-		inEdgeDestCountStrm.close();
-
-//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
-
-
 	}
 
 //	private void readGrammarTab() throws NumberFormatException, IOException {
