@@ -1,12 +1,18 @@
 package edu.uci.ics.cs.graspan.scheduler;
 
+import java.util.LinkedHashMap;
+
 public class SchedulerInfo {
 
-	public static long[][] partSizes;
-	public static long[][] edgeDestCount;
+	private static long[][] partSizes;
+	private static long[][] edgeDestCount;
+	private static long[][] edgeDestCountTwoWay;
 	private int[][] terminationMap;
-	public static double[][] edcPercentage = new double[50][50];
+	private static double[][] edcPercentage = new double[50][50];
 
+	public static LinkedHashMap<Integer, LinkedHashMap<Integer, Long>> edgeDestCountMP = 
+			new LinkedHashMap<Integer, LinkedHashMap<Integer, Long>>();
+	
 	/**
 	 * 
 	 * @param arr
@@ -71,6 +77,14 @@ public class SchedulerInfo {
 				System.out.println(i + " " + j + " " + edgeDestCount[i][j]);
 			}
 		}
+	}
+
+	public static void setEdcTwoWay(long[][] edcTwoWay) {
+		edgeDestCountTwoWay=edcTwoWay;
+	}
+	
+	public static long[][] getEdcTwoWay(){
+		return edgeDestCountTwoWay;
 	}
 
 	// @Override
