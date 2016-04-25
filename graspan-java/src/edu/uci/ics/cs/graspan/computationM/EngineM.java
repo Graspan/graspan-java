@@ -232,28 +232,35 @@ public class EngineM {
 				vertices[i].setOutEdgeValues(compSets[i].getOldUnewUdeltaVals());
 				
 				/*
-				 * Update edge-dest-count
+				 * Update edge-dest-count and edge-dest-count-2way
 				 */
 				int srcV, destV, partA, partB;
 				long[][] edc = SchedulerInfo.getEdgeDestCount();
+				long[][] edcTwoWay = SchedulerInfo.getEdcTwoWay();
 		
-				// 1. get source vertex partition Id
+				//1. get source vertex partition Id
 				 srcV = vertices[i].getVertexId();
 				 partA = PartitionQuerier.findPartition(srcV);
 				 
 				 //2. scan each destination vertex id
 				 for (int k = 0; k < compSets[i].getDeltaEdgs().length; k++)
 				 {
-					 //3.  get dest vertex partition Id
+					 //2.1.  get dest vertex partition Id
 					 destV =compSets[i].getDeltaEdgs()[k];
 					 partB = PartitionQuerier.findPartition(destV);
 					 if (partB == -1)  // destination v does not lie in any partition
 						 continue;
-					 //4. increment entry in edc table
+					 //2.2. increment entry in edc table
 					 edc[partA][partB]++;
+					 
+					 //2.3. update edc-two-way
+					 if (partA == partB)
+							edcTwoWay[partA][partB] = edc[partA][partB];
+					else
+							edcTwoWay[partA][partB] = edc[partA][partB] + edc[partB][partA];
 				 }
-				
-				// update compsets before next iteration
+
+				 // update compsets before next iteration
 				compSets[i].setOldEdgs(compSets[i].getOldUnewEdgs());
 				compSets[i].setOldVals(compSets[i].getOldUnewVals());
 				compSets[i].setNewEdgs(compSets[i].getDeltaEdgs());

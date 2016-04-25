@@ -194,8 +194,7 @@ public class Scheduler {
 
 		for (int i = 0; i < allEdgeInfo.size(); i++) {
 			int partitionId = allEdgeInfo.get(i).getPartitionId();
-			List<Boolean> terminationInfo = allEdgeInfo.get(i)
-					.getTerminationInfo();
+			List<Boolean> terminationInfo = allEdgeInfo.get(i).getTerminationInfo();
 			for (int j = (partitionId + 1); j < size; j++) {
 				if (!terminationInfo.get(j))
 					return false;

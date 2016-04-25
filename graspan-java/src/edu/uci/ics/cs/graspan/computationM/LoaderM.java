@@ -350,11 +350,9 @@ public class LoaderM {
 	}
 
 	private void createTwoWayEdc(long[][] edgeDestCount) {
-		int partA;
-		int partB;
 		long edcTwoWay[][] = new long[EDC_SIZE][EDC_SIZE];
-		for (partA = 0; partA < numParts; partA++) {
-			for (partB = 0; partB < numParts; partB++) {
+		for (int partA = 0; partA < numParts; partA++) {
+			for (int partB = 0; partB < numParts; partB++) {
 				if (partA == partB)
 					edcTwoWay[partA][partB] = edgeDestCount[partA][partB];
 				else
