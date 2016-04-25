@@ -277,16 +277,13 @@ public class LoaderM {
 	 * @throws IOException
 	 */
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
-
-		// initialize edgeDestCount and partSizes variables
-		long edgeDestCount[][] = new long[EDC_SIZE][EDC_SIZE];
-		long partSizes[][] = new long[numParts][2];
-		double edcPercentages[][] = new double[EDC_SIZE][EDC_SIZE];
 		String ln;
+//		double edcPercentages[][] = new double[EDC_SIZE][EDC_SIZE];
 
 		/*
 		 * Scan the partSizes file
 		 */
+		long partSizes[][] = new long[numParts][2];
 		BufferedReader inPartSizesStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".partSizes"))));
 		int j = 0;
@@ -310,6 +307,7 @@ public class LoaderM {
 		/*
 		 * Scan the edge destination counts file
 		 */
+		long edgeDestCount[][] = new long[EDC_SIZE][EDC_SIZE];
 		BufferedReader inEdgeDestCountStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".edgeDestCounts"))));
 
@@ -330,18 +328,34 @@ public class LoaderM {
 		}
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 		
-		/*
-		 * Update edcPercentages based on partSizes and edc
-		 */
+//		/*
+//		 * Update edcPercentages based on partSizes and edc ---- edc percentages will not be used
+//		 */
+//		
+//		for (partA = 0; partA < numParts; partA++) {
+//			for (partB = 0; partB < numParts; partB++) {
+		//TODO: INCLUDE CASE IF PARTA=PARTB (IF YOU USE PERCENTAGES)
+//				edcPercentages[partA][partB]=  (double) edgeDestCount[partA][partB] / partSizes[partA][1] 
+//						                                          + (double) edgeDestCount[partB][partA] / partSizes[partB][1];
+//			}
+//		}
+//		
+//		SchedulerInfo.setEdcPercentage(edcPercentages);
 		
+		/*
+		 * Update edcTwoWay 
+		 */
+		long edcTwoWay[][] = new long[EDC_SIZE][EDC_SIZE];
 		for (partA = 0; partA < numParts; partA++) {
 			for (partB = 0; partB < numParts; partB++) {
-				edcPercentages[partA][partB]=  (double) edgeDestCount[partA][partB] / partSizes[partA][1] 
-						                                          + (double) edgeDestCount[partB][partA] / partSizes[partB][1];
+				if (partA == partB)
+					edcTwoWay[partA][partB] = edgeDestCount[partA][partB];
+				else
+					edcTwoWay[partA][partB] = edgeDestCount[partA][partB] + edgeDestCount[partB][partA];
 			}
 		}
 		
-		SchedulerInfo.setEdcPercentage(edcPercentages);
+		SchedulerInfo.setEdcTwoWay(edcTwoWay);
 
 		inEdgeDestCountStrm.close();
 
