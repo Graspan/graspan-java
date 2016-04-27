@@ -40,8 +40,7 @@ public class ComputedPartProcessorM {
 //	private static String patOP = "";
 
 //	private static final int OUTPUT_EDGE_TRACKER_INTERVAL = 1000;
-	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams
-			.getPartMaxPostNewEdges();
+	private static final long PART_MAX_POST_NEW_EDGES = GlobalParams.getPartMaxPostNewEdges();
 
 	/**
 	 * Initializes the heuristic for maximum size of a partition after addition
@@ -161,14 +160,12 @@ public class ComputedPartProcessorM {
 				// System.out.println("Actual Id of Src" + src);
 
 				// 1.1.1. check whether new edges have been added
-				if (vertices[i].getNumOutEdges() > loadPartOutDegs[a][PartitionQuerier
-						.getPartArrIdxFrmActualId(src, partId)]) {
+				if (vertices[i].getNumOutEdges() > loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)]) {
 					partHasNewEdges = true;
 				}
 
 				// 1.1.2. update degrees data
-				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(
-						src, partId)] = vertices[i].getNumOutEdges();
+				loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)] = vertices[i].getNumOutEdges();
 				// logger.info(
 				// "Set Degree of vertex " + vertices[i].getVertexId() + " to "
 				// + vertices[i].getCombinedDeg());
@@ -210,8 +207,7 @@ public class ComputedPartProcessorM {
 				// + " in loadPartOutDegs datastructure");
 
 				try {
-					partEdgeCount += loadPartOutDegs[a][PartitionQuerier
-							.getPartArrIdxFrmActualId(src, partId)];
+					partEdgeCount += loadPartOutDegs[a][PartitionQuerier.getPartArrIdxFrmActualId(src, partId)];
 					// logger.info("partId "+partId);
 					// logger.info("loadPartOutDegs[a].length: " +
 					// loadPartOutDegs[a].length+"");
@@ -346,8 +342,7 @@ public class ComputedPartProcessorM {
 					oldIntervalFirst = partAllocTab[j - 1][1] + 1;
 				}
 				oldIntervalLast = partAllocTab[j][1];
-				if (newPartAllocTab[i][1] >= oldIntervalFirst
-						&& newPartAllocTab[i][1] <= oldIntervalLast) {
+				if (newPartAllocTab[i][1] >= oldIntervalFirst && newPartAllocTab[i][1] <= oldIntervalLast) {
 					newPartAllocTab[i][0] = partAllocTab[j][0];
 					partAllocTab[j][0] = -1;
 				}
@@ -407,16 +402,13 @@ public class ComputedPartProcessorM {
 //		logger.info("Updating repartitioned/modifiedParts and loadedParts");
 		for (int i = 0; i < splitVertices.size(); i++) {
 			for (int j = 0; j < loadedParts.length; j++) {
-				if (loadedParts[j] == PartitionQuerier
-						.findPartition(splitVertices.get(i))) {
+				if (loadedParts[j] == PartitionQuerier.findPartition(splitVertices.get(i))) {
 
-					// 2.2.1. add id of repartitioned partition to
-					// repartitionedParts set
+					// 2.2.1. add id of repartitioned partition to repartitionedParts set
 					repartitionedParts.add(loadedParts[j]);
 					modifiedParts.remove(loadedParts[j]);
 
-					// 2.2.2. once a partition is repartitioned, we don't
-					// consider it loaded, thus we set it to MIN_VALUE
+					// 2.2.2. once a partition is repartitioned, we don't consider it loaded, thus we set it to MIN_VALUE
 					if (GlobalParams.getReloadPlan().compareTo("RELOAD_PLAN_2") == 0)
 						loadedParts[j] = Integer.MIN_VALUE;
 
@@ -483,14 +475,10 @@ public class ComputedPartProcessorM {
 						for (LoadedVertexInterval interval : intervals) {
 							if (interval.getPartitionId() == loadedPartId) {
 								intervalFound = true;
-								interval.setLastVertex(PartitionQuerier
-										.getLastSrc(loadedPartId));
+								interval.setLastVertex(PartitionQuerier.getLastSrc(loadedPartId));
 								indexSt = i;
 								interval.setIndexStart(indexSt);
-								indexEd = indexSt
-										+ PartitionQuerier
-												.getNumUniqueSrcs(loadedPartId)
-										- 1;
+								indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId)	- 1;
 								interval.setIndexEnd(indexEd);
 								break;
 							}
@@ -498,15 +486,10 @@ public class ComputedPartProcessorM {
 
 						if (!intervalFound) {
 							// we have a new interval to add
-							LoadedVertexInterval interval = new LoadedVertexInterval(
-									src,
-									PartitionQuerier.getLastSrc(loadedPartId),
-									loadedPartId);
+							LoadedVertexInterval interval = new LoadedVertexInterval(src, PartitionQuerier.getLastSrc(loadedPartId), loadedPartId);
 							indexSt = i;
 							interval.setIndexStart(indexSt);
-							indexEd = indexSt
-									+ PartitionQuerier
-											.getNumUniqueSrcs(loadedPartId) - 1;
+							indexEd = indexSt + PartitionQuerier.getNumUniqueSrcs(loadedPartId) - 1;
 							interval.setIndexEnd(indexEd);
 							intervals.add(interval);
 						}
@@ -652,16 +635,13 @@ public class ComputedPartProcessorM {
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-//		logger.info("Updating " + GlobalParams.baseFilename + ".partition."
-//				+ partitionId);
+		// logger.info("Updating " + GlobalParams.baseFilename + ".partition."	+ partitionId);
 
 		// clear current file
-		DataOutputStream partOutStrm = new DataOutputStream(
-				new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
+		DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
 		partOutStrm.close();
 
-		partOutStrm = new DataOutputStream(
-				new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition."	+ partitionId, true)));
+		partOutStrm = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition."	+ partitionId, true)));
 
 		int srcVId, destVId, count;
 		int edgeValue;
@@ -718,12 +698,10 @@ public class ComputedPartProcessorM {
 			List<LoadedVertexInterval> intervals, Integer partitionId)
 			throws IOException {
 
-		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
+		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
 		partDegOutStrm.close();
 
-		partDegOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(
-				GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
+		partDegOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", true)));
 
 		int srcVId, deg;
 
@@ -732,8 +710,7 @@ public class ComputedPartProcessorM {
 			// locate the required interval in "vertices"
 			if (partitionId == intervals.get(i).getPartitionId()) {
 
-				// scan each vertex in this interval in "vertices" data
-				// structure
+				// scan each vertex in this interval in "vertices" data structure
 				for (int j = intervals.get(i).getIndexStart(); j < intervals
 						.get(i).getIndexEnd() + 1; j++) {
 

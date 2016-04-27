@@ -256,7 +256,7 @@ public class EngineM {
 					 //2.3. update edc-two-way
 					 if (partA == partB)
 							edcTwoWay[partA][partB] = edc[partA][partB];
-					else
+					 else
 							edcTwoWay[partA][partB] = edc[partA][partB] + edc[partB][partA];
 				 }
 

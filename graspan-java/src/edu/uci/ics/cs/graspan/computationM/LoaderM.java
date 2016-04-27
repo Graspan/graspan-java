@@ -124,7 +124,7 @@ public class LoaderM {
 	public void loadParts(int[] partsToLoad) throws IOException {
 
 		// save previous round's vertices and previous round's lvi
-		if (vertices != null) {// TODO CHANGE THIS
+		if (vertices != null) {
 			prevRoundVertices = new Vertex[vertices.length];
 			// prevRoundVertices = vertices;
 			System.arraycopy(vertices, 0, prevRoundVertices, 0, vertices.length);
@@ -149,11 +149,10 @@ public class LoaderM {
 //			logger.info("oldIntervals after creation: " + oldIntervals);
 		}
 
-		loadedIntStartOP = "Loaded intervals at start of loading: ";
-		for (LoadedVertexInterval interval : intervals) {
-			loadedIntStartOP = loadedIntStartOP + interval.getPartitionId()
-					+ " ";
-		}
+//		loadedIntStartOP = "Loaded intervals at start of loading: ";
+//		for (LoadedVertexInterval interval : intervals) {
+//			loadedIntStartOP = loadedIntStartOP + interval.getPartitionId()+ " ";
+//		}
 //		logger.info(loadedIntStartOP);
 
 //		String str = "";
@@ -165,20 +164,17 @@ public class LoaderM {
 		// update newPartsToLoad
 		updateNewPartsAndLoadedParts(partsToLoad);
 
-		// logger.info("oldIntervals after  update newPartsToLoad: "
-		// + oldIntervals);
+		// logger.info("oldIntervals after  update newPartsToLoad: " + oldIntervals);
 
 		// update loadedPartOutDegrees
 		updateDegsOfPartsToLoad();
 
-		// logger.info("oldIntervals after update loadedPartOutDegrees: "
-		// + oldIntervals);
+		// logger.info("oldIntervals after update loadedPartOutDegrees: " + oldIntervals);
 
 		// initialize data structures of the partitions to load
 		initVarsOfPartsToLoad();
 
-		// logger.info("oldIntervals after init of data structures of the partitions to load: "
-		// + oldIntervals);
+		// logger.info("oldIntervals after init of data structures of the partitions to load: " + oldIntervals);
 
 //		logger.info("Initialized data structures for partitions to load.");
 
@@ -408,13 +404,13 @@ public class LoaderM {
 		 * NOTE: At no point will partsToLoad be equal to loadedparts.
 		 */
 
-		// TODO INCOMPLETE - SINCE RELOAD PLAN 1 IS THE WORST PLAN, WE SHALL
+		// INCOMPLETE - SINCE RELOAD PLAN 1 IS THE WORST PLAN, WE SHALL
 		// IGNORE THIS
-		if (this.reloadPlan.compareTo("RELOAD_PLAN_1") == 0) {
-			int[] newParts = LoadedPartitions.getNewParts();
-			newParts = partsToLoad;
-			LoadedPartitions.setNewParts(newParts);
-		}
+//		if (this.reloadPlan.compareTo("RELOAD_PLAN_1") == 0) {
+//			int[] newParts = LoadedPartitions.getNewParts();
+//			newParts = partsToLoad;
+//			LoadedPartitions.setNewParts(newParts);
+//		}
 
 		if (this.reloadPlan.compareTo("RELOAD_PLAN_2") == 0) {
 			int[] loadedParts = LoadedPartitions.getLoadedParts();
@@ -589,12 +585,9 @@ public class LoaderM {
 
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
-				// initialize Dimension 2 (Total no. of Unique SrcVs for a
-				// Partition)
-				partOutDegs[i] = new int[PartitionQuerier
-						.getNumUniqueSrcs(newParts[i])];
-				// remember to use this only for loading partitions that aren't
-				// currently loaded.
+				// initialize Dimension 2 (Total no. of Unique SrcVs for a Partition)
+				partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])];
+				// remember to use this only for loading partitions that aren't currently loaded.
 			}
 		}
 
@@ -603,11 +596,7 @@ public class LoaderM {
 		 */
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
-				BufferedReader outDegInStrm = new BufferedReader(
-						new InputStreamReader(new FileInputStream(new File(
-								baseFilename + ".partition." + newParts[i]
-										+ ".degrees"))));
-
+				BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseFilename + ".partition." + newParts[i]+ ".degrees"))));
 				String ln;
 				while ((ln = outDegInStrm.readLine()) != null) {
 
@@ -617,12 +606,9 @@ public class LoaderM {
 					int srcVId = Integer.parseInt(tok[0]);
 					int deg = Integer.parseInt(tok[1]);
 					try {
-						partOutDegs[i][srcVId
-								- PartitionQuerier.getFirstSrc(newParts[i])] = deg;
+						partOutDegs[i][srcVId- PartitionQuerier.getFirstSrc(newParts[i])] = deg;
 					} catch (Exception e) {
-						logger.info("ERROR!: " + srcVId + " "
-								+ PartitionQuerier.getFirstSrc(newParts[i]));
-
+						logger.info("ERROR!: " + srcVId + " "+ PartitionQuerier.getFirstSrc(newParts[i]));
 					}
 					// this will be later updated in processParts() of
 					// ComputedPartProcessor if new edges are added for this
@@ -716,8 +702,7 @@ public class LoaderM {
 		// initializing new data structures
 		int totalNumVertices = 0;
 		for (int i = 0; i < loadedParts.length; i++) {
-			totalNumVertices += PartitionQuerier
-					.getNumUniqueSrcs(loadedParts[i]);
+			totalNumVertices += PartitionQuerier.getNumUniqueSrcs(loadedParts[i]);
 		}
 		vertices = new Vertex[totalNumVertices];
 
@@ -735,13 +720,10 @@ public class LoaderM {
 
 				// initialize Dimension 2 (Total no. of Unique SrcVs for a
 				// Partition)
-				partEdges[i] = new int[PartitionQuerier
-						.getNumUniqueSrcs(newParts[i])][];
-				partEdgeVals[i] = new byte[PartitionQuerier
-						.getNumUniqueSrcs(newParts[i])][];
+				partEdges[i] = new int[PartitionQuerier.getNumUniqueSrcs(newParts[i])][];
+				partEdgeVals[i] = new byte[PartitionQuerier.getNumUniqueSrcs(newParts[i])][];
 
-				for (int j = 0; j < PartitionQuerier
-						.getNumUniqueSrcs(newParts[i]); j++) {
+				for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(newParts[i]); j++) {
 
 					// initialize Dimension 3 (Total no. of Out-edges for a
 					// SrcV)
@@ -755,12 +737,9 @@ public class LoaderM {
 		// set vertices data structure
 		int vertexIdx = 0;
 		for (int i = 0; i < loadedParts.length; i++) {
-			for (int j = 0; j < PartitionQuerier
-					.getNumUniqueSrcs(loadedParts[i]); j++) {
-				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j,
-						loadedParts[i]);
-				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId,
-						partEdges[i][j], partEdgeVals[i][j]);
+			for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(loadedParts[i]); j++) {
+				int vertexId = PartitionQuerier.getActualIdFrmPartArrIdx(j, loadedParts[i]);
+				vertices[vertexIdx] = new Vertex(vertexIdx, vertexId, partEdges[i][j], partEdgeVals[i][j]);
 				vertexIdx++;
 			}
 		}
@@ -783,9 +762,7 @@ public class LoaderM {
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
-				DataInputStream partInStrm = new DataInputStream(
-						new BufferedInputStream(new FileInputStream(
-								baseFilename + ".partition." + newParts[i])));
+				DataInputStream partInStrm = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + newParts[i])));
 
 				// stores the position of last filled edge (destV) and the edge
 				// val in partEdges and partEdgeVals for a source vertex for a partition
@@ -831,7 +808,7 @@ public class LoaderM {
 			}
 		}
 
-		// test TODO - COMMENT THIS CHUNK
+		// test 
 		// logger.info("partEdges content after loading:");
 		// int[][] partOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		// String str = "";
@@ -993,16 +970,13 @@ public class LoaderM {
 		for (int i = 0; i < intervals.size(); i++) {
 
 			// locate the required interval in "vertices", and if it has new  edges added
-			if (partitionId == intervals.get(i).getPartitionId()
-					&& intervals.get(i).hasNewEdges()) {
+			if (partitionId == intervals.get(i).getPartitionId() && intervals.get(i).hasNewEdges()) {
 
 				// clear current file
-				DataOutputStream partOutStrm = new DataOutputStream(
-						new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
+				DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
 				partOutStrm.close();
 
-				partOutStrm = new DataOutputStream(
-						new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, true)));
+				partOutStrm = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, true)));
 
 				int srcVId, destVId, count;
 				int edgeValue;

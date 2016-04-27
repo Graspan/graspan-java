@@ -23,7 +23,7 @@ public class Scheduler {
 	public static int counterTwo = 1;
 
 	/**
-	 * Constructor 1. Only consider termination w/o scheduling
+	 * Constructor 1. 
 	 * 
 	 * @param numParts
 	 */
@@ -49,7 +49,7 @@ public class Scheduler {
 	}
 
 	/**
-	 * Constructor 2. Termination + scheduling
+	 * Constructor 2. (unused)
 	 * 
 	 * @param partSizes
 	 * @param edgeDstCount
