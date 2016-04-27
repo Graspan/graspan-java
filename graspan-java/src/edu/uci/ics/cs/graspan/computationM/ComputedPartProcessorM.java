@@ -77,9 +77,7 @@ public class ComputedPartProcessorM {
 	 * @param intervals
 	 * @throws IOException
 	 */
-	public static void processParts(Vertex[] vertices,
-			ComputationSet[] compsets, List<LoadedVertexInterval> intervals)
-			throws IOException {
+	public static void processParts(Vertex[] vertices, ComputationSet[] compsets, List<LoadedVertexInterval> intervals)	throws IOException {
 
 //		logger.info("Processing partitions after computation.");
 
@@ -275,7 +273,7 @@ public class ComputedPartProcessorM {
 			// partSizes[part.getPartitionId()][1] = edgeCount;
 		}
 
-		// TODO: PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
+		// PRINTING VERTEX DEGREES (COMMENT THIS OUT LATER:)
 //		logger.info("PRINTING DEGREES OF PARTITION");
 //		for (int i = 0; i < vertices.length; i++) {
 //			logger.info(vertices[i].getVertexId() + " | "
@@ -469,8 +467,7 @@ public class ComputedPartProcessorM {
 				for (Integer loadedPartId : loadedPartsPostProcessing) {
 					if (src == PartitionQuerier.getFirstSrc(loadedPartId)) {
 
-						// For an existing interval
-						// find the interval
+						// For an existing interval find the interval
 						intervalFound = false;
 						for (LoadedVertexInterval interval : intervals) {
 							if (interval.getPartitionId() == loadedPartId) {
