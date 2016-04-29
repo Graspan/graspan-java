@@ -11,6 +11,7 @@ import edu.uci.ics.cs.graspan.computationEL.EngineEL;
 import edu.uci.ics.cs.graspan.computationM.EngineM;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.GraspanTimer;
+import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
 public class ComputationClient {
 
@@ -23,8 +24,7 @@ public class ComputationClient {
 		/*
 		 * Scan the Computer-client config file
 		 */
-		BufferedReader computationConfigStream = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(computationConfigFilename))));
+		BufferedReader computationConfigStream = new BufferedReader(new InputStreamReader(new FileInputStream(new File(computationConfigFilename))));
 		String ln;
 
 		String[] tok;
@@ -63,6 +63,9 @@ public class ComputationClient {
 		}
 
 		computationConfigStream.close();
+		
+		MemUsageCheckThread memUsage = new MemUsageCheckThread();
+		memUsage.start();
 
 		logger.info("Starting computation.");
 		logger.info("Total number of partitions: " + GlobalParams.getNumParts());
@@ -88,5 +91,8 @@ public class ComputationClient {
 			
 			logger.info("Smart Merge Computation took " + GraspanTimer.getDurationInHMS(sm_comp.getDuration()));
 		}
+		
+		MemUsageCheckThread.memoryUsageOutput.close();
+		memUsage.stop();
 	}
 }

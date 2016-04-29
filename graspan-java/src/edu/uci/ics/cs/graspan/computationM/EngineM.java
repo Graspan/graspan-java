@@ -96,8 +96,8 @@ public class EngineM {
 		iterationOutput.println("ROUND_NUMBER,ITERATION_NUMBER,H,M,S,#NEW_EDGES");
 		
 		// IO output info
-		this.IO_output = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.IO.csv", true)));
-		this.IO_output.println("OPERATION_TYPE,H,M,S");
+		IO_output = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.IO.csv", true)));
+		IO_output.println("OPERATION_TYPE,H,M,S");
 		
 //		int roundNo = 0;
 		while (!scheduler.shouldTerminate()) {
@@ -194,7 +194,7 @@ public class EngineM {
 			logger.info(vertices[i].getVertexId() + ": (edge vals) :" + Arrays.toString(vertices[i].getOutEdgeValues()));
 			size=size+vertices[i].getOutEdges().length;
 		}
-		logger.info("Total number of edges in vertices ds "+size);
+		logger.info("Total number of edges in vertices ds " + size);
 //		logger.info("All vertices in memory just after loading: \n" + s);
 	}
 
@@ -434,8 +434,6 @@ public class EngineM {
 					+ Arrays.toString(compSets[i].getOldUnewUdeltaVals()));
 			}
 		}
-		
-		
 	}
 	
 	public static PrintWriter getIO_outputStrm(){

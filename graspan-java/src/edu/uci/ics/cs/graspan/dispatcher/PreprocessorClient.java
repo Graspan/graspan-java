@@ -12,6 +12,7 @@ import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdder;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.GraspanTimer;
+import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
@@ -59,7 +60,10 @@ public class PreprocessorClient {
 		}
 
 		preprocessorConfigStream.close();
-
+		
+		MemUsageCheckThread memUsage = new MemUsageCheckThread();
+		memUsage.start();
+		
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
 		
@@ -96,6 +100,8 @@ public class PreprocessorClient {
 			logger.info("Generating partitions took: "+ GraspanTimer.getDurationInHMS(ppPartGen.getDuration()));
 		}
 	
+		MemUsageCheckThread.memoryUsageOutput.close();
+		memUsage.stop();
 	}
 
 }
