@@ -64,8 +64,8 @@ public class ComputationClient {
 
 		computationConfigStream.close();
 		
-		MemUsageCheckThread memUsage = new MemUsageCheckThread();
-		memUsage.start();
+//		MemUsageCheckThread memUsage = new MemUsageCheckThread();
+//		memUsage.start();
 
 		logger.info("Starting computation.");
 		logger.info("Total number of partitions: " + GlobalParams.getNumParts());
@@ -92,7 +92,7 @@ public class ComputationClient {
 			logger.info("Smart Merge Computation took " + GraspanTimer.getDurationInHMS(sm_comp.getDuration()));
 		}
 		
-		MemUsageCheckThread.memoryUsageOutput.close();
-		memUsage.stop();
+//		MemUsageCheckThread.memoryUsageOutput.close();
+//		memUsage.stop();
 	}
 }

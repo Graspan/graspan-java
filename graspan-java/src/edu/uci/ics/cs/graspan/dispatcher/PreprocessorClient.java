@@ -61,8 +61,8 @@ public class PreprocessorClient {
 
 		preprocessorConfigStream.close();
 		
-		MemUsageCheckThread memUsage = new MemUsageCheckThread();
-		memUsage.start();
+//		MemUsageCheckThread memUsage = new MemUsageCheckThread();
+//		memUsage.start();
 		
 		logger.info("Input graph: " + GlobalParams.getBasefilename());
 		logger.info("Requested # partitions to generate: " + GlobalParams.getNumParts());
@@ -100,8 +100,8 @@ public class PreprocessorClient {
 			logger.info("Generating partitions took: "+ GraspanTimer.getDurationInHMS(ppPartGen.getDuration()));
 		}
 	
-		MemUsageCheckThread.memoryUsageOutput.close();
-		memUsage.stop();
+//		MemUsageCheckThread.memoryUsageOutput.close();
+//		memUsage.stop();
 	}
 
 }
