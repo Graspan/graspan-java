@@ -472,16 +472,22 @@ public class LoaderM {
 
 			// 2.1. save partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
+			{	long writeStart = System.currentTimeMillis();
 				storePart(getVertices(), getIntervals(), partitionId);
+				EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+			}
 
 			// 2.2. save degrees of partitions not in the next round
 			for (Integer partitionId : partsToSaveByLoader)
+			{
+				long writeStart = System.currentTimeMillis();
 				storePartDegs(getVertices(), getIntervals(), partitionId);
-
+				EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+			}
+				
 			// 2.3. Remove saved partitions from LoadedVertexIntervals
 			for (int i = 0; i < intervals.size(); i++) {
-				if (partsToSaveByLoader.contains(intervals.get(i)
-						.getPartitionId())) {
+				if (partsToSaveByLoader.contains(intervals.get(i).getPartitionId())) {
 					intervals.remove(i);
 					// reset i
 					i--;
@@ -591,6 +597,7 @@ public class LoaderM {
 			}
 		}
 
+		long readStart = System.currentTimeMillis();
 		/*
 		 * Scan degrees file of each partition
 		 */
@@ -620,6 +627,7 @@ public class LoaderM {
 //						+ newParts[i] + ".degrees");
 			}
 		}
+		EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
 	}
 
 	/**
@@ -759,6 +767,7 @@ public class LoaderM {
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
 
+		long readStart = System.currentTimeMillis();
 		for (int i = 0; i < newParts.length; i++) {
 			if (newParts[i] != Integer.MIN_VALUE) {
 
@@ -807,6 +816,8 @@ public class LoaderM {
 //				logger.info("Loaded " + baseFilename + ".partition." + newParts[i]);
 			}
 		}
+		
+		EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
 
 		// test 
 		// logger.info("partEdges content after loading:");

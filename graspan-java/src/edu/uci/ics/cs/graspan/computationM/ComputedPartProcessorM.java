@@ -23,6 +23,7 @@ import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
  * 
@@ -584,13 +585,21 @@ public class ComputedPartProcessorM {
 		// 3.1. save repartitioned partition and newly generated partitions
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSaveByCPP)
+		{
+			long writeStart = System.currentTimeMillis();
 			storePart(vertices, compsets, intervals, partitionId);
-
+			EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+		}
+			
 		// 3.2. save degree of those partitions.
 		// iterate over saveParts and get partitionId
 		for (Integer partitionId : partsToSaveByCPP)
+		{
+			long writeStart = System.currentTimeMillis();
 			storePartDegs(vertices, intervals, partitionId);
-
+			EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+		}
+		
 		// loaded intervals test before saving partitions 1/2
 		// String s = "Loaded intervals before saving:\n";
 		// for (int i = 0; i < intervals.size(); i++)

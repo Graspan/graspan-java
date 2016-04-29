@@ -1,7 +1,10 @@
 package edu.uci.ics.cs.graspan.computationM;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +24,7 @@ import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.scheduler.Scheduler;
 import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
  * @author Kai Wang
@@ -48,6 +52,12 @@ public class EngineM {
 	public static NewEdgesList[] newEdgeLists_prevIt;
 	public List<LoadedVertexInterval> intervals_prevIt;
 	public static ComputationSet[] compSets_prevIt;
+	
+	private int roundNo;
+	private PrintWriter roundOutput;
+	private PrintWriter iterationOutput;
+	private static PrintWriter IO_output;
+	
 
 	/**
 	 * Description:
@@ -76,7 +86,20 @@ public class EngineM {
 		// instantiate scheduler
 		Scheduler scheduler = new Scheduler(AllPartitions.partAllocTable.length);
 		Vertex[] vertices=null;
-		int roundNo = 0;
+		
+		// round output info
+		roundOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.round.csv", true)));
+		roundOutput.println("ROUND_NUMBER,H,M,S,#NEW_EDGES");
+		
+		// iteration output info
+		iterationOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.iteration.csv", true)));
+		iterationOutput.println("ROUND_NUMBER,ITERATION_NUMBER,H,M,S,#NEW_EDGES");
+		
+		// IO output info
+		this.IO_output = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.IO.csv", true)));
+		this.IO_output.println("OPERATION_TYPE,H,M,S");
+		
+//		int roundNo = 0;
 		while (!scheduler.shouldTerminate()) {
 			roundNo++;
 			logger.info("STARTING ROUND NO #" + roundNo);
@@ -100,7 +123,6 @@ public class EngineM {
 			// for debugging
 			// printSrcVerticesForDebugging(vertices);
 			
-
 			// *************************************************************************************************
 			// computation
 			ComputationSet[] compSets = new ComputationSet[vertices.length];
@@ -115,16 +137,18 @@ public class EngineM {
 			logger.info("Finished initialization of CompSets and EdgeComputers");
 
 			logger.info("Start computation and edge addition...");
-			long t = System.currentTimeMillis();
+			long roundStartTime = System.currentTimeMillis();
 
 			// MemUsageCheckThread job1 = new MemUsageCheckThread();
 			// job1.start();
 
 			// do computation and add edges
 			computeForOneRound(vertices, compSets, intervals);
+			
+			roundOutput.println(roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
 
 			logger.info("Finish computation for one round");
-			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - t) + " ms");
+			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - roundStartTime) + " ms");
 			
 
 			// *************************************************************************************************
@@ -151,6 +175,10 @@ public class EngineM {
 		logger.info("Total Num of New Edges: " + totalNewEdgs);
 //		printSrcVerticesForDebugging(vertices);
 		computationExecutor.shutdown();
+		
+		this.roundOutput.close();
+		this.iterationOutput.close();
+		getIO_outputStrm().close();
 	}
 
 	/**
@@ -205,7 +233,7 @@ public class EngineM {
 		do {
 			iterationNo++;
 			totalNewEdgsForIteratn = 0;
-			long t = System.currentTimeMillis();
+			long iterationStartTime = System.currentTimeMillis();
 			logger.info("Entered iteration no. " + iterationNo);
 
 //			printCompSetsInfo(vertices,compSets);
@@ -269,7 +297,8 @@ public class EngineM {
 				compSets[i].setOldUnewVals(compSets[i].getOldUnewUdeltaVals());
 			}
 			
-			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - t) / 1000 + " s");
+			iterationOutput.println(roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
+			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - iterationStartTime) / 1000 + " s");
 		} 
 		while (totalNewEdgsForIteratn > 0);
 
@@ -295,8 +324,7 @@ public class EngineM {
 	 */
 	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
 			final Vertex[] vertices, final ComputationSet[] compSets, 
-			final List<LoadedVertexInterval> intervals, final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
-			final int indexEndForTwo) {
+			final List<LoadedVertexInterval> intervals, final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo, final int indexEndForTwo) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
 		final Object counterLock = new Object();
@@ -408,6 +436,10 @@ public class EngineM {
 		}
 		
 		
+	}
+	
+	public static PrintWriter getIO_outputStrm(){
+		return IO_output;
 	}
 
 	public long get_totalNewEdgs() {

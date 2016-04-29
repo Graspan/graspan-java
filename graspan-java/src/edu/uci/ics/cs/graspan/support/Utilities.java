@@ -1,5 +1,7 @@
 package edu.uci.ics.cs.graspan.support;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * This class consists of sorting methods.
  * 
@@ -64,5 +66,12 @@ public class Utilities {
 		if (high > i)
 			quickSort(edgeArr, edgeValArr, i, high);
 	}
+	
+	public static String getDurationInHMS(long duration){
+		String hms = String.format("%02d,%02d,%02d", TimeUnit.MILLISECONDS.toHours(duration),
+				     TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+				     TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+		return hms;
+		}
 	
 }
