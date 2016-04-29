@@ -232,6 +232,7 @@ public class Preprocessor {
 		this.outDegs = outDegs;
 
 		logger.info("Completed saving all degrees files.");
+		logger.info("Total number of vertices in input graph: " + this.outDegs.size());
 //		logger.info(outDegs+"");
 	}
 

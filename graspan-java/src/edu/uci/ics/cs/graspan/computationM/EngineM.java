@@ -339,8 +339,7 @@ public class EngineM {
 				public void run() {
 					long threadUpdates = 0;
 
-//					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"
-//							+ Thread.currentThread().getId());
+//					logger.info("in multithreaded portion - chunk start: " + chunkStart + " ThreadNo:"	+ Thread.currentThread().getId());
 
 					try {
 						int end = chunkEnd;

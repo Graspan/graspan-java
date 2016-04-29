@@ -16,7 +16,7 @@ public class MemUsageCheckThread extends Thread {
 
 	public void run() {
 		Runtime runtime = Runtime.getRuntime();
-		NumberFormat format = NumberFormat.getInstance();
+//		NumberFormat format = NumberFormat.getInstance();
 		
 		// round output info
 		try {
@@ -36,9 +36,9 @@ public class MemUsageCheckThread extends Thread {
 //			logger.info("Max memory (MB): " + format.format(maxMemory / 1048576));
 //			logger.info("Total free memory (MB): " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
 			
-			memoryUsageOutput.println(format.format(freeMemory / 1048576) + ","
-					+ format.format(allocatedMemory / 1048576) + "," + format.format(maxMemory / 1048576) + ","
-					+ format.format((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
+			memoryUsageOutput.println((freeMemory / 1048576) + ","
+					+ (allocatedMemory / 1048576) + "," + (maxMemory / 1048576) + ","
+					+ ((freeMemory + (maxMemory - allocatedMemory)) / 1048576));
 			
 			if (((freeMemory + (maxMemory - allocatedMemory)) / 1048576) > 0) {
 				EngineM.memFull = true;
