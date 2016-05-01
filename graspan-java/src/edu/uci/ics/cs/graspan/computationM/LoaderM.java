@@ -8,6 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -273,29 +274,28 @@ public class LoaderM {
 	 * @throws IOException
 	 */
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
-		String ln;
 
 		/*
 		 * Scan the partSizes file
 		 */
-		long partSizes[][] = new long[numParts][2];
-		BufferedReader inPartSizesStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".partSizes"))));
-		int j = 0;
-		while ((ln = inPartSizesStrm.readLine()) != null) {
-			// store partSizes in memory
-			partSizes[j][0] = j;
-			partSizes[j][1] = Long.parseLong(ln);
-			j++;
-		}
-		SchedulerInfo.setPartSizes(partSizes);
-		inPartSizesStrm.close();
+		readPartSizes();
 //		logger.info("Loaded " + baseFilename + ".partSizes");
 	
 
 		/*
 		 * Scan the edge destination counts file
 		 */
+		long[][] edgeDestCount = readEDC();
+//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
+		
+		/*
+		 * Update edcTwoWay 
+		 */
+		createTwoWayEdc(edgeDestCount);
+	}
+
+	private long[][] readEDC() throws FileNotFoundException, IOException {
+		String ln;
 		long edgeDestCount[][] = new long[EDC_SIZE][EDC_SIZE];
 		BufferedReader inEdgeDestCountStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".edgeDestCounts"))));
@@ -317,12 +317,23 @@ public class LoaderM {
 		}
 		SchedulerInfo.setEdgeDestCount(edgeDestCount);
 		inEdgeDestCountStrm.close();
-//		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
-		
-		/*
-		 * Update edcTwoWay 
-		 */
-		createTwoWayEdc(edgeDestCount);
+		return edgeDestCount;
+	}
+
+	private void readPartSizes() throws FileNotFoundException, IOException {
+		String ln;
+		long partSizes[][] = new long[numParts][2];
+		BufferedReader inPartSizesStrm = new BufferedReader(
+				new InputStreamReader(new FileInputStream(new File(baseFilename	+ ".partSizes"))));
+		int j = 0;
+		while ((ln = inPartSizesStrm.readLine()) != null) {
+			// store partSizes in memory
+			partSizes[j][0] = j;
+			partSizes[j][1] = Long.parseLong(ln);
+			j++;
+		}
+		SchedulerInfo.setPartSizes(partSizes);
+		inPartSizesStrm.close();
 	}
 
 	private void createTwoWayEdc(long[][] edgeDestCount) {
