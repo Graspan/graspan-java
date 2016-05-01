@@ -566,9 +566,9 @@ public class ComputedPartProcessorM {
 
 		}
 
-		partsToSaveOP = "Parts to save by Computed-part-processor: ";
-		for (Integer partitionId : partsToSaveByCPP)
-		partsToSaveOP = partsToSaveOP + partitionId + " ";
+//		partsToSaveOP = "Parts to save by Computed-part-processor: ";
+//		for (Integer partitionId : partsToSaveByCPP)
+//		partsToSaveOP = partsToSaveOP + partitionId + " ";
 //		logger.info(partsToSaveOP);
 
 		// Post processing - Parts to save test
