@@ -274,7 +274,6 @@ public class LoaderM {
 	 */
 	private void readSchedulingInfo() throws NumberFormatException, IOException {
 		String ln;
-//		double edcPercentages[][] = new double[EDC_SIZE][EDC_SIZE];
 
 		/*
 		 * Scan the partSizes file
@@ -293,11 +292,6 @@ public class LoaderM {
 		inPartSizesStrm.close();
 //		logger.info("Loaded " + baseFilename + ".partSizes");
 	
-//		for (int i = 0; i < EDC_SIZE; i++) {
-//			for (int k = 0;k < EDC_SIZE; k++) {
-//				edcPercentages[i][k] = -1;
-//			}
-//		}
 
 		/*
 		 * Scan the edge destination counts file
@@ -344,31 +338,6 @@ public class LoaderM {
 		SchedulerInfo.setEdcTwoWay(edcTwoWay);
 	}
 
-//	private void readGrammarTab() throws NumberFormatException, IOException {
-//
-//		// initialize edgeDestCount and partSizes variables
-//		byte[][] grammarTab = GlobalParams.getGrammarTab();
-//		int i = 0;
-//
-//		/*
-//		 * Scan the grammar file
-//		 */
-//		BufferedReader inGrammarStrm = new BufferedReader(
-//				new InputStreamReader(new FileInputStream(new File(baseFilename + ".grammar"))));
-//		String ln;
-//
-//		String[] tok;
-//		while ((ln = inGrammarStrm.readLine()) != null) {
-//			tok = ln.split("\t");
-//			grammarTab[i][0] = (byte) Integer.parseInt(tok[0]);
-//			grammarTab[i][1] = (byte) Integer.parseInt(tok[1]);
-//			grammarTab[i][2] = (byte) Integer.parseInt(tok[2]);
-//			i++;
-//		}
-//
-//		inGrammarStrm.close();
-////		logger.info("Loaded " + baseFilename + ".grammar");
-//	}
 
 	public Vertex[] getVertices() {
 		return vertices;
