@@ -325,20 +325,6 @@ public class LoaderM {
 		inEdgeDestCountStrm.close();
 //		logger.info("Loaded " + baseFilename + ".edgeDestCounts");
 		
-//		/*
-//		 * Update edcPercentages based on partSizes and edc ---- edc percentages will not be used
-//		 */
-//		
-//		for (partA = 0; partA < numParts; partA++) {
-//			for (partB = 0; partB < numParts; partB++) {
-		//TODO: INCLUDE CASE IF PARTA=PARTB (IF YOU USE PERCENTAGES)
-//				edcPercentages[partA][partB]=  (double) edgeDestCount[partA][partB] / partSizes[partA][1] 
-//						                                          + (double) edgeDestCount[partB][partA] / partSizes[partB][1];
-//			}
-//		}
-//		
-//		SchedulerInfo.setEdcPercentage(edcPercentages);
-		
 		/*
 		 * Update edcTwoWay 
 		 */
