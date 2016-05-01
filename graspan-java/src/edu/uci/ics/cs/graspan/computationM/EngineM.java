@@ -54,9 +54,9 @@ public class EngineM {
 	public static ComputationSet[] compSets_prevIt;
 	
 	private int roundNo;
-	private PrintWriter roundOutput;
-	private PrintWriter iterationOutput;
-	private static PrintWriter IO_output;
+//	private PrintWriter roundOutput;
+//	private PrintWriter iterationOutput;
+//	private static PrintWriter IO_output;
 	
 
 	/**
@@ -88,16 +88,16 @@ public class EngineM {
 		Vertex[] vertices=null;
 		
 		// round output info
-		roundOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.round.csv", true)));
-		roundOutput.println("ROUND_NUMBER,H,M,S,#NEW_EDGES");
+//		roundOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.round.csv", true)));
+//		roundOutput.println("ROUND_NUMBER,H,M,S,#NEW_EDGES");
 		
 		// iteration output info
-		iterationOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.iteration.csv", true)));
-		iterationOutput.println("ROUND_NUMBER,ITERATION_NUMBER,H,M,S,#NEW_EDGES");
+//		iterationOutput = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.iteration.csv", true)));
+//		iterationOutput.println("ROUND_NUMBER,ITERATION_NUMBER,H,M,S,#NEW_EDGES");
 		
 		// IO output info
-		IO_output = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.IO.csv", true)));
-		IO_output.println("OPERATION_TYPE,H,M,S");
+//		IO_output = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.getBasefilename() + ".output.IO.csv", true)));
+//		IO_output.println("OPERATION_TYPE,H,M,S");
 		
 //		int roundNo = 0;
 		while (!scheduler.shouldTerminate()) {
@@ -145,7 +145,8 @@ public class EngineM {
 			// do computation and add edges
 			computeForOneRound(vertices, compSets, intervals);
 			
-			roundOutput.println(roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
+//			roundOutput.println(roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
+			logger.info("output.round ||"+roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
 
 			logger.info("Finish computation for one round");
 			logger.info("Computation and edge addition took: " + (System.currentTimeMillis() - roundStartTime) + " ms");
@@ -176,9 +177,9 @@ public class EngineM {
 //		printSrcVerticesForDebugging(vertices);
 		computationExecutor.shutdown();
 		
-		this.roundOutput.close();
-		this.iterationOutput.close();
-		getIO_outputStrm().close();
+//		this.roundOutput.close();
+//		this.iterationOutput.close();
+//		getIO_outputStrm().close();
 	}
 
 	/**
@@ -297,7 +298,8 @@ public class EngineM {
 				compSets[i].setOldUnewVals(compSets[i].getOldUnewUdeltaVals());
 			}
 			
-			iterationOutput.println(roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
+//			iterationOutput.println(roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
+			logger.info("output.iteration||" + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
 			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - iterationStartTime) / 1000 + " s");
 		} 
 		while (totalNewEdgsForIteratn > 0);
@@ -435,9 +437,9 @@ public class EngineM {
 		}
 	}
 	
-	public static PrintWriter getIO_outputStrm(){
-		return IO_output;
-	}
+//	public static PrintWriter getIO_outputStrm(){
+//		return IO_output;
+//	}
 
 	public long get_totalNewEdgs() {
 		return totalNewEdgs;

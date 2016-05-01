@@ -11,8 +11,7 @@ import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdder;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
-import edu.uci.ics.cs.graspan.support.GraspanTimer;
-import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
  * This program performs preprocessing of the input graph to generate partitions
@@ -31,8 +30,7 @@ public class PreprocessorClient {
 		/*
 		 * Scan the Computer-client config file
 		 */
-		BufferedReader preprocessorConfigStream = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(preprocessorConfigFilename))));
+		BufferedReader preprocessorConfigStream = new BufferedReader(new InputStreamReader(new FileInputStream(new File(preprocessorConfigFilename))));
 		String ln;
 
 		String[] tok;
@@ -73,22 +71,25 @@ public class PreprocessorClient {
 		// adding edges to the graph based on eRules
 		{
 			logger.info("PREPROCESSING: Start computing and adding edges from eRules...");
-			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
+//			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
+			long eAdd_start = System.currentTimeMillis();
 			
 			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
 			edgeAdder.run();
 			
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
 			
-			ppERedgeAdding.calculateDuration(System.currentTimeMillis());
-			logger.info("Edge Adding from Erules took: "+ GraspanTimer.getDurationInHMS(ppERedgeAdding.getDuration()));
+//			ppERedgeAdding.calculateDuration(System.currentTimeMillis());
+//			logger.info("Edge Adding from Erules took: "+ GraspanTimer.getDurationInHMS(ppERedgeAdding.getDuration()));
+			logger.info("Edge Adding from Erules took: "+ Utilities.getDurationInHMS(System.currentTimeMillis()-eAdd_start));
 		}
 
 		else if (GlobalParams.getPPOperation().compareTo("GenParts") == 0) 
 		// generate pp parts
 		{
 			logger.info("PREPROCESSING: Start generating partitions...");
-			GraspanTimer ppPartGen = new GraspanTimer(System.currentTimeMillis());
+//			GraspanTimer ppPartGen = new GraspanTimer(System.currentTimeMillis());
+			long pp_start = System.currentTimeMillis();
 			
 			// initialize Partition Generator Program
 			Preprocessor partgenerator = new Preprocessor(GlobalParams.getBasefilename(), GlobalParams.getNumParts());
@@ -96,8 +97,9 @@ public class PreprocessorClient {
 
 			logger.info("PREPROCESSING: Finished generating partitions.");
 			
-			ppPartGen.calculateDuration(System.currentTimeMillis());
-			logger.info("Generating partitions took: "+ GraspanTimer.getDurationInHMS(ppPartGen.getDuration()));
+//			ppPartGen.calculateDuration(System.currentTimeMillis());
+//			logger.info("Generating partitions took: "+ GraspanTimer.getDurationInHMS(ppPartGen.getDuration()));
+			logger.info("Edge Adding from Erules took: " + Utilities.getDurationInHMS(System.currentTimeMillis()-pp_start));
 		}
 	
 //		MemUsageCheckThread.memoryUsageOutput.close();

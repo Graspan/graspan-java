@@ -10,8 +10,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computationEL.EngineEL;
 import edu.uci.ics.cs.graspan.computationM.EngineM;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
-import edu.uci.ics.cs.graspan.support.GraspanTimer;
-import edu.uci.ics.cs.graspan.support.MemUsageCheckThread;
+import edu.uci.ics.cs.graspan.support.Utilities;
 
 public class ComputationClient {
 
@@ -79,7 +78,8 @@ public class ComputationClient {
 		} else if (GlobalParams.getComputationLogic().compareTo("SMART_MERGE") == 0) {
 			
 			logger.info("Starting Smart Merge Computation");
-			GraspanTimer sm_comp = new GraspanTimer(System.currentTimeMillis());			
+//			GraspanTimer sm_comp = new GraspanTimer(System.currentTimeMillis());			
+			long smart_merge_comp_start = System.currentTimeMillis();
 			
 			EngineM engine = new EngineM();
 			engine.run();
@@ -87,9 +87,10 @@ public class ComputationClient {
 			
 			logger.info("Finished Smart Merge Computation");
 			
-			sm_comp.calculateDuration(System.currentTimeMillis());
+//			sm_comp.calculateDuration(System.currentTimeMillis());
 			
-			logger.info("Smart Merge Computation took " + GraspanTimer.getDurationInHMS(sm_comp.getDuration()));
+//			logger.info("Smart Merge Computation took " + Utilities.getDurationInHMS(sm_comp.getDuration()));
+			logger.info("Smart Merge Computation took " + Utilities.getDurationInHMS(System.currentTimeMillis() - smart_merge_comp_start));
 		}
 		
 //		MemUsageCheckThread.memoryUsageOutput.close();

@@ -208,7 +208,7 @@ public class GraphERuleEdgeAdder {
 
 		partOutDegs[0] = new int[outDegs.lastKey()-outDegs.firstKey()+1];
 		/*
-		 * Scan degrees file of partition
+		 * Scan degrees file of graph
 		 */
 		BufferedReader outDegInStrm = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(baseFilename + ".degrees"))));
