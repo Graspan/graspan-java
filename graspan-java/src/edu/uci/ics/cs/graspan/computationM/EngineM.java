@@ -299,7 +299,7 @@ public class EngineM {
 			}
 			
 //			iterationOutput.println(roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
-			logger.info("output.iteration||" + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
+			logger.info("output.iteration||"+ roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
 			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - iterationStartTime) / 1000 + " s");
 		} 
 		while (totalNewEdgsForIteratn > 0);
