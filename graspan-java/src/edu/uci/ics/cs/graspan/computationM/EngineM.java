@@ -214,6 +214,10 @@ public class EngineM {
 
 		newEdgesInOne = 0;
 		newEdgesInTwo = 0;
+		
+		// reset new edge added flag for scheduler
+		intervals.get(0).setIsNewEdgeAdded(false);
+		intervals.get(1).setIsNewEdgeAdded(false);
 
 		// initiate lock
 		final Object termationLock = new Object();
