@@ -475,7 +475,8 @@ public class LoaderM {
 			{	long writeStart = System.currentTimeMillis();
 				storePart(getVertices(), getIntervals(), partitionId);
 //				EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
-				logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+//				logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+				logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
 			}
 
 			// 2.2. save degrees of partitions not in the next round
@@ -484,7 +485,8 @@ public class LoaderM {
 				long writeStart = System.currentTimeMillis();
 				storePartDegs(getVertices(), getIntervals(), partitionId);
 //				EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
-				logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+//				logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+				logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
 			}
 				
 			// 2.3. Remove saved partitions from LoadedVertexIntervals
@@ -630,7 +632,8 @@ public class LoaderM {
 			}
 		}
 //		EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
-		logger.info("output.IO||"+"read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
+//		logger.info("output.IO||"+"read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
+		logger.info("output.IO||"+"read," + (System.currentTimeMillis() - readStart) );
 	}
 
 	/**
@@ -821,7 +824,8 @@ public class LoaderM {
 		}
 		
 //		EngineM.getIO_outputStrm().println("read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
-		logger.info("output.IO||"+"read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
+//		logger.info("output.IO||"+"read," + Utilities.getDurationInHMS(System.currentTimeMillis() - readStart) );
+		logger.info("output.IO||"+"read," + (System.currentTimeMillis() - readStart) );
 
 		// test 
 		// logger.info("partEdges content after loading:");

@@ -589,7 +589,8 @@ public class ComputedPartProcessorM {
 			long writeStart = System.currentTimeMillis();
 			storePart(vertices, compsets, intervals, partitionId);
 //			EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
-			logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+//			logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+			logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
 		}
 			
 		// 3.2. save degree of those partitions.
@@ -599,7 +600,8 @@ public class ComputedPartProcessorM {
 			long writeStart = System.currentTimeMillis();
 			storePartDegs(vertices, intervals, partitionId);
 //			EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
-			logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+//			logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
+			logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
 		}
 		
 		// loaded intervals test before saving partitions 1/2
