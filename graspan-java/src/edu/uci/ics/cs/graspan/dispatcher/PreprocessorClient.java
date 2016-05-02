@@ -99,7 +99,7 @@ public class PreprocessorClient {
 			
 //			ppPartGen.calculateDuration(System.currentTimeMillis());
 //			logger.info("Generating partitions took: "+ GraspanTimer.getDurationInHMS(ppPartGen.getDuration()));
-			logger.info("Edge Adding from Erules took: " + Utilities.getDurationInHMS(System.currentTimeMillis()-pp_start));
+			logger.info("Generating partitions took: " + Utilities.getDurationInHMS(System.currentTimeMillis()-pp_start));
 		}
 	
 //		MemUsageCheckThread.memoryUsageOutput.close();

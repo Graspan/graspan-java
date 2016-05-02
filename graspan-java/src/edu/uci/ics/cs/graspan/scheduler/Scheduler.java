@@ -193,6 +193,8 @@ public class Scheduler {
 	 */
 	public boolean shouldTerminate() {
 		int size = allEdgeInfo.size();
+		
+//		logger.info(this+" Scheduler Termination Map");
 
 		for (int i = 0; i < allEdgeInfo.size(); i++) {
 			int partitionId = allEdgeInfo.get(i).getPartitionId();
@@ -233,9 +235,11 @@ public class Scheduler {
 		assert (intervals.size() == 2);
 
 		int loadedPartitionOne = intervals.get(0).getPartitionId();
-		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();
+//		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdges();//ORIGINAL
+		boolean isNewEdgeAddedForOne = intervals.get(0).hasNewEdgesInCurrentRound();
 		int loadedPartitionTwo = intervals.get(1).getPartitionId();
-		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();
+//		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdges();//ORIGINAL
+		boolean isNewEdgeAddedForTwo = intervals.get(1).hasNewEdgesInCurrentRound();;
 
 		logger.info("partitionId 1: " + loadedPartitionOne + ". New edges : "+ isNewEdgeAddedForOne);
 		logger.info("partitionId 2: " + loadedPartitionTwo + ". New edges : "+ isNewEdgeAddedForTwo);
@@ -250,7 +254,10 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionTwo, false);
+				{
+//				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionTwo, false); ORIGINAL
+				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionOne, false);
+				}
 		}
 
 		if (isNewEdgeAddedForTwo) {
@@ -260,7 +267,10 @@ public class Scheduler {
 
 			// set the column to false
 			for (int i = 0; i < allEdgeInfo.size(); i++)
-				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionOne, false);
+				{
+//				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionOne, false); ORIGINAL
+				allEdgeInfo.get(i).getTerminationInfo().set(loadedPartitionTwo, false);
+				}
 		}
 
 		terminationInfoForOne.set(loadedPartitionTwo, true);

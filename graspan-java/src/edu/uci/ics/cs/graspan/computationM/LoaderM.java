@@ -237,8 +237,7 @@ public class LoaderM {
 		 * Scan the partition allocation table file
 		 */
 		BufferedReader inPartAllocTabStrm = new BufferedReader(
-				new InputStreamReader(new FileInputStream(new File(baseFilename
-						+ ".partAllocTable"))));
+				new InputStreamReader(new FileInputStream(new File(baseFilename + ".partAllocTable"))));
 		String ln, tok[];
 
 //		int i = 0;

@@ -215,10 +215,6 @@ public class EngineM {
 		newEdgesInOne = 0;
 		newEdgesInTwo = 0;
 		
-		// reset new edge added flag for scheduler
-		intervals.get(0).setIsNewEdgeAdded(false);
-		intervals.get(1).setIsNewEdgeAdded(false);
-
 		// initiate lock
 		final Object termationLock = new Object();
 
@@ -289,7 +285,23 @@ public class EngineM {
 			intervals.get(0).setIsNewEdgeAdded(true);
 		if (newEdgesInTwo > 0)
 			intervals.get(1).setIsNewEdgeAdded(true);
-
+		
+		// set new edge added for current round flag for scheduler
+		if (newEdgesInOne > 0)
+		{
+			intervals.get(0).setHasNewEdgesInCurrentRound(true);
+		}
+		else{
+			intervals.get(0).setHasNewEdgesInCurrentRound(false);
+		}
+		if (newEdgesInTwo > 0)
+		{
+			intervals.get(1).setHasNewEdgesInCurrentRound(true);
+		}
+		else{
+			intervals.get(1).setHasNewEdgesInCurrentRound(false);
+		}
+		
 	}
 
 	private void updateEDCandTwoWayEDC(final Vertex[] vertices, final ComputationSet[] compSets, int i) {
@@ -297,7 +309,7 @@ public class EngineM {
 		long[][] edc = SchedulerInfo.getEdgeDestCount();
 		long[][] edcTwoWay = SchedulerInfo.getEdcTwoWay();
 
-		//1. get source vertex partition Id
+		 //1. get source vertex partition Id
 		 srcV = vertices[i].getVertexId();
 		 partA = PartitionQuerier.findPartition(srcV);
 		 

@@ -11,7 +11,12 @@ public class LoadedVertexInterval {
 	private int indexStart;
 	private int indexEnd;
 	private int partitionId;
+	
+	//THIS FLAG STORES WHETHER A NEW EDGE HAS BEEN ADDED FOR A PARTITION AFTER IT HAS BEEN LOADED, BEFORE IT HAS BEEN SAVED
 	private boolean isNewEdgeAdded;
+	
+	//THIS FLAG STORES WHETHER A NEW EDGE HAS BEEN ADDED FOR A PARTITION IN THE CURRENT ROUND
+	private boolean isNewEdgeAddedinCurrentRound; 
 
 	public LoadedVertexInterval(int firstVertex, int lastVertex, int partitionId) {
 		this.firstVertex = firstVertex;
@@ -85,6 +90,14 @@ public class LoadedVertexInterval {
 
 	public boolean hasNewEdges() {
 		return isNewEdgeAdded;
+	}
+	
+	public void setHasNewEdgesInCurrentRound(boolean isNewEdgeAddedinCurrentRound) {
+		this.isNewEdgeAddedinCurrentRound = isNewEdgeAddedinCurrentRound;
+	}
+
+	public boolean hasNewEdgesInCurrentRound() {
+		return isNewEdgeAddedinCurrentRound;
 	}
 
 	@Override
