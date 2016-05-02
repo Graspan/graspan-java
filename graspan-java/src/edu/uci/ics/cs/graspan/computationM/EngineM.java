@@ -180,6 +180,14 @@ public class EngineM {
 //		this.roundOutput.close();
 //		this.iterationOutput.close();
 //		getIO_outputStrm().close();
+		
+		//save part alloc table
+		logger.info(Arrays.deepToString(AllPartitions.partAllocTable));
+		PrintWriter partAllocTableOutStrm = new PrintWriter(GlobalParams.getBasefilename() + ".partAllocTable", "UTF-8");
+		for (int i = 0; i < AllPartitions.partAllocTable.length; i++) {
+			partAllocTableOutStrm.println(AllPartitions.partAllocTable[i][0] + "\t" + AllPartitions.partAllocTable[i][1]);
+		}
+		partAllocTableOutStrm.close();
 	}
 
 	/**
