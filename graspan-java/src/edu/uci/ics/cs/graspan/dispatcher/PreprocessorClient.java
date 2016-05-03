@@ -67,7 +67,7 @@ public class PreprocessorClient {
 		
 		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
 		
-		if (GlobalParams.getPPOperation().compareTo("+eRULE") == 0)
+		if (GlobalParams.getPPOperation().compareTo("erule") == 0)
 		// adding edges to the graph based on eRules
 		{
 			logger.info("PREPROCESSING: Start computing and adding edges from eRules...");
@@ -84,7 +84,7 @@ public class PreprocessorClient {
 			logger.info("Edge Adding from Erules took: "+ Utilities.getDurationInHMS(System.currentTimeMillis()-eAdd_start));
 		}
 
-		else if (GlobalParams.getPPOperation().compareTo("GenParts") == 0) 
+		else if (GlobalParams.getPPOperation().compareTo("genparts") == 0) 
 		// generate pp parts
 		{
 			logger.info("PREPROCESSING: Start generating partitions...");
