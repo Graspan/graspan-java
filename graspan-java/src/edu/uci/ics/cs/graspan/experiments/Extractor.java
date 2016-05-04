@@ -145,7 +145,7 @@ public class Extractor {
 				if (tok[1].compareTo("PM")==0){
 					hour+=12;
 				}
-				finishTime_hms=hour+":"+finishTime[1]+finishTime[2];
+				finishTime_hms=hour+","+finishTime[1]+","+finishTime[2];
 			}
 		}
 		this.numRounds=numRounds;
