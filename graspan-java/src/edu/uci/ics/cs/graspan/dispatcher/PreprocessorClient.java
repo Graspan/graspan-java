@@ -179,7 +179,7 @@ public class PreprocessorClient {
 		
 		compconfStrm.println("<START_CONFIG_FILE_BODY>");
 		compconfStrm.println();
-		compconfStrm.println("INPUT_GRAPH_FILEPATH = " + GlobalParams.getBasefilename() + ".eRulesAdded");
+		compconfStrm.println("INPUT_GRAPH_FILEPATH = " + GlobalParams.getBasefilename());
 		compconfStrm.println("TOTAL_NUM_PARTS = " + AllPartitions.getPartAllocTab().length);
 		compconfStrm.println("MAX_PART_SIZE_POST_NEW_EDGES = " + GlobalParams.getPartMaxPostNewEdges());
 		compconfStrm.println("RELOAD_PLAN = "+GlobalParams.getReloadPlan());
