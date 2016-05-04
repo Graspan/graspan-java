@@ -59,6 +59,10 @@ public class GlobalParams {
 	// The type of preprocessing operation: +eRULE or GenParts 
 	private static String ppOperation;
 
+	private static int heapSize;
+	
+	private static double pSizeConst, repartConst;
+
 	public static void setEdcSize(int num) {
 		EdcSize = num;
 	}
@@ -202,6 +206,30 @@ public class GlobalParams {
 	
 	public static String getPPOperation(){
 		return ppOperation;
+	}
+
+	public static void setHeapSize(int hs) {
+		heapSize=hs;
+	}
+	
+	public static int getHeapSize(){
+		return heapSize;
+	}
+	
+	public static void setRepartConst(double rc){
+		repartConst=rc;
+	}
+	
+	public static double getRepartConst(){
+		return repartConst;
+	}
+	
+	public static void setPSizeConst(double pc){
+		pSizeConst=pc;
+	}
+	
+	public static double getPSizeConst(){
+		return pSizeConst;
 	}
 
 }
