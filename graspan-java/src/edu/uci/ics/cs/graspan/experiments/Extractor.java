@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
@@ -33,6 +32,7 @@ public class Extractor {
 	// args[2] -- comp.output
 	// args[3] -- comp.gctimes.output
 	// args[4] -- comp.memusage.output
+	// args[5] -- basefilename
 	public static void main(String args[]) throws IOException {
 		Extractor extractor = new Extractor();
 		extractor.run(args);
@@ -56,15 +56,15 @@ public class Extractor {
 		scan_pmap(args);
 		
 		// write the file
-		printData();
+		printData(args);
 		
 	}
 	
-	private void printData() throws IOException{
+	private void printData(String[] args) throws IOException{
 			PrintWriter gptabStrm;
 			gptabStrm = new PrintWriter(new BufferedWriter(new FileWriter("graspanPerformance.Table.csv", true)));
 			
-			gptabStrm.println(this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
+			gptabStrm.println(args[5]+","+this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
 			this.pgenDuration_hms+","+this.numRounds+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage);
 			
 			gptabStrm.close();
@@ -138,7 +138,14 @@ public class Extractor {
 			if (ln.contains("Computation took")) {
 				tok = ln.split(" ");
 				totalDuration_hms = tok[tok.length - 1];
-				finishTime_hms=tok[0].replace(":", ",");
+				
+				//finding finish time
+				String finishTime[] = tok[0].split(":");
+				int hour = Integer.parseInt(finishTime[0]);
+				if (tok[1].compareTo("PM")==0){
+					hour+=12;
+				}
+				finishTime_hms=hour+":"+finishTime[1]+finishTime[2];
 			}
 		}
 		this.numRounds=numRounds;
