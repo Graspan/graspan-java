@@ -24,6 +24,8 @@ public class Extractor {
 	private String finishTime_hms;
 	private long finishTime_s, totalMemUsage;
 	
+	private long writeDuration, readDuration;
+	
 	private int numRounds;
 
 	// VERY IMPORTANT
@@ -65,7 +67,7 @@ public class Extractor {
 			gptabStrm = new PrintWriter(new BufferedWriter(new FileWriter("graspanPerformance.Table.csv", true)));
 			
 			gptabStrm.println(args[5]+","+this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
-			this.pgenDuration_hms+","+this.numRounds+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage);
+			this.pgenDuration_hms+","+this.numRounds+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage+","+this.readDuration+","+this.writeDuration);
 			
 			gptabStrm.close();
 	}
@@ -122,6 +124,7 @@ public class Extractor {
 		String[] tok;
 		int numRounds=0;
 		long numOfNewEdges=0;
+		long readDuration = 0, writeDuration=0;
 		String totalDuration_hms="",finishTime_hms="";
 		BufferedReader compStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[2]))));
 
@@ -147,11 +150,23 @@ public class Extractor {
 				}
 				finishTime_hms=hour+","+finishTime[1]+","+finishTime[2];
 			}
+			if (ln.contains("output.IO") & ln.contains("write")){
+				tok = ln.split("\\s+");
+				String[] outputIO = tok[tok.length-1].split(",");
+				writeDuration+=Long.parseLong(outputIO[outputIO.length-1]);
+			}
+			if (ln.contains("output.IO") & ln.contains("read")){
+				tok = ln.split("\\s+");
+				String[] outputIO = tok[tok.length-1].split(",");
+				readDuration+=Long.parseLong(outputIO[outputIO.length-1]);
+			}
 		}
 		this.numRounds=numRounds;
 		this.numOfNewEdges=numOfNewEdges;
 		this.totalDuration_hms=totalDuration_hms;
 		this.finishTime_hms=finishTime_hms;
+		this.writeDuration=writeDuration;
+		this.readDuration=readDuration;
 		compStrm.close();
 	}
 
