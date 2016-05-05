@@ -68,7 +68,7 @@ public class Extractor {
 			gptabStrm = new PrintWriter(new BufferedWriter(new FileWriter("graspanPerformance.Table.csv", true)));
 			
 			gptabStrm.println(args[5]+","+this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
-			this.pgenDuration_hms+","+this.numRounds+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage+","+this.readDuration+","+this.writeDuration);
+			this.pgenDuration_hms+","+this.numRounds+","+this.numRoundsWithRepartitioning+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage+","+this.readDuration+","+this.writeDuration);
 			
 			gptabStrm.close();
 	}
