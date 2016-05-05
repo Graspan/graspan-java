@@ -27,6 +27,7 @@ public class Extractor {
 	private long writeDuration, readDuration;
 	
 	private int numRounds;
+	private int numRoundsWithRepartitioning;
 
 	// VERY IMPORTANT
 	// args[0] -- pp.eadd.output
@@ -123,6 +124,7 @@ public class Extractor {
 		String ln;
 		String[] tok;
 		int numRounds=0;
+		int numRoundsWithoutRepart=0;
 		long numOfNewEdges=0;
 		long readDuration = 0, writeDuration=0;
 		String totalDuration_hms="",finishTime_hms="";
@@ -133,6 +135,11 @@ public class Extractor {
 				tok = ln.split("\\|\\|");
 //				logger.info(Arrays.deepToString(tok));
 				numRounds = Integer.parseInt(tok[tok.length-1].split(",")[0]);
+			}
+			if (ln.contains("No Parts Repartitioned.")) {
+				tok = ln.split("\\|\\|");
+//				logger.info(Arrays.deepToString(tok));
+				numRoundsWithoutRepart++;
 			}
 			if (ln.contains("Total Num of New Edges:")) {
 				tok = ln.split(" ");
@@ -162,6 +169,7 @@ public class Extractor {
 			}
 		}
 		this.numRounds=numRounds;
+		this.numRoundsWithRepartitioning=numRounds-numRoundsWithoutRepart;
 		this.numOfNewEdges=numOfNewEdges;
 		this.totalDuration_hms=totalDuration_hms;
 		this.finishTime_hms=finishTime_hms;
