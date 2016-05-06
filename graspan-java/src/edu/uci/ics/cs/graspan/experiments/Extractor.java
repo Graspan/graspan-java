@@ -103,6 +103,7 @@ public class Extractor {
 			}
 		}
 //		this.totalMemUsage = totalMemUsage;
+		this.maxMemUsage = maxMemUsage;
 		pmapStrm.close();
 	}
 
