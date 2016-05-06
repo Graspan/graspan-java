@@ -17,7 +17,7 @@ public class LoadedVertexInterval {
 	
 	//THIS FLAG STORES WHETHER A NEW EDGE HAS BEEN ADDED FOR A PARTITION IN THE CURRENT ROUND
 	private boolean isNewEdgeAddedinCurrentRound; 
-
+	
 	public LoadedVertexInterval(int firstVertex, int lastVertex, int partitionId) {
 		this.firstVertex = firstVertex;
 		this.lastVertex = lastVertex;

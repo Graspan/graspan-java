@@ -132,13 +132,21 @@ public class Extractor {
 		long numOfNewEdges=0;
 		long readDuration = 0, writeDuration=0;
 		String totalDuration_hms="",finishTime_hms="";
+		String[] roundOutputComponent=null; //round#,h,m,s,#edges
 		BufferedReader compStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[2]))));
 
+		PrintWriter edgesPRound;
+		edgesPRound = new PrintWriter(new BufferedWriter(new FileWriter("edgesPerRound.Table.csv", true)));
+		edgesPRound.println(args[5]);
+		
 		while ((ln = compStrm.readLine()) != null) {
 			if (ln.contains("output.round")) {
 				tok = ln.split("\\|\\|");
 //				logger.info(Arrays.deepToString(tok));
-				numRounds = Integer.parseInt(tok[tok.length-1].split(",")[0]);
+				roundOutputComponent = tok[tok.length-1].split(",");
+				numRounds = Integer.parseInt(roundOutputComponent[0]);
+//				numRounds = Integer.parseInt(tok[tok.length-1].split(",")[0]);
+				edgesPRound.println(numRounds + "," + roundOutputComponent[roundOutputComponent.length-1] );
 			}
 			if (ln.contains("No Parts Repartitioned.")) {
 				tok = ln.split("\\|\\|");
@@ -172,6 +180,7 @@ public class Extractor {
 				readDuration+=Long.parseLong(outputIO[outputIO.length-1]);
 			}
 		}
+		
 		this.numRounds=numRounds;
 		this.numRoundsWithRepartitioning=numRounds-numRoundsWithoutRepart;
 		this.numOfNewEdges=numOfNewEdges;
@@ -179,6 +188,7 @@ public class Extractor {
 		this.finishTime_hms=finishTime_hms;
 		this.writeDuration=writeDuration;
 		this.readDuration=readDuration;
+		edgesPRound.close();
 		compStrm.close();
 	}
 
