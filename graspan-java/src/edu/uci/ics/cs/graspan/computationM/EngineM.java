@@ -53,6 +53,8 @@ public class EngineM {
 	public List<LoadedVertexInterval> intervals_prevIt;
 	public static ComputationSet[] compSets_prevIt;
 	
+	private final static long MaxNumNewEdgesPerRoundOfComputation = 175000000;
+	
 	private int roundNo;
 //	private PrintWriter roundOutput;
 //	private PrintWriter iterationOutput;
@@ -143,7 +145,7 @@ public class EngineM {
 			// job1.start();
 
 			// do computation and add edges
-			computeForOneRound(vertices, compSets, intervals);
+			computeForOneRound(vertices, compSets, intervals, scheduler);
 			
 //			roundOutput.println(roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
 			logger.info("output.round ||"+roundNo + "," + Utilities.getDurationInHMS(System.currentTimeMillis() - roundStartTime) + "," + (newEdgesInOne + newEdgesInTwo));
@@ -216,12 +218,14 @@ public class EngineM {
 	 * @param edgeComputers
 	 * @param intervals
 	 */
-	private void computeForOneRound(final Vertex[] vertices, final ComputationSet[] compSets, List<LoadedVertexInterval> intervals) {
+	private void computeForOneRound(final Vertex[] vertices, final ComputationSet[] compSets, List<LoadedVertexInterval> intervals, Scheduler scheduler) {
 		if (vertices == null || vertices.length == 0)
 			return;
 
 		newEdgesInOne = 0;
 		newEdgesInTwo = 0;
+		
+		scheduler.setPrematureTerminationStatus(false);
 		
 		// initiate lock
 		final Object termationLock = new Object();
@@ -285,8 +289,15 @@ public class EngineM {
 //			iterationOutput.println(roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
 			logger.info("output.iteration||"+ roundNo + "," + iterationNo +","+ Utilities.getDurationInHMS(System.currentTimeMillis() - iterationStartTime) + "," + totalNewEdgsForIteratn);
 			logger.info("Finished iteration no. " + iterationNo + " took " + (System.currentTimeMillis() - iterationStartTime) / 1000 + " s");
+			logger.info("New edges added in this round, thus far: "+ (newEdgesInOne + newEdgesInTwo) );
+			if ((newEdgesInOne + newEdgesInTwo) > MaxNumNewEdgesPerRoundOfComputation) {
+//			if ((newEdgesInOne + newEdgesInTwo) > GlobalParams.getPartMaxPostNewEdges()) {
+				scheduler.setPrematureTerminationStatus(true);
+				logger.info("Premature Terminate! " + newEdgesInOne + " (newEdgesInOne) + " + newEdgesInTwo +" (newEdgesInTwo) >"+ MaxNumNewEdgesPerRoundOfComputation);
+			}
+			
 		} 
-		while (totalNewEdgsForIteratn > 0);
+		while (totalNewEdgsForIteratn > 0 & scheduler.getPrematureTerminationStatus()==false);
 
 		// set new edge added flag for scheduler
 		if (newEdgesInOne > 0)

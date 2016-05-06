@@ -17,6 +17,7 @@ public class Scheduler {
 	private List<Long> partitionNumEdges = new ArrayList<Long>();
 	private List<LoadedVertexInterval> intervals = null;
 	private static final Logger logger = GraspanLogger.getLogger("Scheduler");
+	private boolean premature_terminate_status;
 
 	// for temp use
 	public static int counterOne = 0;
@@ -85,6 +86,8 @@ public class Scheduler {
 	 * @return
 	 */
 	public int[] schedulePartitionSimple(int numOfPartitions) {
+		logger.info("Scheduling using Simple Scheduler.");
+		
 		int[] scheduled = new int[2];
 
 		// schedule two partitions every time
@@ -109,6 +112,7 @@ public class Scheduler {
 	 * @return
 	 */
 	public int[] schedulePartitionEDC(int numOfPartitions) {
+		logger.info("Scheduling using EDC-based Scheduler");
 //		int partA = 0, partB = 0;
 //		long partA_Size = 0;
 //		long partB_Size = 0;
@@ -273,8 +277,11 @@ public class Scheduler {
 				}
 		}
 
+		if (this.getPrematureTerminationStatus()==false){
 		terminationInfoForOne.set(loadedPartitionTwo, true);
 		terminationInfoForTwo.set(loadedPartitionOne, true);
+		}
+		
 	}
 
 	/**
@@ -310,5 +317,12 @@ public class Scheduler {
 			result.append(NEW_LINE + info.toString());
 
 		return result.toString();
+	}
+	
+	public void setPrematureTerminationStatus(boolean status){
+		premature_terminate_status=status;
+	}
+	public boolean getPrematureTerminationStatus(){
+		return premature_terminate_status;
 	}
 }

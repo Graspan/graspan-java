@@ -116,25 +116,25 @@ public class PreprocessorClient {
 			 */
 			
 			double gSize = getSizeOfGraphWithEREdgs_MB();
-//			logger.info(gSize+"");
+			logger.info(gSize+"");
 			
 			double pSize_expected = getExpectedPartSize_MB();
-//			logger.info("pSize_expected "+pSize_expected);
+			logger.info("pSize_expected "+pSize_expected);
 			
 			double gSize_to_pSizeExpected = (double) gSize/pSize_expected;
-//			logger.info("gSize_to_pSizeExpected "+gSize_to_pSizeExpected);
+			logger.info("gSize_to_pSizeExpected "+gSize_to_pSizeExpected);
 			
 			int numparts_torequest = getNumOfPartsToRequest(gSize_to_pSizeExpected);
-//			logger.info("numparts_torequest "+numparts_torequest);
+			logger.info("numparts_torequest "+numparts_torequest);
 			
 			double pSize_asPerNumparts_torequest = (double)gSize/numparts_torequest;
-//			logger.info("pSize_asPerNumparts_torequest "+pSize_asPerNumparts_torequest);
+			logger.info("pSize_asPerNumparts_torequest "+pSize_asPerNumparts_torequest);
 			
 			double pSize_postNewEdges_MB = getPSize_postNewEdges_MB(pSize_asPerNumparts_torequest);
-//			logger.info("pSize_postNewEdges_MB "+pSize_postNewEdges_MB);
+			logger.info("pSize_postNewEdges_MB "+pSize_postNewEdges_MB);
 			
-			double pSize_postNewEdges_inNumOfEdges = pSize_postNewEdges_MB * 50000;
-//			logger.info("pSize_postNewEdges_inNumOfEdges "+pSize_postNewEdges_inNumOfEdges);
+			double pSize_postNewEdges_inNumOfEdges = pSize_postNewEdges_MB * 50000;//1MB of Graph rougly equal to 50000 edges on disk
+			logger.info("pSize_postNewEdges_inNumOfEdges "+pSize_postNewEdges_inNumOfEdges);
 			
 			printValstoPgenconfFile(numparts_torequest, pSize_postNewEdges_inNumOfEdges);
 			
