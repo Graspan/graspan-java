@@ -22,7 +22,7 @@ public class Extractor {
 	
 	private static final Logger logger = GraspanLogger.getLogger("Extractor");
 	private String finishTime_hms;
-	private long finishTime_s, totalMemUsage;
+	private long finishTime_s, totalMemUsage, maxMemUsage;
 	
 	private long writeDuration, readDuration;
 	
@@ -68,7 +68,7 @@ public class Extractor {
 			gptabStrm = new PrintWriter(new BufferedWriter(new FileWriter("graspanPerformance.Table.csv", true)));
 			
 			gptabStrm.println(args[5]+","+this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
-			this.pgenDuration_hms+","+this.numRounds+","+this.numRoundsWithRepartitioning+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.totalMemUsage+","+this.readDuration+","+this.writeDuration);
+			this.pgenDuration_hms+","+this.numRounds+","+this.numRoundsWithRepartitioning+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.maxMemUsage+","+this.readDuration+","+this.writeDuration);
 			
 			gptabStrm.close();
 	}
@@ -76,7 +76,7 @@ public class Extractor {
 	private void scan_pmap(String[] args) throws FileNotFoundException, IOException {
 		String ln,time ;
 		String[] tok, timeparts;
-		long currentTime_s=0, totalMemUsage=0;
+		long currentTime_s=0, totalMemUsage=0, maxMemUsage=0;
 		
 		BufferedReader pmapStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[4]))));
 
@@ -95,11 +95,14 @@ public class Extractor {
 				}
 				
 				if (tok.length > 1) {
-					totalMemUsage += Long.parseLong(tok[2]);
+					if (Long.parseLong(tok[2]) > maxMemUsage) {
+						maxMemUsage = Long.parseLong(tok[2]);
+					}
+//					totalMemUsage += Long.parseLong(tok[2]);
 				}
 			}
 		}
-		this.totalMemUsage = totalMemUsage;
+//		this.totalMemUsage = totalMemUsage;
 		pmapStrm.close();
 	}
 
