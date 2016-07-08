@@ -41,7 +41,8 @@ public class PreprocessorClient {
 		while ((ln = preprocessorConfigStream.readLine()) != null) {
 			tok = ln.split(" ");
 			if (tok[0].compareTo("INPUT_GRAPH_FILEPATH") == 0) {
-				GlobalParams.setBasefilename(tok[2].trim());
+//				GlobalParams.setBasefilename(tok[2].trim());//TODO: SWITCH BACK LATER.
+				GlobalParams.setBasefilename(args[1]);
 			}
 			if (tok[0].compareTo("TOTAL_NUM_PARTS") == 0) {
 				GlobalParams.setNumParts(Integer.parseInt(tok[2]));
@@ -62,19 +63,23 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("PREPROCESSING_OPERATION")==0){
 				GlobalParams.setPPOperation(tok[2].trim());
 			}
-			if (tok[0].compareTo("HEAP_SIZE(GB)")==0){
+			
+			
+			// THE FOLLOWING ARE NOT USED FOR PREPROCESSING, BUT USED TO GENERATE THE CONFIG FILE 
+			// OF FOR THE COMPUTATION
+			if (tok[0].compareTo("HEAP_SIZE(GB)")==0){ 
 				GlobalParams.setHeapSize(Integer.parseInt(tok[2].trim()));
 			}
-			if (tok[0].compareTo("PART_SIZE_CONST")==0){
+			if (tok[0].compareTo("PART_SIZE_CONST")==0){ 
 				GlobalParams.setPSizeConst(Double.parseDouble(tok[2].trim()));
 			}
-			if (tok[0].compareTo("REPART_SIZE_CONST")==0){
+			if (tok[0].compareTo("REPART_SIZE_CONST")==0){ 
 				GlobalParams.setRepartConst(Double.parseDouble(tok[2].trim()));
 			}
-			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) {
+			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) { 
 				GlobalParams.setComputationLogic(tok[2]);
 			}
-			if (tok[0].compareTo("NUM_OF_THREADS") == 0) {
+			if (tok[0].compareTo("NUM_OF_THREADS") == 0) { 
 				GlobalParams.setNumThreads(Integer.parseInt(tok[2]));
 			}
 			if (tok[0].compareTo("MAX_PART_SIZE_POST_NEW_EDGES") == 0) {
@@ -83,6 +88,8 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
 			}
+			
+			
 		}
 
 		preprocessorConfigStream.close();
@@ -192,8 +199,7 @@ public class PreprocessorClient {
 		compconfStrm.close();
 	}
 
-	private static void printValstoPgenconfFile(int numparts_torequest, double pSize_postNewEdges_inNumOfEdges)
-			throws IOException {
+	private static void printValstoPgenconfFile(int numparts_torequest, double pSize_postNewEdges_inNumOfEdges) throws IOException {
 		PrintWriter pgenconfStrm;
 		pgenconfStrm = new PrintWriter(new BufferedWriter(new FileWriter("pp.pgen.config", true)));
 		
