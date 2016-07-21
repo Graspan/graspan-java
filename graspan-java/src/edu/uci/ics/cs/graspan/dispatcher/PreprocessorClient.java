@@ -66,7 +66,7 @@ public class PreprocessorClient {
 			
 			
 			// THE FOLLOWING ARE NOT USED FOR PREPROCESSING, BUT USED TO GENERATE THE CONFIG FILE 
-			// OF FOR THE COMPUTATION
+			// FOR THE COMPUTATION
 			if (tok[0].compareTo("HEAP_SIZE(GB)")==0){ 
 				GlobalParams.setHeapSize(Integer.parseInt(tok[2].trim()));
 			}
@@ -118,6 +118,7 @@ public class PreprocessorClient {
 //			logger.info("Edge Adding from Erules took: "+ GraspanTimer.getDurationInHMS(ppERedgeAdding.getDuration()));
 			logger.info("Edge Adding from Erules took: "+ Utilities.getDurationInHMS(System.currentTimeMillis()-eAdd_start));
 			
+			
 			/*
 			 * Generating pp.pgen.config file for partition generation process
 			 */
@@ -167,7 +168,7 @@ public class PreprocessorClient {
 			logger.info("Generating partitions took: " + Utilities.getDurationInHMS(System.currentTimeMillis()-pp_start));
 			
 			/*
-			 * Generating pp.pgen.config file for partition generation process
+			 * Generating comp.config file for computation process
 			 */
 			
 			printValstoCompconfFile();
