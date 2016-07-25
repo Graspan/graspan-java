@@ -17,10 +17,10 @@ public class MinSet {
 		return minSetId;
 	}
 
-	public MinSet(int minSetId) {
+	public MinSet(int minSetId) { //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 		ptr = 0;
 		this.minSetId = minSetId;
-		evals = new HashSet<Byte>();
+		evals = new HashSet<Byte>(); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 	}
 
 	public int getCurrentVId() {

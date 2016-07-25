@@ -57,7 +57,7 @@ public class SortedArrMerger {
 		// src_oldUnewUdelta
 		int cumTgtRowsSize = 0;
 		for (int i = 0; i < edgArrstoMerge.length; i++) {
-			MinSet minSet = new MinSet(i);
+			MinSet minSet = new MinSet(i);//TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 			createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			minSets[i] = minSet;
 			
@@ -104,21 +104,21 @@ public class SortedArrMerger {
 				int rowIdOfTgtMinSet = minSetFrmTgtRows.getMinSetId();
 
 				processMinSets(minSetFromSrcRow, minSetFrmTgtRows, edgArrstoMerge[srcRowId], valArrstoMerge[srcRowId],
-						edgArrstoMerge[rowIdOfTgtMinSet], valArrstoMerge[rowIdOfTgtMinSet]);
+						edgArrstoMerge[rowIdOfTgtMinSet], valArrstoMerge[rowIdOfTgtMinSet]); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
 			}
 
 		}
 
 		// removing the empty values in output components: delta and oldUnewUdelta
-		removeRedundantArraySpace();
+		removeRedundantArraySpace(); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
 	}
 
 	/**
 	 * Removes empty slots the arrays
 	 */
-	private void removeRedundantArraySpace() {
+	private void removeRedundantArraySpace() { //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 		// removing empty values from src_oldUnewUdelta_edgs
 		int[] tempEdgs = new int[oldUnewUdelta_ptr + 1];
 		byte[] tempVals = new byte[oldUnewUdelta_ptr + 1];
@@ -323,14 +323,14 @@ public class SortedArrMerger {
 			evals_src = minSetFrmSrcRow.getEvals();
 
 			// add the source row minSet to src_oldUnewUdelta
-			for (Byte src_eval : evals_src) {
+			for (Byte src_eval : evals_src) { //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 				if (!currentEvals.contains(src_eval)) {
 
 					oldUnewUdelta_ptr++;
 					if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
 						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmSrcRow.getCurrentVId();
 						src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = src_eval;
-						currentEvals.add(src_eval);
+						currentEvals.add(src_eval); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 					} else {
 						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
 								+ Thread.currentThread().getId());

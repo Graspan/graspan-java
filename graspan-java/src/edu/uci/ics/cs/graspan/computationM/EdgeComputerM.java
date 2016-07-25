@@ -20,7 +20,6 @@ public class EdgeComputerM {
 
 	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
-	
 	/**
 	 * 
 	 * @param i
@@ -91,21 +90,21 @@ public class EdgeComputerM {
 		rows_to_merge_id++;
 		
 		//for singleton rule
-		rows_to_merge_id = genEdgesToMergeForSRule(newEdgs, newVals, edgArrstoMerge, valArrstoMerge, rows_to_merge_id);
+		rows_to_merge_id = genEdgesToMergeForSRule(newEdgs, newVals, edgArrstoMerge, valArrstoMerge, rows_to_merge_id); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 		
 		//for length 2 rule
 		rows_to_merge_id = genEdgesToMerge(compSets, newRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "old");
 		rows_to_merge_id = genEdgesToMerge(compSets, oldUnewRowIndicesToMerge, edgArrstoMerge, valArrstoMerge, rows_to_merge_id, "new");
 		
 
-		// -------------------------------------------------------------------------------
+		//-------------------------------------------------------------------------------
 		// 4. call the SortedArrMerger merge function
 		SortedArrMerger sortedArrMerger = new SortedArrMerger();
 		// logger.info("Vertex ID: " + this.vertex.getVertexId());
 		int srcRowId = 0;
-		sortedArrMerger.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId);
+		sortedArrMerger.mergeTgtstoSrc(edgArrstoMerge, valArrstoMerge, srcRowId); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
-		// -------------------------------------------------------------------------------
+		//-------------------------------------------------------------------------------
 		compSet.setDeltaEdges(sortedArrMerger.get_src_delta_edgs());
 		compSet.setDeltaVals(sortedArrMerger.get_src_delta_vals());
 		compSet.setOldUnewUdeltaEdgs(sortedArrMerger.get_src_oldUnewUdelta_edgs());
@@ -128,7 +127,7 @@ public class EdgeComputerM {
 	 */
 	private static int genEdgesToMergeForSRule(int[] newEdgs, byte[] newVals, int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id) {
 		//get the resulting edge and value array
-		List<IdValuePair> list = new ArrayList<IdValuePair>();
+		List<IdValuePair> list = new ArrayList<IdValuePair>();//TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. 
 		for(int i = 0; i < newEdgs.length; i++){
 			int dstId = newEdgs[i];
 			byte dstVal = newVals[i];
