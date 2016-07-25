@@ -145,8 +145,7 @@ public class Preprocessor {
 		// be later filled in by generatePartDegs())
 		partDegOutStrms = new PrintWriter[numParts];
 		for (int i = 0; i < numParts; i++) {
-			partDegOutStrms[i] = new PrintWriter(
-					new BufferedWriter(new FileWriter(baseFilename + ".partition." + i + ".degrees", true)));
+			partDegOutStrms[i] = new PrintWriter(new BufferedWriter(new FileWriter(baseFilename + ".partition." + i + ".degrees", true)));
 		}
 		logger.info("Done");
 		
@@ -422,11 +421,10 @@ public class Preprocessor {
 						dst = Integer.parseInt(tok[1]);
 					}
 
-					// ignore edge-value if dataflow
-					if (GlobalParams.getInputGraphType().compareTo("DATAFLOW") == 0) {
+					if (GlobalParams.getInputGraphType().compareTo("NOEDGEVALS") == 0) {
 						eval = 0;
 					}
-					if (GlobalParams.getInputGraphType().compareTo("POINTSTO") == 0) {
+					if (GlobalParams.getInputGraphType().compareTo("EDGEVALS") == 0) {
 						// if (tok[2].compareTo("D") == 0) {
 						// eval = 9;
 						// }
