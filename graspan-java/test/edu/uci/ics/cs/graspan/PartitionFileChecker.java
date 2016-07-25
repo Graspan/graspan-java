@@ -42,11 +42,12 @@ public class PartitionFileChecker {
 		// readPartitionFile(baseFilename);
 	
 		//read all partition files
-		for (int i = 0; i < numParts; i++) {
+//		for (int i = 0; i < numParts; i++) {
+		int i=1;
 		logger.info("partition " + i);
 //			System.out.println("partition " +partId);
 			readAndPrint(i);
-		}
+//		}
 
 	}
 
@@ -64,7 +65,7 @@ public class PartitionFileChecker {
 				
 				srcVId = dataIn.readInt();
 			
-				if (srcVId==reqVertexId)
+//				if (srcVId==reqVertexId)
 				{
 					// srcVId
 					System.out.println("src " + srcVId);
@@ -84,15 +85,6 @@ public class PartitionFileChecker {
 
 					}
 					System.out.println("=====");
-				}
-				else{
-					// count (number of destVs from srcV in the current list)
-					int count = dataIn.readInt();
-
-					for (int i = 0; i < count; i++) {
-						dataIn.readInt();
-						dataIn.readByte();
-					}
 				}
 
 			} catch (Exception exception) {
