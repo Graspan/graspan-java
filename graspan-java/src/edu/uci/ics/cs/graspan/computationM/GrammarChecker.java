@@ -73,7 +73,6 @@ public class GrammarChecker {
 	
 	
 	public static Byte getValue(String string) {
-		// TODO Auto-generated method stub
 		string = string.trim();
 		if(map.containsKey(string)){
 			return map.get(string);
@@ -88,6 +87,10 @@ public class GrammarChecker {
 	
 	public static String getValue(Byte e){
 		return reverse_map.get(e);
+	}
+	
+	public static int getNumOfGrammarSymbols(){
+		return map.size();
 	}
 
 

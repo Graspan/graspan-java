@@ -16,7 +16,8 @@ public class SortedArrMerger {
 
 	private int currentId;
 
-	private HashSet<Byte> currentEvals = new HashSet<Byte>();
+//	private HashSet<Byte> currentEvals = new HashSet<Byte>();// TODO: Need to change this to byte array :DONE
+	private byte[] currentEvals_arr;
 
 	private int[] src_delta_edgs;
 	private byte[] src_delta_vals;
@@ -26,8 +27,40 @@ public class SortedArrMerger {
 	private PriorityQueue<MinSet> targetRowsMinHeap;
 
 	public SortedArrMerger() {
-		// delta_ptr = -1;
+		currentEvals_arr = new byte[GrammarChecker.getNumOfGrammarSymbols()];
+		clearEvalsArr(currentEvals_arr);
+//		logger.info("currentEvals_arr"+currentEvals_arr.length);
 	}
+	
+	//*** new ds implementation methods ***
+	public void clearEvalsArr(byte arr[]){
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = -1;
+		}
+	}
+	
+	public void addtoEvalsArr(byte arr[],byte eval){
+		for (int i=0;i<arr.length;i++){
+			if (currentEvals_arr[i]==-1){
+				currentEvals_arr[i]=eval;
+				break;
+			}
+		}
+	}
+	
+	public boolean evalsArrContains(byte arr[], byte eval){
+//		logger.info(arr.length+"LOOK HERE");
+		for (int i=0;i<arr.length;i++){
+			if (arr[i]==eval){
+				return true;
+			}
+			if (arr[i]==-1){
+				break;
+			}
+		}
+		return false;
+	}
+	
 
 	/**
 	 * 
@@ -45,7 +78,7 @@ public class SortedArrMerger {
 
 		// MIN_SETS ARRAY
 		MinSet[] minSets = new MinSet[edgArrstoMerge.length];
-		
+
 		targetRowsMinHeap = new PriorityQueue<MinSet>(edgArrstoMerge.length, new Comparator<MinSet>() {
 			@Override
 			public int compare(MinSet o1, MinSet o2) {
@@ -57,12 +90,12 @@ public class SortedArrMerger {
 		// src_oldUnewUdelta
 		int cumTgtRowsSize = 0;
 		for (int i = 0; i < edgArrstoMerge.length; i++) {
-			MinSet minSet = new MinSet(i);//TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+			MinSet minSet = new MinSet(i);// TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. :DONE
 			createNextMinSet(minSet, edgArrstoMerge[i], valArrstoMerge[i]);
 			minSets[i] = minSet;
-			
+
 			// add each target row minSet to minHeap
-			if(i != srcRowId)
+			if (i != srcRowId)
 				targetRowsMinHeap.offer(minSet);
 
 			if (i != srcRowId)
@@ -94,31 +127,29 @@ public class SortedArrMerger {
 			while (true) {
 				// pick the min set from source row and min set from target rows
 				MinSet minSetFromSrcRow = minSets[srcRowId];
-//				MinSet minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
+				// MinSet minSetFrmTgtRows = getNextMinSetFrmTgtRows(minSets, srcRowId);
 				MinSet minSetFrmTgtRows = targetRowsMinHeap.peek();
-				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE
-						&& minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
+				if (minSetFromSrcRow.getCurrentVId() == Integer.MAX_VALUE && minSetFrmTgtRows.getCurrentVId() == Integer.MAX_VALUE) {
 					break;
 				}
 
 				int rowIdOfTgtMinSet = minSetFrmTgtRows.getMinSetId();
 
 				processMinSets(minSetFromSrcRow, minSetFrmTgtRows, edgArrstoMerge[srcRowId], valArrstoMerge[srcRowId],
-						edgArrstoMerge[rowIdOfTgtMinSet], valArrstoMerge[rowIdOfTgtMinSet]); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+						edgArrstoMerge[rowIdOfTgtMinSet], valArrstoMerge[rowIdOfTgtMinSet]); // TODO: NEED TO FIX.IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. :DONE
 
 			}
-
 		}
 
 		// removing the empty values in output components: delta and oldUnewUdelta
-		removeRedundantArraySpace(); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+		removeRedundantArraySpace(); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
 	}
 
 	/**
 	 * Removes empty slots the arrays
 	 */
-	private void removeRedundantArraySpace() { //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+	private void removeRedundantArraySpace() { // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 		// removing empty values from src_oldUnewUdelta_edgs
 		int[] tempEdgs = new int[oldUnewUdelta_ptr + 1];
 		byte[] tempVals = new byte[oldUnewUdelta_ptr + 1];
@@ -149,7 +180,6 @@ public class SortedArrMerger {
 	}
 
 	private void processMinSetsForNull(int[] srcEdgRow, byte[] srcValRow) {
-		// TODO Auto-generated method stub
 
 		// add the source row minSet to src_oldUnewUdelta
 		for (int i = 0; i < srcEdgRow.length; i++) {
@@ -179,10 +209,12 @@ public class SortedArrMerger {
 		// logger.info("Updating MinSet no. " + minSet.getMinSetId() +
 		// " ThreadNo:" + Thread.currentThread().getId());
 		minSet.setCurrentVId(Integer.MAX_VALUE);
-		minSet.clearEvalSet();
+//		minSet.clearEvalSet(); //TODO: TO SWITCH METHOD :DONE
+		minSet.clearEvalArr();
 		for (int i = minSet.getPtr(); i < edgRow.length && edgRow[i] <= minSet.getCurrentVId(); i++) {
 			minSet.setCurrentVId(edgRow[i]);
-			minSet.addEval(valRow[i]);
+//			minSet.addEval(valRow[i]);//TODO: TO SWITCH METHOD :DONE
+			minSet.addToEvalArr(valRow[i]);
 			minSet.incrementPtr();
 		}
 	}
@@ -209,7 +241,7 @@ public class SortedArrMerger {
 		}
 		return minset;
 	}
-	
+
 	public void processMinSets(MinSet minSetFrmSrcRow, MinSet minSetFrmTgtRows, int[] srcEdgRow, byte[] srcValRow,
 			int[] tgtEdgRow, byte[] tgtValRow) {
 
@@ -217,21 +249,27 @@ public class SortedArrMerger {
 		if (minSetFrmTgtRows.getCurrentVId() < minSetFrmSrcRow.getCurrentVId()) {
 			if (currentId != minSetFrmTgtRows.getCurrentVId()) {
 				currentId = minSetFrmTgtRows.getCurrentVId();
-				currentEvals.clear();
+//				currentEvals.clear(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+				clearEvalsArr(currentEvals_arr);
+				
 			}
 
-			HashSet<Byte> evals_tgt = minSetFrmTgtRows.getEvals();
-			for (Byte tgt_eval : evals_tgt) {
-				if (!currentEvals.contains(tgt_eval)) {
+//			HashSet<Byte> evals_tgt = minSetFrmTgtRows.getEvals(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE 
+			byte[] evals_tgt_arr = minSetFrmTgtRows.getEvalsArr();
 
+//			for (Byte tgt_eval : evals_tgt) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+//				if (!currentEvals.contains(tgt_eval)) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			for (byte tgt_eval : evals_tgt_arr) {
+				if (tgt_eval!=-1 & !this.evalsArrContains(currentEvals_arr, tgt_eval)){
+					
+					
 					// add the target row minSet to src_oldUnewUdelta
 					oldUnewUdelta_ptr++;
 					if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
 						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmTgtRows.getCurrentVId();
 						src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = tgt_eval;
 					} else {
-						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
-								+ Thread.currentThread().getId());
+						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:" + Thread.currentThread().getId());
 					}
 
 					// add the target row minSet to delta
@@ -239,7 +277,10 @@ public class SortedArrMerger {
 					if (delta_ptr < src_delta_edgs.length) {
 						src_delta_edgs[delta_ptr] = minSetFrmTgtRows.getCurrentVId();
 						src_delta_vals[delta_ptr] = tgt_eval;
-						currentEvals.add(tgt_eval);
+//						currentEvals.add(tgt_eval); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+						this.addtoEvalsArr(currentEvals_arr, tgt_eval);
+						
+						
 					} else {
 						logger.info("Error, delta_ptr has gone past the size the array!" + " ThreadNo:"
 								+ Thread.currentThread().getId());
@@ -248,7 +289,7 @@ public class SortedArrMerger {
 			}
 			// remove min from minheap
 			targetRowsMinHeap.remove(minSetFrmTgtRows);
-			
+
 			// increment the pointers for this minset
 			if (tgtEdgRow.length > 0) {
 				createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
@@ -263,17 +304,28 @@ public class SortedArrMerger {
 		if (minSetFrmTgtRows.getCurrentVId() == minSetFrmSrcRow.getCurrentVId()) {
 			if (currentId != minSetFrmTgtRows.getCurrentVId()) {
 				currentId = minSetFrmTgtRows.getCurrentVId();
-				currentEvals.clear();
+//				currentEvals.clear(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+				clearEvalsArr(currentEvals_arr);
 			}
-			HashSet<Byte> evals_src, evals_tgt;
-			evals_tgt = minSetFrmTgtRows.getEvals();
-			evals_src = minSetFrmSrcRow.getEvals();
-
-			for (Byte tgt_eval : evals_tgt) {
+//			HashSet<Byte> evals_src, evals_tgt; // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			byte[] evals_src_arr, evals_tgt_arr;
+			
+			
+//			evals_tgt = minSetFrmTgtRows.getEvals(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			evals_tgt_arr = minSetFrmTgtRows.getEvalsArr();
+			
+//			evals_src = minSetFrmSrcRow.getEvals(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			evals_src_arr = minSetFrmSrcRow.getEvalsArr();
+			
+//			for (Byte tgt_eval : evals_tgt) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			for (byte tgt_eval : evals_tgt_arr) {
+				
 				// compare the src evals and the tgt evals
-				if (!evals_src.contains(tgt_eval)) {
+//				if (!evals_src.contains(tgt_eval)) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+				if (tgt_eval!=-1 & !this.evalsArrContains(evals_src_arr, tgt_eval)){
 
-					if (!currentEvals.contains(tgt_eval)) {
+//					if (!currentEvals.contains(tgt_eval)) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+					if (!this.evalsArrContains(currentEvals_arr, tgt_eval)){
 
 						// add the target row minSet to src_oldUnewUdelta
 						oldUnewUdelta_ptr++;
@@ -290,7 +342,8 @@ public class SortedArrMerger {
 						if (delta_ptr < src_delta_edgs.length) {
 							src_delta_edgs[delta_ptr] = minSetFrmTgtRows.getCurrentVId();
 							src_delta_vals[delta_ptr] = tgt_eval;
-							currentEvals.add(tgt_eval);
+//							currentEvals.add(tgt_eval); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+							this.addtoEvalsArr(currentEvals_arr, tgt_eval);
 						} else {
 							logger.info("Error, delta_ptr has gone past the size the array!" + " ThreadNo:"
 									+ Thread.currentThread().getId());
@@ -300,9 +353,9 @@ public class SortedArrMerger {
 			}
 			// remove min from minheap
 			targetRowsMinHeap.remove(minSetFrmTgtRows);
-			
+
 			// increment the pointers for this minset
-			if(tgtEdgRow.length > 0) {
+			if (tgtEdgRow.length > 0) {
 				createNextMinSet(minSetFrmTgtRows, tgtEdgRow, tgtValRow);
 				// add current minset to minheap
 				targetRowsMinHeap.offer(minSetFrmTgtRows);
@@ -315,25 +368,29 @@ public class SortedArrMerger {
 
 			if (currentId != minSetFrmSrcRow.getCurrentVId()) {
 				currentId = minSetFrmSrcRow.getCurrentVId();
-				currentEvals.clear();
+//				currentEvals.clear(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+				this.clearEvalsArr(currentEvals_arr);
 			}
 
-			HashSet<Byte> evals_src;
+//			HashSet<Byte> evals_src; // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			byte[] evals_src_arr;
 
-			evals_src = minSetFrmSrcRow.getEvals();
+//			evals_src = minSetFrmSrcRow.getEvals(); // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+			evals_src_arr = minSetFrmSrcRow.getEvalsArr();
 
 			// add the source row minSet to src_oldUnewUdelta
-			for (Byte src_eval : evals_src) { //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
-				if (!currentEvals.contains(src_eval)) {
-
+//			for (Byte src_eval : evals_src) { // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. :DONE
+			for (byte src_eval : evals_src_arr) {
+//				if (!currentEvals.contains(src_eval)) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+				if (src_eval!=-1 & !evalsArrContains(currentEvals_arr, src_eval)){
 					oldUnewUdelta_ptr++;
 					if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
 						src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = minSetFrmSrcRow.getCurrentVId();
 						src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = src_eval;
-						currentEvals.add(src_eval); //TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+//						currentEvals.add(src_eval); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. :DONE
+						this.addtoEvalsArr(currentEvals_arr, src_eval);
 					} else {
-						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
-								+ Thread.currentThread().getId());
+						logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:" + Thread.currentThread().getId());
 					}
 				}
 			}
