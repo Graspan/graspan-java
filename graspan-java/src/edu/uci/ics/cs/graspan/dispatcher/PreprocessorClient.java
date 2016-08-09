@@ -41,8 +41,8 @@ public class PreprocessorClient {
 		while ((ln = preprocessorConfigStream.readLine()) != null) {
 			tok = ln.split(" ");
 			if (tok[0].compareTo("INPUT_GRAPH_FILEPATH") == 0) {
-//				GlobalParams.setBasefilename(tok[2].trim());//TODO: SWITCH BACK LATER.
-				GlobalParams.setBasefilename(args[1]);
+//				GlobalParams.setBasefilename(tok[2].trim());//use when running through EclipseIDE TODO
+				GlobalParams.setBasefilename(args[1]);//use when running as .jar
 			}
 			if (tok[0].compareTo("TOTAL_NUM_PARTS") == 0) {
 				GlobalParams.setNumParts(Integer.parseInt(tok[2]));
@@ -85,11 +85,12 @@ public class PreprocessorClient {
 			if (tok[0].compareTo("MAX_PART_SIZE_POST_NEW_EDGES") == 0) {
 				GlobalParams.setPartMaxPostNewEdges(Integer.parseInt(tok[2]));
 			}
+			if (tok[0].compareTo("ANALYSIS_TYPE") == 0) {// POINTSTO OR DATAFLOW (IF DATAFLOW NO ERULES ARE ADDED)
+				GlobalParams.setAnalysisType(tok[2]);
+			}
 			if (tok[0].compareTo("<END_CONFIG_FILE_BODY>") == 0) {
 				break;
 			}
-			
-			
 		}
 
 		preprocessorConfigStream.close();
@@ -109,14 +110,20 @@ public class PreprocessorClient {
 //			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
 			long eAdd_start = System.currentTimeMillis();
 			
+			if (GlobalParams.getAnalysisType().compareTo("POINTSTO")==0)
+			{
 			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
 			edgeAdder.run();
+			}
+			else{
+				logger.info("No erules to add.");
+			}
 			
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
 			
 //			ppERedgeAdding.calculateDuration(System.currentTimeMillis());
 //			logger.info("Edge Adding from Erules took: "+ GraspanTimer.getDurationInHMS(ppERedgeAdding.getDuration()));
-			logger.info("Edge Adding from Erules took: "+ Utilities.getDurationInHMS(System.currentTimeMillis()-eAdd_start));
+			logger.info("Edge Adding from Erules took: " + Utilities.getDurationInHMS(System.currentTimeMillis() - eAdd_start));
 			
 			
 			/*
@@ -127,21 +134,21 @@ public class PreprocessorClient {
 			logger.info(gSize+"");
 			
 			double pSize_expected = getExpectedPartSize_MB();
-			logger.info("pSize_expected "+pSize_expected);
+			logger.info("pSize_expected " + pSize_expected);
 			
 			double gSize_to_pSizeExpected = (double) gSize/pSize_expected;
-			logger.info("gSize_to_pSizeExpected "+gSize_to_pSizeExpected);
+			logger.info("gSize_to_pSizeExpected " + gSize_to_pSizeExpected);
 			
 			int numparts_torequest = getNumOfPartsToRequest(gSize_to_pSizeExpected);
-			logger.info("numparts_torequest "+numparts_torequest);
+			logger.info("numparts_torequest " + numparts_torequest);
 			
 			double pSize_asPerNumparts_torequest = (double)gSize/numparts_torequest;
-			logger.info("pSize_asPerNumparts_torequest "+pSize_asPerNumparts_torequest);
+			logger.info("pSize_asPerNumparts_torequest " + pSize_asPerNumparts_torequest);
 			
 			double pSize_postNewEdges_MB = getPSize_postNewEdges_MB(pSize_asPerNumparts_torequest);
-			logger.info("pSize_postNewEdges_MB "+pSize_postNewEdges_MB);
+			logger.info("pSize_postNewEdges_MB " + pSize_postNewEdges_MB);
 			
-			double pSize_postNewEdges_inNumOfEdges = pSize_postNewEdges_MB * 50000;//1MB of Graph rougly equal to 50000 edges on disk
+			double pSize_postNewEdges_inNumOfEdges = pSize_postNewEdges_MB * 50000;//1MB of Graph roughly equal to 50000 edges on disk
 			logger.info("pSize_postNewEdges_inNumOfEdges "+pSize_postNewEdges_inNumOfEdges);
 			
 			printValstoPgenconfFile(numparts_torequest, pSize_postNewEdges_inNumOfEdges);

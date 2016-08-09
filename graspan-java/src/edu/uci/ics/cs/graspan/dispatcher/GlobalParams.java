@@ -58,6 +58,9 @@ public class GlobalParams {
 	
 	// The type of preprocessing operation: +eRULE or GenParts 
 	private static String ppOperation;
+	
+	// DATAFLOW or POINTSTO: if dataflow, then erules adding process is skipped
+	private static String analysisType;
 
 	private static int heapSize;
 	
@@ -170,10 +173,19 @@ public class GlobalParams {
 	public static String getInputGraphType() {
 		return inputGraphType;
 	}
+	
 
 	public static void setInputGraphType(String ipgraphtype) {
 		inputGraphType = ipgraphtype;
 
+	}
+	
+	public static String getAnalysisType() {
+		return analysisType;
+	}
+	
+	public static void setAnalysisType(String alsType){
+		analysisType = alsType;
 	}
 
 	public static int getFirstVertexID() {
