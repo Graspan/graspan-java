@@ -41,8 +41,8 @@ public class SortedArrMerger {
 	
 	public void addtoEvalsArr(byte arr[],byte eval){
 		for (int i=0;i<arr.length;i++){
-			if (currentEvals_arr[i]==-1){
-				currentEvals_arr[i]=eval;
+			if (arr[i]==-1){
+				arr[i]=eval;
 				break;
 			}
 		}
