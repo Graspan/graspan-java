@@ -43,8 +43,8 @@ public class PartitionFileChecker {
 	
 		//read all partition files
 //		for (int i = 0; i < numParts; i++) {
-		int i=1;
-		logger.info("partition " + i);
+		int i=2;
+//		logger.info("partition " + i);
 //			System.out.println("partition " +partId);
 			readAndPrint(i);
 //		}
@@ -59,7 +59,9 @@ public class PartitionFileChecker {
 	 */
 	private void readAndPrint(int partId) throws IOException {
 		DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(baseFilename + ".partition." + partId)));
-		int srcVId;
+		int srcVId, destVId;
+		byte edgVal;
+		String edgValStr="";
 		while (true) {
 			try {
 				
@@ -68,23 +70,37 @@ public class PartitionFileChecker {
 //				if (srcVId==reqVertexId)
 				{
 					// srcVId
-					System.out.println("src " + srcVId);
-					System.out.println("-----");
+//					System.out.println("src " + srcVId);//Adjacency List Print Style
+//					System.out.println("-----");//Adjacency List Print Style
 
 					// count (number of destVs from srcV in the current list)
 					int count = dataIn.readInt();
-					System.out.println("# " + count);
-					System.out.println("-----");
+//					System.out.println("# " + count);//Adjacency List Print Style
+//					System.out.println("-----");//Adjacency List Print Style
 
 					for (int i = 0; i < count; i++) {
 						// dstVId
-						System.out.println("dst " + dataIn.readInt());
+						destVId=dataIn.readInt();
+//						System.out.println("dst " + destVId);//Adjacency List Print Style
 
 						// edge value
-						System.out.println("val " + dataIn.readByte());
+						edgVal = dataIn.readByte();
+//						System.out.println("val " + edgVal);//Adjacency List Print Style
+						
+						//edgeval to number conversion:
+						
+						if (edgVal==0){
+							edgValStr="n";
+						}
+						if (edgVal==1){
+							edgValStr="e";
+						}
+						
+						System.out.println(srcVId+"\t"+destVId+"\t"+edgValStr);//Edge List Print Style
+						
 
 					}
-					System.out.println("=====");
+//					System.out.println("=====");//Adjacency List Print Style
 				}
 
 			} catch (Exception exception) {
