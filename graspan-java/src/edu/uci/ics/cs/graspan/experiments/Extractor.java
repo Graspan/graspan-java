@@ -23,8 +23,11 @@ public class Extractor {
 	private static final Logger logger = GraspanLogger.getLogger("Extractor");
 	private String finishTime_hms;
 	private long finishTime_s, totalMemUsage, maxMemUsage;
+	private long maxNumIters; //the maximum number of iterations for any round
 	
 	private long writeDuration, readDuration;
+	
+	private double IO_Duration;
 	
 	private int numRounds;
 	private int numRoundsWithRepartitioning;
@@ -36,6 +39,7 @@ public class Extractor {
 	// args[3] -- comp.gctimes.output
 	// args[4] -- comp.memusage.output
 	// args[5] -- basefilename
+	// args[6] -- io.output
 	public static void main(String args[]) throws IOException {
 		Extractor extractor = new Extractor();
 		extractor.run(args);
@@ -56,10 +60,29 @@ public class Extractor {
 		scan_gctimes(args);
 		gcDuration_hms = Utilities.getDurationInHMS((long)gcDuration_s*1000);
 		
-		scan_pmap(args);
+//		scan_pmap(args);
 		
 		// write the file
 		printData(args);
+		
+	}
+	
+	public void scan_IO_times(String args[]) throws IOException{
+		String ln;
+		String[] tok;
+		double IO_Duration=0;
+		BufferedReader iostat_Strm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[6]))));
+		
+		while ((ln = iostat_Strm.readLine()) != null) {
+			if (!ln.contains("avg-cpu")) {
+				ln = iostat_Strm.readLine();// read the next line after line
+											// beginning with avg-cpu
+				tok = ln.split("\\s+");
+				IO_Duration += (double) Double.parseDouble(tok[3]) * 5;// IO  time off 5 seconds
+			}
+		}
+		iostat_Strm.close();
+		this.IO_Duration=IO_Duration;
 		
 	}
 	
@@ -68,7 +91,8 @@ public class Extractor {
 			gptabStrm = new PrintWriter(new BufferedWriter(new FileWriter("graspanPerformance.Table.csv", true)));
 			
 			gptabStrm.println(args[5]+","+this.numOfEdgesStart+","+this.numOfVs+","+this.numOfEdgesEnd+","+this.numOfVs+","+this.eredgsDuration_hms+","+
-			this.pgenDuration_hms+","+this.numRounds+","+this.numRoundsWithRepartitioning+","+this.totalDuration_hms+","+this.gcDuration_hms+","+this.maxMemUsage+","+this.readDuration+","+this.writeDuration);
+			this.pgenDuration_hms+","+this.numRounds+","+this.numRoundsWithRepartitioning+","+this.totalDuration_hms+","+this.gcDuration_hms+","+
+			this.maxMemUsage+","+this.IO_Duration+","+this.maxNumIters);
 			
 			gptabStrm.close();
 	}
@@ -90,7 +114,7 @@ public class Extractor {
 						+ Integer.parseInt(timeparts[4])*60    //min  --> sec
 						+ Integer.parseInt(timeparts[5]);
 				
-				if (currentTime_s>this.finishTime_s){
+				if (currentTime_s > this.finishTime_s){
 					break;
 				}
 				
@@ -110,12 +134,13 @@ public class Extractor {
 	private void scan_gctimes(String[] args) throws FileNotFoundException, IOException {
 		String ln;
 		String[] tok;
-		long gcDuration_s=0;
+		double gcDuration_s=0;
 		BufferedReader gcTimeStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[3]))));
 
 		while ((ln = gcTimeStrm.readLine()) != null) {
 			if (ln.contains("secs")) {
 				tok = ln.split(" ");
+//				logger.info(args[5]);
 //				logger.info(tok[tok.length-2]);
 				gcDuration_s+=Double.parseDouble(tok[tok.length - 2]);
 			}
@@ -130,9 +155,11 @@ public class Extractor {
 		int numRounds=0;
 		int numRoundsWithoutRepart=0;
 		long numOfNewEdges=0;
+		long numIters=0, maxNumIters=0;
 		long readDuration = 0, writeDuration=0;
 		String totalDuration_hms="",finishTime_hms="";
 		String[] roundOutputComponent=null; //round#,h,m,s,#edges
+		String[] iterationOutputComponent=null; //iteration#, round#, h,m,s, #edges
 		BufferedReader compStrm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[2]))));
 
 		PrintWriter edgesPRound;
@@ -140,6 +167,17 @@ public class Extractor {
 		edgesPRound.println(args[5]);
 		
 		while ((ln = compStrm.readLine()) != null) {
+			
+			if (ln.contains("output.iteration")) {
+				tok = ln.split("\\|\\|");
+				iterationOutputComponent = tok[tok.length-1].split(",");
+				numIters = Long.parseLong(iterationOutputComponent[1]);
+				if (numIters>maxNumIters){
+					maxNumIters=numIters;
+				}
+			}
+			
+			
 			if (ln.contains("output.round")) {
 				tok = ln.split("\\|\\|");
 //				logger.info(Arrays.deepToString(tok));
@@ -181,6 +219,7 @@ public class Extractor {
 			}
 		}
 		
+		this.maxNumIters=maxNumIters;
 		this.numRounds=numRounds;
 		this.numRoundsWithRepartitioning=numRounds-numRoundsWithoutRepart;
 		this.numOfNewEdges=numOfNewEdges;
