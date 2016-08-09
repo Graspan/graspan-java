@@ -50,9 +50,9 @@ public class MinSet {
 	}
 
 	//adding edge val - old hashset implementation
-//	public void addEval(byte eval) { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
-//		evals.add(eval);
-//	}
+	public void addEval(byte eval) { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+		evals.add(eval);
+	}
 	
 	//adding edge val - new array implementation
 	public void addToEvalArr(byte eval) { 
@@ -76,9 +76,9 @@ public class MinSet {
 	}
 
 	//clearing edge vals - old hashset implementation
-//	public void clearEvalSet() { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
-//		evals.clear();
-//	}
+	public void clearEvalSet() { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+		evals.clear();
+	}
 	
 	//clearing edge vals - new array implementation
 	public void clearEvalArr() { 
@@ -88,9 +88,9 @@ public class MinSet {
 	}
 
 	//return edge vals - old hashset implementation
-//	public HashSet<Byte> getEvals() { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
-//		return evals;
-//	}
+	public HashSet<Byte> getEvals() { //TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
+		return evals;
+	}
 	
 	//return edge vals - new array implementation
 	public byte[] getEvalsArr(){

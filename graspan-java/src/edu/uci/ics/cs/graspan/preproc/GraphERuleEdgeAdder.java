@@ -294,7 +294,6 @@ public class GraphERuleEdgeAdder {
 			
 			String[] tok = ln.split("\t");
 			
-			
 			int src = Integer.parseInt(tok[0]);
 //			logger.info("Input Line " + Arrays.toString(tok));
 
@@ -311,13 +310,11 @@ public class GraphERuleEdgeAdder {
 //			logger.info(" arraySrcVId "+arraySrcVId+" lastAddedEdgePos "+lastAddedEdgePos.length);
 			
 			// dstVId
-//			logger.info(
-//					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId]  " + lastAddedEdgePos[arraySrcVId]);
+//			logger.info("arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId]  " + lastAddedEdgePos[arraySrcVId]);
 			partEdges[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = Integer.parseInt(tok[1]);
 
 			// edgeVal
-//			logger.info(
-//					"arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId] " + lastAddedEdgePos[arraySrcVId]);
+//			logger.info("arraySrcVId " + arraySrcVId + " lastAddedEdgePos[arraySrcVId] " + lastAddedEdgePos[arraySrcVId]);
 			partEdgeVals[0][arraySrcVId][lastAddedEdgePos[arraySrcVId] + 1] = GrammarChecker.getValue(tok[2]);;
 
 			// increment the last added position for this row
@@ -410,7 +407,6 @@ public class GraphERuleEdgeAdder {
 		
 		
 		for (int j = 0; j < vertices.length; j++) {
-			
 			count = vertices[j].getNumOutEdges();
 			if (count == 0) {
 				continue;

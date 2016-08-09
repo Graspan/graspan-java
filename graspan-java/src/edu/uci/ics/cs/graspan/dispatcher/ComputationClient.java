@@ -93,7 +93,7 @@ public class ComputationClient {
 			logger.info("Smart Merge Computation took " + Utilities.getDurationInHMS(System.currentTimeMillis() - smart_merge_comp_start));
 		}
 		
-//		MemUsageCheckThread.memoryUsageOutput.close();
-//		memUsage.stop();
+		// MemUsageCheckThread.memoryUsageOutput.close();
+		// memUsage.stop();
 	}
 }
