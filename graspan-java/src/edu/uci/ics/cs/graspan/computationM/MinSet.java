@@ -63,16 +63,16 @@ public class MinSet {
 				return;
 			}
 			if (evals_arr[i] == -1) {
-				break;
-			}
-		}
-		
-		for (int i = 0; i < evals_arr.length; i++) {
-			if (evals_arr[i] == -1) {
 				evals_arr[i] = eval;
 				break;
 			}
 		}
+		
+//		for (int i = 0; i < evals_arr.length; i++) {
+//			if (evals_arr[i] == -1) {
+//				break;
+//			}
+//		}
 	}
 
 	//clearing edge vals - old hashset implementation

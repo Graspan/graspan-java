@@ -34,15 +34,24 @@ public class SortedArrMerger {
 	
 	//*** new ds implementation methods ***
 	public void clearEvalsArr(byte arr[]){
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = -1;
+//		for (int i = 0; i < arr.length; i++) {
+//			arr[i] = -1;
+//		}
+		for (int i = 0; i < currentEvals_arr.length; i++) {
+			currentEvals_arr[i] = -1;
 		}
 	}
 	
 	public void addtoEvalsArr(byte arr[],byte eval){
-		for (int i=0;i<arr.length;i++){
-			if (arr[i]==-1){
-				arr[i]=eval;
+//		for (int i=0;i<arr.length;i++){
+//			if (arr[i]==-1){
+//				arr[i]=eval;
+//				break;
+//			}
+//		}
+		for (int i=0;i<currentEvals_arr.length;i++){
+			if (currentEvals_arr[i]==-1){
+				currentEvals_arr[i]=eval;
 				break;
 			}
 		}
@@ -261,7 +270,6 @@ public class SortedArrMerger {
 //				if (!currentEvals.contains(tgt_eval)) { // TODO: NEED TO UPDATE FOR EVALS AS ARRAY :DONE
 			for (byte tgt_eval : evals_tgt_arr) {
 				if (tgt_eval!=-1 & !this.evalsArrContains(currentEvals_arr, tgt_eval)){
-					
 					
 					// add the target row minSet to src_oldUnewUdelta
 					oldUnewUdelta_ptr++;

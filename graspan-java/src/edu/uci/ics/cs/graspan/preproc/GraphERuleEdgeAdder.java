@@ -398,8 +398,7 @@ public class GraphERuleEdgeAdder {
 //				new FileWriter(GlobalParams.baseFilename , false)));
 //		partOutStrm.close();
 
-		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(
-				new FileWriter(GlobalParams.baseFilename+".eRulesAdded" , true)));
+		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.baseFilename+".eRulesAdded" , true)));
 
 		int srcVId, destVId, count;
 		int edgeValue;
