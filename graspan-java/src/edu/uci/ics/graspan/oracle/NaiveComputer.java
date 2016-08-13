@@ -178,7 +178,7 @@ public class NaiveComputer {
 					this.totalEdgesLoaded++;
 					if(this.graph.containsKey(srcId)){
 						boolean flag = this.graph.get(srcId).add(new Pair(tgtId, eval));
-						assert(flag);
+//						assert(flag);
 					}
 					else{
 						HashSet<Pair> set = new HashSet<Pair>();

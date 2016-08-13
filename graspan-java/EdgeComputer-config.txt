@@ -1,6 +1,6 @@
 <BEGIN_CONFIG_FILE_BODY>
 
-INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/kernel_pointsto_v3/kernel_afterInline.txt.eRulesAdded.extracted
+INPUT_GRAPH_FILEPATH = /home/aftab/workspace/graphs/POST_OSDI_TEST_CENTER/kernel_afterInline.txt.eRulesAdded.extracted
 TOTAL_NUM_PARTS = 5
 RELOAD_PLAN = RELOAD_PLAN_2 #(OPTIONS: RELOAD_PLAN_2)
 EDC_SIZE = 500

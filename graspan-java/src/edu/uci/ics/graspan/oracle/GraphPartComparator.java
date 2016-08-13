@@ -133,7 +133,7 @@ public class GraphPartComparator {
 		BufferedReader reader;
 		String line;
 		try {
-			reader = new BufferedReader(new FileReader(new File(this.basefilename + ".final")));
+			reader = new BufferedReader(new FileReader(new File(this.basefilename + ".finalOracleOutput")));
 			while ((line = reader.readLine()) != null) {
 				if (!line.isEmpty()) {
 					String[] tok = line.split("\t");// NOTE: MAKE SURE INPUT

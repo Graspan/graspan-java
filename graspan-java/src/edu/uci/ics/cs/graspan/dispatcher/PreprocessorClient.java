@@ -64,7 +64,6 @@ public class PreprocessorClient {
 				GlobalParams.setPPOperation(tok[2].trim());
 			}
 			
-			
 			// THE FOLLOWING ARE NOT USED FOR PREPROCESSING, BUT USED TO GENERATE THE CONFIG FILE 
 			// FOR THE COMPUTATION
 			if (tok[0].compareTo("HEAP_SIZE(GB)")==0){ 
@@ -110,15 +109,10 @@ public class PreprocessorClient {
 //			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
 			long eAdd_start = System.currentTimeMillis();
 			
-//			if (GlobalParams.getAnalysisType().compareTo("POINTSTO")==0)
-//			{
-			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
+    
+    		GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
 			edgeAdder.run();
-//			}
-//			else{
-				logger.info("No erule edges to add.");
-//			}
-			
+				
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
 			
 //			ppERedgeAdding.calculateDuration(System.currentTimeMillis());

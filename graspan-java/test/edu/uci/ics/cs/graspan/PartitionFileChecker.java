@@ -21,10 +21,11 @@ public class PartitionFileChecker {
 	int reqVertexId;
 	int numParts;
 	
-	public PartitionFileChecker(String basefilename, int reqVertexId, int numParts){
+	public PartitionFileChecker(String basefilename){
+//	public PartitionFileChecker(String basefilename, int reqVertexId, int numParts){
 		this.baseFilename=basefilename;
-		this.reqVertexId=reqVertexId;
-		this.numParts=numParts;
+//		this.reqVertexId=reqVertexId;
+//		this.numParts=numParts;
 	}
 
 	/**
@@ -33,7 +34,8 @@ public class PartitionFileChecker {
 	 * @throws IOException
 	 */
 	public static void main(String args[]) throws IOException {
-		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0]);
+//		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
 		pfchecker.run();
 	}
 	
