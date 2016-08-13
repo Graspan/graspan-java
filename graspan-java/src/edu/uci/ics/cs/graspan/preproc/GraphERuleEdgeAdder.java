@@ -112,9 +112,10 @@ public class GraphERuleEdgeAdder {
 //			}
 		
 		addEdgesforERules();
-		logger.info("Added new edges for ERules for " + baseFilename);
 
 		sort();
+		//sorting the outedges of each source vertex is required in order to perform
+		//smart merge computation
 		logger.info("Sorted " + baseFilename);
 
 		save();
@@ -125,21 +126,24 @@ public class GraphERuleEdgeAdder {
 		// add edges corresponding to epsilon rules.
 		Set<Byte> eRules = GrammarChecker.eRules;
 
-		int srcId = 0;
+		if (eRules.size() != 0) {//If no eRules exist in grammar skip this
+			int srcId = 0;
 
-		// for each loaded source vertex row
-		for (int i = 0; i < vertices.length; i++) {
+			// for each loaded source vertex row
+			for (int i = 0; i < vertices.length; i++) {
 
-			srcId = vertices[i].getVertexId();
+				srcId = vertices[i].getVertexId();
 
-			// first assume all eRules values need to be added
-			HashSet<Byte> newValsforSrc = new HashSet<Byte>(eRules);
+				// first assume all eRules values need to be added
+				HashSet<Byte> newValsforSrc = new HashSet<Byte>(eRules);
 
-			// find values already existing for this source row, and remove
-			// those values from newValsforSrc
-			removeExistingERuleVals(srcId, i, newValsforSrc);
+				// find values already existing for this source row, and remove
+				// those values from newValsforSrc
+				removeExistingERuleVals(srcId, i, newValsforSrc);
 
-			addNewEdges(srcId, i, newValsforSrc);
+				addNewEdges(srcId, i, newValsforSrc);
+			}
+			logger.info("Added new edges for ERules for " + baseFilename);
 		}
 	}
 

@@ -64,7 +64,6 @@ public class PreprocessorClient {
 				GlobalParams.setPPOperation(tok[2].trim());
 			}
 			
-			
 			// THE FOLLOWING ARE NOT USED FOR PREPROCESSING, BUT USED TO GENERATE THE CONFIG FILE 
 			// FOR THE COMPUTATION
 			if (tok[0].compareTo("HEAP_SIZE(GB)")==0){ 
@@ -110,14 +109,8 @@ public class PreprocessorClient {
 //			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
 			long eAdd_start = System.currentTimeMillis();
 			
-			if (GlobalParams.getAnalysisType().compareTo("POINTSTO")==0)
-			{
 			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
 			edgeAdder.run();
-			}
-			else{
-				logger.info("No erules to add.");
-			}
 			
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
 			
@@ -219,7 +212,7 @@ public class PreprocessorClient {
 		pgenconfStrm.println("INPUT_GRAPH_NUMBERING_STARTS_FROM = " + GlobalParams.getFirstVertexID());
 		pgenconfStrm.println("MAX_PART_SIZE_POST_NEW_EDGES = " + Math.round(pSize_postNewEdges_inNumOfEdges));
 		pgenconfStrm.println("PREPROCESSING_OPERATION = genparts");
-		pgenconfStrm.println("RELOAD_PLAN = "+GlobalParams.getReloadPlan());
+		pgenconfStrm.println("RELOAD_PLAN = "+ GlobalParams.getReloadPlan());
 		pgenconfStrm.println("EDC_SIZE = " + GlobalParams.getEdcSize());
 		pgenconfStrm.println("COMPUTATION_LOGIC = " + GlobalParams.getComputationLogic());
 		pgenconfStrm.println("NUM_OF_THREADS = " + GlobalParams.getNumThreads());
