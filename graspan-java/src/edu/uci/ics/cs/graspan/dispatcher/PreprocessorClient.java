@@ -110,14 +110,14 @@ public class PreprocessorClient {
 //			GraspanTimer ppERedgeAdding = new GraspanTimer(System.currentTimeMillis());
 			long eAdd_start = System.currentTimeMillis();
 			
-			if (GlobalParams.getAnalysisType().compareTo("POINTSTO")==0)
-			{
+//			if (GlobalParams.getAnalysisType().compareTo("POINTSTO")==0)
+//			{
 			GraphERuleEdgeAdder edgeAdder = new GraphERuleEdgeAdder();
 			edgeAdder.run();
-			}
-			else{
-				logger.info("No erules to add.");
-			}
+//			}
+//			else{
+				logger.info("No erule edges to add.");
+//			}
 			
 			logger.info("PREPROCESSING: Finished computing and adding edges from eRules.");
 			
