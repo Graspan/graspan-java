@@ -61,6 +61,7 @@ public class Extractor {
 		gcDuration_hms = Utilities.getDurationInHMS((long)gcDuration_s*1000);
 		
 //		scan_pmap(args);
+		scan_IO_times(args);
 		
 		// write the file
 		printData(args);
@@ -71,14 +72,24 @@ public class Extractor {
 		String ln;
 		String[] tok;
 		double IO_Duration=0;
+		double iostat_time=0;
+		double total_time= Double.parseDouble(this.totalDuration_hms.split(",")[0])*60*60
+				          +Double.parseDouble(this.totalDuration_hms.split(",")[1])*60
+				          +Double.parseDouble(this.totalDuration_hms.split(",")[2]);
+				          
 		BufferedReader iostat_Strm = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[6]))));
 		
 		while ((ln = iostat_Strm.readLine()) != null) {
-			if (!ln.contains("avg-cpu")) {
+			if (ln.contains("avg-cpu")) {
 				ln = iostat_Strm.readLine();// read the next line after line
 											// beginning with avg-cpu
 				tok = ln.split("\\s+");
-				IO_Duration += (double) Double.parseDouble(tok[3]) * 5;// IO  time off 5 seconds
+//				System.out.println(ln);//TODO: TEST CODE
+				IO_Duration += (double) ((double)Double.parseDouble(tok[3])/100) * 5;// IO  time off 5 seconds
+				iostat_time+=5;
+				if (iostat_time>total_time){
+					break;
+				}
 			}
 		}
 		iostat_Strm.close();
