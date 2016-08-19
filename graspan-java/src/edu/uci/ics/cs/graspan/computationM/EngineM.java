@@ -54,6 +54,8 @@ public class EngineM {
 	public static ComputationSet[] compSets_prevIt;
 
 	private final static long MaxNumNewEdgesPerRoundOfComputation = 175000000;
+	
+	private final static long MaxNumNewEdgesPerIteration = 333;
 
 	private int roundNo;
 	// private PrintWriter roundOutput;
@@ -265,7 +267,7 @@ public class EngineM {
 
 			// parallel computation for one iteration
 			parallelComputationForOneIteration(termationLock, chunkSize, nWorkers, vertices, compSets, intervals,
-					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo);
+					indexStartForOne, indexEndForOne, indexStartForTwo, indexEndForTwo, scheduler);
 
 			// for debugging: print compsets information at the end of each
 			// iteration
@@ -379,7 +381,7 @@ public class EngineM {
 	private void parallelComputationForOneIteration(final Object termationLock, final int chunkSize, final int nWorkers,
 			final Vertex[] vertices, final ComputationSet[] compSets, final List<LoadedVertexInterval> intervals,
 			final int indexStartForOne, final int indexEndForOne, final int indexStartForTwo,
-			final int indexEndForTwo) {
+			final int indexEndForTwo, final Scheduler scheduler) {
 
 		final AtomicInteger countDown = new AtomicInteger(nWorkers);
 		final Object counterLock = new Object();
@@ -419,6 +421,14 @@ public class EngineM {
 										newEdgesInOne += threadUpdates;
 									else if (i >= indexStartForTwo && i <= indexEndForTwo)
 										newEdgesInTwo += threadUpdates;
+									
+									//TODO: TO TEST THE FOLLOWING
+									if (totalNewEdgsForIteratn > MaxNumNewEdgesPerIteration){
+										logger.info("Number of edges added in this iteration exceed limit!, terminating prematurely.");
+										scheduler.setPrematureTerminationStatus(true);
+										break;
+									}
+									
 								}
 							}
 						}
