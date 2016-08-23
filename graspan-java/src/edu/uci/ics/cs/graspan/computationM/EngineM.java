@@ -55,7 +55,8 @@ public class EngineM {
 
 	private final static long MaxNumNewEdgesPerRoundOfComputation = 175000000;
 	
-	private final static long MaxNumNewEdgesPerIteration = 333;
+	private final static long MaxNumNewEdgesPerIteration = 3000;
+	private static boolean iterationLimitExceeded;
 
 	private int roundNo;
 	// private PrintWriter roundOutput;
@@ -154,6 +155,7 @@ public class EngineM {
 
 			// do computation and add edges
 			computeForOneRound(vertices, compSets, intervals, scheduler);
+			
 
 			// roundOutput.println(roundNo + "," +
 			// Utilities.getDurationInHMS(System.currentTimeMillis() -
@@ -240,6 +242,8 @@ public class EngineM {
 		newEdgesInTwo = 0;
 
 		scheduler.setPrematureTerminationStatus(false);
+		iterationLimitExceeded=false;
+		
 
 		// initiate lock
 		final Object termationLock = new Object();
@@ -316,6 +320,12 @@ public class EngineM {
 				logger.info("Premature Terminate! " + newEdgesInOne + " (newEdgesInOne) + " + newEdgesInTwo
 						+ " (newEdgesInTwo) >" + MaxNumNewEdgesPerRoundOfComputation);
 			}
+			
+			if (totalNewEdgsForIteratn>MaxNumNewEdgesPerIteration){
+				scheduler.setPrematureTerminationStatus(true);
+				logger.info("Premature Terminate! due to exceeding iteration limit" );
+			}
+			
 
 		} while (totalNewEdgsForIteratn > 0 & scheduler.getPrematureTerminationStatus() == false);
 
@@ -421,15 +431,16 @@ public class EngineM {
 										newEdgesInOne += threadUpdates;
 									else if (i >= indexStartForTwo && i <= indexEndForTwo)
 										newEdgesInTwo += threadUpdates;
-									
 									//TODO: TO TEST THE FOLLOWING
-									if (totalNewEdgsForIteratn > MaxNumNewEdgesPerIteration){
-										logger.info("Number of edges added in this iteration exceed limit!, terminating prematurely.");
-										scheduler.setPrematureTerminationStatus(true);
-										break;
-									}
-									
+//									if (totalNewEdgsForIteratn > MaxNumNewEdgesPerIteration){
+//										logger.info("Number of edges added in this iteration exceed limit!, terminating prematurely.");
+//									scheduler.setPrematureTerminationStatus(true);
+//										iterationLimitExceeded=true;
+//									break;
+//									}
 								}
+								
+								
 							}
 						}
 					} catch (Exception e) {
