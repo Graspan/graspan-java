@@ -16,7 +16,7 @@ public class SortedArrMerger {
 
 	private int currentId;
 
-//	private HashSet<Byte> currentEvals = new HashSet<Byte>();// TODO: Need to change this to byte array :DONE
+//	private HashSet<Byte> currentEvals = new HashSet<Byte>();// TODO: Need to change this to byte array to cut GC :DONE
 	private byte[] currentEvals_arr;
 
 	private int[] src_delta_edgs;
@@ -114,18 +114,17 @@ public class SortedArrMerger {
 		// declare & initialize src_delta and src_oldUnewUdelta
 		src_delta_edgs = new int[cumTgtRowsSize];
 		src_delta_vals = new byte[cumTgtRowsSize];
-		// for (int i = 0; i < cumTgtRowsSize; i++) {
-		// src_delta_edgs[i] = -1;
-		// src_delta_vals[i] = -1;
-		// }
+//		 for (int i = 0; i < src_delta_edgs.length; i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
+//		 src_delta_edgs[i] = -1;
+//		 src_delta_vals[i] = -1;
+//		 }
 
 		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
 		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
-		// for (int i = 0; i < edgArrstoMerge[srcRowId].length + cumTgtRowsSize;
-		// i++) {
-		// src_oldUnewUdelta_edgs[i] = -1;
-		// src_oldUnewUdelta_vals[i] = -1;
-		// }
+//		 for (int i = 0; i < src_oldUnewUdelta_edgs.length;i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
+//		 src_oldUnewUdelta_edgs[i] = -1;
+//		 src_oldUnewUdelta_vals[i] = -1;
+//		 }
 
 		// MinSet minSetFrmTgtRows = null;
 		// MinSet minSetFromSrcRow = null;
@@ -220,7 +219,7 @@ public class SortedArrMerger {
 		minSet.setCurrentVId(Integer.MAX_VALUE);
 //		minSet.clearEvalSet(); //TODO: TO SWITCH METHOD :DONE
 		minSet.clearEvalArr();
-		for (int i = minSet.getPtr(); i < edgRow.length && edgRow[i] <= minSet.getCurrentVId(); i++) {
+		for (int i = minSet.getPtr(); i < edgRow.length && edgRow[i] <= minSet.getCurrentVId() && edgRow[i]!=-1; i++) {//added third condition TODO: test this
 			minSet.setCurrentVId(edgRow[i]);
 //			minSet.addEval(valRow[i]);//TODO: TO SWITCH METHOD :DONE
 			minSet.addToEvalArr(valRow[i]);

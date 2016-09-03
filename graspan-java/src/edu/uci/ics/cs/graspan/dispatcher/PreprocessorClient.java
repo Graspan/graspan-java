@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdder;
+import edu.uci.ics.cs.graspan.preproc.PartitionPreprocessor;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
@@ -175,6 +176,12 @@ public class PreprocessorClient {
 			printValstoCompconfFile();
 			
 			logger.info("Generated comp.config");
+			
+			//TODO: TEMPORARY CODE: TO REMOVE:
+//			PartitionPreprocessor partProc = new PartitionPreprocessor();
+//			for (int i=0;i<GlobalParams.getNumParts();i++){
+//				partProc.loadAndProcessParts(i);
+//			}
 			
 		}
 	

@@ -53,10 +53,9 @@ public class EngineM {
 	public List<LoadedVertexInterval> intervals_prevIt;
 	public static ComputationSet[] compSets_prevIt;
 
-	private final static long MaxNumNewEdgesPerRoundOfComputation = 175000000;
+	private final static long MaxNumNewEdgesPerRoundOfComputation = 500000;
 	
-	private final static long MaxNumNewEdgesPerIteration = 3000;
-	private static boolean iterationLimitExceeded;
+	private final static long MaxNumNewEdgesPerIteration = 30000;
 
 	private int roundNo;
 	// private PrintWriter roundOutput;
@@ -242,8 +241,6 @@ public class EngineM {
 		newEdgesInTwo = 0;
 
 		scheduler.setPrematureTerminationStatus(false);
-		iterationLimitExceeded=false;
-		
 
 		// initiate lock
 		final Object termationLock = new Object();
