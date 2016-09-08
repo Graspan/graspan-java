@@ -704,9 +704,7 @@ public class ComputedPartProcessorM {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	public static void storePartDegs(Vertex[] vertices,
-			List<LoadedVertexInterval> intervals, Integer partitionId)
-			throws IOException {
+	public static void storePartDegs(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
 
 		PrintWriter partDegOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.baseFilename + ".partition." + partitionId + ".degrees", false)));
 		partDegOutStrm.close();

@@ -16,8 +16,7 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
  */
 public class EdgeComputerEL {
 
-	private static final Logger logger = GraspanLogger
-			.getLogger("EdgeComputer");
+	private static final Logger logger = GraspanLogger.getLogger("EdgeComputer");
 
 	// test flag for viewing new edges of a source
 	public static int flag = 0;

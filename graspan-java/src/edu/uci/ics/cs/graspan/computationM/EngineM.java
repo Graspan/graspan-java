@@ -215,9 +215,9 @@ public class EngineM {
 		int size = 0;
 		for (int i = 0; i < vertices.length; i++) {
 			logger.info(vertices[i].getVertexId() + ": (dest ids) :" + Arrays.toString(vertices[i].getOutEdges()));
-			logger.info(
-					vertices[i].getVertexId() + ": (edge vals) :" + Arrays.toString(vertices[i].getOutEdgeValues()));
-			size = size + vertices[i].getOutEdges().length;
+			logger.info(vertices[i].getVertexId() + ": (edge vals) :" + Arrays.toString(vertices[i].getOutEdgeValues()));
+//			size = size + vertices[i].getOutEdges().length;
+			size = size + vertices[i].getNumOutEdges();
 		}
 		logger.info("Total number of edges in vertices ds " + size);
 		// logger.info("All vertices in memory just after loading: \n" + s);
