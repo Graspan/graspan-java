@@ -48,7 +48,7 @@ public class Vertex {
 		this.numOutEdges = 0;
 		
 		if(this.outEdges != null){
-			numOutEdges = outEdges.length;
+			numOutEdges = outEdges.length; //TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
 		}
 		return numOutEdges;
 	}
@@ -58,7 +58,7 @@ public class Vertex {
 	}
 
 	/**
-	 * Used by EdgeList Style Computation
+	 * Used in EdgeList Style Computation
 	 * 
 	 * @return
 	 */
@@ -66,6 +66,11 @@ public class Vertex {
 		return combinedDeg;
 	}
 
+	/**
+	 * Used in EdgeList Style Computation
+	 * 
+	 * @return
+	 */
 	public void setCombinedDeg(int num) {
 		combinedDeg = num;
 	}

@@ -108,23 +108,25 @@ public class SortedArrMerger {
 				targetRowsMinHeap.offer(minSet);
 
 			if (i != srcRowId)
-				cumTgtRowsSize += edgArrstoMerge[i].length;
+				cumTgtRowsSize += edgArrstoMerge[i].length;//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
 		}
 
 		// declare & initialize src_delta and src_oldUnewUdelta
 		src_delta_edgs = new int[cumTgtRowsSize];
 		src_delta_vals = new byte[cumTgtRowsSize];
-//		 for (int i = 0; i < src_delta_edgs.length; i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
+		 for (int i = 0; i < src_delta_edgs.length; i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH//TO TEST
 //		 src_delta_edgs[i] = -1;
-//		 src_delta_vals[i] = -1;
-//		 }
+		 src_delta_vals[i] = -1;
+		 src_delta_edgs[i] = Integer.MAX_VALUE;
+		 }
 
-		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
-		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];
-//		 for (int i = 0; i < src_oldUnewUdelta_edgs.length;i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
+		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
+		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
+		 for (int i = 0; i < src_oldUnewUdelta_edgs.length;i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
 //		 src_oldUnewUdelta_edgs[i] = -1;
-//		 src_oldUnewUdelta_vals[i] = -1;
-//		 }
+		 src_oldUnewUdelta_vals[i] = -1;
+		 src_oldUnewUdelta_edgs[i] = Integer.MAX_VALUE;
+		 }
 
 		// MinSet minSetFrmTgtRows = null;
 		// MinSet minSetFromSrcRow = null;
@@ -150,7 +152,7 @@ public class SortedArrMerger {
 		}
 
 		// removing the empty values in output components: delta and oldUnewUdelta
-		removeRedundantArraySpace(); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+//		removeRedundantArraySpace(); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
 	}
 
