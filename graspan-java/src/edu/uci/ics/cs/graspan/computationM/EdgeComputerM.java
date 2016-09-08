@@ -77,7 +77,6 @@ public class EdgeComputerM {
 //				logger.info("oldUnewRowIndicesToMerge - " + ivp.id + " " + ivp.value);//+" The vertex"+vertices[ivp.id]);
 //			}
 //		}
-
 		
 		int num_of_rows_to_merge = 2 + oldUnewRowIndicesToMerge.size() + newRowIndicesToMerge.size();
 		// 3. store the refs to rows in edgArrstoMerge & valArrstoMerge
@@ -128,11 +127,20 @@ public class EdgeComputerM {
 	private static int genEdgesToMergeForSRule(int[] newEdgs, byte[] newVals, int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id) {
 		//get the resulting edge and value array
 		List<IdValuePair> list = new ArrayList<IdValuePair>();//TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT. 
+		
+		int dstId;
+		byte dstVal,newVal;
+		
 		for(int i = 0; i < newEdgs.length; i++){
-			int dstId = newEdgs[i];
-			byte dstVal = newVals[i];
+//			int dstId = newEdgs[i];
+			dstId = newEdgs[i];
 			
-			byte newVal = GrammarChecker.checkL1Rules(dstVal);
+//			byte dstVal = newVals[i];
+			dstVal = newVals[i];
+			
+//			byte newVal = GrammarChecker.checkL1Rules(dstVal);
+			newVal = GrammarChecker.checkL1Rules(dstVal);
+			
 			if(newVal != -1){
 				list.add(new IdValuePair(dstId, newVal));
 			}
@@ -141,8 +149,10 @@ public class EdgeComputerM {
 //		if(!list.isEmpty()){
 			int[] newEdgeArray = new int[list.size()];
 			byte[] newValArray = new byte[list.size()];
+			IdValuePair ele;
 			for(int i = 0; i < list.size(); i++){
-				IdValuePair ele = list.get(i);
+//				IdValuePair ele = list.get(i);
+				ele = list.get(i);
 				newEdgeArray[i] = ele.id;
 				newValArray[i] = ele.value;
 			}
@@ -168,13 +178,24 @@ public class EdgeComputerM {
 	 */
 	private static int genEdgesToMerge(ComputationSet[] compSets, HashSet<IdValuePair> idsToMerge,
 			int[][] edgArrstoMerge, byte[][] valArrstoMerge, int rows_to_merge_id, String flag) {
+		
+		int index;
+		int[] edges;
+		
+		byte srcVal;
+		byte[] vals;
+		
 		for(IdValuePair pair: idsToMerge){
-			int index = pair.id;
-			byte srcVal = pair.value;
+//			int index = pair.id;
+			index = pair.id;
+//			byte srcVal = pair.value;
+			srcVal = pair.value;
 
 			//
-			int[] edges = null;
-			byte[] vals = null;
+//			int[] edges = null;
+			edges = null;
+//			byte[] vals = null;
+			vals = null;
 			
 			if(flag.equals("old")){
 				edges = compSets[index].getNewEdgs();
@@ -200,8 +221,10 @@ public class EdgeComputerM {
 //			if(!list.isEmpty()){
 				int[] newEdgeArray = new int[list.size()];
 				byte[] newValArray = new byte[list.size()];
+				IdValuePair ele;
 				for(int i = 0; i < list.size(); i++){
-					IdValuePair ele = list.get(i);
+//					IdValuePair ele = list.get(i);
+					ele = list.get(i);
 					newEdgeArray[i] = ele.id;
 					newValArray[i] = ele.value;
 				}
