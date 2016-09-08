@@ -144,9 +144,11 @@ public class PartitionPreprocessor {
 			tempArrMarker++;
 		}
 
-		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
-		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
-
+//		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
+//		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
+		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getNumOutEdges());
+		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getNumOutEdges());
+		
 		//reset the outEdges/outVals
 		vertices[i].setOutEdges(tempEdgs);
 		vertices[i].setOutEdgeValues(tempVals);
@@ -154,7 +156,8 @@ public class PartitionPreprocessor {
 
 	private void removeExistingERuleVals(int srcId, int i, HashSet<Byte> newValsforSrc) {
 		int destId;
-		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+//		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+		for (int j = 0; j < vertices[i].getNumOutEdges(); j++) {
 			destId = vertices[i].getOutEdge(j);
 			if (destId > srcId)
 				break;

@@ -45,7 +45,7 @@ public class PartitionFileChecker {
 	
 		//read all partition files
 //		for (int i = 0; i < numParts; i++) {
-		int i=2;
+		int i=1;
 //		logger.info("partition " + i);
 //			System.out.println("partition " +partId);
 			readAndPrint(i);

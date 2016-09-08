@@ -151,8 +151,10 @@ public class GraphERuleEdgeAdder {
 		int[] tempEdgs;
 		byte[] tempVals;
 		// add the new edges to tempEdgs
-		tempEdgs = new int[vertices[i].getOutEdges().length + newValsforSrc.size()];
-		tempVals = new byte[vertices[i].getOutEdges().length + newValsforSrc.size()];
+//		tempEdgs = new int[vertices[i].getOutEdges().length + newValsforSrc.size()];
+//		tempVals = new byte[vertices[i].getOutEdges().length + newValsforSrc.size()];
+		tempEdgs = new int[vertices[i].getNumOutEdges() + newValsforSrc.size()];
+		tempVals = new byte[vertices[i].getNumOutEdges() + newValsforSrc.size()];
 
 //		assert (srcId != 0);
 
@@ -163,9 +165,11 @@ public class GraphERuleEdgeAdder {
 			tempArrMarker++;
 		}
 
-		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length);
-		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length);
-
+//		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getOutEdges().length); 
+//		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getOutEdgeValues().length); 
+		System.arraycopy(vertices[i].getOutEdges(), 0, tempEdgs, tempArrMarker, vertices[i].getNumOutEdges()); 
+		System.arraycopy(vertices[i].getOutEdgeValues(), 0, tempVals, tempArrMarker, vertices[i].getNumOutEdges()); 
+		
 		// reset the outEdges/outVals
 		vertices[i].setOutEdges(tempEdgs);
 		vertices[i].setOutEdgeValues(tempVals);
@@ -173,7 +177,8 @@ public class GraphERuleEdgeAdder {
 
 	private void removeExistingERuleVals(int srcId, int i, HashSet<Byte> newValsforSrc) {
 		int destId;
-		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+//		for (int j = 0; j < vertices[i].getOutEdges().length; j++) {
+		for (int j = 0; j < vertices[i].getNumOutEdges(); j++) {	
 			destId = vertices[i].getOutEdge(j);
 			if (destId == srcId) //remove the loop edge value if it already exists
 				newValsforSrc.remove(vertices[i].getOutEdgeValue(j));
@@ -191,7 +196,8 @@ public class GraphERuleEdgeAdder {
 		for (int j = 0 ; j < vertices.length ; j++) {
 			int low = 0;
 //			int high = partOutDegs[0][j] - 1;
-			int high = vertices[j].getOutEdges().length-1;
+//			int high = vertices[j].getOutEdges().length-1;
+			int high = vertices[j].getNumOutEdges()-1;
 			Utilities.quickSort(vertices[j].getOutEdges(), vertices[j].getOutEdgeValues(), low, high);
 		}
 		logger.info("Sorted loaded partition.");
@@ -375,7 +381,9 @@ public class GraphERuleEdgeAdder {
 			for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
 
 				// write the destId-edgeValue pair
-				if (vertices[j].getOutEdges().length > 0) {
+//				if (vertices[j].getOutEdges().length > 0) {
+				if (vertices[j].getNumOutEdges() > 0) {
+					
 					if (vertices[j].getOutEdge(k) == -1)
 						break;
 					destVId = vertices[j].getOutEdge(k);
@@ -423,7 +431,9 @@ public class GraphERuleEdgeAdder {
 			for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
 
 				// write the destId-edgeValue pair
-				if (vertices[j].getOutEdges().length > 0) {
+//				if (vertices[j].getOutEdges().length > 0) {
+				if (vertices[j].getNumOutEdges() > 0) {
+					
 					if (vertices[j].getOutEdge(k) == -1)
 						break;
 					destVId = vertices[j].getOutEdge(k);

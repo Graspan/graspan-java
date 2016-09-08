@@ -82,8 +82,10 @@ public class SortedArrMerger {
 	 * @param oldUnewUdelta_vals
 	 */
 	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge, int srcRowId) {
+//	public void mergeTgtstoSrc(int[][] edgArrstoMerge, byte[][] valArrstoMerge, int srcRowId, int[]edgArrsSizes) {	
 		assert (delta_ptr == -1);
 		assert (srcRowId == 0);
+		
 
 		// MIN_SETS ARRAY
 		MinSet[] minSets = new MinSet[edgArrstoMerge.length];
@@ -108,25 +110,25 @@ public class SortedArrMerger {
 				targetRowsMinHeap.offer(minSet);
 
 			if (i != srcRowId)
-				cumTgtRowsSize += edgArrstoMerge[i].length;//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
+				cumTgtRowsSize += edgArrstoMerge[i].length;//TODO: to avoid array resize approach // USE ACTUAL LENGTH INSTEAD OF CAPACITY
 		}
 
 		// declare & initialize src_delta and src_oldUnewUdelta
 		src_delta_edgs = new int[cumTgtRowsSize];
 		src_delta_vals = new byte[cumTgtRowsSize];
-		 for (int i = 0; i < src_delta_edgs.length; i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH//TO TEST
+//		 for (int i = 0; i < src_delta_edgs.length; i++) {//TODO: to avoid array resize approach//TO TEST
 //		 src_delta_edgs[i] = -1;
-		 src_delta_vals[i] = -1;
-		 src_delta_edgs[i] = Integer.MAX_VALUE;
-		 }
+//		 src_delta_edgs[i] = Integer.MAX_VALUE;
+//		 src_delta_vals[i] = -1;
+//		 }
 
-		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
-		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE APPROACH // USE ACTUAL LENGTH INSTEAD OF CAPACITY
-		 for (int i = 0; i < src_oldUnewUdelta_edgs.length;i++) {//TODO: IN PLACE OF REMOVE REDUNDANT ARRAYSPACE//TO TEST
+		src_oldUnewUdelta_edgs = new int[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: to avoid array resize approach // USE ACTUAL LENGTH INSTEAD OF CAPACITY
+		src_oldUnewUdelta_vals = new byte[edgArrstoMerge[srcRowId].length + cumTgtRowsSize];//TODO: to avoid array resize approach // USE ACTUAL LENGTH INSTEAD OF CAPACITY
+//		 for (int i = 0; i < src_oldUnewUdelta_edgs.length;i++) {//TODO: to avoid array resize approach//TO TEST
 //		 src_oldUnewUdelta_edgs[i] = -1;
-		 src_oldUnewUdelta_vals[i] = -1;
-		 src_oldUnewUdelta_edgs[i] = Integer.MAX_VALUE;
-		 }
+//		 src_oldUnewUdelta_edgs[i] = Integer.MAX_VALUE;
+//		 src_oldUnewUdelta_vals[i] = -1;
+//		 }
 
 		// MinSet minSetFrmTgtRows = null;
 		// MinSet minSetFromSrcRow = null;
@@ -152,7 +154,7 @@ public class SortedArrMerger {
 		}
 
 		// removing the empty values in output components: delta and oldUnewUdelta
-//		removeRedundantArraySpace(); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
+		removeRedundantArraySpace(); // TODO: NEED TO FIX. IDENTIFIED AS GC-EXPENSIVE BY YOURKIT.
 
 	}
 
@@ -189,17 +191,16 @@ public class SortedArrMerger {
 		src_delta_vals = tempVals;
 	}
 
-	private void processMinSetsForNull(int[] srcEdgRow, byte[] srcValRow) {
+	private void processMinSetsForNull(int[] srcEdgRow, byte[] srcValRow) { 
 
 		// add the source row minSet to src_oldUnewUdelta
-		for (int i = 0; i < srcEdgRow.length; i++) {
+		for (int i = 0; i < srcEdgRow.length; i++) {//TODO: to avoid array resize approach // USE ACTUAL LENGTH INSTEAD OF CAPACITY
 			oldUnewUdelta_ptr++;
 			if (oldUnewUdelta_ptr < src_oldUnewUdelta_edgs.length) {
 				src_oldUnewUdelta_edgs[oldUnewUdelta_ptr] = srcEdgRow[i];
 				src_oldUnewUdelta_vals[oldUnewUdelta_ptr] = srcValRow[i];
 			} else {
-				logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:"
-						+ Thread.currentThread().getId());
+				logger.info("Error, oldUnewUdelta_ptr has gone past the size the array!" + " ThreadNo:" + Thread.currentThread().getId());
 			}
 		}
 
@@ -405,7 +406,7 @@ public class SortedArrMerger {
 			}
 
 			// increment the pointers for this minset
-			if (srcEdgRow.length > 0) {
+			if (srcEdgRow.length > 0) {//TODO: to avoid array resize approach // USE ACTUAL LENGTH INSTEAD OF CAPACITY
 				createNextMinSet(minSetFrmSrcRow, srcEdgRow, srcValRow);
 			}
 			return;

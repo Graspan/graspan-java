@@ -626,8 +626,7 @@ public class LoaderM {
 
 			// initialize Dimension 2 (Total no. of Unique SrcVs for a
 			// Partition)
-			partOutDegs[i] = new int[PartitionQuerier
-					.getNumUniqueSrcs(partsToLoad[i])];
+			partOutDegs[i] = new int[PartitionQuerier.getNumUniqueSrcs(partsToLoad[i])];
 		}
 
 		/*
@@ -636,10 +635,7 @@ public class LoaderM {
 		BufferedReader outDegInStrm = new BufferedReader(new InputStreamReader(
 				new FileInputStream(new File(baseFilename + ".degrees"))));
 
-		System.out
-				.print("Reading degrees file ("
-						+ baseFilename
-						+ ".degrees) to obtain degrees of source vertices in partitions to load");
+		System.out.print("Reading degrees file (" + baseFilename + ".degrees) to obtain degrees of source vertices in partitions to load");
 
 		String ln;
 		while ((ln = outDegInStrm.readLine()) != null) {
@@ -884,10 +880,7 @@ public class LoaderM {
 
 //						logger.info("All prevRoundvertices in memory during loading: \n"
 //								+ s2);
-//						logger.info("oldIntvIdxSt: " + oldIntvIdxSt
-//								+ " oldIntvIdxEnd: " + oldIntvIdxEnd
-//								+ " oldIntervals partId: "
-//								+ oldIntervals.get(j).getPartitionId());
+//						logger.info("oldIntvIdxSt: " + oldIntvIdxSt + " oldIntvIdxEnd: " + oldIntvIdxEnd + " oldIntervals partId: " + oldIntervals.get(j).getPartitionId());
 //						logger.info("OldIntervals: " + oldIntervals);
 //						logger.info("Current Intervals:" + intervals);
 
@@ -956,6 +949,7 @@ public class LoaderM {
 			// locate the required interval in "vertices", and if it has new  edges added
 			if (partitionId == intervals.get(i).getPartitionId() && intervals.get(i).hasNewEdges()) {
 
+//				logger.info("partition ID : " + partitionId);
 				// clear current file
 				DataOutputStream partOutStrm = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(GlobalParams.baseFilename + ".partition." + partitionId, false)));
 				partOutStrm.close();
@@ -984,13 +978,17 @@ public class LoaderM {
 					for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
 
 						// write the destId-edgeValue pair
-						if (vertices[j].getOutEdges().length > 0) {
+//						if (vertices[j].getOutEdges().length > 0) {
+						if (vertices[j].getNumOutEdges() > 0) {	
 							if (vertices[j].getOutEdge(k) == -1)
 								break;
 							destVId = vertices[j].getOutEdge(k);
 							edgeValue = vertices[j].getOutEdgeValue(k);
 							partOutStrm.writeInt(destVId);
 							partOutStrm.writeByte(edgeValue);
+//							if (destVId == 0) {
+//								logger.info(srcVId + "\t" + destVId + "\t" + edgeValue);
+//							}
 
 						}
 
