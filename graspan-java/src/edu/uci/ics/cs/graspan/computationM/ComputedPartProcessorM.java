@@ -78,7 +78,8 @@ public class ComputedPartProcessorM {
 	 * @param intervals
 	 * @throws IOException
 	 */
-	public static void processParts(Vertex[] vertices, ComputationSet[] compsets, List<LoadedVertexInterval> intervals)	throws IOException {
+//	public static void processParts(Vertex[] vertices, ComputationSet[] compsets, List<LoadedVertexInterval> intervals)	throws IOException {
+	public static void processParts(Vertex[] vertices, List<LoadedVertexInterval> intervals)	throws IOException {
 
 //		logger.info("Processing partitions after computation.");
 
@@ -587,7 +588,8 @@ public class ComputedPartProcessorM {
 		for (Integer partitionId : partsToSaveByCPP)
 		{
 			long writeStart = System.currentTimeMillis();
-			storePart(vertices, compsets, intervals, partitionId);
+//			storePart(vertices, compsets, intervals, partitionId);
+			storePart(vertices, intervals, partitionId);
 //			EngineM.getIO_outputStrm().println("write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
 //			logger.info("output.IO||"+"write," + Utilities.getDurationInHMS(System.currentTimeMillis() - writeStart) );
 			logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
@@ -641,10 +643,9 @@ public class ComputedPartProcessorM {
 	 * @param partitionId
 	 * @throws IOException
 	 */
-	private static void storePart(Vertex[] vertices, ComputationSet[] compsets,
-			List<LoadedVertexInterval> intervals, Integer partitionId)
-			throws IOException {
-
+//	private static void storePart(Vertex[] vertices, ComputationSet[] compsets, List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
+	private static void storePart(Vertex[] vertices, List<LoadedVertexInterval> intervals, Integer partitionId) throws IOException {
+		
 		// logger.info("Updating " + GlobalParams.baseFilename + ".partition."	+ partitionId);
 
 		// clear current file

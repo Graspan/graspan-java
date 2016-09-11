@@ -173,7 +173,8 @@ public class EngineM {
 			RepartitioningData.initRepartioningVars();
 
 			ComputedPartProcessorM.initRepartitionConstraints();
-			ComputedPartProcessorM.processParts(vertices, compSets, intervals);
+//			ComputedPartProcessorM.processParts(vertices, compSets, intervals);
+			ComputedPartProcessorM.processParts(vertices, intervals);
 			int numPartsFinal = AllPartitions.getPartAllocTab().length;
 
 			vertices_prevIt = vertices;
