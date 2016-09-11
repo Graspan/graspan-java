@@ -15,6 +15,9 @@ public class Vertex {
 	private int id;
 	private int numOutEdges;
 	
+	//in order to deal with arrays with empty elements.
+	private int[] numOutEdgesActual;
+	
 	private int[] outEdges;
 	private byte[] outEdgeValues;
 
@@ -36,6 +39,7 @@ public class Vertex {
 		this.idx = idx;
 		this.id = id;
 		this.numOutEdges = 0;
+		numOutEdgesActual = new int[1];
 		this.outEdges = outEdges;
 		this.outEdgeValues = outEdgeValues;
 		if(outEdges != null){
@@ -53,8 +57,8 @@ public class Vertex {
 		return numOutEdges;
 	}
 
-	public void setNumOutEdges() {
-
+	public void setNumOutEdges(int i) {
+		this.numOutEdgesActual[0] = i;
 	}
 
 	/**

@@ -15,6 +15,7 @@ public class ComputationSet {
 
 	private int oldEdgs[];
 	private byte oldVals[];
+	private int oldNumEdgs[];
 
 	public int[] getOldEdgs() {
 		return oldEdgs;
@@ -36,6 +37,7 @@ public class ComputationSet {
 
 	private int newEdgs[];
 	private byte newVals[];
+	private int newNumEdgs[];
 
 	public int[] getNewEdgs() {
 		return newEdgs;
@@ -57,6 +59,7 @@ public class ComputationSet {
 
 	private int oldUnewEdgs[];
 	private byte oldUnewVals[];
+	private int oldUnewNumEdgs[];
 
 	public int[] getOldUnewEdgs() {
 		return oldUnewEdgs;
@@ -80,6 +83,7 @@ public class ComputationSet {
 
 	private int deltaEdgs[];
 	private byte deltaVals[];
+	private int deltaNumEdgs[];
 
 	public int[] getDeltaEdgs() {
 		return deltaEdgs;
@@ -101,6 +105,7 @@ public class ComputationSet {
 
 	private int oldUnewUdeltaEdgs[];
 	private byte oldUnewUdeltaVals[];
+	private int oldUnewUdeltaNumEdgs[];
 
 	public int[] getOldUnewUdeltaEdgs() {
 		return oldUnewUdeltaEdgs;
@@ -117,21 +122,34 @@ public class ComputationSet {
 	public void setOldUnewUdeltaVals(byte[] oldUnewUdeltaVals) {
 		this.oldUnewUdeltaVals = oldUnewUdeltaVals;
 	}
+	
+	public int[] getOldUnewUdeltaNumEdgs() {
+		return this.oldUnewNumEdgs;
+	}
 
+	public void setOldUnewUdeltaNumEdgs(byte[] oldUnewUdeltaVals) {
+		this.oldUnewUdeltaVals = oldUnewUdeltaVals;
+	}
+	
 	public ComputationSet(){
 		this.oldEdgs = new int[0];
 		this.oldVals = new byte[0];
+		this.oldNumEdgs = new int[1];	
 		
 		this.newEdgs = new int[0];
 		this.newVals = new byte[0];
+		this.newNumEdgs = new int[1];	
 		
 		this.oldUnewEdgs = new int[0];
 		this.oldUnewVals = new byte[0];
+		this.oldUnewNumEdgs = new int[1];	
 		
 		this.deltaEdgs = new int[0];
 		this.deltaVals = new byte[0];
+		this.deltaNumEdgs = new int[1];	
 		
 		this.oldUnewUdeltaEdgs = new int[0];
 		this.oldUnewUdeltaVals = new byte[0];
+		this.oldUnewUdeltaNumEdgs = new int[1];		
 	}
 }
