@@ -268,11 +268,34 @@ public class Preprocessor {
 
 //		long totalEdgeCount = 0;
 		Iterator<Entry<Integer, Integer>> it = outDegs.entrySet().iterator();
+		
+		
+		//FOR IN-MEMORY (TOTAL_NUM_PARTS==2):
+		if (GlobalParams.getNumParts()==2){
 		while (it.hasNext()) {
 			Map.Entry<Integer, Integer> pair = it.next();
 			intervalMaxVId = pair.getKey();
 			intervalEdgeCount += pair.getValue();
-
+			
+		if (intervalEdgeCount > intervalMaxSize & intervalIDs.size()==0) {
+			intervalIDs.add(intervalMaxVId);
+			intervalECounts.add(intervalEdgeCount);
+			intervalEdgeCount = 0;
+		}
+		else if(intervalMaxVId == outDegs.lastKey()){
+			intervalIDs.add(intervalMaxVId);
+			intervalECounts.add(intervalEdgeCount);
+			intervalEdgeCount = 0;
+			break;
+		}
+		}
+		}
+		
+		if (GlobalParams.getNumParts()!=2){
+		while (it.hasNext()) {
+			Map.Entry<Integer, Integer> pair = it.next();
+			intervalMaxVId = pair.getKey();
+			intervalEdgeCount += pair.getValue();
 			// w total degree > intervalMax,
 			// assign the partition_interval_head to the current_Scanned_Vertex
 			if (intervalEdgeCount > intervalMaxSize) {
@@ -281,17 +304,17 @@ public class Preprocessor {
 //				partSizes[partTabIdx][1] = intervalEdgeCount;
 				intervalIDs.add(intervalMaxVId);
 				intervalECounts.add(intervalEdgeCount);
-				
 				intervalEdgeCount = 0;
 			}
 			else if(intervalMaxVId == outDegs.lastKey()){
 				intervalIDs.add(intervalMaxVId);
 				intervalECounts.add(intervalEdgeCount);
-				
 				intervalEdgeCount = 0;
-				
 				break;
 			}
+		}
+			
+			
 
 //			// when last partition is reached, assign partition_interval_head to
 //			// last_Vertex
