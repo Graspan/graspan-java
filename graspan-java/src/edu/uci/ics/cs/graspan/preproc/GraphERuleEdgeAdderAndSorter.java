@@ -29,7 +29,7 @@ import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
-public class GraphERuleEdgeAdder {
+public class GraphERuleEdgeAdderAndSorter {
 
 	private static final Logger logger = GraspanLogger.getLogger("GraphERuleEdgeAdder");
 
@@ -48,7 +48,7 @@ public class GraphERuleEdgeAdder {
 	// map of vertices and degrees
 	private TreeMap<Integer, Integer> outDegs;
 
-	public GraphERuleEdgeAdder() throws NumberFormatException, IOException {
+	public GraphERuleEdgeAdderAndSorter() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParams.getBasefilename();
 
