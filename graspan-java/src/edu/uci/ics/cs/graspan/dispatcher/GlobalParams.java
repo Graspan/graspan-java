@@ -28,7 +28,7 @@ public class GlobalParams {
 	static String reloadPlan = "";
 
 	static String computation_logic = "";
-
+	
 	private static final int GRAMMAR_SIZE = 200;
 
 	// The grammar file
@@ -69,11 +69,11 @@ public class GlobalParams {
 	public static void setEdcSize(int num) {
 		EdcSize = num;
 	}
-
+	
 	public static int getEdcSize() {
 		return EdcSize;
 	}
-
+	
 	public static void setOpEdgeTrackerInterval(int num) {
 		OpEdgeTrackerInterval = num;
 	}
@@ -170,7 +170,7 @@ public class GlobalParams {
 		grammarTab = arr;
 	}
 
-	public static String getInputGraphType() {
+	public static String hasEdgeVals() {
 		return inputGraphType;
 	}
 	
@@ -180,14 +180,6 @@ public class GlobalParams {
 
 	}
 	
-	public static String getAnalysisType() {
-		return analysisType;
-	}
-	
-	public static void setAnalysisType(String alsType){
-		analysisType = alsType;
-	}
-
 	public static int getFirstVertexID() {
 		return firstVId;
 	}
