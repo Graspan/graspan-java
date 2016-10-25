@@ -444,10 +444,10 @@ public class Preprocessor {
 						dst = Integer.parseInt(tok[1]);
 					}
 
-					if (GlobalParams.getInputGraphType().compareTo("NOEDGEVALS") == 0) {
+					if (GlobalParams.hasEdgeVals().compareTo("no") == 0) {
 						eval = 0;
 					}
-					if (GlobalParams.getInputGraphType().compareTo("EDGEVALS") == 0) {
+					if (GlobalParams.hasEdgeVals().compareTo("yes") == 0) {
 						// if (tok[2].compareTo("D") == 0) {
 						// eval = 9;
 						// }

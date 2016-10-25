@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.datastructures.ComputationSet;
 import edu.uci.ics.cs.graspan.datastructures.LoadedVertexInterval;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
+import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 
 /**
@@ -212,7 +213,10 @@ public class EdgeComputerM {
 				int dstId = edges[i];
 				byte dstVal = vals[i];
 				
-				byte newVal = GrammarChecker.checkL2Rules(srcVal, dstVal);
+				byte newVal = GrammarChecker.checkL2Rules(srcVal, dstVal);// use this for general TC 
+//				byte newVal = 0; //use this for pure TC
+				
+				
 				if(newVal != -1){
 					list.add(new IdValuePair(dstId, newVal));
 				}
