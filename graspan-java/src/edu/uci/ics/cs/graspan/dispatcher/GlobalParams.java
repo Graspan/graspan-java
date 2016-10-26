@@ -48,7 +48,7 @@ public class GlobalParams {
 
 	// The type of input graph: DATAFLOW OR POINTS-TO (used to indicate whether
 	// or not edge values exist)
-	private static String inputGraphType;
+	private static String hasEdgeVals;
 
 	// The id of the first vertex of the graph
 	private static int firstVId;
@@ -171,12 +171,12 @@ public class GlobalParams {
 	}
 
 	public static String hasEdgeVals() {
-		return inputGraphType;
+		return hasEdgeVals;
 	}
 	
 
-	public static void setInputGraphType(String ipgraphtype) {
-		inputGraphType = ipgraphtype;
+	public static void setHasEdgeVals(String hasedgvals) {
+		hasEdgeVals = hasedgvals;
 
 	}
 	
