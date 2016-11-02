@@ -31,7 +31,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  * @author aftab
  *
  */
-public class PartitionPreprocessor {
+public class PartERuleAdder {
 
 	private static final Logger logger = GraspanLogger.getLogger("PartitionPreprocessor");
 
@@ -39,7 +39,7 @@ public class PartitionPreprocessor {
 	private String baseFilename;
 	private int numParts;
 
-	public PartitionPreprocessor() throws NumberFormatException, IOException {
+	public PartERuleAdder() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParams.getBasefilename();
 		this.numParts = GlobalParams.getNumParts();
