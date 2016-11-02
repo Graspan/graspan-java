@@ -18,6 +18,11 @@ public class ComputationClient {
 
 	public static void main(String args[]) throws IOException {
 
+		GlobalParams.setReloadPlan("RELOAD_PLAN_2");
+		GlobalParams.setEdcSize(1000);
+		GlobalParams.setComputationLogic("SMART_MERGE");
+		
+		
 		String computationConfigFilename = args[0];
 
 		/*
@@ -35,12 +40,6 @@ public class ComputationClient {
 			if (tok[0].compareTo("TOTAL_NUM_PARTS") == 0) {
 				GlobalParams.setNumParts(Integer.parseInt(tok[2]));
 			}
-			if (tok[0].compareTo("RELOAD_PLAN") == 0) {
-				GlobalParams.setReloadPlan(tok[2]);
-			}
-			if (tok[0].compareTo("EDC_SIZE") == 0) {
-				GlobalParams.setEdcSize(Integer.parseInt(tok[2]));
-			}
 			if (tok[0].compareTo("OP_EDGE_TRACKER_INTERVAL") == 0) {
 				GlobalParams.setOpEdgeTrackerInterval(Integer.parseInt(tok[2]));
 			}
@@ -49,9 +48,6 @@ public class ComputationClient {
 			}
 			if (tok[0].compareTo("NEW_EDGE_NODE_SIZE") == 0) {
 				GlobalParams.setNewEdgesNodeSize(Integer.parseInt(tok[2]));
-			}
-			if (tok[0].compareTo("COMPUTATION_LOGIC") == 0) {
-				GlobalParams.setComputationLogic(tok[2]);
 			}
 			if (tok[0].compareTo("NUM_OF_THREADS") == 0) {
 				GlobalParams.setNumThreads(Integer.parseInt(tok[2]));
