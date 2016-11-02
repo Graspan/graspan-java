@@ -27,13 +27,13 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
- * This Class is not used. Not needed.
+ * This class adds erules to a single partition 
  * @author aftab
  *
  */
 public class PartERuleAdder {
 
-	private static final Logger logger = GraspanLogger.getLogger("PartitionPreprocessor");
+	private static final Logger logger = GraspanLogger.getLogger("PartERuleAdder");
 
 	public static Vertex[] vertices;
 	private String baseFilename;
@@ -50,7 +50,7 @@ public class PartERuleAdder {
 
 		// get the grammar info
 //		GrammarChecker.loadGrammars(new File(baseFilename + ".grammar"));
-		logger.info("Loaded " + baseFilename + ".grammar");
+//		logger.info("Loaded " + baseFilename + ".grammar");
 
 		preliminaryInit();
 	}
@@ -291,7 +291,7 @@ public class PartERuleAdder {
 		}
 	}
 
-	public void loadPartData(int partId) throws IOException {
+	private void loadPartData(int partId) throws IOException {
 
 		int[][][] partEdges = LoadedPartitions.getLoadedPartEdges();
 		byte[][][] partEdgeVals = LoadedPartitions.getLoadedPartEdgeVals();
