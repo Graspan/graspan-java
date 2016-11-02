@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdderAndSorter;
-import edu.uci.ics.cs.graspan.preproc.PartERuleAdder;
+import edu.uci.ics.cs.graspan.preproc.PartERuleAdderAndSorter;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
-public class PartERuleAdderClient {
+public class PartERuleAdderAndSorterClient {
 
 	private static final Logger logger = GraspanLogger.getLogger("PartERuleAdderClient");
 
@@ -27,7 +27,7 @@ public class PartERuleAdderClient {
 		long eAdd_start = System.currentTimeMillis();
 
 		for (int partId = 0; partId < GlobalParams.getNumParts(); partId++) {
-			PartERuleAdder partERadder = new PartERuleAdder();
+			PartERuleAdderAndSorter partERadder = new PartERuleAdderAndSorter();
 			partERadder.loadAndProcessParts(partId);
 		}
 

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import edu.uci.ics.cs.graspan.computationM.GrammarChecker;
 import edu.uci.ics.cs.graspan.datastructures.AllPartitions;
 import edu.uci.ics.cs.graspan.preproc.GraphERuleEdgeAdderAndSorter;
-import edu.uci.ics.cs.graspan.preproc.PartERuleAdder;
+import edu.uci.ics.cs.graspan.preproc.PartERuleAdderAndSorter;
 import edu.uci.ics.cs.graspan.preproc.Preprocessor;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;

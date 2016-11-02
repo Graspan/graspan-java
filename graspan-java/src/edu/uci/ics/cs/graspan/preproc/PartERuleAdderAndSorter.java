@@ -27,11 +27,12 @@ import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
 /**
- * This class adds erules to a single partition 
+ * This class adds erules to a single partition (if the grammar contains eRules), and then 
+ * sorts it.
  * @author aftab
  *
  */
-public class PartERuleAdder {
+public class PartERuleAdderAndSorter {
 
 	private static final Logger logger = GraspanLogger.getLogger("PartERuleAdder");
 
@@ -39,7 +40,7 @@ public class PartERuleAdder {
 	private String baseFilename;
 	private int numParts;
 
-	public PartERuleAdder() throws NumberFormatException, IOException {
+	public PartERuleAdderAndSorter() throws NumberFormatException, IOException {
 
 		this.baseFilename = GlobalParams.getBasefilename();
 		this.numParts = GlobalParams.getNumParts();
