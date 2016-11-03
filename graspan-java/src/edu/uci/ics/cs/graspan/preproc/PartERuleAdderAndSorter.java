@@ -23,6 +23,7 @@ import edu.uci.ics.cs.graspan.datastructures.LoadedPartitions;
 import edu.uci.ics.cs.graspan.datastructures.PartitionQuerier;
 import edu.uci.ics.cs.graspan.datastructures.Vertex;
 import edu.uci.ics.cs.graspan.dispatcher.GlobalParams;
+import edu.uci.ics.cs.graspan.scheduler.SchedulerInfo;
 import edu.uci.ics.cs.graspan.support.GraspanLogger;
 import edu.uci.ics.cs.graspan.support.Utilities;
 
@@ -34,7 +35,7 @@ import edu.uci.ics.cs.graspan.support.Utilities;
  */
 public class PartERuleAdderAndSorter {
 
-	private static final Logger logger = GraspanLogger.getLogger("PartERuleAdder");
+	private static final Logger logger = GraspanLogger.getLogger("PartERuleAdderAndSorter");
 
 	public static Vertex[] vertices;
 	private String baseFilename;
@@ -88,21 +89,33 @@ public class PartERuleAdderAndSorter {
 		// fill the partition data structures
 		loadPartData(partId);
 		
-		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs(); // this is not updated because unnecessary later
+		// this is not updated because unnecessary later; the updated part degrees are
+		// store in disk using vertices.numoutedges
+		int loadedPartOutDegs[][] = LoadedPartitions.getLoadedPartOutDegs(); 
+		
 		int partEdges[][][] = LoadedPartitions.getLoadedPartEdges();
 		byte partEdgeVals[][][] = LoadedPartitions.getLoadedPartEdgeVals();
 
 		logger.info("Loaded " + baseFilename + ".partition." + partId);
 		
-		sortPart(partId, loadedPartOutDegs, partEdges, partEdgeVals);
-		logger.info("Sorted " + baseFilename + ".partition." + partId);
 		
 		addEdgesforERules();
 		logger.info("Added new edges for ERules for " + baseFilename + ".partition." + partId);
+		
+//		sortPart(partId, loadedPartOutDegs, partEdges, partEdgeVals);
+		sort();
+		logger.info("Sorted " + baseFilename + ".partition." + partId);
 
-		savePartAndDegs(partId);
-		logger.info("Saved data (adjacency lists & degrees) for " + baseFilename + ".partition." + partId);
+		storePart_ActualEdges();
+		logger.info("Stored edges in" + baseFilename + ".eRulesAdded" + " from partition "+ partId);
+		
+//		savePartAndDegs(partId);
+//		logger.info("Saved data (adjacency lists & degrees) for " + baseFilename + ".partition." + partId);
+//
+//		savePartSize(partId);
+//		logger.info("Saved updated size of " + baseFilename + ".partition." + partId);
 
+		
 	}
 
 	private void addEdgesforERules() {
@@ -166,18 +179,20 @@ public class PartERuleAdderAndSorter {
 		}
 	}
 
-	/**
-	 * 
-	 * @param partId
-	 * @param loadedPartOutDegs
-	 * @param partEdges
-	 * @param partEdgeVals
-	 */
-	private void sortPart(int partId, int[][] loadedPartOutDegs, int[][][] partEdges, byte[][][] partEdgeVals) {
-		for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partId); j++) {
+	private void sort(){
+//	private void sortPart(int partId, int[][] loadedPartOutDegs, int[][][] partEdges, byte[][][] partEdgeVals) {
+//		for (int j = 0; j < PartitionQuerier.getNumUniqueSrcs(partId); j++) {
+//			int low = 0;
+//			int high = loadedPartOutDegs[0][j] - 1;
+//			Utilities.quickSort(partEdges[0][j], partEdgeVals[0][j], low, high);
+//		}
+		
+		for (int j = 0 ; j < vertices.length ; j++) {
 			int low = 0;
-			int high = loadedPartOutDegs[0][j] - 1;
-			Utilities.quickSort(partEdges[0][j], partEdgeVals[0][j], low, high);
+//			int high = partOutDegs[0][j] - 1;
+//			int high = vertices[j].getOutEdges().length-1;
+			int high = vertices[j].getNumOutEdges()-1;
+			Utilities.quickSort(vertices[j].getOutEdges(), vertices[j].getOutEdgeValues(), low, high);
 		}
 		logger.info("Sorted loaded partition.");
 	}
@@ -224,6 +239,32 @@ public class PartERuleAdderAndSorter {
 	private void savePartAndDegs(int partitionId) throws IOException {
 		storePart(getVertices(), partitionId);
 		storePartDegs(getVertices(), partitionId);
+	}
+	
+	/**
+	 * Stores the counts of partition sizes of each partition in disk.
+	 * 
+	 * @throws IOException
+	 */
+	private void savePartSize(int partId) throws IOException {
+		PrintWriter partSizesOutStrm;
+		
+		if (partId==0){//for clearing the partSizes file
+			partSizesOutStrm = new PrintWriter(
+					new BufferedWriter(new FileWriter(baseFilename + ".partSizes", false)));
+			partSizesOutStrm.close();
+		}
+		
+		partSizesOutStrm = new PrintWriter(
+				new BufferedWriter(new FileWriter(baseFilename + ".partSizes", true)));
+		long partSize=0;
+		for (int i=0;i<vertices.length;i++){
+			partSize+=vertices[i].getNumOutEdges();
+		}
+//		for (int i = 0; i < numParts; i++) {
+			partSizesOutStrm.println(partSize);
+//		}
+		partSizesOutStrm.close();
 	}
 
 	private void readDegrees(int partId) throws IOException {
@@ -344,6 +385,59 @@ public class PartERuleAdderAndSorter {
 
 	}
 
+private void storePart_ActualEdges() throws IOException {
+		
+		logger.info("Writing to" + GlobalParams.baseFilename+".eRulesAdded");
+		
+//		for (int i=0;i<vertices.length;i++){
+//		logger.info(vertices[i].getVertexId()+" "+Arrays.toString(vertices[i].getOutEdges()));
+//		}
+		
+		
+		// clear current graph file
+//		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(
+//				new FileWriter(GlobalParams.baseFilename , false)));
+//		partOutStrm.close();
+
+		PrintWriter partOutStrm = new PrintWriter(new BufferedWriter(new FileWriter(GlobalParams.baseFilename+".eRulesAdded" , true)));
+
+		int srcVId, destVId, count;
+		int edgeValue;
+		String edgeValStr="";
+		
+		
+		for (int j = 0; j < vertices.length; j++) {
+			count = vertices[j].getNumOutEdges();
+			if (count == 0) {
+				continue;
+			}
+
+			// write the srcId
+			srcVId = vertices[j].getVertexId();
+
+			// scan each edge (original edge) in list of each vertex in
+			// this interval
+			for (int k = 0; k < vertices[j].getNumOutEdges(); k++) {
+
+				// write the destId-edgeValue pair
+//				if (vertices[j].getOutEdges().length > 0) {
+				if (vertices[j].getNumOutEdges() > 0) {
+					
+					if (vertices[j].getOutEdge(k) == -1)
+						break;
+					destVId = vertices[j].getOutEdge(k);
+					edgeValue = vertices[j].getOutEdgeValue(k);
+					edgeValStr=GrammarChecker.getValue((byte)edgeValue);
+					partOutStrm.println(srcVId + "\t" + destVId+ "\t" + edgeValStr);
+				}
+			}
+		}
+
+		partOutStrm.close();
+		
+	}
+
+	
 	/**
 	 * Stores a partition to disk.
 	 * 
