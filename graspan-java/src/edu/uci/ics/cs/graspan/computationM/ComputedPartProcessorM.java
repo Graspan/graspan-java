@@ -514,6 +514,8 @@ public class ComputedPartProcessorM {
 
 		// 2.4. Updating Scheduler Information
 //		logger.info("Updating scheduler information");
+		//note that we don't update the partsizes file in disk
+		//as we always keep its info in memory
 		int[][] pat = AllPartitions.getPartAllocTab();
 		long[][] newPartSizes = new long[pat.length][2];
 
