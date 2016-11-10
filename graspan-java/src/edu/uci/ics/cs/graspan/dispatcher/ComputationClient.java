@@ -18,18 +18,23 @@ public class ComputationClient {
 
 	public static void main(String args[]) throws IOException {
 
+//		String computationConfigFilename = args[0];
+		GlobalParams.setBasefilename(args[0]);
+		GlobalParams.setNumParts(Integer.parseInt(args[1]));
+		GlobalParams.setNumThreads(Integer.parseInt(args[2]));
+		GlobalParams.setPartMaxPostNewEdges(Integer.parseInt(args[3])*1000000);
+		
 		GlobalParams.setReloadPlan("RELOAD_PLAN_2");
 		GlobalParams.setEdcSize(1000);
 		GlobalParams.setComputationLogic("SMART_MERGE");
 		
-		
-		String computationConfigFilename = args[0];
 
 		/*
 		 * Scan the Computer-client config file
 		 */
-		BufferedReader computationConfigStream = new BufferedReader(new InputStreamReader(new FileInputStream(new File(computationConfigFilename))));
-		String ln;
+		
+//		BufferedReader computationConfigStream = new BufferedReader(new InputStreamReader(new FileInputStream(new File(computationConfigFilename))));
+		/* String ln;
 
 		String[] tok;
 		while ((ln = computationConfigStream.readLine()) != null) {
@@ -57,7 +62,7 @@ public class ComputationClient {
 			}
 		}
 
-		computationConfigStream.close();
+		computationConfigStream.close();*/
 		
 //		MemUsageCheckThread memUsage = new MemUsageCheckThread();
 //		memUsage.start();
