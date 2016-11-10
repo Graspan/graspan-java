@@ -36,16 +36,16 @@ public class PartitionFileChecker {
 	public static void main(String args[]) throws IOException {
 		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0]);
 //		PartitionFileChecker pfchecker = new PartitionFileChecker(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-		pfchecker.run();
+		pfchecker.run(Integer.parseInt(args[1]));
 	}
 	
 	
-	public void run() throws IOException {
+	public void run(int i) throws IOException {
 		// readPartitionFile(baseFilename);
 	
 		//read all partition files
 //		for (int i = 0; i < numParts; i++) {
-		int i=1;
+//		int i=1;
 //		logger.info("partition " + i);
 //			System.out.println("partition " +partId);
 			readAndPrint(i);
@@ -91,12 +91,16 @@ public class PartitionFileChecker {
 						
 						//edgeval to number conversion:
 						
-						if (edgVal==0){
-							edgValStr="n";
-						}
-						if (edgVal==1){
-							edgValStr="e";
-						}
+//						if (edgVal==0){
+//							edgValStr="n";
+//						}
+//						else if (edgVal==1){
+//							edgValStr="e";
+//						}
+//						else  {
+							edgValStr="" + edgVal;
+//						}
+						
 						
 						System.out.println(srcVId+"\t"+destVId+"\t"+edgValStr);//Edge List Print Style
 						
