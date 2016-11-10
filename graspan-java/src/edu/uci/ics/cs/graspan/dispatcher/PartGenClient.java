@@ -20,7 +20,10 @@ public class PartGenClient {
 	private static final Logger logger = GraspanLogger.getLogger("PartGenClient");
 
 	public static void main(String[] args) throws IOException {
-
+		
+//		for (int i = 0; i < args.length; i++) {
+//			logger.info("    "+i+"  "+args[i].trim());
+//		}
 		
 		GlobalParams.setBasefilename(args[0]);
 		GlobalParams.setNumParts(Integer.parseInt(args[1]));
@@ -32,7 +35,6 @@ public class PartGenClient {
 
 		GrammarChecker.loadGrammars(new File(GlobalParams.getBasefilename() + ".grammar"));
 
-		logger.info("Generated pp.pgen.config");
 		logger.info("PREPROCESSING: Start generating partitions...");
 		long pp_start = System.currentTimeMillis();
 
