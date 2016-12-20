@@ -98,10 +98,10 @@ public class ComputedPartProcessorM {
 		// split vertices for all partitions
 		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
 		TreeSet<Integer> newPartLimits = RepartitioningData.getNewPartLimits();
-		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
-		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();
-		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts();
-		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();
+		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();//partitions that were repartitioned
+		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();//new parts generated from repartitioning
+		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts(); //loaded parts with new edges
+		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();//loaded parts with no new edges
 		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
 		HashSet<Integer> partsToSaveByCPP = RepartitioningData.getPartsToSave();
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
@@ -630,7 +630,7 @@ public class ComputedPartProcessorM {
 		// for (int i = 0; i < intervals.size(); i++)
 		// s1 = s1 + intervals.get(i).getPartitionId() + " ";
 		// logger.info(s1);
-
+		
 		RepartitioningData.clearRepartitioningVars();
 //		logger.info("\nLVI after computedPartProcessor saves partitions : "
 //				+ intervals);
@@ -673,9 +673,11 @@ public class ComputedPartProcessorM {
 					// write the srcId
 					srcVId = vertices[j].getVertexId();
 					partOutStrm.writeInt(srcVId);
+					logger.info("srcVId: "+srcVId);//TODO :remove
 
 					// write the count
 					partOutStrm.writeInt(count);
+					logger.info("Count: "+count);//TODO :remove
 
 					// scan each edge (original edge) in list of each vertex in
 					// this interval
@@ -688,6 +690,9 @@ public class ComputedPartProcessorM {
 						edgeValue = vertices[j].getOutEdgeValue(k);
 						partOutStrm.writeInt(destVId);
 						partOutStrm.writeByte(edgeValue);
+						
+						logger.info("destVId: "+destVId);//TODO :remove
+						logger.info("edgeValue: "+edgeValue);//TODO :remove
 
 					}
 
