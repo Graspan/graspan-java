@@ -10,7 +10,9 @@ For a detailed description of our system, please see the preliminary version of 
 
 ## Getting Started
 
-In order to start using the Java version Graspan, first ensure you have **JDK 1.6** (or a later version of JDK) installed in your machine. 
+Using Graspan Java is very simple, and no compilation is necessary. 
+
+First ensure you have **JDK 1.6** (or a later version of JDK) installed in your machine. 
 
 Then copy the **executables** folder in the **src** folder of the **graspan-java** repository, into any location in your machine. The folder contains:
 
@@ -39,6 +41,7 @@ Here is an **example**,
 ./graspan-java-run.sh mygraph 5 yes rules_pt  
 ```
 
+After running the above command, you can monitor the progress of the computation by viewing the generated **comp.output** file. After computation ends, the comp.output file will show the number of edges generated and the total computation time. The **.partition.** output files will contain the partitioned graph with new edges. 
 
 ## Project Contributors
 
