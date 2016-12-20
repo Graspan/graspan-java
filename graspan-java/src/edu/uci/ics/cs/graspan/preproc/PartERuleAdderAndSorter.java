@@ -290,7 +290,7 @@ public class PartERuleAdderAndSorter {
 			try {
 				partOutDegs[0][srcVId - PartitionQuerier.getFirstSrc(partId)] = deg;
 			} catch (Exception e) {
-				logger.info("ERROR!: " + srcVId + " " + PartitionQuerier.getFirstSrc(partId));
+				logger.info("ERROR!: "+e+" " + srcVId + " " + PartitionQuerier.getFirstSrc(partId));
 			}
 		}
 		outDegInStrm.close();
