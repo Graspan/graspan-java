@@ -5,8 +5,9 @@ erAdderAndSorterClassPath="edu.uci.ics.cs.graspan.dispatcher.PartERuleAdderAndSo
 graph=$1
 numParts=$2
 hasEdgeVals=$3
-firstVID=$4
-grammar=$5
+firstVID=0
+#firstVID=$4
+grammar=$4
 
 echo "Preprocessing..."
 
