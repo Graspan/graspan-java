@@ -98,12 +98,25 @@ public class ComputedPartProcessorM {
 		// split vertices for all partitions
 		ArrayList<Integer> splitVertices = RepartitioningData.getSplitVertices();
 		TreeSet<Integer> newPartLimits = RepartitioningData.getNewPartLimits();
-		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();//partitions that were repartitioned
-		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();//new parts generated from repartitioning
-		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts(); //loaded parts with new edges
-		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();//loaded parts with no new edges
+		
+		//partitions that were repartitioned
+		HashSet<Integer> repartitionedParts = RepartitioningData.getRepartitionedParts();
+		
+		//new parts generated from repartitioning
+		HashSet<Integer> newPartsFrmRepartitioning = RepartitioningData.getNewPartsFrmRepartitioning();
+		
+		//loaded parts with new edges (of these partitions,
+		//those that are repartitioned are later removed from this set -- See 2.2.1 in this class)
+		HashSet<Integer> modifiedParts = RepartitioningData.getModifiedParts(); 
+																				
+		//loaded parts with no new edges
+		HashSet<Integer> unModifiedParts = RepartitioningData.getUnModifiedParts();
+		
 		HashSet<Integer> loadedPartsPostProcessing = RepartitioningData.getLoadedPartsPostProcessing();
+		
+		//these parts correspond to the repartitioned partitions and the newly generated partitions
 		HashSet<Integer> partsToSaveByCPP = RepartitioningData.getPartsToSave();
+		
 		int[][] loadPartOutDegs = LoadedPartitions.getLoadedPartOutDegs();
 		int[] loadedParts = LoadedPartitions.getLoadedParts();
 		
@@ -630,6 +643,47 @@ public class ComputedPartProcessorM {
 		// for (int i = 0; i < intervals.size(); i++)
 		// s1 = s1 + intervals.get(i).getPartitionId() + " ";
 		// logger.info(s1);
+		
+		/*
+		 * 4. Saving all computed partitions during in-memory computation
+		 */
+		
+		//If number of partitions in the input graph for the computation phase is TWO,
+		//the whole computation will be an in-memory computation, there would be no further
+		//rounds of computation. So all loaded partitions should be saved to disk. 
+		if (GlobalParams.inMemComp()){
+			// 4.1. //saves any partition that has no new edges added
+			for (Integer partitionId : unModifiedParts)
+			{
+				long writeStart = System.currentTimeMillis();
+				storePart(vertices, intervals, partitionId);
+				logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
+			}
+			
+			//4.2. //saves any partition that has new edges added but was not repartitioned
+			for (Integer partitionId : modifiedParts)
+			{
+				long writeStart = System.currentTimeMillis();
+				storePart(vertices, intervals, partitionId);
+				logger.info("output.IO||"+"write," + (System.currentTimeMillis() - writeStart) );
+			}
+			
+			// 4.3. Remove saved partitions from LoadedVertexIntervals
+			for (int i = 0; i < intervals.size(); i++) {
+				if (unModifiedParts.contains(intervals.get(i).getPartitionId())) {
+					intervals.remove(i);
+					// reset i
+					i--;
+				}
+			}
+			for (int i = 0; i < intervals.size(); i++) {
+				if (modifiedParts.contains(intervals.get(i).getPartitionId())) {
+					intervals.remove(i);
+					// reset i
+					i--;
+				}
+			}
+		}
 		
 		RepartitioningData.clearRepartitioningVars();
 //		logger.info("\nLVI after computedPartProcessor saves partitions : "
