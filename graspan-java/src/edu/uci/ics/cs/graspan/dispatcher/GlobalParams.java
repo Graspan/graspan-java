@@ -8,9 +8,12 @@ public class GlobalParams {
 
 	// input graph full file name and path
 	public static String baseFilename = "";
-
+	
 	// total number of partitions
 	static int numParts;
+	
+	// in-memory computation
+	public static boolean inMemComp;
 
 	// number of partitions during each computation
 	static final int NUM_PARTS_PER_COMPUTATION = 2;
@@ -73,6 +76,15 @@ public class GlobalParams {
 	public static int getEdcSize() {
 		return EdcSize;
 	}
+	
+	public static boolean inMemComp(){
+		return inMemComp;
+	}
+	
+	public static void setInMemComp(boolean val){
+		inMemComp=val;
+	}
+	
 	
 	public static void setOpEdgeTrackerInterval(int num) {
 		OpEdgeTrackerInterval = num;

@@ -28,6 +28,13 @@ public class ComputationClient {
 		GlobalParams.setEdcSize(1000);
 		GlobalParams.setComputationLogic("SMART_MERGE");
 		
+		if (GlobalParams.getNumParts()==2){
+			GlobalParams.setInMemComp(true);
+		}
+		else{
+			GlobalParams.setInMemComp(false);
+		}
+		
 
 		/*
 		 * Scan the Computer-client config file
