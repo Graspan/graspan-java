@@ -4,7 +4,7 @@ Welcome to the home repository of Graspan Java.
 
 Graspan is a disk-based parallel graph system that uses an edge-pair centric computation model to compute dynamic transitive closures on large program graphs. Graspan has been implemented in two languages: Java and C++. This repository provides the Java implementation of Graspan.
 
-This Readme (under revision) provides a how-to-use guide for Graspan Java. 
+This Readme (under revision) provides a how-to-use guide for Graspan Java. To see how to use the C++ version of Graspan, see [here](https://github.com/Graspan/graspan-cpp). 
 
 For a detailed description of our system, please see the preliminary version of our paper [here](http://www.ics.uci.edu/~guoqingx/papers/wang-asplos17.pdf), which has been accepted in ASPLOS 2017. In addition, a tutorial of Graspan is scheduled to be presented in ASPLOS 2017. If you are interested, please visit our tutorial [page](http://www.ics.uci.edu/~guoqingx/asplos-tutorial/main.html). 
 
@@ -16,10 +16,10 @@ First ensure you have **JDK 1.6** (or a later version of JDK) installed in your 
 
 Then copy the **executables** folder in the **src** folder of the **graspan-java** repository, into any location in your machine. The folder contains:
 
-* graspan.jar - *executable of the graspan-java project*
-* graspan-java-run.sh - *script for running graspan-java*
-* rules_pt - *sample grammar file containing rules for points-to analysis*
-* rules_np - *sample grammar file containing rules for dataflow analysis*
+* *graspan.jar* - executable of the graspan-java project
+* *graspan-java-run.sh* - script for running graspan-java
+* *rules_pt* - sample grammar file containing rules for points-to analysis
+* *rules_np* - sample grammar file containing rules for dataflow analysis
 
 Now you will need a graph on which Graspan can perform computations. 
 Copy any graph from our datasets [here](https://drive.google.com/drive/folders/0B8bQanV_QfNkbDJsOWc2WWk4SkE?usp=sharing) inside the **executables** folder in your machine. 
