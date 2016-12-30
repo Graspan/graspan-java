@@ -56,6 +56,9 @@ Here is an **example**,
 
 After running the above command, you can monitor the progress of the computation by viewing the generated **comp.output** file. After computation ends, **comp.output** will show the number of edges generated and the total computation time. The **.partition.** output files will contain the partitioned graph with new edges. 
 
+## Questions or Comments?
+Participate in our discussion group, [GraspanMeet](https://groups.google.com/d/forum/graspanmeet). 
+
 ## Project Contributors
 
 * [**Kai Wang**](http://www.ics.uci.edu/~wangk7/) - *PhD Student, UCI* 
