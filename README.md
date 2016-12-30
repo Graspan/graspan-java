@@ -25,7 +25,7 @@ Graspan needs two input files: (1) a graph on which Graspan can perform computat
 
 You may copy any graph and grammar file from our sample datasets [here](https://drive.google.com/drive/folders/0B8bQanV_QfNkbDJsOWc2WWk4SkE?usp=sharing) inside the **executables** folder in your machine. 
 
-*Note that Graspan supports graph files in the edge-list format as shown below*
+*Note that Graspan supports graph files in edge-list format as shown below,*
 
 ```
 [EDGE SOURCE] [EDGE DESTINATION] [EDGE VALUE]
@@ -40,7 +40,7 @@ A B C
 After getting the graph and grammar file into the **executables** folder, run the **graspan-java-run.sh** script in your command line specifying, 
 
 1. the graph file,
-2. the number of partitions graspan should generate from the graph during preprocessing, prior to computation, 
+2. the number of partitions user would like to generate from the graph during preprocessing, prior to computation, 
 3. whether or not the graph has edge values (yes or no),
 4. the grammar file,
 
