@@ -10,21 +10,34 @@ For a detailed description of our system, please see the preliminary version of 
 
 ## Getting Started
 
-Using Graspan Java is very simple, and no compilation is necessary. 
+Using Graspan Java is very simple; no compilation is necessary. 
 
-First ensure you have **JDK 1.6** (or a later version of JDK) installed in your machine. 
+First, ensure you have **JDK 1.6** (or a later version of JDK) installed in your machine. 
 
-Then copy the **executables** folder in the **src** folder of the **graspan-java** repository, into any location in your machine. The folder contains:
+Then, copy the **executables** folder in the **src** folder of the **graspan-java** repository, into any location in your machine. The folder contains:
 
 * *graspan.jar* - executable of the graspan-java project
 * *graspan-java-run.sh* - script for running graspan-java
 * *rules_pt* - sample grammar file containing rules for points-to analysis
 * *rules_np* - sample grammar file containing rules for dataflow analysis
 
-Now you will need a graph on which Graspan can perform computations. 
-Copy any graph from our datasets [here](https://drive.google.com/drive/folders/0B8bQanV_QfNkbDJsOWc2WWk4SkE?usp=sharing) inside the **executables** folder in your machine. 
+Graspan needs two input files: (1) a graph on which Graspan can perform computations and (2) a grammar file which describes how the computations (edge additions) are to be performed.
 
-Then execute the **graspan-java-run.sh** script in your command line specifying, 
+You may copy any graph and grammar file from our sample datasets [here](https://drive.google.com/drive/folders/0B8bQanV_QfNkbDJsOWc2WWk4SkE?usp=sharing) inside the **executables** folder in your machine. 
+
+*Note that Graspan supports graph files in the edge-list format as shown below*
+
+```
+[EDGE SOURCE] [EDGE DESTINATION] [EDGE VALUE]
+```
+
+*The grammar file consists of production rules in CNF form, where a line like the following,*   
+```
+A B C
+```
+*represents a rule such that **A** is the left-side of the rule and **BC** is the right-side of the production.*
+
+After getting the graph and grammar file into the **executables** folder, run the **graspan-java-run.sh** script in your command line specifying, 
 
 1. the graph file,
 2. the number of partitions graspan should generate from the graph during preprocessing, prior to computation, 
@@ -41,7 +54,7 @@ Here is an **example**,
 ./graspan-java-run.sh mygraph 5 yes rules_pt  
 ```
 
-After running the above command, you can monitor the progress of the computation by viewing the generated **comp.output** file. After computation ends, the comp.output file will show the number of edges generated and the total computation time. The **.partition.** output files will contain the partitioned graph with new edges. 
+After running the above command, you can monitor the progress of the computation by viewing the generated **comp.output** file. After computation ends, **comp.output** will show the number of edges generated and the total computation time. The **.partition.** output files will contain the partitioned graph with new edges. 
 
 ## Project Contributors
 
