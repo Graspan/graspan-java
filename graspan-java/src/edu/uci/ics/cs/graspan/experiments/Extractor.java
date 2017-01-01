@@ -118,7 +118,7 @@ public class Extractor {
 				iostat_time += 5;
 				if (iostat_time < pp_time) {// for excluding IOtime during
 											// preprocessing
-					break;
+					continue;
 				}
 
 				ln = iostat_Strm.readLine();// read the next line after line
