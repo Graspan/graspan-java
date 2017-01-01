@@ -2,7 +2,7 @@
 
 Welcome to the home repository of Graspan Java.
 
-Graspan is a disk-based parallel graph system that uses an edge-pair centric computation model to compute dynamic transitive closures on large program graphs. Graspan has been implemented in two languages: Java and C++. This repository provides the Java implementation of Graspan.
+Graspan is a **disk-based parallel graph system** that uses an edge-pair centric computation model to compute dynamic transitive closures on large program graphs. Graspan has been implemented in two languages: Java and C++. This repository provides the Java implementation of Graspan.
 
 This Readme provides a how-to-use guide for Graspan Java. To see how to use the **C++ version** of Graspan, see [here](https://github.com/Graspan/graspan-cpp). 
 
